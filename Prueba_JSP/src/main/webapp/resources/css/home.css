@@ -1,0 +1,39 @@
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.hea_container {
+  width: 100%;
+  height: clamp(10%, 12vw, 12%);
+  background-color: gray;
+  display: flex;
+  justify-content: space-between;
+}
+.hea_container__buttons {
+  display: flex;
+}
+.hea_container__logo {
+  width: 30vh;
+  display: flex;
+  justify-content: center;
+}
+
+.logo__img {
+  width: 50%;
+}
+
+.BarraIzq {
+  width: 15%;
+  height: 85vh;
+  background-color: gray;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
