@@ -4,8 +4,7 @@
 
   <head>
     <title>Login</title>
-    ta
-    <link rel="stylesheet" href="src/main/resources/css/Login.css">
+    <link rel="stylesheet" href="resources/css/login.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -15,45 +14,41 @@
 
   <body>
 
-    
-    <main>
+    <main class="background">
       <section class="Container">
-        <div class="logo">
-          <img src="" alt="" class="logo__img">
+        <div class="Container__logo">
+          <img src="resources/imagenes/Logo.png" alt="" class="logo__img">
           <p class="logo__text">Helmet Masters</p>
         </div>
         <h1 class="Container__title">Iniciar Sesión</h1>
 
         <div class="Inputs_Container">
-          <form action="" method="POST">
+          <form action="" method="POST" class="formulario">
+            <div class="formulario__inputs">
             <input type="text" id="documento" placeholder="documento" name="documento" required>
-            
+
             <select id="pais" name="pais">
-              <option value="A+">Cedula de Ciudadania</option>
-              <option value="A-">Tarjeta de identidad</option>
-              <option value="B">Pasaporte</option>
+              <option value="A+" class="CdC">Cedula de Ciudadania</option>
+              <option value="A-" class="TdI">Tarjeta de identidad</option>
+              <option value="B" class="Psp">Pasaporte</option>
             </select>
+
             <input type="password" id="passWord" placeholder="contraseña" name="password" required>
-            <button type="submit"></button>
+            </div>
+            <button  type="submit" class="formulario__button">Iniciar Sesión</button>
           </form>
 
-          <p>¿Has olvidado tu contraseña</p>
-
-          <p>Nuevo Colaborador</p>
-
+          
         </div>
+        <p class="Container__forget">¿Has olvidado tu contraseña</p>
+
+        <a href="register.jsp" class="Container__register">Nuevo Colaborador</a>
 
 
       </section>
 
 
     </main>
-
-    <h1>
-      <%= "Hello World!" %>
-    </h1>
-    <br />
-    <a href="hello-servlet">Hello Servlet</a>
 
   </body>
 
