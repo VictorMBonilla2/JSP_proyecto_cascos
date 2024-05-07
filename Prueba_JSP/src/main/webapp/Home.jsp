@@ -43,22 +43,24 @@
           </section>
 
           <section class="main_container__home">
-          <div class="info_user">
-            <h1>(nombre)</h1>
-            <p>Has iniciado sesíon en: (lugar)</p>
-            <p>Ult. sesión activa: (fecha)<br> (hora)</p>
-          </div>
+            <div class="info_user">
+              <h1>(nombre)</h1>
+              <p>Has iniciado sesíon en: (lugar)</p>
+              <p>Ult. sesión activa: (fecha)<br> (hora)</p>
+            </div>
 
-          <div class="Grapih">
-            <P> (GRAFICO1)</P>
-          </div>
-          <div class="Grapih">
-            <P> (GRAFICO2)</P>
-          </div>
-          <div class="Grapih">
-            <P> (GRAFICO2)</P>
-            asdlaskhjsaldksadjkasdlkñ
-          </div>
+            <div class="Graph Graph1" >
+              <P> (GRAFICO1)</P>
+              <div class="bloque">s</div>
+            </div>
+            <div class="Graph Graph2" >
+              <P> (GRAFICO2)</P>
+              <div class="bloque">s</div>
+            </div>
+            <div class="Graph Graph3">
+              <P> (GRAFICO3)</P>
+              <div class="bloque">s</div>
+            </div>
           </section>
         </section>
       </main>
