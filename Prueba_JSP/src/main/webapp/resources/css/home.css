@@ -1,4 +1,4 @@
-* {
+ * {
   box-sizing: border-box;
 }
 html,
@@ -13,23 +13,45 @@ body {
   height: clamp(10%, 12vw, 12%);
   background-color: gray;
   display: flex;
-  justify-content: space-between;
+
 }
-.hea_container__buttons {
-  display: flex;
-}
+
 .hea_container__logo {
   width: 30vh;
   display: flex;
   justify-content: center;
+  
+
+}
+
+.hea_container__list{
+padding-left: 50%;
+display: flex;
+align-items: center;
+
+}
+.list__buttons{
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap:60%;
+  font-size: 24px;
 }
 
 .logo__img {
   width: 50%;
 }
 
+.main_container{
+  display: flex;
+}
+.main_container__aside{
+  width: 12%;
+}
+
+
 .BarraIzq {
-  width: 15%;
+  width: 100%;
   height: 85vh;
   background-color: gray;
   display: flex;

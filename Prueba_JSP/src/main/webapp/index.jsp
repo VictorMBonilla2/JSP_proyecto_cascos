@@ -1,3 +1,5 @@
+
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
   <!DOCTYPE html>
   <html>
@@ -25,7 +27,7 @@
         <div class="Inputs_Container">
           <form action="" method="POST" class="formulario">
             <div class="formulario__inputs">
-            <input type="text" id="documento" placeholder="documento" name="documento" required>
+            <input type="text" id="documento" placeholder="Documento" name="documento" required>
 
             <select id="pais" name="pais">
               <option value="A+" class="CdC">Cedula de Ciudadania</option>
@@ -33,14 +35,14 @@
               <option value="B" class="Psp">Pasaporte</option>
             </select>
 
-            <input type="password" id="passWord" placeholder="contraseña" name="password" required>
+            <input type="password" id="passWord" placeholder="Contraseña" name="password" required>
             </div>
             <button  type="submit" class="formulario__button">Iniciar Sesión</button>
           </form>
 
           
         </div>
-        <p class="Container__forget">¿Has olvidado tu contraseña</p>
+        <p class="Container__forget">¿Has olvidado tu contraseña?</p>
 
         <a href="register.jsp" class="Container__register">Nuevo Colaborador</a>
 

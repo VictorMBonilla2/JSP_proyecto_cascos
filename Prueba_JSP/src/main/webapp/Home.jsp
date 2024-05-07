@@ -18,37 +18,49 @@
         <div class="hea_container__logo">
           <img src="resources/imagenes/Logo.png" alt="" class="logo__img">
         </div>
-        <ul class="hea_container__buttons">
-          <li>Inicio</li>
-          <li>Casilleros</li>
-          <li>Soporte</li>
-        </ul>
+        <div class="hea_container__list">
+          
+          <ul class="list__buttons">
+            <li>Inicio</li>
+            <li>Casilleros</li>
+            <li>Soporte</li>
+          </ul>
+      </div>
       </header>
 
-      <aside class="BarraIzq">
-        <img src="" alt="perfil" class="BarraIzq__img">
-        <img src="" alt="libros" class="BarraIzq__img">
-        <img src="" alt="bugs" class="BarraIzq__img">
-        <img src="" alt="log out" class="BarraIzq__img">
-      </aside>
+
 
       <main>
-        <div class="info_user">
-          <h1>(nombre)</h1>
-          <p>Has iniciado sesíon en: (lugar)</p>
-          <p>Ult. sesión activa: (fecha)<br> (hora)</p>
-        </div>
+        <section class="main_container">
 
-        <div class="Grapih">
-          <P> (GRAFICO1)</P>
-        </div>
-        <div class="Grapih">
-          <P> (GRAFICO2)</P>
-        </div>
-        <div class="Grapih">
-          <P> (GRAFICO2)</P>
-        </div>
+          <section class="main_container__aside">
+            <aside class="BarraIzq">
+              <img src="resources/imagenes/perfilIcon.svg" alt="perfil" class="BarraIzq__img">
+              <img src="resources/imagenes/bookIcoin.svg" alt="libros" class="BarraIzq__img">
+              <img src="resources/imagenes/warningIcon.svg" alt="bugs" class="BarraIzq__img">
+              <img src="resources/imagenes/salirIcon.svg" alt="log out" class="BarraIzq__img">
+            </aside>
+          </section>
 
+          <section class="main_container__home">
+          <div class="info_user">
+            <h1>(nombre)</h1>
+            <p>Has iniciado sesíon en: (lugar)</p>
+            <p>Ult. sesión activa: (fecha)<br> (hora)</p>
+          </div>
+
+          <div class="Grapih">
+            <P> (GRAFICO1)</P>
+          </div>
+          <div class="Grapih">
+            <P> (GRAFICO2)</P>
+          </div>
+          <div class="Grapih">
+            <P> (GRAFICO2)</P>
+            asdlaskhjsaldksadjkasdlkñ
+          </div>
+          </section>
+        </section>
       </main>
 
     </body>
