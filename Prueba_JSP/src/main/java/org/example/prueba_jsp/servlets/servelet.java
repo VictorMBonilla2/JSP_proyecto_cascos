@@ -1,6 +1,7 @@
 package org.example.prueba_jsp.servlets;
 
 
+import Controlador.PersistenciaController;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -9,6 +10,7 @@ public class servelet {
     public static void main(String[] args) {
         EntityManagerFactory entityManagerFactory = null;
         EntityManager entityManager = null;
+        PersistenciaController controller = new PersistenciaController();
 
         try {
             entityManagerFactory = Persistence.createEntityManagerFactory("default");

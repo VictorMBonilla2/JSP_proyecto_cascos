@@ -1,16 +1,30 @@
 package Clases;
 
-import java.util.Date;
+import jakarta.persistence.*;
 
+import java.util.Date;
+@Entity
 public class Persona {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
     private String nombre;
     private String apellido;
     private String TipoDocumento;
     private int documento;
     private String correo;
+    @Temporal(TemporalType.DATE)
     private Date fechaNacimiento;
 
     public Persona() {}
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Persona(String nombre, String apellido, String tipoDocumento, int documento, String correo, Date fechaNacimiento) {
         this.nombre = nombre;
