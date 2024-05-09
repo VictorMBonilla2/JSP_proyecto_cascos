@@ -1,4 +1,4 @@
-<%--
+  <%--
   Created by IntelliJ IDEA.
   User: Propietario
   Date: 3/05/2024
@@ -22,25 +22,26 @@
     <h3>Registro</h3>
 
     <div class="Inputs_Container">
-      <form action="" method="POST" class="formulario">
+      <form action="SvPersona" method="POST" class="formulario">
         <div class="formulario__inputs">
-        <input type="text" id="documento" placeholder="Nombres" name="Nombres" required>
-        <input type="text" id="documento" placeholder="Apellidos" name="Apellidos" required>
-        <select id="pais" name="pais">
+        <input type="text"  placeholder="Nombres" name="Nombres" required>
+        <input type="text"  placeholder="Apellidos" name="Apellidos" required>
+        <select id="pais" name="TipoDocumento">
           <option value="A+" class="CdC">Cedula de Ciudadania</option>
           <option value="A-" class="TdI">Tarjeta de identidad</option>
           <option value="B" class="Psp">Pasaporte</option>
         </select>
-        <input type="text" id="documento" placeholder="Numero de Documento" name="documento" required>
-        <input type="email" id="email" placeholder="Correo Electronico" name="documento" required>
+        <input type="text"  placeholder="Numero de Documento" name="documento" required>
+        <input type="email" id="email" placeholder="Correo Electronico" name="correo" required>
         <input type="password" id="passWord" placeholder="contraseña" name="password" required>
         </div>
         <button  type="submit" class="formulario__button">Iniciar Sesión</button>
+
       </form>
 
 
       <a href="index.jsp" class="Container__login">¿Ya tienes una cuenta?</a>
-
+    </div>
   </section>
 </main>
 

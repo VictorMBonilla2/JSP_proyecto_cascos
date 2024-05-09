@@ -1,4 +1,4 @@
-package Clases;
+package Modelo;
 
 import jakarta.persistence.*;
 
@@ -15,6 +15,7 @@ public class Persona {
     private String correo;
     @Temporal(TemporalType.DATE)
     private Date fechaNacimiento;
+
 
     public Persona() {}
 

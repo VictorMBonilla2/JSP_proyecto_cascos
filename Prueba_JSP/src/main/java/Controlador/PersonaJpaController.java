@@ -1,6 +1,6 @@
 package Controlador;
 
-import Clases.Persona;
+import Modelo.Persona;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.servlet.annotation.WebServlet;
