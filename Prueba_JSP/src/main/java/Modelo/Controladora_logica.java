@@ -9,11 +9,16 @@ public class Controladora_logica {
 
 
     PersistenciaController controladora = new PersistenciaController();
+
      public void crearPersona(Persona perso){
          controladora.CrearPersona(perso);
      }
 
      public List<Persona> TraerPersonas(){
          return controladora.TraerPersonas();
+     }
+
+     public List<LoginDTO> login(int documento){
+         return controladora.login(documento);
      }
 }

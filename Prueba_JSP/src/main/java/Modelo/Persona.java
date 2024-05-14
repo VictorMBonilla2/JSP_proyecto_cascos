@@ -19,14 +19,6 @@ public class Persona {
 
     public Persona() {}
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public Persona(String nombre, String apellido, String tipoDocumento, int documento, String correo, Date fechaNacimiento) {
         this.nombre = nombre;
         this.apellido = apellido;
@@ -36,6 +28,13 @@ public class Persona {
         this.fechaNacimiento = fechaNacimiento;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     public String getNombre() {
         return nombre;
     }

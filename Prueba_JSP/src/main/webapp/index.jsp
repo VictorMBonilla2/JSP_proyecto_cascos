@@ -25,14 +25,15 @@
         <h1 class="Container__title">Iniciar Sesión</h1>
 
         <div class="Inputs_Container">
-          <form action="" method="POST" class="formulario">
+          <form action="SvPersona" method="POST" class="formulario">
+            <input type="hidden" name="action" value="login">
             <div class="formulario__inputs">
             <input type="text" id="documento" placeholder="Documento" name="documento" required>
 
             <select id="pais" name="pais">
-              <option value="A+" class="CdC">Cedula de Ciudadania</option>
-              <option value="A-" class="TdI">Tarjeta de identidad</option>
-              <option value="B" class="Psp">Pasaporte</option>
+              <option value="Cedula de Ciudadania" class="CdC">Cedula de Ciudadania</option>
+              <option value="Tarjeta de identidad" class="TdI">Tarjeta de identidad</option>
+              <option value="Pasaporte" class="Psp">Pasaporte</option>
             </select>
 
             <input type="password" id="passWord" placeholder="Contraseña" name="password" required>

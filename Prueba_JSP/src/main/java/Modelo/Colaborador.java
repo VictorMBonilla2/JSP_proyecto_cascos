@@ -1,4 +1,6 @@
 package Modelo;
 
-public class Colaborador {
+public class Colaborador extends  Persona {
+
+
 }

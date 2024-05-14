@@ -1,33 +1,37 @@
 package Controlador;
 
+import Modelo.LoginDTO;
 import Modelo.Persona;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.servlet.annotation.WebServlet;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 
-@WebServlet("/PersonaJpaController")
+@WebServlet("/PersonaJpaController")//Se le da nombre al controlador de persistencia de la clase.
 public class PersonaJpaController implements Serializable {
 
-    public PersonaJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
     public PersonaJpaController() {
-        emf = Persistence.createEntityManagerFactory("default");
+        fabricaEntidades = Persistence.createEntityManagerFactory("default");
+        //Se crea un manager de entidad, haciendo referencia a la persistencia del proyecto.
     }
-
-    private EntityManagerFactory emf = null;
+    //Se instacia la variable con valor null
+    private EntityManagerFactory fabricaEntidades = null;
 
     public EntityManager getEntityManager() {
-        return emf.createEntityManager();
+        return fabricaEntidades.createEntityManager();
     }
+
     public void create(Persona persona) {
         EntityManager em = null;
+        // Se llama a una EntityManager llamada em, para trabajar el proceso con esta variable y no llamar mas EntityManager
         try {
+
             em = getEntityManager();
+            //se le asigna un manejador de entidades a la variable emy se inicia el proceso.
             em.getTransaction().begin();
             em.persist(persona);
             em.getTransaction().commit();
@@ -37,7 +41,6 @@ public class PersonaJpaController implements Serializable {
             }
 
         }
-
 
     }
 
@@ -84,6 +87,7 @@ public class PersonaJpaController implements Serializable {
             }
         }
     }
+
     public List<Persona> findPersonaEntities() {
         return findPersonaEntities(true, -1,-1);
     }
@@ -108,6 +112,29 @@ public class PersonaJpaController implements Serializable {
             }
         }
     }
+    public List<LoginDTO> login(int documento){
+        EntityManager em = getEntityManager();
+        try{
+            TypedQuery<Object[]> query= em.createQuery(
+                    "SELECT p.nombre, p.apellido, p.documento FROM Persona p WHERE p.documento = :NumeroDoc", Object[].class);
+            query.setParameter("NumeroDoc", documento);
+            Object[] resultado = query.getSingleResult();
+            List<LoginDTO> loginDTOs = new ArrayList<>();
+            if (resultado != null) {
+                String nombre = (String) resultado[0];
+                String apellido = (String) resultado[1];
+                int documentoPersona = (int) resultado[2];
+                loginDTOs.add(new LoginDTO(nombre, apellido, documentoPersona));
+            }
+            return loginDTOs; // Devolver la lista de LoginDTOs
+        }finally {
+            em.close();
+
+        }
+
+
+    }
+
     public Persona findPersona(int id) {
         EntityManager em = getEntityManager();
         try {
