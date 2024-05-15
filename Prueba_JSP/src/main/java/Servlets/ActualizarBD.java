@@ -6,7 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
-public class servelet {
+public class ActualizarBD {
     public static void main(String[] args) {
         EntityManagerFactory entityManagerFactory = null;
         EntityManager entityManager = null;

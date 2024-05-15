@@ -43,7 +43,8 @@
             </section>
 
             <section class="main_container__casillero" id="casillerosContainer">
-                <% for (int i=1; i<=4; i++) { %>
+                <%
+                    for (int i=1; i<=4; i++) { %>
                 <div class="casillero">
                     <div class="casillero__title">
                         <h1>(PLACA)</h1>

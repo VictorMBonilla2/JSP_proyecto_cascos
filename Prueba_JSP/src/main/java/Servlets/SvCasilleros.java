@@ -31,9 +31,12 @@ public class SvCasilleros {
 
         @Override
         protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("hola");
+            List<Integer> CantidadCascos= controladora_logica.ObtenerEspacios();
 
-            List<TbCasillero> CantidadCascos= controladora_logica.ObtenerEspacios();
-
+            for (Integer c : CantidadCascos) {
+                System.out.println(c.toString());
+            }
         }
     }
 }

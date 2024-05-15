@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CasillerosJPAController implements Serializable {
@@ -113,6 +114,14 @@ public class CasillerosJPAController implements Serializable {
                 em.close();
             }
         }
+    }
+    public List<Integer> ObtenerCantidadEspacios() {
+        List<TbCasillero> casilleros = findTbCasilleroEntities();
+        List<Integer> cantidades = new ArrayList<>();
+        for (TbCasillero c : casilleros) {
+            cantidades.add(c.getCant_espacio());
+        }
+        return cantidades;
     }
 }
 

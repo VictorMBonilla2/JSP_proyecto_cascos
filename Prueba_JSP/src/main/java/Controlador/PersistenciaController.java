@@ -2,7 +2,6 @@ package Controlador;
 
 import Modelo.LoginDTO;
 import Modelo.Persona;
-import Modelo.TbCasillero;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class PersistenciaController {
         return  persoJpa.login(documento);
     }
 
-    public List<TbCasillero> ObtEspacios() {
-        return casillerosJPA.findTbCasilleroEntities();
+    public List<Integer> ObtEspacios() {
+        return casillerosJPA.ObtenerCantidadEspacios();
     }
 }

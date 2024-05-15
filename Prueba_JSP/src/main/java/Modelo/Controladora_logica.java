@@ -30,7 +30,7 @@ public class Controladora_logica {
          return controladora.TraerPersonas();
      }
 
-    public List<TbCasillero> ObtenerEspacios() {
+    public List<Integer> ObtenerEspacios() {
         return controladora.ObtEspacios();
     }
 }
