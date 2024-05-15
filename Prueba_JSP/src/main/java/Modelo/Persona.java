@@ -6,7 +6,7 @@ import java.util.Date;
 @Entity
 public class Persona {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nombre;
     private String apellido;
@@ -15,17 +15,32 @@ public class Persona {
     private String correo;
     @Temporal(TemporalType.DATE)
     private Date fechaNacimiento;
+    private String clave;
+    private String rol;
 
 
-    public Persona() {}
+    public Persona() {
+    }
 
-    public Persona(String nombre, String apellido, String tipoDocumento, int documento, String correo, Date fechaNacimiento) {
-        this.nombre = nombre;
-        this.apellido = apellido;
-        TipoDocumento = tipoDocumento;
-        this.documento = documento;
-        this.correo = correo;
+
+    public Persona(String rol, String clave, Date fechaNacimiento, String correo, int documento, String tipoDocumento, String apellido, String nombre, int id) {
+        this.rol = rol;
+        this.clave = clave;
         this.fechaNacimiento = fechaNacimiento;
+        this.correo = correo;
+        this.documento = documento;
+        TipoDocumento = tipoDocumento;
+        this.apellido = apellido;
+        this.nombre = nombre;
+        this.id = id;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
     }
 
     public int getId() {
@@ -35,6 +50,7 @@ public class Persona {
     public void setId(int id) {
         this.id = id;
     }
+
     public String getNombre() {
         return nombre;
     }
@@ -81,5 +97,13 @@ public class Persona {
 
     public void setFechaNacimiento(Date fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public String getClave() {
+        return clave;
+    }
+
+    public void setClave(String clave) {
+        this.clave = clave;
     }
 }

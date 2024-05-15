@@ -8,9 +8,21 @@ import java.util.List;
 public class Controladora_logica {
 
 
-    PersistenciaController controladora = new PersistenciaController();
+    static PersistenciaController controladora = new PersistenciaController();
 
-     public void crearPersona(Persona perso){
+    public static boolean validarIngreso(int documento, String tipoDocumento, String clave) {
+
+        List<LoginDTO> lista = controladora.login(documento);
+
+        for (LoginDTO login : lista) {
+            if (login.getTipoDocumento().equals(tipoDocumento) && login.getClave().equals(clave)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void crearPersona(Persona perso){
          controladora.CrearPersona(perso);
      }
 
@@ -18,7 +30,7 @@ public class Controladora_logica {
          return controladora.TraerPersonas();
      }
 
-     public List<LoginDTO> login(int documento){
-         return controladora.login(documento);
-     }
+    public List<TbCasillero> ObtenerEspacios() {
+        return controladora.ObtEspacios();
+    }
 }

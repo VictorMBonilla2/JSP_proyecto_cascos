@@ -28,9 +28,10 @@
           <form action="SvPersona" method="POST" class="formulario">
             <input type="hidden" name="action" value="login">
             <div class="formulario__inputs">
+
             <input type="text" id="documento" placeholder="Documento" name="documento" required>
 
-            <select id="pais" name="pais">
+            <select id="TipDocument" name="TipoDocumento">
               <option value="Cedula de Ciudadania" class="CdC">Cedula de Ciudadania</option>
               <option value="Tarjeta de identidad" class="TdI">Tarjeta de identidad</option>
               <option value="Pasaporte" class="Psp">Pasaporte</option>

@@ -1,4 +1,4 @@
-package org.example.prueba_jsp.servlets;
+package Servlets;
 
 
 import Controlador.PersistenciaController;

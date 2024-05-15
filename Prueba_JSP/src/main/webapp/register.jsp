@@ -23,14 +23,17 @@
 
     <div class="Inputs_Container">
       <form action="SvPersona" method="POST" class="formulario">
+        <input type="hidden" name="action" value="registro">
         <div class="formulario__inputs">
         <input type="text"  placeholder="Nombres" name="Nombres" required>
         <input type="text"  placeholder="Apellidos" name="Apellidos" required>
+
         <select id="pais" name="TipoDocumento">
-          <option value="A+" class="CdC">Cedula de Ciudadania</option>
-          <option value="A-" class="TdI">Tarjeta de identidad</option>
-          <option value="B" class="Psp">Pasaporte</option>
+          <option value="Cedula de Ciudadania" class="CdC">Cedula de Ciudadania</option>
+          <option value="Tarjeta de identidad" class="TdI">Tarjeta de identidad</option>
+          <option value="Pasaporte" class="Psp">Pasaporte</option>
         </select>
+
         <input type="text"  placeholder="Numero de Documento" name="documento" required>
         <input type="email" id="email" placeholder="Correo Electronico" name="correo" required>
         <input type="password" id="passWord" placeholder="contraseña" name="password" required>
