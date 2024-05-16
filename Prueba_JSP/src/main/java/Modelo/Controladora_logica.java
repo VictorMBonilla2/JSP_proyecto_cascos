@@ -26,11 +26,20 @@ public class Controladora_logica {
          controladora.CrearPersona(perso);
      }
 
-     public List<Persona> TraerPersonas(){
+    public List<Persona> TraerPersonas(){
          return controladora.TraerPersonas();
      }
 
-    public List<Integer> ObtenerEspacios() {
-        return controladora.ObtEspacios();
+    public Integer ObtenerEspacios(int id) {
+        List<TbCasillero> casilleros= controladora.ObtEspacios();
+        int espacios = 0;
+
+        for (TbCasillero c : casilleros) {
+            if (c.getId().equals(id)) { // Verificar si el ID del casillero coincide con el ID específico
+                espacios = c.getCant_espacio(); // Obtener la cantidad de espacios del casillero
+                break; // Salir del bucle una vez que se encuentre el casillero con el ID específico
+            }
+        }
+        return espacios;
     }
 }

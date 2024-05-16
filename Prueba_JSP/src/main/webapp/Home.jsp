@@ -21,9 +21,9 @@
         <div class="hea_container__list">
           
           <ul class="list__buttons">
-            <li>Inicio</li>
-            <li>Casilleros</li>
-            <li>Soporte</li>
+            <li><a href="Home.jsp">Inicio</a></li>
+            <li><a href="SvCasillero">Casilleros</a></li>
+            <li><a href="soporte.html">Soporte</a></li>
           </ul>
       </div>
       </header>

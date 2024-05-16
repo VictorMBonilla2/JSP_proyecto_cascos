@@ -43,8 +43,11 @@
             </section>
 
             <section class="main_container__casillero" id="casillerosContainer">
-                <%
-                    for (int i=1; i<=4; i++) { %>
+                <% Integer cantidadCasilleros = (Integer) request.getAttribute("Casilleros");
+                        System.out.println(cantidadCasilleros);;
+                    int Cantidad = cantidadCasilleros != null ? cantidadCasilleros.intValue() : 0;
+                    for (int i=1; i<=Cantidad; i++) { %>
+
                 <div class="casillero">
                     <div class="casillero__title">
                         <h1>(PLACA)</h1>

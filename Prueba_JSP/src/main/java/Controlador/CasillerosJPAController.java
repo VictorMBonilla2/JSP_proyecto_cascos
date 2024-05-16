@@ -115,13 +115,6 @@ public class CasillerosJPAController implements Serializable {
             }
         }
     }
-    public List<Integer> ObtenerCantidadEspacios() {
-        List<TbCasillero> casilleros = findTbCasilleroEntities();
-        List<Integer> cantidades = new ArrayList<>();
-        for (TbCasillero c : casilleros) {
-            cantidades.add(c.getCant_espacio());
-        }
-        return cantidades;
-    }
+
 }
 

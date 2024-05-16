@@ -27,16 +27,21 @@ public class SvCasilleros {
         protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
 
+
+            Integer CantidadCascos= controladora_logica.ObtenerEspacios(1);
+
+            System.out.println("hola");
+            request.setAttribute("Casilleros", CantidadCascos);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("Casilleros.jsp");
+            dispatcher.forward(request, response);
+
         }
 
         @Override
         protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("hola");
-            List<Integer> CantidadCascos= controladora_logica.ObtenerEspacios();
 
-            for (Integer c : CantidadCascos) {
-                System.out.println(c.toString());
-            }
+
+
         }
     }
 }
