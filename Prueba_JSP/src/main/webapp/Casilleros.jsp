@@ -1,4 +1,6 @@
-
+<%@ page import="Modelo.TbEspacio" %>
+<%@ page import="java.util.List" %>
+<%@ page import="Modelo.TbCasco" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:include page="resources/header.jsp" />
 
@@ -7,13 +9,17 @@
 
             <section class="main_container__casillero" id="casillerosContainer">
                 <% Integer cantidadCasilleros = (Integer) request.getAttribute("Casilleros");
-                        System.out.println(cantidadCasilleros);;
-                    int Cantidad = cantidadCasilleros != null ? cantidadCasilleros.intValue() : 0;
-                    for (int i=1; i<=Cantidad; i++) { %>
+                    List<TbEspacio> DatosEspacio = (List<TbEspacio>) request.getAttribute("Espacios");
+                    for (TbEspacio espacio : DatosEspacio) {
+                        TbCasco casco = espacio.getCasco();
+                        String placaCasco = "";
+                        if (casco != null) {
+                            placaCasco = casco.getPlaca_casco();
+                        }%>
 
                 <div class="casillero">
                     <div class="casillero__title">
-                        <h1>(PLACA)</h1>
+                        <h1><%=placaCasco%></h1>
                         <p>lugar</p>
                     </div>
 

@@ -1,7 +1,7 @@
 .hea_container {
     width: 100%;
     height: clamp(10%, 12vw, 12%);
-    background-color: gray;
+    background-color: #0085FF;
     display: flex;
 
 }

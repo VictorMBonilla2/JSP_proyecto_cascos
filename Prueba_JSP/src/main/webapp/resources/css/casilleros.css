@@ -24,7 +24,7 @@ body {
 
 .casillero{
     width: 75%;
-    height: 60%;
+    height: 70%;
     display: flex;
     border-radius: 15px;
     flex-direction: column;
@@ -37,6 +37,7 @@ body {
     display: flex;
     padding: 15px;
     gap: 20px;
+    border-radius: var(--borderRadius) var(--borderRadius) 0 0
 
 }
 
@@ -47,6 +48,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    border-radius: 0 0 var(--borderRadius) var(--borderRadius)
 }
 .contenido__info{
     display: flex;
@@ -73,10 +75,10 @@ body {
     transition: background-color 0.3s;
 }
 .botones__pago:hover{
-    background-color: greenyellow;
+    background-color: #25ab3a;
 }
 .botones__ajustar{
-    background-color: yellow;
+    background-color: #E3B732;
     transition: background-color 0.3s;
 }
 .botones__ajustar:hover{

@@ -1,8 +1,6 @@
 package Servlets;
 
-import Modelo.Controladora_logica;
-import Modelo.Persona;
-import Modelo.TbCasillero;
+import Modelo.*;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -27,10 +25,25 @@ public class SvCasilleros {
         protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
 
+            List<TbEspacio> DatosEspacio= controladora_logica.DatosEspacio();
+            for (TbEspacio espacio : DatosEspacio) {
+
+                TbCasco casco = espacio.getCasco();
+                if (casco != null) {
+                    // Si hay un casco asociado al espacio, obtener la placa
+                    String placaCasco = casco.getPlaca_casco();
+                    // Ahora puedes hacer lo que necesites con la placa del casco
+                    System.out.println("Para el espacio " + espacio.getId() + ", la placa del casco es: " + placaCasco);
+                } else {
+                    // No hay ningún casco asociado a este espacio
+                    System.out.println("Para el espacio " + espacio.getId() + ", no hay ningún casco asociado.");
+                }
+            }
 
             Integer CantidadCascos= controladora_logica.ObtenerEspacios(1);
 
             System.out.println("hola");
+            request.setAttribute("Espacios", DatosEspacio);
             request.setAttribute("Casilleros", CantidadCascos);
             RequestDispatcher dispatcher = request.getRequestDispatcher("Casilleros.jsp");
             dispatcher.forward(request, response);

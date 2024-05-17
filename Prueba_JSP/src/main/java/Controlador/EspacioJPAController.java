@@ -1,18 +1,17 @@
 package Controlador;
 
-import Modelo.TbCasillero;
+import Modelo.TbEspacio;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-public class CasillerosJPAController implements Serializable {
+public class EspacioJPAController implements Serializable {
 
 
 
-    public CasillerosJPAController() {
+    public EspacioJPAController() {
         fabricaEntidades = Persistence.createEntityManagerFactory("default");
     }
     private EntityManagerFactory fabricaEntidades= null;
@@ -21,12 +20,12 @@ public class CasillerosJPAController implements Serializable {
         return fabricaEntidades.createEntityManager();
     }
 
-    public void create(TbCasillero casillero) {
+    public void create(TbEspacio espacio) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(casillero);
+            em.persist(espacio);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -35,19 +34,19 @@ public class CasillerosJPAController implements Serializable {
         }
     }
 
-    public void edit(TbCasillero casillero) throws Exception {
+    public void edit(TbEspacio espacio) throws Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            casillero = em.merge(casillero);
+            espacio = em.merge(espacio);
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                int id = casillero.getId();
-                if (findTbCasillero(id) == null) {
-                    throw new Exception("The casillero with id " + id + " no longer exists.");
+                int id = espacio.getId();
+                if (findTbEspacio(id) == null) {
+                    throw new Exception("The espacio with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -63,14 +62,14 @@ public class CasillerosJPAController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            TbCasillero casillero;
+            TbEspacio espacio;
             try {
-                casillero = em.getReference(TbCasillero.class, id);
-                casillero.getId();
+                espacio = em.getReference(TbEspacio.class, id);
+                espacio.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new Exception("The casillero with id " + id + " no longer exists.", enfe);
+                throw new Exception("The espacio with id " + id + " no longer exists.", enfe);
             }
-            em.remove(casillero);
+            em.remove(espacio);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -79,19 +78,19 @@ public class CasillerosJPAController implements Serializable {
         }
     }
 
-    public List<TbCasillero> findTbCasilleroEntities() {
-        return findTbCasilleroEntities(true, -1, -1);
+    public List<TbEspacio> findTbEspacioEntities() {
+        return findTbEspacioEntities(true, -1, -1);
     }
 
-    public List<TbCasillero> findTbCasilleroEntities(int maxResults, int firstResult) {
-        return findTbCasilleroEntities(false, maxResults, firstResult);
+    public List<TbEspacio> findTbEspacioEntities(int maxResults, int firstResult) {
+        return findTbEspacioEntities(false, maxResults, firstResult);
     }
 
-    private List<TbCasillero> findTbCasilleroEntities(boolean all, int maxResults, int firstResult) {
+    private List<TbEspacio> findTbEspacioEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(TbCasillero.class));
+            cq.select(cq.from(TbEspacio.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -105,10 +104,10 @@ public class CasillerosJPAController implements Serializable {
         }
     }
 
-    public TbCasillero findTbCasillero(int id) {
+    public TbEspacio findTbEspacio(int id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(TbCasillero.class, id);
+            return em.find(TbEspacio.class, id);
         } finally {
             if (em != null) {
                 em.close();
