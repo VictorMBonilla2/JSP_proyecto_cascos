@@ -27,7 +27,7 @@ public class SvCasilleros {
 
             List<TbEspacio> DatosEspacio= controladora_logica.DatosEspacio();
             for (TbEspacio espacio : DatosEspacio) {
-
+            System.out.println("Ejecución servlet");
                 TbCasco casco = espacio.getCasco();
                 if (casco != null) {
                     // Si hay un casco asociado al espacio, obtener la placa

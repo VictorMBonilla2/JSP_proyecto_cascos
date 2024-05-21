@@ -1,6 +1,6 @@
 .BarraIzq {
     width: 100%;
-    height: 88vh;
+    height: 87vh;
     background-color: #5B4CAF;
     display: flex;
     flex-direction: column;
@@ -9,4 +9,12 @@
 }
 .main_container__aside{
     width: 12%;
+}
+
+.imgContainerr{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color:white;
+    font-family: Inter, sans-serif;
 }

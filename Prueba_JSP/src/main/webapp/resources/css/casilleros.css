@@ -11,20 +11,26 @@ body {
 }
 .main_container{
     display: flex;
+
 }
 
 .main_container__casillero{
     display: grid;
     width: 100%;
+    height: 88vh; /*Debe totalizar 100% con respecto al height del header*/
     grid-gap: 1rem;
     grid-template-columns: repeat(auto-fill, minmax(calc(100% / 3 - 20px), 1fr));
     justify-items: center;
     align-items: center;
+    font-family: Inter, sans-serif;
+    background: #E6E6E6;
+    overflow: auto;
+
 }
 
 .casillero{
     width: 75%;
-    height: 70%;
+    height: 90%;
     display: flex;
     border-radius: 15px;
     flex-direction: column;
@@ -33,7 +39,7 @@ body {
 .casillero__title{
     width: 100%;
     height: 30%;
-    background-color: blanchedalmond;
+    background-color: #7D93E0;
     display: flex;
     padding: 15px;
     gap: 20px;
@@ -43,8 +49,8 @@ body {
 
 .casillero__contenido{
     width: 100%;
-    height: 80%;
-    background-color: #797979;
+    height: 73%;
+    background-color: #FAFAFA;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -53,13 +59,17 @@ body {
 .contenido__info{
     display: flex;
     justify-content: space-around;
+    padding-top: 25px;
 
+}
+.contenido__info h1{
+    font-size: 30px;
 }
 
 .contenido__botones{
     display: flex;
     justify-content: center;
-    padding: 25px 0;
+    padding-bottom: 6%;
 }
 
 .botones{
@@ -70,15 +80,21 @@ body {
     font-weight: bold;
     color: white;
 }
+
+.botones--largo{
+    width: 80%;
+
+}
 .botones__pago{
-    background-color: green;
+    background-color: var(--greenbutton);
     transition: background-color 0.3s;
 }
+
 .botones__pago:hover{
     background-color: #25ab3a;
 }
 .botones__ajustar{
-    background-color: #E3B732;
+    background-color: var(--yellowbutton);
     transition: background-color 0.3s;
 }
 .botones__ajustar:hover{

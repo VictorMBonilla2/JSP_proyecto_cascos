@@ -10,7 +10,7 @@ public class PruebaSv {
 
         URL url = new URL(servletUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("POST"); // o "POST" si tu servlet lo requiere
+        connection.setRequestMethod("GET"); // o "POST" si tu servlet lo requiere
         int responseCode = connection.getResponseCode();
 
         System.out.println("Respuesta del servlet: " + responseCode);

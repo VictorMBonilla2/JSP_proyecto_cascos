@@ -2,6 +2,9 @@
  --backgroundColor:rgb(85, 7, 231);
  --borderRadius:15px;
  --bcInputs:rgb(180, 180, 180);
+  --greenbutton:#5BB964;
+  --yellowbutton:#E3B732;
+  --bluebutton:#50A9DC;
 }
 /*Propiedades globales*/
 .body{
