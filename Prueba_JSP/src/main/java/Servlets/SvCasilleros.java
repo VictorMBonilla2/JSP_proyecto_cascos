@@ -1,20 +1,17 @@
 package Servlets;
 
-import Modelo.*;
+import Modelo.Controladora_logica;
+import Modelo.TbCasco;
+import Modelo.TbEspacio;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
-import javax.swing.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-
-import static Modelo.Controladora_logica.validarIngreso;
 
 public class SvCasilleros {
     @WebServlet(name = "SvCasillero", urlPatterns = {"/SvCasillero"})

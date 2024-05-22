@@ -118,15 +118,20 @@ public class PersonaJpaController implements Serializable {
             TypedQuery<Object[]> query= em.createQuery(
                     "SELECT p.documento, p.TipoDocumento, p.clave FROM Persona p WHERE p.documento = :NumeroDoc", Object[].class);
             query.setParameter("NumeroDoc", documento);
-            Object[] resultado = query.getSingleResult();
+            List<Object[]> resultados = query.getResultList();
             List<LoginDTO> loginDTOs = new ArrayList<>();
-            if (resultado != null) {
-                int numDoc =  (int) resultado[0];
+            for (Object[] resultado : resultados) {
+                int numDoc = (int) resultado[0];
                 String TipDocument = (String) resultado[1];
                 String clave = (String) resultado[2];
                 loginDTOs.add(new LoginDTO(numDoc, TipDocument, clave));
             }
             return loginDTOs; // Devolver la lista de LoginDTOs
+
+        }catch (NoResultException e) {
+            // Se maneja el caso en que no se encuentren resultados
+            System.out.println("No se encontraron resultados para el documento: " + documento);
+            return new ArrayList<>(); // Devolver una lista vacía en este caso
         }finally {
             em.close();
 

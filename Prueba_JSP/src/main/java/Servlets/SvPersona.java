@@ -1,65 +1,62 @@
 package Servlets;
 
 import Modelo.Controladora_logica;
-import Modelo.LoginDTO;
 import Modelo.Persona;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import org.hibernate.sql.InFragment;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.PrintWriter;
 
 import static Modelo.Controladora_logica.validarIngreso;
-
 
 @WebServlet(name = "SvPersona", urlPatterns = {"/SvPersona"})
 public class SvPersona extends HttpServlet {
     //CONTROLADORA LOGICA
     Controladora_logica controladora_logica = new Controladora_logica();
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
     }
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action = req.getParameter("action");
-        if("login".equals(action)){
-            int Documento= Integer.parseInt(req.getParameter("documento"));
-            String TipoDocumento = req.getParameter("TipoDocumento");
-            String clave = req.getParameter("password");
-            List<Object> Ingresado = new ArrayList<>();
-            Ingresado.add(Documento);
-            Ingresado.add(TipoDocumento);
-            Ingresado.add(clave);
-            for (Object item : Ingresado){
-                System.out.println(item);
+        // Leer el cuerpo de la solicitud
+        BufferedReader reader = req.getReader();
+        StringBuilder jsonBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            jsonBuilder.append(line);
+        }
+        String json = jsonBuilder.toString();
+
+        // Parsear el JSON usando org.json
+        JSONObject jsonObject = new JSONObject(json);
+
+        String action = jsonObject.getString("action");
+        if ("login".equals(action)) {
+            int documento = jsonObject.getInt("documento");
+            String tipoDocumento = jsonObject.getString("TipoDocumento");
+            String password = jsonObject.getString("password");
+            boolean validacion = validarIngreso(documento, tipoDocumento, password);
+            resp.setContentType("application/json");
+            PrintWriter out = resp.getWriter();
+
+            JSONObject jsonResponse = new JSONObject();
+            if (validacion) {
+                jsonResponse.put("status", "success");
+                jsonResponse.put("message", "Login successful");
+            } else {
+                jsonResponse.put("status", "error");
+                jsonResponse.put("message", "Invalid credentials");
             }
-            boolean validacion = false;
-            validacion = validarIngreso(Documento, TipoDocumento, clave);
 
-            if (validacion){
-                HttpSession session = req.getSession(true);
-                session.setAttribute("Ingresado",Documento);
-                resp.sendRedirect("Home.jsp");
-            }
-            else {
-
-                System.out.println("Error al iniciar secion");
-                req.setAttribute("error", "Credenciales inválidas. Por favor, intente nuevamente.");
-                RequestDispatcher dispatcher = req.getRequestDispatcher("index.jsp");
-                dispatcher.forward(req, resp);
-
-            }
-
+            out.print(jsonResponse.toString());
+            out.flush();
 
         } else if("registro".equals(action)){
 

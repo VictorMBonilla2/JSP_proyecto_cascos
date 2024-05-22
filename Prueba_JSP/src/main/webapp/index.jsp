@@ -20,18 +20,25 @@
       <section class="Container">
         <div class="Container__logo">
           <img src="resources/imagenes/Logo.png" alt="" class="logo__img">
-          <p class="logo__text">Helmet Masters</p>
+          <p class="logo__text">Colaborador</p>
         </div>
         <h1 class="Container__title">Iniciar Sesión</h1>
 
+        <div id="Error" class="Container__error">
+          <p>Credenciales incorrectas. Intente nuevamente.</p>
+        </div>
+        <div id="ErrorOnlydigitos" class="Container__error">
+          <p>Ingrese solo números en Documento. Intente nuevamente.</p>
+        </div>
+
         <div class="Inputs_Container">
-          <form action="SvPersona" method="POST" class="formulario">
+          <form id="Logeo" onsubmit="login(event)" class="formulario">
             <input type="hidden" name="action" value="login">
             <div class="formulario__inputs">
 
             <input type="text" id="documento" placeholder="Documento" name="documento" required>
 
-            <select id="TipDocument" name="TipoDocumento">
+            <select id="TipoDocumento" name="TipoDocumento">
               <option value="Cedula de Ciudadania" class="CdC">Cedula de Ciudadania</option>
               <option value="Tarjeta de identidad" class="TdI">Tarjeta de identidad</option>
               <option value="Pasaporte" class="Psp">Pasaporte</option>
@@ -53,7 +60,7 @@
 
 
     </main>
-
+      <script src="resources/js/Login.js"></script>
   </body>
 
   </html>
