@@ -1,9 +1,6 @@
 package Controlador;
 
-import Modelo.LoginDTO;
-import Modelo.Persona;
-import Modelo.TbCasillero;
-import Modelo.TbEspacio;
+import Modelo.*;
 
 import java.util.List;
 
@@ -12,6 +9,7 @@ public class PersistenciaController {
     PersonaJpaController persoJpa = new PersonaJpaController();
     CasillerosJPAController casillerosJPA = new CasillerosJPAController();
     EspacioJPAController espacioJPA = new EspacioJPAController();
+    CascosJPAController cascosJPA = new CascosJPAController();
     Persona persona = new Persona();
 
     public void CrearPersona(Persona persona) {
@@ -35,6 +33,15 @@ public class PersistenciaController {
 
     public boolean CrearEspacio(String placa, String ciudad, String cantcascos) {
 
-        return espacioJPA.create();
+
+    }
+
+    public TbEspacio traerEspacio(Integer idEspacio) {
+
+        return espacioJPA.findTbEspacio(idEspacio);
+    }
+
+    public TbCasco obtenerCasco(String placa) {
+
     }
 }

@@ -35,12 +35,13 @@ public class TbEspacio {
     public TbEspacio() {
     }
 
-    public TbEspacio(Integer id, String estado_espacio, Date hora_entrada, Date hora_salida, TbCasillero casillero) {
+    public TbEspacio(Integer id, String estado_espacio, Date hora_entrada, Date hora_salida, TbCasillero casillero, TbCasco casco) {
         this.id = id;
         this.estado_espacio = estado_espacio;
         this.hora_entrada = hora_entrada;
         this.hora_salida = hora_salida;
         this.casillero = casillero;
+        this.casco = casco;
     }
 
     public Integer getId() {

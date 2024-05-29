@@ -62,12 +62,45 @@ public class SvCasilleros {
 
             // Parsear el JSON usando org.json
             JSONObject jsonObject = new JSONObject(json);
-
+            Integer idEspacio = Integer.valueOf(jsonObject.getString("espacio"));
             String placa = jsonObject.getString("placa");
             String ciudad = jsonObject.getString("ciudad");
             String cantcascos = jsonObject.getString("cantcascos");
 
-            boolean creacion= controladora_logica.crearcasilleros(placa,ciudad,cantcascos);
+            try {
+                // Busca el espacio por ID
+                TbEspacio espacio = controladora_logica.buscarEspacio(idEspacio);
+                if (espacio != null) {
+                    // Busca el casco por placa
+                    TbCasco casco = controladora_logica.buscarCascoPorPlaca(placa);
+                    if (casco == null) {
+                        // Si el casco no existe, crearlo
+                        casco = new TbCasco();
+                        casco.setPlaca_casco(placa);
+                        casco.setCiudad(ciudad);
+                        casco.setCant_casco(Integer.valueOf(cantcascos));
+                        controladora_logica.Crearcasco(casco);
+                    }
+
+                    // Actualizar el espacio
+                    espacio.setCasco(casco);
+                    espacio.setEstado_espacio("Ocupado");
+                    espacio.setHora_entrada(new Date());
+
+                    // Guardar los cambios en el espacio
+                    controladora_logica.actualizarEspacio(espacio);
+
+                    // Enviar una respuesta de éxito
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                    resp.getWriter().write("{\"status\":\"success\"}");
+                } else {
+                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    resp.getWriter().write("{\"status\":\"error\", \"message\":\"Espacio no encontrado\"}");
+                }
+            } catch (Exception e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                resp.getWriter().write("{\"status\":\"error\", \"message\":\"" + e.getMessage() + "\"}");
+            }
         }
     }
 }

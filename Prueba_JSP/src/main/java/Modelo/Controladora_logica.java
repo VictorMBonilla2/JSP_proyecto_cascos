@@ -50,9 +50,20 @@ public class Controladora_logica {
         return controladora.DatosEspacios();
     }
 
+    public boolean addespacio(Integer idEspacio, String placa, String ciudad, String cantcascos) {
 
-    public boolean crearcasilleros(String placa, String ciudad, String cantcascos) {
 
-        return  controladora.CrearEspacio(placa,ciudad,cantcascos);
+    }
+
+    public TbEspacio buscarEspacio(Integer idEspacio) {
+        return controladora.traerEspacio(idEspacio);
+    }
+
+    public TbCasco buscarCascoPorPlaca(String placa) {
+        return controladora.obtenerCasco(placa);
+    }
+
+    public void Crearcasco(TbCasco casco) {
+        
     }
 }

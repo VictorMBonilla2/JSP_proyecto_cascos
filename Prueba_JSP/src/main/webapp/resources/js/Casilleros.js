@@ -65,7 +65,7 @@ function validateAndSubmit(event, espacioId) {
 
 
 }
-async function addCasilleroBtn(form) {
+async function addCasilleroBtn(form,espacioId) {
     const placa = document.getElementById(`placa${espacioId}`).value;
     const ciudad = document.getElementById(`ciudad${espacioId}`).value;
     const cantcascos = document.getElementById(`cant_cascos${espacioId}`).value;
@@ -79,6 +79,7 @@ async function addCasilleroBtn(form) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
+                espacio: espacioId,
                 placa: placa,
                 ciudad: ciudad,
                 cantcascos: cantcascos
