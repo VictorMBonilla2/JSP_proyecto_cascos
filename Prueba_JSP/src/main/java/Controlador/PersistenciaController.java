@@ -33,4 +33,8 @@ public class PersistenciaController {
         return espacioJPA.findTbEspacioEntities();
     }
 
+    public boolean CrearEspacio(String placa, String ciudad, String cantcascos) {
+
+        return espacioJPA.create();
+    }
 }

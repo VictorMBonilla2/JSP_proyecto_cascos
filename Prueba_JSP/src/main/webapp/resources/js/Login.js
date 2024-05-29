@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault();
         document.getElementById("Error").style.display = "none";
         document.getElementById("ErrorOnlydigitos").style.display = "none";
+
         // Obtener valores de los campos del formulario
         const documento = document.getElementById("documento").value;
         const tipoDocumento = document.getElementById("TipoDocumento").value;

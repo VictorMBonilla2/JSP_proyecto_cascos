@@ -9,7 +9,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 
@@ -50,8 +52,22 @@ public class SvCasilleros {
         @Override
         protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+            BufferedReader reader = req.getReader();
+            StringBuilder jsonBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonBuilder.append(line);
+            }
+            String json = jsonBuilder.toString();
 
+            // Parsear el JSON usando org.json
+            JSONObject jsonObject = new JSONObject(json);
 
+            String placa = jsonObject.getString("placa");
+            String ciudad = jsonObject.getString("ciudad");
+            String cantcascos = jsonObject.getString("cantcascos");
+
+            boolean creacion= controladora_logica.crearcasilleros(placa,ciudad,cantcascos);
         }
     }
 }

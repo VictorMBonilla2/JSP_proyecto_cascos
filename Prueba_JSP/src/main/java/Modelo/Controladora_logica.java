@@ -51,5 +51,8 @@ public class Controladora_logica {
     }
 
 
+    public boolean crearcasilleros(String placa, String ciudad, String cantcascos) {
 
+        return  controladora.CrearEspacio(placa,ciudad,cantcascos);
+    }
 }

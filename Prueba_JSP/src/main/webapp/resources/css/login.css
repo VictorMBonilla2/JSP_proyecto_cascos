@@ -19,7 +19,6 @@
 /*Propiedades globales*/
 .body{
   font-family: "Roboto", sans-serif;
-  margin: ;
 
 }
 
@@ -74,6 +73,7 @@
   font-size: 23px;
   color: var(--colorfontError);
   padding-left: 25px;
+  padding-top: 6px;
 
 }
 

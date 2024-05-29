@@ -66,12 +66,35 @@
                             </div>
                         </div>
                         <div class="contenido__botones">
-                            <button class="botones botones--largo botones__pago">
+                            <button class="botones botones--largo botones__pago addCasilleroBtn" data-add="modal<%=espacioId%>">
                                 Añadir
                             </button>
                         </div>
                     </div>
+
                 </div>
+                <!-- ventana Crear Espacio-->
+                <div id="modal<%=espacioId%>" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                            <h2>Casillero <%=espacioId%></h2>
+                            <span class="close" data-modal-id="modal<%=espacioId%>">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <h2>Nuevo Casco</h2>
+                            <form id="addCasco<%=espacioId%>" onsubmit="addCasco(event)" class="formulario">
+                                <div class="formulario__inputs">
+                                    <input type="text" id="placa<%=espacioId%>" placeholder="Placa" name="documento" required>
+                                    <input type="text" id="ciudad<%=espacioId%>" placeholder="Ciudad" name="ciudad" required>
+                                    <input type="number" id="cant_cascos<%=espacioId%>" placeholder="Cantidad de cascos" name="cant_cascos" required>
+                                    <button type="submit" class="formulario__button">Añadir</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
                 <% }
                 }
             } else {
@@ -100,6 +123,7 @@
 
 
 
+                    <script src="resources/js/Casilleros.js"></script>
             </section>
         </section>
     </main>
