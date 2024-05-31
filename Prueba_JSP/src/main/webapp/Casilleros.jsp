@@ -15,6 +15,7 @@
                 for (TbEspacio espacio : DatosEspacio) {
                     TbCasco casco = espacio.getCasco();
                     int espacioId = espacio.getId();
+
                     if (casco != null) {
                         String placaCasco = casco.getPlaca_casco();
                         String ciudad = casco.getCiudad();
@@ -53,7 +54,11 @@
                     </div>
                 </div>
                 <%
-                        }else {%>
+                        }else {
+                            String placaCasco = casco.getPlaca_casco();
+                            String ciudad = casco.getCiudad();
+                            Integer cantCascos= casco.getCant_casco();
+                        %>
                 <div class="casillero">
                     <div class="casillero__title">
                         <h1>Espacio <%=espacioId%></h1>
@@ -88,6 +93,28 @@
                                     <input type="text" id="placa<%=espacioId%>" placeholder="Placa" name="documento" required>
                                     <input type="text" id="ciudad<%=espacioId%>" placeholder="Ciudad" name="ciudad" required>
                                     <input type="number" id="cant_cascos<%=espacioId%>" placeholder="Cantidad de cascos" name="cant_cascos" required>
+                                    <button type="submit" class="formulario__button">Añadir</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- ventana Editar Espacio-->
+
+                <div id="editmodal<%=espacioId%>" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                            <h2>Casillero <%=espacioId%></h2>
+                            <span class="close" data-modal-id="editmodal<%=espacioId%>">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <h2>Nuevo Casco</h2>
+                            <form id="addCasco<%=espacioId%>" onsubmit="addCasco(event)" class="formulario">
+                                <div class="formulario__inputs">
+                                    <input type="text" id="placa<%=espacioId%>" placeholder="Placa" name="documento" value="<%=placaCasco%>" required>
+                                    <input type="text" id="ciudad<%=espacioId%>" placeholder="Ciudad" name="ciudad" value="<%=ciudad%>" required >
+                                    <input type="number" id="cant_cascos<%=espacioId%>" placeholder="Cantidad de cascos" name="cant_cascos" value="<%=cantCascos%>" required>
                                     <button type="submit" class="formulario__button">Añadir</button>
                                 </div>
                             </form>

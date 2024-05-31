@@ -3,10 +3,12 @@ package Modelo;
 import Controlador.PersistenciaController;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Controladora_logica {
-
+    private static final Logger logger = Logger.getLogger(Controladora_logica.class.getName());
 //Aca se reciben los retornos del Controlador de la persistencia y se hace todo el trabajo logico.
     static PersistenciaController controladora = new PersistenciaController();
 
@@ -50,12 +52,9 @@ public class Controladora_logica {
         return controladora.DatosEspacios();
     }
 
-    public boolean addespacio(Integer idEspacio, String placa, String ciudad, String cantcascos) {
-
-
-    }
 
     public TbEspacio buscarEspacio(Integer idEspacio) {
+
         return controladora.traerEspacio(idEspacio);
     }
 
@@ -64,6 +63,21 @@ public class Controladora_logica {
     }
 
     public void Crearcasco(TbCasco casco) {
-        
+        controladora.CrearCasco(casco);
     }
+
+
+
+
+    public boolean actualizarEspacio(TbEspacio espacio) {
+
+        try {
+            controladora.ActualizarEspacio(espacio);
+            return true;
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error al actualizar el espacio con ID " + espacio.getId(), e);
+            return false;
+            }
+        }
+
 }

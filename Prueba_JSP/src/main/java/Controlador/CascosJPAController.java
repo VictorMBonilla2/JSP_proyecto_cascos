@@ -41,7 +41,7 @@ public class CascosJPAController implements Serializable {
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
-            if (msg == null || msg.length() == 0) {
+            if (msg == null || msg.isEmpty()) {
                 int id = casco.getId();
                 if (findTbCasco(id) == null) {
                     throw new Exception("The espacio with id " + id + " no longer exists.");
@@ -123,14 +123,5 @@ public class CascosJPAController implements Serializable {
             em.close();
         }
     }
-    public void crearCasco(TbCasco casco) {
-        EntityManager em = getEntityManager();
-        try {
-            em.getTransaction().begin();
-            em.persist(casco);
-            em.getTransaction().commit();
-        } finally {
-            em.close();
-        }
-    }
+
 }

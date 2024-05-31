@@ -24,6 +24,9 @@ public class PersistenciaController {
         return  persoJpa.login(documento);
     }
 
+
+
+
     public List<TbCasillero>  ObtEspacios() {
         return casillerosJPA.findTbCasilleroEntities();
     }
@@ -31,17 +34,28 @@ public class PersistenciaController {
         return espacioJPA.findTbEspacioEntities();
     }
 
-    public boolean CrearEspacio(String placa, String ciudad, String cantcascos) {
 
-
-    }
-
+//Espacios
     public TbEspacio traerEspacio(Integer idEspacio) {
 
         return espacioJPA.findTbEspacio(idEspacio);
     }
 
-    public TbCasco obtenerCasco(String placa) {
 
+
+
+
+
+    public TbCasco obtenerCasco(String placa) {
+    return cascosJPA.buscarCascoPorPlaca(placa);
+    }
+
+    public void CrearCasco(TbCasco casco) {
+
+        cascosJPA.create(casco);
+    }
+
+    public void ActualizarEspacio(TbEspacio espacio) throws Exception {
+        espacioJPA.edit(espacio);
     }
 }

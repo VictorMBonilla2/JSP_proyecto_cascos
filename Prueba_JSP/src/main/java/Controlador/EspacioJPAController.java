@@ -124,16 +124,7 @@ public class EspacioJPAController implements Serializable {
             em.close();
         }
     }
-    public void actualizarEspacio(TbEspacio espacio) {
-        EntityManager em = getEntityManager();
-        try {
-            em.getTransaction().begin();
-            em.merge(espacio);
-            em.getTransaction().commit();
-        } finally {
-            em.close();
-        }
-    }
+
 
 }
 

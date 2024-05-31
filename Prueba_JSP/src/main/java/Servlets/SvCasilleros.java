@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 public class SvCasilleros {
@@ -88,16 +89,24 @@ public class SvCasilleros {
                     espacio.setHora_entrada(new Date());
 
                     // Guardar los cambios en el espacio
-                    controladora_logica.actualizarEspacio(espacio);
-
-                    // Enviar una respuesta de éxito
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                    resp.getWriter().write("{\"status\":\"success\"}");
+                    boolean added = controladora_logica.actualizarEspacio(espacio);
+                    if (added) {
+                        resp.setContentType("application/json");
+                        resp.setStatus(HttpServletResponse.SC_OK);
+                        resp.getWriter().write("{\"status\":\"success\"}");
+                    } else {
+                        resp.setContentType("application/json");
+                        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                        resp.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to update space\"}");
+                    }
                 } else {
+                    resp.setContentType("application/json");
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    resp.getWriter().write("{\"status\":\"error\", \"message\":\"Espacio no encontrado\"}");
+                    resp.getWriter().write("{\"status\":\"error\"," +
+                            " \"message\":\"Espacio no encontrado\"}");
                 }
             } catch (Exception e) {
+                resp.setContentType("application/json");
                 resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 resp.getWriter().write("{\"status\":\"error\", \"message\":\"" + e.getMessage() + "\"}");
             }
