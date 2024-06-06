@@ -1,8 +1,18 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Obtén todos los botones con la clase addCasilleroBtn
     let buttonsadd = document.getElementsByClassName("addCasilleroBtn");
-    let buttonedit =document.getElementsByClassName("botones__ajustar")
+    let buttonedit =document.getElementsByClassName("botones__ajustar");
+    let buttonpay =document.getElementsByClassName("botones__pago");
 
+
+    // Añade un event listener a cada botón pagar
+    for (let i = 0; i < buttonpay.length; i++) {
+        buttonpay[i].onclick = function () {
+            let modalId = this.getAttribute("data-pay");
+            let modal = document.getElementById(modalId);
+            modal.style.display = "flex";
+        };
+    }
     // Añade un event listener a cada botón añadir
     for (let i = 0; i < buttonsadd.length; i++) {
         buttonsadd[i].onclick = function () {
@@ -19,6 +29,8 @@ document.addEventListener('DOMContentLoaded', function () {
             modal.style.display = "flex";
         };
     }
+
+
     // Obtén todos los elementos <span> que cierran los modales
     let closeButtons = document.getElementsByClassName("close");
 
@@ -37,6 +49,8 @@ document.addEventListener('DOMContentLoaded', function () {
             event.target.style.display = "none";
         }
     }
+
+
 
     // Encuentra todos los formularios que empiezan con "addCasco"
     const forms = document.querySelectorAll('form[id^="addCasco"]');

@@ -44,12 +44,33 @@
                             </div>
                         </div>
                         <div class="contenido__botones">
-                            <button class="botones botones__pago">
+                            <button class="botones botones__pago " data-pay="paymodal<%=espacioId%>">
                                 Pagar
                             </button>
                             <button class="botones botones__ajustar" data-edit="editmodal<%=espacioId%>">
                                 Ajustar
                             </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- ventana add Espacio-->
+                <div id="paymodal<%=espacioId%>" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Casillero <%=espacioId%></h2>
+                            <span class="close" data-modal-id="paymodal<%=espacioId%>">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <h2>Pagar Casco</h2>
+                            <form id="addCasco<%=espacioId%>" onsubmit="addCasco(event)" class="formulario">
+                                <div class="formulario__inputs">
+                                    <p>Tiempo transcurrido: riwmpo</p>
+                                    <p>Costo Total: $1000</p>
+                                    <p>Placa: <%=placaCasco%></p>
+
+                                    <button type="submit" class="formulario__button">Añadir</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -64,7 +85,7 @@
                         </div>
                         <div class="modal-body">
                             <h2>editar Casco</h2>
-                            <form id="addCasco<%=espacioId%>" onsubmit="addCasco(event)" class="formulario">
+                            <form id="editCasco<%=espacioId%>" onsubmit="addCasco(event)" class="formulario">
                                 <div class="formulario__inputs">
                                     <input type="text" id="placa<%=espacioId%>" placeholder="Placa" name="documento" value="<%=placaCasco%>" required>
                                     <input type="text" id="ciudad<%=espacioId%>" placeholder="Ciudad" name="ciudad" value="<%=ciudad%>" required >
@@ -90,7 +111,7 @@
                             </div>
                         </div>
                         <div class="contenido__botones">
-                            <button class="botones botones--largo botones__pago addCasilleroBtn" data-add="modal<%=espacioId%>">
+                            <button class="botones botones--largo botones__pago addCasilleroBtn" data-add="addmodal<%=espacioId%>">
                                 Añadir
                             </button>
                         </div>
@@ -98,7 +119,7 @@
 
                 </div>
                 <!-- ventana Crear Espacio-->
-                <div id="modal<%=espacioId%>" class="modal">
+                <div id="addmodal<%=espacioId%>" class="modal">
                     <div class="modal-content">
                         <div class="modal-header">
 
