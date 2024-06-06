@@ -1,16 +1,24 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Obtén todos los botones con la clase addCasilleroBtn
-    let buttons = document.getElementsByClassName("addCasilleroBtn");
+    let buttonsadd = document.getElementsByClassName("addCasilleroBtn");
+    let buttonedit =document.getElementsByClassName("botones__ajustar")
 
-    // Añade un event listener a cada botón
-    for (let i = 0; i < buttons.length; i++) {
-        buttons[i].onclick = function () {
+    // Añade un event listener a cada botón añadir
+    for (let i = 0; i < buttonsadd.length; i++) {
+        buttonsadd[i].onclick = function () {
             let modalId = this.getAttribute("data-add");
             let modal = document.getElementById(modalId);
             modal.style.display = "flex";
         };
     }
-
+    // Añade un event listener a cada botón editar
+    for (let i = 0; i < buttonedit.length; i++) {
+        buttonedit[i].onclick = function () {
+            let modalId = this.getAttribute("data-edit");
+            let modal = document.getElementById(modalId);
+            modal.style.display = "flex";
+        };
+    }
     // Obtén todos los elementos <span> que cierran los modales
     let closeButtons = document.getElementsByClassName("close");
 
