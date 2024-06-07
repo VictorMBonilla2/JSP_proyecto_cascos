@@ -50,47 +50,65 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+   //Metodo uno para escuchar a los form
 
+    // // Encuentra todos los formularios que empiezan con "addCasco"
+    // const addforms = document.querySelectorAll('form[id^="addCasco"]');
+    // const editforms = document.querySelectorAll('form[id^="editCasco"]');
+    // const payforms = document.querySelectorAll('form[id^="payCasco"]');
+    //
+    // // Asigna el manejador de eventos a cada formulario
+    // addforms.forEach(form => {
+    //     form.onsubmit = function (addevent) {
+    //         const espacioId = this.id.replace('addCasco', '');
+    //         return validateAndSubmit(addevent, espacioId, 'add');
+    //     };
+    // });
+    // editforms.forEach(form => {
+    //     form.onsubmit = function (editevent) {
+    //         const espacioId = this.id.replace('editCasco', '');
+    //         return validateAndSubmit(editevent, espacioId, 'edit');
+    //     };
+    // });
+    // payforms.forEach(form => {
+    //     form.onsubmit = function (payevent) {
+    //         const espacioId = this.id.replace('payCasco', '');
+    //         return validateAndSubmit(payevent, espacioId, 'pay');
+    //     };
+    // });
 
-    // Encuentra todos los formularios que empiezan con "addCasco"
-    const forms = document.querySelectorAll('form[id^="addCasco"]');
-
-    // Asigna el manejador de eventos a cada formulario
-    forms.forEach(form => {
-        form.onsubmit = function (event) {
-            // Extrae el espacioId del ID del formulario
-            const espacioId = this.id.replace('addCasco', '');
-            return validateAndSubmit(event, espacioId);
-        };
-    });
 });
 
-function validateAndSubmit(event, espacioId) {
+function validateAndSubmit(addevent, espacioId, formType) {
     event.preventDefault(); // Previene el envío del formulario
 
-    // Obtén los valores de los inputs
-    const documento = document.getElementById(`placa${espacioId}`).value;
-    const ciudad = document.getElementById(`ciudad${espacioId}`).value;
-    const cantCascos = document.getElementById(`cant_cascos${espacioId}`).value;
 
-    // Realiza la validación
-    if (documento.trim() === '' || ciudad.trim() === '' || cantCascos.trim() === '') {
-        alert('Por favor, llena todos los campos');
-        return false; // Previene el envío del formulario si hay errores de validación
+    if (formType === "pay") {
+
+    }else if (formType === "add" || formType === "edit") {
+        // Obtén los valores de los inputs
+        const documento = document.getElementById(`${formType}placa${espacioId}`).value;
+        const ciudad = document.getElementById(`${formType}ciudad${espacioId}`).value;
+        const cantCascos = document.getElementById(`${formType}cant_cascos${espacioId}`).value;
+
+        // Realiza la validación
+        if (documento.trim() === '' || ciudad.trim() === '' || cantCascos.trim() === '') {
+            alert('Por favor, llena todos los campos');
+            return false; // Previene el envío del formulario si hay errores de validación
+        }
+
+        // Si la validación es exitosa, puedes proceder a enviar el formulario
+        const form = document.getElementById(`${formType}Casco${espacioId}`);
+        return addDataCasilleros(form, espacioId, formType); // Envía el formulario
     }
-
-    // Si la validación es exitosa, puedes proceder a enviar el formulario
-    const form = document.getElementById(`addCasco${espacioId}`);
-     return  addCasilleroBtn(form,espacioId); // Envía el formulario
-
-
 
 
 }
-async function addCasilleroBtn(form,espacioId) {
-    const placa = document.getElementById(`placa${espacioId}`).value;
-    const ciudad = document.getElementById(`ciudad${espacioId}`).value;
-    const cantcascos = document.getElementById(`cant_cascos${espacioId}`).value;
+
+async function addDataCasilleros(form,espacioId, formType) {
+    const placa = document.getElementById(`${formType}placa${espacioId}`).value;
+    const ciudad = document.getElementById(`${formType}ciudad${espacioId}`).value;
+    const cantcascos = document.getElementById(`${formType}cant_cascos${espacioId}`).value
     try {
 
 
@@ -104,7 +122,8 @@ async function addCasilleroBtn(form,espacioId) {
                 espacio: espacioId,
                 placa: placa,
                 ciudad: ciudad,
-                cantcascos: cantcascos
+                cantcascos: cantcascos,
+                formType: formType
             })
         });
         // Verificar si la respuesta es exitosa
@@ -130,4 +149,17 @@ async function addCasilleroBtn(form,espacioId) {
         document.getElementById("Error").style.display = "block";
     }
 
+}
+//Metodo 2 para escuchar los formularios.
+
+function addCasco(event, espacioId) {
+    validateAndSubmit(event, espacioId, 'add');
+}
+
+function editCasco(event, espacioId) {
+    validateAndSubmit(event, espacioId, 'edit');
+}
+
+function payCasco(event, espacioId) {
+    validateAndSubmit(event, espacioId, 'pay');
 }

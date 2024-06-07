@@ -62,7 +62,7 @@
                         </div>
                         <div class="modal-body">
                             <h2>Pagar Casco</h2>
-                            <form id="addCasco<%=espacioId%>" onsubmit="addCasco(event)" class="formulario">
+                            <form id="payCasco<%= espacioId %>" onsubmit="payCasco(event, <%= espacioId %>)" class="formulario">
                                 <div class="formulario__inputs">
                                     <p>Tiempo transcurrido: riwmpo</p>
                                     <p>Costo Total: $1000</p>
@@ -85,11 +85,11 @@
                         </div>
                         <div class="modal-body">
                             <h2>editar Casco</h2>
-                            <form id="editCasco<%=espacioId%>" onsubmit="addCasco(event)" class="formulario">
+                            <form id="editCasco<%= espacioId %>" onsubmit="editCasco(event, <%= espacioId %>)" class="formulario">
                                 <div class="formulario__inputs">
-                                    <input type="text" id="placa<%=espacioId%>" placeholder="Placa" name="documento" value="<%=placaCasco%>" required>
-                                    <input type="text" id="ciudad<%=espacioId%>" placeholder="Ciudad" name="ciudad" value="<%=ciudad%>" required >
-                                    <input type="number" id="cant_cascos<%=espacioId%>" placeholder="Cantidad de cascos" name="cant_cascos" value="<%=cantCascos%>" required>
+                                    <input type="text" id="editplaca<%=espacioId%>" placeholder="Placa" name="documento" value="<%=placaCasco%>" required>
+                                    <input type="text" id="editciudad<%=espacioId%>" placeholder="Ciudad" name="ciudad" value="<%=ciudad%>" required >
+                                    <input type="number" id="editcant_cascos<%=espacioId%>" placeholder="Cantidad de cascos" name="cant_cascos" value="<%=cantCascos%>" required>
                                     <button type="submit" class="formulario__button">Añadir</button>
                                 </div>
                             </form>
@@ -128,11 +128,11 @@
                         </div>
                         <div class="modal-body">
                             <h2>Nuevo Casco</h2>
-                            <form id="addCasco<%=espacioId%>" onsubmit="addCasco(event)" class="formulario">
+                            <form id="addCasco<%= espacioId %>" onsubmit="addCasco(event, <%= espacioId %>)" class="formulario">
                                 <div class="formulario__inputs">
-                                    <input type="text" id="placa<%=espacioId%>" placeholder="Placa" name="documento" required>
-                                    <input type="text" id="ciudad<%=espacioId%>" placeholder="Ciudad" name="ciudad" required>
-                                    <input type="number" id="cant_cascos<%=espacioId%>" placeholder="Cantidad de cascos" name="cant_cascos" required>
+                                    <input type="text" id="addplaca<%=espacioId%>" placeholder="Placa" name="documento" required>
+                                    <input type="text" id="addciudad<%=espacioId%>" placeholder="Ciudad" name="ciudad" required>
+                                    <input type="number" id="addcant_cascos<%=espacioId%>" placeholder="Cantidad de cascos" name="cant_cascos" required>
                                     <button type="submit" class="formulario__button">Añadir</button>
                                 </div>
                             </form>

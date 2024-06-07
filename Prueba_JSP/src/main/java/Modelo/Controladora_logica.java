@@ -80,4 +80,12 @@ public class Controladora_logica {
             }
         }
 
+    public void actualizarCasco(TbCasco casco) {
+
+        try{
+            controladora.updateCasco(casco);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -15,18 +15,12 @@ public class PersistenciaController {
     public void CrearPersona(Persona persona) {
         persoJpa.create(persona);
     }
-
     public List<Persona> TraerPersonas() {
         return persoJpa.findPersonaEntities();
     }
-
     public List<LoginDTO> login(int documento){
         return  persoJpa.login(documento);
     }
-
-
-
-
     public List<TbCasillero>  ObtEspacios() {
         return casillerosJPA.findTbCasilleroEntities();
     }
@@ -41,21 +35,20 @@ public class PersistenciaController {
         return espacioJPA.findTbEspacio(idEspacio);
     }
 
-
-
-
-
-
     public TbCasco obtenerCasco(String placa) {
     return cascosJPA.buscarCascoPorPlaca(placa);
     }
-
     public void CrearCasco(TbCasco casco) {
 
         cascosJPA.create(casco);
+    }
+    public void updateCasco(TbCasco casco) throws Exception {
+        cascosJPA.edit(casco);
     }
 
     public void ActualizarEspacio(TbEspacio espacio) throws Exception {
         espacioJPA.edit(espacio);
     }
+
+
 }

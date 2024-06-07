@@ -52,7 +52,7 @@ public class SvCasilleros {
 
         @Override
         protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+            System.out.println("INGRESANDO A METODO POST");
             BufferedReader reader = req.getReader();
             StringBuilder jsonBuilder = new StringBuilder();
             String line;
@@ -60,51 +60,61 @@ public class SvCasilleros {
                 jsonBuilder.append(line);
             }
             String json = jsonBuilder.toString();
-
+            System.out.println("acceder al objeto json");
             // Parsear el JSON usando org.json
             JSONObject jsonObject = new JSONObject(json);
+            
+            System.out.println("realizado objeto json");
             Integer idEspacio = Integer.valueOf(jsonObject.getString("espacio"));
+            System.out.println("idEspacio: " + idEspacio);
             String placa = jsonObject.getString("placa");
             String ciudad = jsonObject.getString("ciudad");
             String cantcascos = jsonObject.getString("cantcascos");
-
+            String formType = jsonObject.getString("formType");
+            // Busca el espacio por ID
+            System.out.println("Intentando Obtener el ID del espacio " + idEspacio);
+            TbEspacio espacio = controladora_logica.buscarEspacio(idEspacio);
+            System.out.println("Espacio " + espacio.getId());
             try {
-                // Busca el espacio por ID
-                TbEspacio espacio = controladora_logica.buscarEspacio(idEspacio);
-                if (espacio != null) {
-                    // Busca el casco por placa
-                    TbCasco casco = controladora_logica.buscarCascoPorPlaca(placa);
-                    if (casco == null) {
-                        // Si el casco no existe, crearlo
-                        casco = new TbCasco();
-                        casco.setPlaca_casco(placa);
-                        casco.setCiudad(ciudad);
-                        casco.setCant_casco(Integer.valueOf(cantcascos));
-                        controladora_logica.Crearcasco(casco);
-                    }
+                    if (espacio != null) {
+                        // Busca el casco por placa
+                        TbCasco casco = controladora_logica.buscarCascoPorPlaca(placa);
 
-                    // Actualizar el espacio
-                    espacio.setCasco(casco);
-                    espacio.setEstado_espacio("Ocupado");
-                    espacio.setHora_entrada(new Date());
+                        if (casco == null) {
+                            // Si el casco no existe, crearlo
+                            casco = new TbCasco();
+                            casco.setPlaca_casco(placa);
+                            casco.setCiudad(ciudad);
+                            casco.setCant_casco(Integer.valueOf(cantcascos));
+                            System.out.println(" intentando añadir casco");
+                            controladora_logica.Crearcasco(casco);
+                            System.out.println("casco añadido");
+                        }
 
-                    // Guardar los cambios en el espacio
-                    boolean added = controladora_logica.actualizarEspacio(espacio);
-                    if (added) {
-                        resp.setContentType("application/json");
-                        resp.setStatus(HttpServletResponse.SC_OK);
-                        resp.getWriter().write("{\"status\":\"success\"}");
+                        // Actualizar el espacio
+                        espacio.setCasco(casco);
+                        espacio.setEstado_espacio("Ocupado");
+                        espacio.setHora_entrada(new Date());
+
+                        // Guardar los cambios en el espacio
+                        boolean added = controladora_logica.actualizarEspacio(espacio);
+                        System.out.println("Espacio actualizado");
+
+                        if (added) {
+                            resp.setContentType("application/json");
+                            resp.setStatus(HttpServletResponse.SC_OK);
+                            resp.getWriter().write("{\"status\":\"success\"}");
+                        } else {
+                            resp.setContentType("application/json");
+                            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                            resp.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to update space\"}");
+                        }
                     } else {
                         resp.setContentType("application/json");
-                        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                        resp.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to update space\"}");
+                        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                        resp.getWriter().write("{\"status\":\"error\"," +
+                                " \"message\":\"Espacio no encontrado\"}");
                     }
-                } else {
-                    resp.setContentType("application/json");
-                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    resp.getWriter().write("{\"status\":\"error\"," +
-                            " \"message\":\"Espacio no encontrado\"}");
-                }
             } catch (Exception e) {
                 resp.setContentType("application/json");
                 resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
