@@ -65,7 +65,7 @@ public class SvCasilleros {
             JSONObject jsonObject = new JSONObject(json);
             
             System.out.println("realizado objeto json");
-            Integer idEspacio = Integer.valueOf(jsonObject.getString("espacio"));
+            Integer idEspacio = jsonObject.getInt("espacio");
             System.out.println("idEspacio: " + idEspacio);
             String placa = jsonObject.getString("placa");
             String ciudad = jsonObject.getString("ciudad");
@@ -76,6 +76,7 @@ public class SvCasilleros {
             TbEspacio espacio = controladora_logica.buscarEspacio(idEspacio);
             System.out.println("Espacio " + espacio.getId());
             try {
+                if (formType.equals("add")){
                     if (espacio != null) {
                         // Busca el casco por placa
                         TbCasco casco = controladora_logica.buscarCascoPorPlaca(placa);
@@ -115,7 +116,39 @@ public class SvCasilleros {
                         resp.getWriter().write("{\"status\":\"error\"," +
                                 " \"message\":\"Espacio no encontrado\"}");
                     }
-            } catch (Exception e) {
+                } else if (formType.equals("edit")) {
+                    if (espacio != null) {
+                        TbCasco casco = espacio.getCasco();
+                        if (casco != null) {
+                            casco.setPlaca_casco(placa);
+                            casco.setCiudad(ciudad);
+                            casco.setCant_casco(Integer.valueOf(cantcascos));
+                            controladora_logica.actualizarCasco(casco);
+
+                            espacio.setCasco(casco);
+
+                            boolean updated = controladora_logica.actualizarEspacio(espacio);
+                            if (updated) {
+                                resp.setContentType("application/json");
+                                resp.setStatus(HttpServletResponse.SC_OK);
+                                resp.getWriter().write("{\"status\":\"success\"}");
+                            } else {
+                                resp.setContentType("application/json");
+                                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                                resp.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to update space\"}");
+                            }
+                        } else {
+                            resp.setContentType("application/json");
+                            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                            resp.getWriter().write("{\"status\":\"error\", \"message\":\"Casco no encontrado\"}");
+                        }
+                    } else {
+                        resp.setContentType("application/json");
+                        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                        resp.getWriter().write("{\"status\":\"error\", \"message\":\"Espacio no encontrado\"}");
+                    }
+                }
+            }catch (Exception e) {
                 resp.setContentType("application/json");
                 resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 resp.getWriter().write("{\"status\":\"error\", \"message\":\"" + e.getMessage() + "\"}");
