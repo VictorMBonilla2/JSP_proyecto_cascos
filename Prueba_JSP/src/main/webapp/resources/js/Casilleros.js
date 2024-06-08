@@ -84,6 +84,8 @@ function validateAndSubmit(addevent, espacioId, formType) {
 
 
     if (formType === "pay") {
+        const form = document.getElementById(`${formType}Casco${espacioId}`);
+        return payCasillero(form, espacioId, formType);
 
     }else if (formType === "add" || formType === "edit") {
         // Obtén los valores de los inputs
@@ -104,7 +106,40 @@ function validateAndSubmit(addevent, espacioId, formType) {
 
 
 }
+async function payCasillero(form, espacioID, formType){
+    try {
+        const response = await fetch("SvCasillero",{
+            method: "POST",
+            headers: {
+                "content-Type":"application/json"
+            },
+            body: JSON.stringify({
+                espacio: espacioID,
+                formType: formType
+            })
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
 
+        // Obtener el resultado de la respuesta
+        const result = await response.json();
+
+        // Verificar el resultado del inicio de sesión
+        if (result.status === "success") {
+            // Redireccionar al usuario a la página de inicio
+            window.location.href = "SvCasillero";
+        } else {
+            // Mostrar mensaje de error en caso de credenciales inválidas
+            document.getElementById("Error").style.display = "block";
+        }
+    } catch (error) {
+        // Manejar cualquier error que ocurra durante la solicitud
+        console.error("There was a problem with the fetch operation:", error);
+        // Mostrar un mensaje de error genérico al usuario
+        document.getElementById("Error").style.display = "block";
+    }
+}
 async function addDataCasilleros(form,espacioId, formType) {
     const placa = document.getElementById(`${formType}placa${espacioId}`).value;
     const ciudad = document.getElementById(`${formType}ciudad${espacioId}`).value;

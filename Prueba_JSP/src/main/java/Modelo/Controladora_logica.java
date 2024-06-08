@@ -88,4 +88,15 @@ public class Controladora_logica {
             throw new RuntimeException(e);
         }
     }
+
+    public boolean borrarCasco(int idCasco) {
+        try {
+            controladora.deleteCasco(idCasco);
+            return true; // Devuelve true si la eliminación es exitosa
+        } catch (Exception e) {
+            // Registra el error para el diagnóstico
+            System.err.println("Error al eliminar el casco con ID " + idCasco + ": " + e.getMessage());
+            return false; // Devuelve false si se produce una excepción
+        }
+    }
 }

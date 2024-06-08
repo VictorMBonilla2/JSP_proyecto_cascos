@@ -51,4 +51,7 @@ public class PersistenciaController {
     }
 
 
+    public void deleteCasco(int idCasco) throws Exception {
+        cascosJPA.destroy(idCasco);
+    }
 }

@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -63,20 +64,23 @@ public class SvCasilleros {
             System.out.println("acceder al objeto json");
             // Parsear el JSON usando org.json
             JSONObject jsonObject = new JSONObject(json);
-            
             System.out.println("realizado objeto json");
+
             Integer idEspacio = jsonObject.getInt("espacio");
             System.out.println("idEspacio: " + idEspacio);
-            String placa = jsonObject.getString("placa");
-            String ciudad = jsonObject.getString("ciudad");
-            String cantcascos = jsonObject.getString("cantcascos");
+
             String formType = jsonObject.getString("formType");
+            System.out.println("tipo de form: "+formType);
             // Busca el espacio por ID
             System.out.println("Intentando Obtener el ID del espacio " + idEspacio);
             TbEspacio espacio = controladora_logica.buscarEspacio(idEspacio);
             System.out.println("Espacio " + espacio.getId());
+
             try {
                 if (formType.equals("add")){
+                    String placa = jsonObject.getString("placa");
+                    String ciudad = jsonObject.getString("ciudad");
+                    String cantcascos = jsonObject.getString("cantcascos");
                     if (espacio != null) {
                         // Busca el casco por placa
                         TbCasco casco = controladora_logica.buscarCascoPorPlaca(placa);
@@ -117,6 +121,9 @@ public class SvCasilleros {
                                 " \"message\":\"Espacio no encontrado\"}");
                     }
                 } else if (formType.equals("edit")) {
+                    String placa = jsonObject.getString("placa");
+                    String ciudad = jsonObject.getString("ciudad");
+                    String cantcascos = jsonObject.getString("cantcascos");
                     if (espacio != null) {
                         TbCasco casco = espacio.getCasco();
                         if (casco != null) {
@@ -147,8 +154,44 @@ public class SvCasilleros {
                         resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                         resp.getWriter().write("{\"status\":\"error\", \"message\":\"Espacio no encontrado\"}");
                     }
+                } else if (formType.equals("pay")) {
+                    System.out.println("Ingresando al meotodo pay");
+                    TbCasco casco = espacio.getCasco();
+                    if (casco != null) {
+                        int idCasco = casco.getId();
+                        if (true) {
+                            espacio.setId(espacio.getId());
+                            espacio.setCasco(null);
+                            espacio.setEstado_espacio("Activo");
+                            boolean updated = controladora_logica.actualizarEspacio(espacio);
+                            if (updated) {
+                                controladora_logica.borrarCasco(idCasco);
+                                resp.setContentType("application/json");
+                                resp.setStatus(HttpServletResponse.SC_OK);
+                                resp.getWriter().write("{\"status\":\"success\"}");
+                            } else {
+                                resp.setContentType("application/json");
+                                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                                resp.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to update space\"}");
+                            }
+                        } else {
+                            resp.setContentType("application/json");
+                            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                            resp.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to delete casco\"}");
+                        }
+                    } else {
+                        resp.setContentType("application/json");
+                        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                        resp.getWriter().write("{\"status\":\"error\", \"message\":\"Casco no encontrado\"}");
+                    }
                 }
-            }catch (Exception e) {
+            } catch (JSONException e) {
+                System.err.println("Error al procesar el JSON: " + e.getMessage());
+                resp.setContentType("application/json");
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().write("{\"status\":\"error\", \"message\":\"Invalid JSON format\"}");
+            } catch (Exception e) {
+                System.err.println("Error en el servidor: " + e.getMessage());
                 resp.setContentType("application/json");
                 resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 resp.getWriter().write("{\"status\":\"error\", \"message\":\"" + e.getMessage() + "\"}");

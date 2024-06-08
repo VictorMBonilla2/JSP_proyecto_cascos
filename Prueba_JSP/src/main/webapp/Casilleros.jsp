@@ -1,6 +1,7 @@
 <%@ page import="Modelo.TbEspacio" %>
 <%@ page import="java.util.List" %>
 <%@ page import="Modelo.TbCasco" %>
+<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:include page="resources/header.jsp" />
 
@@ -15,6 +16,7 @@
                 for (TbEspacio espacio : DatosEspacio) {
                     TbCasco casco = espacio.getCasco();
                     int espacioId = espacio.getId();
+                    Date tiempoEntrada = espacio.getHora_entrada();
 
                     if (casco != null) {
                         String placaCasco = casco.getPlaca_casco();
@@ -22,7 +24,7 @@
                         Integer cantCascos= casco.getCant_casco();
                     %>
 
-                <div class="casillero">
+                <div class="casillero" data-entrada="<%= tiempoEntrada.getTime() %>" data-tarifa="10.0">
                     <div class="casillero__title">
                         <h1><%=placaCasco%></h1>
                         <p><%=ciudad%></p>
@@ -36,11 +38,11 @@
                             </div>
                             <div class="info__tiempo">
                                 <h3>Tiempo</h3>
-                                <p>(tiempo)</p>
+                                <p class="tiempo-transcurrido"></p>
                             </div>
                             <div class="info__costo">
                                 <h3>Costo</h3>
-                                <p>(costo)</p>
+                                <p class="costo"></p>
                             </div>
                         </div>
                         <div class="contenido__botones">
@@ -168,6 +170,7 @@
 
 
                     <script src="resources/js/Casilleros.js"></script>
+                    <script src="resources/js/tiempoCasilleros.js"></script>
             </section>
         </section>
     </main>
