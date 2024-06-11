@@ -16,12 +16,12 @@
                 for (TbEspacio espacio : DatosEspacio) {
                     TbCasco casco = espacio.getCasco();
                     int espacioId = espacio.getId();
-                    Date tiempoEntrada = espacio.getHora_entrada();
 
                     if (casco != null) {
                         String placaCasco = casco.getPlaca_casco();
                         String ciudad = casco.getCiudad();
                         Integer cantCascos= casco.getCant_casco();
+                        Date tiempoEntrada = espacio.getHora_entrada();
                     %>
 
                 <div class="casillero" data-entrada="<%= tiempoEntrada.getTime() %>" data-tarifa="10.0">
