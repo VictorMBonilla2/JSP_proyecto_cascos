@@ -30,9 +30,77 @@
 }
 ul.list__buttons a {
     text-decoration: none;
-    color: inherit; /* Para heredar el color del elemento padre, si es necesario */
+    color: white; /* Para heredar el color del elemento padre, si es necesario */
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+
 }
+
 
 .logo__img {
     width: 50%;
+}
+
+#right-sidebar {
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Fijo en pantalla */
+    z-index: 1; /* Sobre otros elementos */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Habilitar scroll si es necesario */
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro con opacidad */
+    justify-content: center;
+    align-items: center;
+}
+
+#contenedorIcono {
+    width: 280px;
+    height: 100vh;
+    background-color: #eee7e7;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.escondido {
+    transform: translateX(100%) translateY(-50%);
+    opacity: 0;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+}
+
+.ui-menu{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ui-menu__option{
+    border-radius: 15px;
+    background-color: inherit;
+    transition: background-color 0.5s;
+    width: 85%;
+    margin-top: 20px;
+    padding: 10px;
+
+}
+.ui-menu__option:hover{
+    background-color: powderblue;
 }

@@ -29,7 +29,7 @@
           </section>
         </section>
       </main>
-
+<jsp:include page="resources/footer.jsp" />
     </body>
 
     </html>

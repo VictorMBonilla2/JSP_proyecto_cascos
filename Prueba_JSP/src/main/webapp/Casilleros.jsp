@@ -126,7 +126,7 @@
                         <div class="modal-header">
 
                             <h2>Casillero <%=espacioId%></h2>
-                            <span class="close" data-modal-id="modal<%=espacioId%>">&times;</span>
+                            <span class="close" data-modal-id="addmodal<%=espacioId%>">&times;</span>
                         </div>
                         <div class="modal-body">
                             <h2>Nuevo Casco</h2>
@@ -171,10 +171,11 @@
 
                     <script src="resources/js/Casilleros.js"></script>
                     <script src="resources/js/tiempoCasilleros.js"></script>
+
             </section>
         </section>
     </main>
-
+    <jsp:include page="resources/footer.jsp" />
 </body>
 
 </html>

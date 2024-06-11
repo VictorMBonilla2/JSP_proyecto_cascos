@@ -18,3 +18,7 @@
     color:white;
     font-family: Inter, sans-serif;
 }
+
+.svg-icon svg {
+    fill: red; /* Cambia el color según tus necesidades */
+}
