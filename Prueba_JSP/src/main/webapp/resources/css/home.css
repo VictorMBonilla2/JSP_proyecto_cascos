@@ -21,11 +21,15 @@ body {
     "Grafico2 Grafico3"
 }
 .info_user{
+  margin-top: 95px;
   grid-area: User;
+  margin-left: 116px;
 }
 .Graph{
   justify-self: center;
   align-self: center;
+
+
 }
 .Graph1{
   grid-area: Grafico1;
@@ -37,7 +41,12 @@ body {
   grid-area: Grafico3;
 }
 .bloque{
-  width: 200px;
-  height: 100px;
+  width: 400px;
+  height: 900px;
   background-color: #cccccc;
+  display: flex;
+}
+.info2-user__container{
+  display: flex;
+
 }
