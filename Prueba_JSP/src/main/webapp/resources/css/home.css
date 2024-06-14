@@ -18,35 +18,53 @@ body {
   display: grid;
   grid-template-areas:
     "User Grafico1"
-    "Grafico2 Grafico3"
+    "Grafico2 Grafico1"
 }
 .info_user{
   margin-top: 95px;
   grid-area: User;
   margin-left: 116px;
 }
-.Graph{
-  justify-self: center;
-  align-self: center;
 
-
-}
 .Graph1{
   grid-area: Grafico1;
+  margin: auto;
 }
-.Graph2{
-  grid-area: Grafico2;
-}
-.Graph3{
-  grid-area: Grafico3;
-}
-.bloque{
-  width: 400px;
-  height: 900px;
-  background-color: #cccccc;
+.bloque__user{
+  width: 480px;
+  height: 600px;
+  padding: 15px;
   display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: blue;
 }
 .info2-user__container{
   display: flex;
-
+  gap: 60px;
+  flex-flow: wrap;
+  padding-left: 18%;
+}
+.info2-user__text>h1{
+  font-size: 30px;
+}
+.info2-user__text>p{
+  font-size: 18px;
+}
+.info2-user__img{
+  width: 60%;
+}
+.Graph2{
+  grid-area: Grafico2;
+  width: 100%;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+}
+.bloque__sesion{
+  width: 60%;
+  height: 140px;
+  background-color: #797979;
+  margin-bottom: 20px;
 }

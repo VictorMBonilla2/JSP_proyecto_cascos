@@ -14,9 +14,12 @@
                       <p>Ult. sesión activa: (fecha)<br> (hora)</p>
                     </div>
 
-                    <div class="Graph Graph1" >
-                      <div class="bloque">
-                          <img src="" alt="icono">
+                    <div class="Graph1" >
+                      <div class="bloque__user">
+                          <div class="info2-user__img">
+                              <img src="" alt="icono">
+                          </div>
+
                           <div class="info2-user__container">
                               <div class="info2-user__text">
                                   <h1>Nombre</h1>
@@ -41,13 +44,8 @@
                           </div>
                       </div>
                     </div>
-                    <div class="Graph Graph2" >
-                      <P> (GRAFICO2)</P>
-                      <div class="bloque">s</div>
-                    </div>
-                    <div class="Graph Graph3">
-                      <P> (GRAFICO3)</P>
-                      <div class="bloque">s</div>
+                    <div class="Graph2" >
+                      <div class="bloque__sesion">s</div>
                     </div>
                 </section>
             </section>
