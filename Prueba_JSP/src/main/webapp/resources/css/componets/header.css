@@ -15,17 +15,17 @@
 }
 
 .hea_container__list{
-    padding-left: 50%;
+    padding-left: 64%;
     display: flex;
     align-items: center;
-
+    gap: 60px;
 }
 .list__buttons{
     list-style: none;
     display: flex;
     justify-content: space-between;
     gap:20%;
-    font-size: 24px;
+    font-size: 25px;
 
 }
 ul.list__buttons a {
@@ -41,6 +41,7 @@ ul.list__buttons a {
 .logo__img {
     width: 50%;
 }
+
 
 #right-sidebar {
     display: none; /* Oculto por defecto */

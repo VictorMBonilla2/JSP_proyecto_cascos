@@ -6,18 +6,19 @@
 
 <jsp:include page="resources/sidebar.jsp" />
 
-
                 <section class="main_container__home">
                     <div class="info_user">
-                      <h1>(nombre)</h1>
-                      <p>Has iniciado sesíon en: (lugar)</p>
-                      <p>Ult. sesión activa: (fecha)<br> (hora)</p>
+                          <h1>Bienvenido (nombre)</h1>
+                        <section class="content">
+                            <div class="Mygraph">
+                                <canvas id="myChart" height="900" width="900"></canvas>
+                            </div>
+                        </section>
                     </div>
-
                     <div class="Graph1" >
                       <div class="bloque__user">
                           <div class="info2-user__img">
-                              <img src="" alt="icono">
+                              <img src="resources/imagenes/IconPerfil.png" alt="icono">
                           </div>
 
                           <div class="info2-user__container">
@@ -45,12 +46,18 @@
                       </div>
                     </div>
                     <div class="Graph2" >
-                      <div class="bloque__sesion">s</div>
+                      <div class="bloque__sesion">
+                          <h1>Has iniciado sesíon en: (lugar)</h1>
+                          <p>Ult. sesión activa: (fecha)<br> (hora)</p>
+                      </div>
                     </div>
                 </section>
             </section>
         </main>
 <jsp:include page="resources/footer.jsp" />
+<script src="resources/js/graficos.js"></script>
+
+
     </body>
 
 </html>

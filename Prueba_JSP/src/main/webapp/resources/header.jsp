@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 
@@ -20,10 +21,21 @@
             <ul class="list__buttons">
                 <li><a href="profile.jsp">Inicio</a></li>
                 <li><a href="SvCasillero">Casilleros</a></li>
-                <li><a href="soporte.html">Soporte</a></li>
             </ul>
+            <button id="botonMostrar" class="perfil-button">
+                <img src="resources/imagenes/IconPerfil.png">
+            </button>
         </div>
-        <button id="botonMostrar">Mostrar Sidebar</button>
+        <style>
+            .perfil-button{
+                border: none; /* Eliminar borde del botón */
+                padding: 0; /* Eliminar padding del botón */
+                background: none; /* Sin fondo para el botón */
+                cursor: pointer; /* Cambiar el cursor al pasar sobre el botón */
+            }
+
+        </style>
+
 
         <div id="right-sidebar">
             <div id="contenedorIcono" class="escondido">

@@ -11,6 +11,7 @@ body {
 }
 .main_container{
   display: flex;
+  background-color: #E6E6E6;
 }
 
 .main_container__home{
@@ -26,9 +27,25 @@ body {
   margin-left: 116px;
 }
 
+.content{
+  width: 100%;
+  margin: 0 auto;
+}
+
 .Graph1{
   grid-area: Grafico1;
   margin: auto;
+}
+.Mygraph{
+  width: 90%;
+  height: 80%;
+  background-color: white;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+canvas{
+  width: 100%; !important;
 }
 .bloque__user{
   width: 480px;
@@ -38,7 +55,8 @@ body {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  background-color: blue;
+  background-color: white;
+  border-radius: 15px;
 }
 .info2-user__container{
   display: flex;
@@ -53,18 +71,26 @@ body {
   font-size: 18px;
 }
 .info2-user__img{
-  width: 60%;
+  width: auto;
 }
 .Graph2{
   grid-area: Grafico2;
-  width: 100%;
+  width: 101%;
   display: flex;
   align-items: end;
   justify-content: center;
 }
 .bloque__sesion{
-  width: 60%;
+  width: 82%;
   height: 140px;
-  background-color: #797979;
+  background-color: white;
   margin-bottom: 20px;
+  border-radius: 15px;
+  padding: 20px 60px;
+}
+.bloque__sesion>h1{
+  font-size: 32px;
+}
+.bloque__sesion>p{
+  font-size: 24px;
 }
