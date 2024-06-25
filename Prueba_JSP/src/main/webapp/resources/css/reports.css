@@ -1,0 +1,39 @@
+
+.reportes__title{
+    text-align: center;
+}
+.report__item{
+    display: flex;
+    gap: 40px;
+    font-size: 24px;
+    padding: 24px;
+}
+
+.main_container__reportes{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 40px;
+}
+
+.linea{
+    height: 3px;
+    background-color: black;
+    border: none;
+    margin: 5px 0;
+}
+
+.item__button{
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #0085FF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.item__button:hover{
+    background-color: #055fb6;
+}

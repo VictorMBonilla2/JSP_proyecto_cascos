@@ -3,12 +3,30 @@
     --borderRadius:15px;
     --bcInputs:rgb(180, 180, 180);
    }
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
    /*Propiedades globales*/
    .body{
      font-family: "Roboto", sans-serif;
    
    }
-   
+
+.Container__error{
+    display: none;
+    width: 70%;
+    height: 6vh;
+    background-color: var(--bcerror);
+    border: 1px solid var(--bordererror);
+    border-radius: var(--borderRadius);
+    font-size: 23px;
+    color: var(--colorfontError);
+    padding-left: 25px;
+    padding-top: 6px;
+
+}
    
    .background{
      background-color: var(--backgroundColor);
@@ -21,7 +39,7 @@
    
    .Container{
      width: 80vb;
-     height: auto;
+     height: 60%;
      border-radius: var(--borderRadius);
      background-color: white;
      display: flex;
@@ -31,6 +49,9 @@
    }
    .Container__title{
      text-align: center;
+   }
+   .container>h3{
+       font-size: clamp(12px, 2vw, 24px)
    }
    
    .Container__logo{
@@ -134,3 +155,4 @@
    .Container__login:hover{
      color:#007bff
    }
+

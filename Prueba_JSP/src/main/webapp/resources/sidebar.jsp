@@ -15,8 +15,10 @@
             <p>Cuentas</p>
         </div>
         <div class="imgContainer">
+            <a href="reportes.jsp">
             <img src="resources/imagenes/warningIcon.svg" alt="log out">
             <p>Reportes</p>
+            </a>
         </div>
     </aside>
 </section>

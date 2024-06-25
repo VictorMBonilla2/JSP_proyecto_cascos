@@ -25,12 +25,12 @@
                     %>
 
                 <div class="casillero" data-entrada="<%= tiempoEntrada.getTime() %>" data-tarifa="10.0">
-                    <div class="casillero__title">
+                    <div class="casillero__title estilo__casillero">
                         <h1><%=placaCasco%></h1>
                         <p><%=ciudad%></p>
                     </div>
 
-                    <div class="casillero__contenido">
+                    <div class="casillero__contenido estilo__contenido">
                         <div class="contenido__info">
                             <div class="info__casillero">
                                 <h3>Casillero</h3>
@@ -102,11 +102,11 @@
                 <%
                         }else {%>
                 <div class="casillero">
-                    <div class="casillero__title">
+                    <div class="casillero__title estilo__casillero">
                         <h1>Espacio <%=espacioId%></h1>
                     </div>
 
-                    <div class="casillero__contenido">
+                    <div class="casillero__contenido estilo__contenido">
                         <div class="contenido__info">
                             <div class="info__casillero">
                                 <h1>Libre</h1>

@@ -25,8 +25,16 @@ public class Controladora_logica {
         return false;
     }
     //Proceso Registro.
-    public void crearPersona(Persona perso){
-         controladora.CrearPersona(perso);
+    public boolean crearPersona(Persona perso){
+        try {
+            controladora.CrearPersona(perso);
+            return true; // La creación fue exitosa
+        } catch (Exception e) {
+            // Maneja la excepción, por ejemplo, registrando el error
+            System.err.println("Error al crear la persona: " + e.getMessage());
+            e.printStackTrace();
+            return false; // Se produjo un error
+        }
      }
 
     //Solicitud de Personas registradas.

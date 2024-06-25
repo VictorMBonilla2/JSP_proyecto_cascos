@@ -21,25 +21,31 @@
   <section class="Container">
     <h3>Registro</h3>
 
+    <div id="Error" class="Container__error">
+      <p>Credenciales incorrectas. Intente nuevamente.</p>
+    </div>
+    <div id="ErrorOnlydigitos" class="Container__error">
+      <p>Ingrese solo números en Documento. Intente nuevamente.</p>
+    </div>
+
     <div class="Inputs_Container">
-      <form action="SvPersona" method="POST" class="formulario">
-        <input type="hidden" name="action" value="registro">
+      <form action="SvPersona" method="POST" class="formulario" id="registro">
         <div class="formulario__inputs">
-        <input type="text"  placeholder="Nombres" name="Nombres" required>
-        <input type="text"  placeholder="Apellidos" name="Apellidos" required>
+          <input type="hidden" id="rol" value="Colaborador">
+          <input type="text"  placeholder="Nombres" name="Nombres" id="Nombre" required>
+          <input type="text"  placeholder="Apellidos" name="Apellidos" id="Apellido" required>
 
-        <select id="pais" name="TipoDocumento">
-          <option value="Cedula de Ciudadania" class="CdC">Cedula de Ciudadania</option>
-          <option value="Tarjeta de identidad" class="TdI">Tarjeta de identidad</option>
-          <option value="Pasaporte" class="Psp">Pasaporte</option>
-        </select>
+          <select id="TipoDocumento" name="TipoDocumento">
+            <option value="Cedula de Ciudadania" class="CdC">Cedula de Ciudadania</option>
+            <option value="Tarjeta de identidad" class="TdI">Tarjeta de identidad</option>
+            <option value="Pasaporte" class="Psp">Pasaporte</option>
+          </select>
 
-        <input type="text"  placeholder="Numero de Documento" name="documento" required>
-        <input type="email" id="email" placeholder="Correo Electronico" name="correo" required>
-        <input type="password" id="passWord" placeholder="contraseña" name="password" required>
+          <input type="text"  placeholder="Numero de Documento" name="documento" id="documento" required>
+          <input type="email" id="email" placeholder="Correo Electronico" name="correo" required>
+          <input type="password" id="passWord" placeholder="contraseña" name="password" required>
         </div>
         <button  type="submit" class="formulario__button">Iniciar Sesión</button>
-
       </form>
 
 
@@ -47,7 +53,7 @@
     </div>
   </section>
 </main>
-
+<script src="resources/js/Registro.js"></script>
 
 </body>
 </html>

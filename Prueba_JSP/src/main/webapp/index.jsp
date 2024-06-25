@@ -32,10 +32,9 @@
         </div>
 
         <div class="Inputs_Container">
-          <form id="Logeo" onsubmit="login(event)" class="formulario">
+          <form id="Logeo" class="formulario">
             <input type="hidden" name="action" value="login">
             <div class="formulario__inputs">
-
             <input type="text" id="documento" placeholder="Documento" name="documento" required>
 
             <select id="TipoDocumento" name="TipoDocumento">

@@ -12,7 +12,7 @@ public class PersistenciaController {
     CascosJPAController cascosJPA = new CascosJPAController();
     Persona persona = new Persona();
 
-    public void CrearPersona(Persona persona) {
+    public void CrearPersona(Persona persona) throws Exception {
         persoJpa.create(persona);
     }
     public List<Persona> TraerPersonas() {

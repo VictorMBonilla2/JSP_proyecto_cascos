@@ -44,23 +44,30 @@ body {
 .casillero__title{
     width: 100%;
     height: 30%;
+}
+.estilo__casillero{
     background-color: #7D93E0;
     display: flex;
     padding: 15px;
     gap: 20px;
     border-radius: var(--borderRadius) var(--borderRadius) 0 0
-
 }
-
 .casillero__contenido{
     width: 100%;
     height: 73%;
-    background-color: #FAFAFA;
     display: flex;
+
+}
+
+.estilo__contenido{
+    background-color: #FAFAFA;
     flex-direction: column;
     align-items: stretch;
     border-radius: 0 0 var(--borderRadius) var(--borderRadius)
 }
+
+
+
 .contenido__info{
     display: flex;
     justify-content: space-around;

@@ -25,23 +25,27 @@ public class PersonaJpaController implements Serializable {
         return fabricaEntidades.createEntityManager();
     }
 
-    public void create(Persona persona) {
+    public void create(Persona persona) throws Exception {
         EntityManager em = null;
-        // Se llama a una EntityManager llamada em, para trabajar el proceso con esta variable y no llamar mas EntityManager
         try {
-
             em = getEntityManager();
-            //se le asigna un manejador de entidades a la variable emy se inicia el proceso.
             em.getTransaction().begin();
             em.persist(persona);
             em.getTransaction().commit();
+        } catch (PersistenceException e) {
+            if (em != null && em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            // Maneja la excepción de persistencia, por ejemplo, registrando el error
+            System.err.println("Error de persistencia: " + e.getMessage());
+            e.printStackTrace();
+            // Lanza una excepción personalizada si es necesario
+            throw new RuntimeException("Error al persistir la entidad", e);
         } finally {
             if (em != null) {
                 em.close();
             }
-
         }
-
     }
 
     public void edit(Persona persona) throws  Exception {

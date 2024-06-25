@@ -23,17 +23,18 @@ public class Persona {
     }
 
 
-    public Persona(String rol, String clave, Date fechaNacimiento, String correo, int documento, String tipoDocumento, String apellido, String nombre, int id) {
-        this.rol = rol;
-        this.clave = clave;
-        this.fechaNacimiento = fechaNacimiento;
-        this.correo = correo;
-        this.documento = documento;
-        TipoDocumento = tipoDocumento;
-        this.apellido = apellido;
-        this.nombre = nombre;
+    public Persona(int id, String nombre, String apellido, String tipoDocumento, int documento, String correo, Date fechaNacimiento, String clave, String rol) {
         this.id = id;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        TipoDocumento = tipoDocumento;
+        this.documento = documento;
+        this.correo = correo;
+        this.fechaNacimiento = fechaNacimiento;
+        this.clave = clave;
+        this.rol = rol;
     }
+
 
     public String getRol() {
         return rol;

@@ -60,12 +60,20 @@ public class SvPersona extends HttpServlet {
 
         } else if("registro".equals(action)){
 
-        String nombre = req.getParameter("Nombres");
-        String apellido = req.getParameter("Apellidos");
-        String TipoDocumento = req.getParameter("TipoDocumento");
-        int documento = Integer.parseInt(req.getParameter("documento"));
-        String correo = req.getParameter("correo");
-        String clave = req.getParameter("password");
+        String nombre = jsonObject.getString("nombre");
+        String apellido = jsonObject.getString("apellido");
+        String TipoDocumento = jsonObject.getString("TipoDocumento");
+        int documento = jsonObject.getInt("documento");
+        String correo = jsonObject.getString("correo");
+        String clave = jsonObject.getString("password");
+        String rol = jsonObject.getString("rol");
+        System.out.println("Nombre: " + nombre);
+        System.out.println("Apellido: " + apellido);
+        System.out.println("TipoDocumento: " + TipoDocumento);
+        System.out.println("Documento: " + documento);
+        System.out.println("Correo: " + correo);
+        System.out.println("Clave: " + clave);
+        System.out.println("Rol: " + rol);
         Persona persona = new Persona();
         persona.setNombre(nombre);
         persona.setApellido(apellido);
@@ -73,8 +81,23 @@ public class SvPersona extends HttpServlet {
         persona.setDocumento(documento);
         persona.setCorreo(correo);
         persona.setClave(clave);
-        controladora_logica.crearPersona(persona);
+        persona.setRol(rol);
 
+        boolean validacion= controladora_logica.crearPersona(persona);
+            resp.setContentType("application/json");
+            PrintWriter out = resp.getWriter();
+
+            JSONObject jsonResponse = new JSONObject();
+            if (validacion) {
+                jsonResponse.put("status", "success");
+                jsonResponse.put("message", "Login successful");
+            } else {
+                jsonResponse.put("status", "error");
+                jsonResponse.put("message", "Invalid credentials");
+            }
+
+            out.print(jsonResponse.toString());
+            out.flush();
         }
         else {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no reconocida");
