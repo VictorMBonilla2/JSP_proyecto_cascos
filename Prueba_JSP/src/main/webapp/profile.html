@@ -1,0 +1,142 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Inicio</title>
+  <link rel="stylesheet" href="resources/css/Styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+  <header class="hea_container">
+    <div class="hea_container__logo">
+      <img src="resources/imagenes/Logo.png" alt="" class="logo__img">
+    </div>
+    <div class="hea_container__list">
+
+      <ul class="list__buttons">
+        <li><a href="profile.jsp">Inicio</a></li>
+        <li><a href="Casilleros.jsp">Casilleros</a></li>
+      </ul>
+      <button id="botonMostrar" class="perfil-button">
+        <img src="resources/imagenes/IconPerfil.png">
+      </button>
+    </div>
+    <style>
+      .perfil-button {
+        border: none;
+        /* Eliminar borde del botón */
+        padding: 0;
+        /* Eliminar padding del botón */
+        background: none;
+        /* Sin fondo para el botón */
+        cursor: pointer;
+        /* Cambiar el cursor al pasar sobre el botón */
+      }
+    </style>
+    <div id="right-sidebar">
+      <div id="contenedorIcono" class="escondido">
+        <div class="user">
+          <img src="" class="user_class">
+          <h3>(nombre)</h3>
+          <p>(rol)</p>
+          <span class="close-button" modal-id="modal">&times;</span>
+        </div>
+        <hr class="linea">
+        <div class="ui-menu">
+          <a class="ui-menu__option">
+            <img src="">
+            <p>Cerrar Sesión</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="main_container">
+      <section class="main_container__aside">
+
+        <aside class="BarraIzq">
+
+          <div class="imgContainerr">
+            <img src="resources/imagenes/perfilIcon.svg" alt="perfil">
+            <p>Perfil</p>
+          </div>
+          <div class="imgContainerr">
+            <object type="image/svg+xml" data="resources/imagenes/casilleros.svg" class="svg-icon"></object>
+            <p>Casillero</p>
+          </div>
+          <div class="imgContainerr">
+            <img src="resources/imagenes/bookIcoin.svg" alt="bugs">
+            <p>Cuentas</p>
+          </div>
+          <div class="imgContainer">
+            <a href="reportes.jsp">
+              <img src="resources/imagenes/warningIcon.svg" alt="log out">
+              <p>Reportes</p>
+            </a>
+          </div>
+        </aside>
+      </section>
+      <section class="main_container__home">
+        <div class="info_user">
+          <h1>Bienvenido (nombre)</h1>
+          <section class="content">
+            <div class="Mygraph">
+              <canvas id="myChart" height="900" width="900"></canvas>
+            </div>
+          </section>
+        </div>
+        <div class="Graph1">
+          <div class="bloque__user">
+            <div class="info2-user__img">
+              <img src="resources/imagenes/IconPerfil.png" alt="icono">
+            </div>
+
+            <div class="info2-user__container">
+              <div class="info2-user__text">
+                <h1>Nombre</h1>
+                <p> Jose</p>
+              </div>
+              <div class="info2-user__text">
+                <h1>Apellido</h1>
+                <p> Antonio G.</p>
+              </div>
+              <div class="info2-user__text">
+                <h1>Tipo Doc</h1>
+                <p> ???</p>
+              </div>
+              <div class="info2-user__text">
+                <h1>num Doc</h1>
+                <p> 0485485</p>
+              </div>
+              <div class="info2-user__text">
+                <h1>fecha nac</h1>
+                <p> 17/35/1995</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="Graph2">
+          <div class="bloque__sesion">
+            <h1>Has iniciado sesíon en: (lugar)</h1>
+            <p>Ult. sesión activa: (fecha)<br> (hora)</p>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+  <jsp:include page="resources/footer.jsp" />
+  <script src="resources/js/graficos.js"></script>
+
+
+</body>
+
+</html>
