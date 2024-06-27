@@ -1,198 +1,632 @@
-<%@ page import="Modelo.TbEspacio" %>
-  <%@ page import="java.util.List" %>
-    <%@ page import="Modelo.TbCasco" %>
-      <%@ page import="java.util.Date" %>
-        <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-          <jsp:include page="resources/header.jsp" />
+<html>
 
-          <jsp:include page="resources/sidebar.jsp" />
+<head>
+  <meta charset="UTF-8">
+  <title>Inicio</title>
+  <link rel="stylesheet" href="resources/css/Styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+</head>
 
-          <section class="main_container__casillero" id="casillerosContainer">
-            <% Integer cantidadCasilleros=(Integer) request.getAttribute("Casilleros"); List<TbEspacio> DatosEspacio =
-              (List<TbEspacio>) request.getAttribute("Espacios");
-                if (DatosEspacio != null) {
-                for (TbEspacio espacio : DatosEspacio) {
-                TbCasco casco = espacio.getCasco();
-                int espacioId = espacio.getId();
+<body>
+  <header class="hea_container">
+    <div class="hea_container__logo">
+      <img src="resources/imagenes/Logo.png" alt="" class="logo__img">
+    </div>
+    <div class="hea_container__list">
 
-                if (casco != null) {
-                String placaCasco = casco.getPlaca_casco();
-                String ciudad = casco.getCiudad();
-                Integer cantCascos= casco.getCant_casco();
-                Date tiempoEntrada = espacio.getHora_entrada();
-                %>
+      <ul class="list__buttons">
+        <li><a href="profile.jsp">Inicio</a></li>
+        <li><a href="Casilleros.jsp">Casilleros</a></li>
+      </ul>
+      <button id="botonMostrar" class="perfil-button">
+        <img src="resources/imagenes/IconPerfil.png">
+      </button>
+    </div>
+    <style>
+      .perfil-button {
+        border: none;
+        /* Eliminar borde del botón */
+        padding: 0;
+        /* Eliminar padding del botón */
+        background: none;
+        /* Sin fondo para el botón */
+        cursor: pointer;
+        /* Cambiar el cursor al pasar sobre el botón */
+      }
+    </style>
+    <div id="right-sidebar">
+      <div id="contenedorIcono" class="escondido">
+        <div class="user">
+          <img src="" class="user_class">
+          <h3>(nombre)</h3>
+          <p>(rol)</p>
+          <span class="close-button" modal-id="modal">&times;</span>
+        </div>
+        <hr class="linea">
+        <div class="ui-menu">
+          <a class="ui-menu__option">
+            <img src="">
+            <p>Cerrar Sesión</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
 
-                <div class="casillero" data-entrada="<%= tiempoEntrada.getTime() %>" data-tarifa="10.0">
-                  <div class="casillero__title estilo__casillero">
-                    <h1>
-                      <%=placaCasco%>
-                    </h1>
-                    <p>
-                      <%=ciudad%>
-                    </p>
-                  </div>
+  <main>
+    <section class="main_container">
+      <section class="main_container__aside">
 
-                  <div class="casillero__contenido estilo__contenido">
-                    <div class="contenido__info">
-                      <div class="info__casillero">
-                        <h3>Casillero</h3>
-                        <p>
-                          <%=espacioId%>
-                        </p>
-                      </div>
-                      <div class="info__tiempo">
-                        <h3>Tiempo</h3>
-                        <p class="tiempo-transcurrido"></p>
-                      </div>
-                      <div class="info__costo">
-                        <h3>Costo</h3>
-                        <p class="costo"></p>
-                      </div>
-                    </div>
-                    <div class="contenido__botones">
-                      <button class="botones botones__pago " data-pay="paymodal<%=espacioId%>">
-                        Pagar
-                      </button>
-                      <button class="botones botones__ajustar" data-edit="editmodal<%=espacioId%>">
-                        Ajustar
-                      </button>
-                    </div>
-                  </div>
+        <aside class="BarraIzq">
+
+          <div class="imgContainerr">
+            <img src="resources/imagenes/perfilIcon.svg" alt="perfil">
+            <p>Perfil</p>
+          </div>
+          <div class="imgContainerr">
+            <object type="image/svg+xml" data="resources/imagenes/casilleros.svg" class="svg-icon"></object>
+            <p>Casillero</p>
+          </div>
+          <div class="imgContainerr">
+            <img src="resources/imagenes/bookIcoin.svg" alt="bugs">
+            <p>Cuentas</p>
+          </div>
+          <div class="imgContainer">
+            <a href="reportes.jsp">
+              <img src="resources/imagenes/warningIcon.svg" alt="log out">
+              <p>Reportes</p>
+            </a>
+          </div>
+        </aside>
+      </section>
+      <section class="main_container__casillero" id="casillerosContainer">
+
+        <div class="casillero" id="casillero1">
+          <div class="casillero__title estilo__casillero">
+            <h1>Espacio 1</h1>
+          </div>
+
+          <div class="casillero__contenido estilo__contenido">
+            <div class="contenido__info">
+              <div class="info__casillero">
+                <h1>Libre</h1>
+              </div>
+            </div>
+            <div class="contenido__botones">
+              <button class="botones botones--largo botones__pago addCasilleroBtn" data-add="addmodal1">
+                Añadir
+              </button>
+            </div>
+          </div>
+
+        </div>
+        <!-- ventana Crear Espacio-->
+        <div id="addmodal1" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+
+              <h2>Casillero 1</h2>
+              <span class="close" data-modal-id="addmodal1">×</span>
+            </div>
+            <div class="modal-body">
+              <h2>Nuevo Casco</h2>
+              <form id="addCasco1" onsubmit="addCasco(event, 1)" class="formulario">
+                <div class="formulario__inputs">
+                  <input type="text" id="addplaca1" placeholder="Placa" name="documento" required="">
+                  <input type="text" id="addciudad1" placeholder="Ciudad" name="ciudad" required="">
+                  <input type="number" id="addcant_cascos1" placeholder="Cantidad de cascos" name="cant_cascos"
+                    required="">
+                  <button type="submit" class="formulario__button">Añadir</button>
                 </div>
-                <!-- ventana add Espacio-->
-                <div id="paymodal<%=espacioId%>" class="modal">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h2>Casillero <%=espacioId%>
-                      </h2>
-                      <span class="close" data-modal-id="paymodal<%=espacioId%>">&times;</span>
-                    </div>
-                    <div class="modal-body">
-                      <h2>Pagar Casco</h2>
-                      <form id="payCasco<%= espacioId %>" onsubmit="payCasco(event, <%= espacioId %>)"
-                        class="formulario">
-                        <div class="formulario__inputs">
-                          <p>Tiempo transcurrido: riwmpo</p>
-                          <p>Costo Total: $1000</p>
-                          <p>Placa: <%=placaCasco%>
-                          </p>
+              </form>
+            </div>
+          </div>
+        </div>
 
-                          <button type="submit" class="formulario__button">Añadir</button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
+
+        <div class="casillero" id="casillero2" data-entrada="1719426406882" data-tarifa="10.0">
+          <div class="casillero__title estilo__casillero">
+            <h1>JHG-785</h1>
+            <p>Bucaramanga</p>
+          </div>
+
+          <div class="casillero__contenido estilo__contenido">
+            <div class="contenido__info">
+              <div class="info__casillero">
+                <h3>Casillero</h3>
+                <p>2</p>
+              </div>
+              <div class="info__tiempo">
+                <h3>Tiempo</h3>
+                <p class="tiempo-transcurrido">0 horas y 9 minutos</p>
+              </div>
+              <div class="info__costo">
+                <h3>Costo</h3>
+                <p class="costo">$1.56</p>
+              </div>
+            </div>
+            <div class="contenido__botones">
+              <button class="botones botones__pago " data-pay="paymodal2">
+                Pagar
+              </button>
+              <button class="botones botones__ajustar" data-edit="editmodal2">
+                Ajustar
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- ventana pay Espacio-->
+        <div id="paymodal2" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2>Casillero 2</h2>
+              <span class="close" data-modal-id="paymodal2">×</span>
+            </div>
+            <div class="modal-body">
+              <h2>Pagar Casco</h2>
+              <form id="payCasco2" onsubmit="payCasco(event, 2)" class="formulario">
+                <div class="formulario__inputs">
+                  <p>Tiempo transcurrido: riwmpo</p>
+                  <p>Costo Total: $1000</p>
+                  <p>Placa: JHG-785</p>
+
+                  <button type="submit" class="formulario__button">Añadir</button>
                 </div>
-                <!-- ventana Editar Espacio-->
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- ventana Editar Espacio-->
 
-                <div id="editmodal<%=espacioId%>" class="modal">
-                  <div class="modal-content">
-                    <div class="modal-header">
+        <div id="editmodal2" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
 
-                      <h2>Casillero <%=espacioId%>
-                      </h2>
-                      <span class="close" data-modal-id="editmodal<%=espacioId%>">&times;</span>
-                    </div>
-                    <div class="modal-body">
-                      <h2>editar Casco</h2>
-                      <form id="editCasco<%= espacioId %>" onsubmit="editCasco(event, <%= espacioId %>)"
-                        class="formulario">
-                        <div class="formulario__inputs">
-                          <input type="text" id="editplaca<%=espacioId%>" placeholder="Placa" name="documento"
-                            value="<%=placaCasco%>" required>
-                          <input type="text" id="editciudad<%=espacioId%>" placeholder="Ciudad" name="ciudad"
-                            value="<%=ciudad%>" required>
-                          <input type="number" id="editcant_cascos<%=espacioId%>" placeholder="Cantidad de cascos"
-                            name="cant_cascos" value="<%=cantCascos%>" required>
-                          <button type="submit" class="formulario__button">Añadir</button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
+              <h2>Casillero 2</h2>
+              <span class="close" data-modal-id="editmodal2">×</span>
+            </div>
+            <div class="modal-body">
+              <h2>editar Casco</h2>
+              <form id="editCasco2" onsubmit="editCasco(event, 2)" class="formulario">
+                <div class="formulario__inputs">
+                  <input type="text" id="editplaca2" placeholder="Placa" name="documento" value="JHG-785" required="">
+                  <input type="text" id="editciudad2" placeholder="Ciudad" name="ciudad" value="Bucaramanga"
+                    required="">
+                  <input type="number" id="editcant_cascos2" placeholder="Cantidad de cascos" name="cant_cascos"
+                    value="3" required="">
+                  <button type="submit" class="formulario__button">Añadir</button>
                 </div>
-
-                <% }else {%>
-                  <div class="casillero">
-                    <div class="casillero__title estilo__casillero">
-                      <h1>Espacio <%=espacioId%>
-                      </h1>
-                    </div>
-
-                    <div class="casillero__contenido estilo__contenido">
-                      <div class="contenido__info">
-                        <div class="info__casillero">
-                          <h1>Libre</h1>
-                        </div>
-                      </div>
-                      <div class="contenido__botones">
-                        <button class="botones botones--largo botones__pago addCasilleroBtn"
-                          data-add="addmodal<%=espacioId%>">
-                          Añadir
-                        </button>
-                      </div>
-                    </div>
-
-                  </div>
-                  <!-- ventana Crear Espacio-->
-                  <div id="addmodal<%=espacioId%>" class="modal">
-                    <div class="modal-content">
-                      <div class="modal-header">
-
-                        <h2>Casillero <%=espacioId%>
-                        </h2>
-                        <span class="close" data-modal-id="addmodal<%=espacioId%>">&times;</span>
-                      </div>
-                      <div class="modal-body">
-                        <h2>Nuevo Casco</h2>
-                        <form id="addCasco<%= espacioId %>" onsubmit="addCasco(event, <%= espacioId %>)"
-                          class="formulario">
-                          <div class="formulario__inputs">
-                            <input type="text" id="addplaca<%=espacioId%>" placeholder="Placa" name="documento"
-                              required>
-                            <input type="text" id="addciudad<%=espacioId%>" placeholder="Ciudad" name="ciudad" required>
-                            <input type="number" id="addcant_cascos<%=espacioId%>" placeholder="Cantidad de cascos"
-                              name="cant_cascos" required>
-                            <button type="submit" class="formulario__button">Añadir</button>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                  <% } } } else { %>
-                    <div class="casillero">
-                      <div class="casillero__title">
-                        <h1>
-                          <%="vacio"%>
-                        </h1>
-                      </div>
-
-                      <div class="casillero__contenido">
-                        <div class="contenido__info">
-                          <div class="info__casillero">
-                            <h1>Libre</h1>
-                          </div>
-                        </div>
-                        <div class="contenido__botones">
-                          <button class="botones botones--largo botones__pago">
-                            Pagar
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+              </form>
+            </div>
+          </div>
+        </div>
 
 
-                    <%} %>
+        <div class="casillero" id="casillero3">
+          <div class="casillero__title estilo__casillero">
+            <h1>Espacio 3</h1>
+          </div>
+
+          <div class="casillero__contenido estilo__contenido">
+            <div class="contenido__info">
+              <div class="info__casillero">
+                <h1>Libre</h1>
+              </div>
+            </div>
+            <div class="contenido__botones">
+              <button class="botones botones--largo botones__pago addCasilleroBtn" data-add="addmodal3">
+                Añadir
+              </button>
+            </div>
+          </div>
+
+        </div>
+        <!-- ventana Crear Espacio-->
+        <div id="addmodal3" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+
+              <h2>Casillero 3</h2>
+              <span class="close" data-modal-id="addmodal3">×</span>
+            </div>
+            <div class="modal-body">
+              <h2>Nuevo Casco</h2>
+              <form id="addCasco3" onsubmit="addCasco(event, 3)" class="formulario">
+                <div class="formulario__inputs">
+                  <input type="text" id="addplaca3" placeholder="Placa" name="documento" required="">
+                  <input type="text" id="addciudad3" placeholder="Ciudad" name="ciudad" required="">
+                  <input type="number" id="addcant_cascos3" placeholder="Cantidad de cascos" name="cant_cascos"
+                    required="">
+                  <button type="submit" class="formulario__button">Añadir</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="casillero" id="casillero4">
+          <div class="casillero__title estilo__casillero">
+            <h1>Espacio 4</h1>
+          </div>
+
+          <div class="casillero__contenido estilo__contenido">
+            <div class="contenido__info">
+              <div class="info__casillero">
+                <h1>Libre</h1>
+              </div>
+            </div>
+            <div class="contenido__botones">
+              <button class="botones botones--largo botones__pago addCasilleroBtn" data-add="addmodal4">
+                Añadir
+              </button>
+            </div>
+          </div>
+
+        </div>
+        <!-- ventana Crear Espacio-->
+        <div id="addmodal4" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+
+              <h2>Casillero 4</h2>
+              <span class="close" data-modal-id="addmodal4">×</span>
+            </div>
+            <div class="modal-body">
+              <h2>Nuevo Casco</h2>
+              <form id="addCasco4" onsubmit="addCasco(event, 4)" class="formulario">
+                <div class="formulario__inputs">
+                  <input type="text" id="addplaca4" placeholder="Placa" name="documento" required="">
+                  <input type="text" id="addciudad4" placeholder="Ciudad" name="ciudad" required="">
+                  <input type="number" id="addcant_cascos4" placeholder="Cantidad de cascos" name="cant_cascos"
+                    required="">
+                  <button type="submit" class="formulario__button">Añadir</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="casillero" id="casillero5" data-entrada="1719426422738" data-tarifa="10.0">
+          <div class="casillero__title estilo__casillero">
+            <h1>852-43F</h1>
+            <p>Giron</p>
+          </div>
+
+          <div class="casillero__contenido estilo__contenido">
+            <div class="contenido__info">
+              <div class="info__casillero">
+                <h3>Casillero</h3>
+                <p>5</p>
+              </div>
+              <div class="info__tiempo">
+                <h3>Tiempo</h3>
+                <p class="tiempo-transcurrido">0 horas y 9 minutos</p>
+              </div>
+              <div class="info__costo">
+                <h3>Costo</h3>
+                <p class="costo">$1.52</p>
+              </div>
+            </div>
+            <div class="contenido__botones">
+              <button class="botones botones__pago " data-pay="paymodal5">
+                Pagar
+              </button>
+              <button class="botones botones__ajustar" data-edit="editmodal5">
+                Ajustar
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- ventana add Espacio-->
+        <div id="paymodal5" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2>Casillero 5</h2>
+              <span class="close" data-modal-id="paymodal5">×</span>
+            </div>
+            <div class="modal-body">
+              <h2>Pagar Casco</h2>
+              <form id="payCasco5" onsubmit="payCasco(event, 5)" class="formulario">
+                <div class="formulario__inputs">
+                  <p>Tiempo transcurrido: riwmpo</p>
+                  <p>Costo Total: $1000</p>
+                  <p>Placa: 852-43F</p>
+
+                  <button type="submit" class="formulario__button">Añadir</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- ventana Editar Espacio-->
+
+        <div id="editmodal5" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+
+              <h2>Casillero 5</h2>
+              <span class="close" data-modal-id="editmodal5">×</span>
+            </div>
+            <div class="modal-body">
+              <h2>editar Casco</h2>
+              <form id="editCasco5" onsubmit="editCasco(event, 5)" class="formulario">
+                <div class="formulario__inputs">
+                  <input type="text" id="editplaca5" placeholder="Placa" name="documento" value="852-43F" required="">
+                  <input type="text" id="editciudad5" placeholder="Ciudad" name="ciudad" value="Giron" required="">
+                  <input type="number" id="editcant_cascos5" placeholder="Cantidad de cascos" name="cant_cascos"
+                    value="1" required="">
+                  <button type="submit" class="formulario__button">Añadir</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="casillero" id="casillero6">
+          <div class="casillero__title estilo__casillero">
+            <h1>Espacio 6</h1>
+          </div>
+
+          <div class="casillero__contenido estilo__contenido">
+            <div class="contenido__info">
+              <div class="info__casillero">
+                <h1>Libre</h1>
+              </div>
+            </div>
+            <div class="contenido__botones">
+              <button class="botones botones--largo botones__pago addCasilleroBtn" data-add="addmodal6">
+                Añadir
+              </button>
+            </div>
+          </div>
+
+        </div>
+        <!-- ventana Crear Espacio-->
+        <div id="addmodal6" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+
+              <h2>Casillero 6</h2>
+              <span class="close" data-modal-id="addmodal6">×</span>
+            </div>
+            <div class="modal-body">
+              <h2>Nuevo Casco</h2>
+              <form id="addCasco6" onsubmit="addCasco(event, 6)" class="formulario">
+                <div class="formulario__inputs">
+                  <input type="text" id="addplaca6" placeholder="Placa" name="documento" required="">
+                  <input type="text" id="addciudad6" placeholder="Ciudad" name="ciudad" required="">
+                  <input type="number" id="addcant_cascos6" placeholder="Cantidad de cascos" name="cant_cascos"
+                    required="">
+                  <button type="submit" class="formulario__button">Añadir</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="casillero" id="casillero7">
+          <div class="casillero__title estilo__casillero">
+            <h1>Espacio 7</h1>
+          </div>
+
+          <div class="casillero__contenido estilo__contenido">
+            <div class="contenido__info">
+              <div class="info__casillero">
+                <h1>Libre</h1>
+              </div>
+            </div>
+            <div class="contenido__botones">
+              <button class="botones botones--largo botones__pago addCasilleroBtn" data-add="addmodal7">
+                Añadir
+              </button>
+            </div>
+          </div>
+
+        </div>
+        <!-- ventana Crear Espacio-->
+        <div id="addmodal7" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+
+              <h2>Casillero 7</h2>
+              <span class="close" data-modal-id="addmodal7">×</span>
+            </div>
+            <div class="modal-body">
+              <h2>Nuevo Casco</h2>
+              <form id="addCasco7" onsubmit="addCasco(event, 7)" class="formulario">
+                <div class="formulario__inputs">
+                  <input type="text" id="addplaca7" placeholder="Placa" name="documento" required="">
+                  <input type="text" id="addciudad7" placeholder="Ciudad" name="ciudad" required="">
+                  <input type="number" id="addcant_cascos7" placeholder="Cantidad de cascos" name="cant_cascos"
+                    required="">
+                  <button type="submit" class="formulario__button">Añadir</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="casillero" id="casillero8" data-entrada="1719426453177" data-tarifa="10.0">
+          <div class="casillero__title estilo__casillero">
+            <h1>JDF-784</h1>
+            <p>Floridablanca</p>
+          </div>
+
+          <div class="casillero__contenido estilo__contenido">
+            <div class="contenido__info">
+              <div class="info__casillero">
+                <h3>Casillero</h3>
+                <p>8</p>
+              </div>
+              <div class="info__tiempo">
+                <h3>Tiempo</h3>
+                <p class="tiempo-transcurrido">0 horas y 8 minutos</p>
+              </div>
+              <div class="info__costo">
+                <h3>Costo</h3>
+                <p class="costo">$1.43</p>
+              </div>
+            </div>
+            <div class="contenido__botones">
+              <button class="botones botones__pago " data-pay="paymodal8">
+                Pagar
+              </button>
+              <button class="botones botones__ajustar" data-edit="editmodal8">
+                Ajustar
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- ventana add Espacio-->
+        <div id="paymodal8" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2>Casillero 8</h2>
+              <span class="close" data-modal-id="paymodal8">×</span>
+            </div>
+            <div class="modal-body">
+              <h2>Pagar Casco</h2>
+              <form id="payCasco8" onsubmit="payCasco(event, 8)" class="formulario">
+                <div class="formulario__inputs">
+                  <p>Tiempo transcurrido: riwmpo</p>
+                  <p>Costo Total: $1000</p>
+                  <p>Placa: JDF-784</p>
+
+                  <button type="submit" class="formulario__button">Añadir</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- ventana Editar Espacio-->
+
+        <div id="editmodal8" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+
+              <h2>Casillero 8</h2>
+              <span class="close" data-modal-id="editmodal8">×</span>
+            </div>
+            <div class="modal-body">
+              <h2>editar Casco</h2>
+              <form id="editCasco8" onsubmit="editCasco(event, 8)" class="formulario">
+                <div class="formulario__inputs">
+                  <input type="text" id="editplaca8" placeholder="Placa" name="documento" value="JDF-784" required="">
+                  <input type="text" id="editciudad8" placeholder="Ciudad" name="ciudad" value="Floridablanca"
+                    required="">
+                  <input type="number" id="editcant_cascos8" placeholder="Cantidad de cascos" name="cant_cascos"
+                    value="1" required="">
+                  <button type="submit" class="formulario__button">Añadir</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="casillero" id="casillero9">
+          <div class="casillero__title estilo__casillero">
+            <h1>Espacio 9</h1>
+          </div>
+
+          <div class="casillero__contenido estilo__contenido">
+            <div class="contenido__info">
+              <div class="info__casillero">
+                <h1>Libre</h1>
+              </div>
+            </div>
+            <div class="contenido__botones">
+              <button class="botones botones--largo botones__pago addCasilleroBtn" data-add="addmodal9">
+                Añadir
+              </button>
+            </div>
+          </div>
+
+        </div>
+        <!-- ventana Crear Espacio-->
+        <div id="addmodal9" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+
+              <h2>Casillero 9</h2>
+              <span class="close" data-modal-id="addmodal9">×</span>
+            </div>
+            <div class="modal-body">
+              <h2>Nuevo Casco</h2>
+              <form id="addCasco9" onsubmit="addCasco(event, 9)" class="formulario">
+                <div class="formulario__inputs">
+                  <input type="text" id="addplaca9" placeholder="Placa" name="documento" required="">
+                  <input type="text" id="addciudad9" placeholder="Ciudad" name="ciudad" required="">
+                  <input type="number" id="addcant_cascos9" placeholder="Cantidad de cascos" name="cant_cascos"
+                    required="">
+                  <button type="submit" class="formulario__button">Añadir</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="casillero" id="casillero10">
+          <div class="casillero__title estilo__casillero">
+            <h1>Espacio 10</h1>
+          </div>
+
+          <div class="casillero__contenido estilo__contenido">
+            <div class="contenido__info">
+              <div class="info__casillero">
+                <h1>Libre</h1>
+              </div>
+            </div>
+            <div class="contenido__botones">
+              <button class="botones botones--largo botones__pago addCasilleroBtn" data-add="addmodal10">
+                Añadir
+              </button>
+            </div>
+          </div>
+
+        </div>
+        <!-- ventana Crear Espacio-->
+        <div id="addmodal10" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+
+              <h2>Casillero 10</h2>
+              <span class="close" data-modal-id="addmodal10">×</span>
+            </div>
+            <div class="modal-body">
+              <h2>Nuevo Casco</h2>
+              <form id="addCasco10" onsubmit="addCasco(event, 10)" class="formulario">
+                <div class="formulario__inputs">
+                  <input type="text" id="addplaca10" placeholder="Placa" name="documento" required="">
+                  <input type="text" id="addciudad10" placeholder="Ciudad" name="ciudad" required="">
+                  <input type="number" id="addcant_cascos10" placeholder="Cantidad de cascos" name="cant_cascos"
+                    required="">
+                  <button type="submit" class="formulario__button">Añadir</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
 
 
 
-                      <script src="resources/js/Casilleros.js"></script>
-                      <script src="resources/js/tiempoCasilleros.js"></script>
 
-          </section>
-          </section>
-          </main>
-          <jsp:include page="resources/footer.jsp" />
-          </body>
+        <script src="resources/js/Casilleros.js"></script>
+        <script src="resources/js/tiempoCasilleros.js"></script>
 
-          </html>
+      </section>
+    </section>
+  </main>
+  <jsp:include page="resources/footer.jsp" />
+</body>
+
+</html>
