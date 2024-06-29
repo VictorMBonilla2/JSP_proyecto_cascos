@@ -2,7 +2,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="Modelo.TbCasco" %>
 <%@ page import="java.util.Date" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <jsp:include page="resources/header.jsp" />
 
 <jsp:include page="resources/sidebar.jsp" />
@@ -81,7 +81,6 @@
                 <div id="editmodal<%=espacioId%>" class="modal">
                     <div class="modal-content">
                         <div class="modal-header">
-
                             <h2>Casillero <%=espacioId%></h2>
                             <span class="close" data-modal-id="editmodal<%=espacioId%>">&times;</span>
                         </div>

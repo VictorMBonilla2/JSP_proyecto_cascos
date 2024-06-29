@@ -94,7 +94,7 @@ ul.list__buttons a {
 }
 
 .ui-menu__option{
-    border-radius: 15px;
+    border-radius: var(--borderRadius);
     background-color: inherit;
     transition: background-color 0.5s;
     width: 85%;

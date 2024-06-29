@@ -56,8 +56,8 @@ public class Controladora_logica {
         return espacios;
     }
 
-    public List<TbEspacio> DatosEspacio(){
-        return controladora.DatosEspacios();
+    public List<TbEspacio> DatosEspacio() {
+        return null;
     }
 
 
@@ -106,5 +106,17 @@ public class Controladora_logica {
             System.err.println("Error al eliminar el casco con ID " + idCasco + ": " + e.getMessage());
             return false; // Devuelve false si se produce una excepción
         }
+    }
+
+    public Persona buscarusuario(int documento) {
+
+        List<Persona> lista = controladora.TraerPersonas();
+
+        for (Persona persona : lista) {
+            if (persona.getDocumento() == documento) {
+                return persona;
+            }
+        }
+        return null;
     }
 }
