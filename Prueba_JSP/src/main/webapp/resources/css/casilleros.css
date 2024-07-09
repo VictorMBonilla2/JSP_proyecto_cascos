@@ -48,6 +48,7 @@ body {
 .estilo__casillero{
     background-color: #7D93E0;
     display: flex;
+    justify-content: space-between;
     padding: 15px;
     gap: 20px;
     border-radius: var(--borderRadius) var(--borderRadius) 0 0

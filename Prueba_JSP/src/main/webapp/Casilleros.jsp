@@ -26,23 +26,23 @@
 
                 <div class="casillero" data-entrada="<%= tiempoEntrada.getTime() %>" data-tarifa="10.0">
                     <div class="casillero__title estilo__casillero">
-                        <h1><%=placaCasco%></h1>
-                        <p><%=ciudad%></p>
+                        <h1>Espacio <%=espacioId%></h1>
+                        <p>(Nombre aprendiz )</p>
                     </div>
 
                     <div class="casillero__contenido estilo__contenido">
                         <div class="contenido__info">
                             <div class="info__casillero">
-                                <h3>Casillero</h3>
-                                <p><%=espacioId%></p>
+                                <h3>Documento</h3>
+                                <p>(Documento Aprendiz)</p>
                             </div>
                             <div class="info__tiempo">
-                                <h3>Tiempo</h3>
-                                <p class="tiempo-transcurrido"></p>
+                                <h3>Placa</h3>
+                                <p> <%=placaCasco%></p>
                             </div>
                             <div class="info__costo">
-                                <h3>Costo</h3>
-                                <p class="costo"></p>
+                                <h3>Cascos</h3>
+                                <p> (cantidad cascos) </p>
                             </div>
                         </div>
                         <div class="contenido__botones">
