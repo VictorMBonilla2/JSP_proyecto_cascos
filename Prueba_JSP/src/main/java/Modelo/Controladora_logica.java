@@ -57,7 +57,7 @@ public class Controladora_logica {
     }
 
     public List<TbEspacio> DatosEspacio() {
-        return null;
+        return controladora.DatosEspacios();
     }
 
 
