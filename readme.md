@@ -1,25 +1,25 @@
-# Project Dependencies
+# Dependencias del Proyecto
 
-This project requires several external libraries. Below are the steps to install these dependencies using Maven.
+Este proyecto requiere varias librerías externas. A continuación se presentan los pasos para instalar estas dependencias usando Maven.
 
-## Prerequisites
+## Prerrequisitos
 
-- Java Development Kit (JDK) 21 or higher
-- Apache Maven 3.6.3 or higher
+- Kit de Desarrollo de Java (JDK) 21 o superior
+- Apache Maven 3.6.3 o superior
 
-## Installation
+## Instalación
 
-1. **Install JDK 21**
+1. **Instalar JDK 21**
 
-   Download and install JDK 21 from the [Oracle website](https://www.oracle.com/java/technologies/javase-jdk21-downloads.html) or use your package manager if you are on Linux.
+   Descarga e instala JDK 21 desde el [sitio web de Oracle](https://www.oracle.com/java/technologies/javase-jdk21-downloads.html) o usa tu gestor de paquetes si estás en Linux.
 
-2. **Install Apache Maven**
+2. **Instalar Apache Maven**
 
-   Download and install Apache Maven from the [Maven website](https://maven.apache.org/download.cgi).
+   Descarga e instala Apache Maven desde el [sitio web de Maven](https://maven.apache.org/download.cgi).
 
-3. **Add Dependencies to `pom.xml`**
+3. **Agregar Dependencias a `pom.xml`**
 
-   Add the following dependencies to your `pom.xml` file:
+   Agrega las siguientes dependencias a tu archivo `pom.xml`:
 
    ```xml
    <dependencies>
@@ -154,10 +154,9 @@ This project requires several external libraries. Below are the steps to install
            <version>1.2.0</version>
        </dependency>
    </dependencies>
-
 3. **Build the Project **
 
-   Open a terminal, navigate to the root directory of your project, and run the following command to build the project and download the dependencies:
+   Abra una terminal, navegue hasta el directorio raíz de su proyecto y ejecute el siguiente comando para compilar el proyecto y descargar las dependencias:
 
 ```sh
 mvn clean install
