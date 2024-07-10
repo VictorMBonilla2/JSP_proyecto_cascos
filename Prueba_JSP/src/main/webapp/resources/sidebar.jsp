@@ -11,8 +11,9 @@
             <p>Casillero</p>
         </div>
         <div class="imgContainerr">
+            <a href="registros.jsp">
             <img src="resources/imagenes/bookIcoin.svg" alt="bugs">
-            <p>Cuentas</p>
+            <p>Registros</p>
         </div>
         <div class="imgContainer">
             <a href="reportes.jsp">

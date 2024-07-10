@@ -1,0 +1,66 @@
+
+.tabs {
+    background-color: #673AB7;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.tabs button {
+    background-color: #673AB7;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.tabs button:hover {
+    background-color: #5E35B1;
+}
+
+.tabs input {
+    padding: 10px;
+    margin-left: auto;
+    border: none;
+    border-radius: 5px;
+}
+
+.fila{
+    padding: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+thead {
+    background-color: #2196F3;
+    color: white;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #ddd;
+    margin-top: 10px;
+}
+
+.box{
+    width: 250px;
+    background-color: red;
+}

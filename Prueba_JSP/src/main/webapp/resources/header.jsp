@@ -1,5 +1,6 @@
 
 <html>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="Modelo.Persona" %>
 <head>
     <meta charset="UTF-8">
@@ -10,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="resources/js/VerificarSesion.js"></script>
-    <script src="resources/js/logout.js"></script>
+
 
 
 </head>
@@ -57,23 +58,25 @@
             <div id="contenedorIcono" class="escondido">
                 <div class="user">
                     <img src="" class="user_class">
+                    <span class="close-button" modal-id="modal">&times;</span>
                     <h3><%= user.getNombre()%> </h3>
                     <p><%= user.getRol()%></p>
-                    <span class="close-button" modal-id="modal">&times;</span>
+                    <hr class="linea">
                 </div>
-                <hr class="linea">
+
                 <div class="ui-menu">
 
-                    <a class="ui-menu__option">
-                        <img src="">
-                        <p>Cerrar Sesión</p>
+                    <a href="#" class="ui-menu__option">
+                        <img src="resources/imagenes/MaterialSymbolsSettings.svg">
+                        <p>Configuración</p>
                     </a>
-                    <form id="logout" action="SvPersona" method="POST" class="formulario">
-                        <input type="hidden" id="action" name="action" value="logout">
-                        <button type="submit" class="formulario__button">Cerrar Sesión</button>
-                    </form>
+                    <a href="#" id="logout-link" class="ui-menu__option">
+                        <img src="resources/imagenes/Logout.svg">
+                        <p>Cerrar Sesión </p>
+                    </a>
 
 
+                    <script src="resources/js/logout.j  s"></script>
                 </div>
             </div>
         </div>
