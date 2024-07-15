@@ -4,8 +4,7 @@
 
 <jsp:include page="resources/sidebar.jsp" />
 
-<section class="main_container__reportes">
-    <div class="box"></div>
+<section class="main_container__registros">
     <div class="tabs">
         <button>hoy</button>
         <button>Semana</button>
