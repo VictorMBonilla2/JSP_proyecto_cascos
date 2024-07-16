@@ -76,7 +76,7 @@
                     </a>
 
 
-                    <script src="resources/js/logout.j  s"></script>
+                    <script src="resources/js/logout.js"></script>
                 </div>
             </div>
         </div>

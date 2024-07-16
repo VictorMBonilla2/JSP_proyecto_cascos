@@ -2,6 +2,11 @@
 .reportes__title{
     text-align: center;
 }
+
+.reportes__content hr:last-child{
+    display: none;
+}
+
 .report__item{
     display: flex;
     gap: 40px;

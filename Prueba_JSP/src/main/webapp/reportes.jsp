@@ -55,7 +55,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
 
-                            <h2>Detalles Reporte 1</h2>
+                            <h2>Detalles Reporte 2</h2>
                             <span class="close" data-modal-id="report2">&times;</span>
                         </div>
                         <div class="modal-body">
