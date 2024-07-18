@@ -68,6 +68,7 @@ ul.list__buttons a {
     transition: transform 0.5s ease, opacity 0.5s ease;
 }
 
+
 .escondido {
     transform: translateX(100%) translateY(-50%);
     opacity: 0;
@@ -87,6 +88,10 @@ ul.list__buttons a {
     text-decoration: none;
 }
 
+.user{
+    padding: 10px;
+}
+
 .ui-menu{
     display: flex;
     flex-direction: column;
@@ -94,14 +99,25 @@ ul.list__buttons a {
 }
 
 .ui-menu__option{
-    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    color: black;
+    width: 85%;
+    padding: 10px;
+    gap: 10px;
+    border-radius: var(--borderRadius);
     background-color: inherit;
     transition: background-color 0.5s;
-    width: 85%;
-    margin-top: 20px;
-    padding: 10px;
+    text-decoration: none;
+
 
 }
+.ui-menu__option>img{
+    width: 45px;
+}
+
 .ui-menu__option:hover{
     background-color: powderblue;
 }
+
+

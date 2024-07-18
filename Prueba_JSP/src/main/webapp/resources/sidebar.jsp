@@ -2,17 +2,23 @@
 
     <aside class="BarraIzq">
 
-        <div class="imgContainerr">
+        <div class="imgContainer">
+            <a href="profile.jsp">
             <img src="resources/imagenes/perfilIcon.svg" alt="perfil">
             <p>Perfil</p>
+            </a>
         </div>
-        <div class="imgContainerr">
-            <object type="image/svg+xml" data="resources/imagenes/casilleros.svg" class="svg-icon"></object>
+        <div class="imgContainer">
+            <a href="SvCasillero">
+                <img src="resources/imagenes/casilleros.svg" alt="bugs">
             <p>Casillero</p>
+            </a>
         </div>
-        <div class="imgContainerr">
+        <div class="imgContainer">
+            <a href="registros.jsp">
             <img src="resources/imagenes/bookIcoin.svg" alt="bugs">
-            <p>Cuentas</p>
+            <p>Registros</p>
+            </a>
         </div>
         <div class="imgContainer">
             <a href="reportes.jsp">

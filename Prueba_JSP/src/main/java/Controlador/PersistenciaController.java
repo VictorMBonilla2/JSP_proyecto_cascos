@@ -54,4 +54,8 @@ public class PersistenciaController {
     public void deleteCasco(int idCasco) throws Exception {
         cascosJPA.destroy(idCasco);
     }
+
+    public Persona buscarpersona(int documento) {
+        return persoJpa.findPersona(documento);
+    }
 }

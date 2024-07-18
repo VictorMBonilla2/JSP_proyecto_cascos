@@ -1,6 +1,26 @@
 @import url(login.css);
 @import url(register.css);
+@import url(registros.css);
 @import url(home.css);
 @import url(casilleros.css);
 @import url(reports.css);
+
+
+:root{/*Establecemos las variables*/
+    --backgroundColor:rgb(85, 7, 231);
+    --borderRadius:15px;
+    --bcInputs:rgb(180, 180, 180);
+    --greenbutton:#5BB964;
+    --yellowbutton:#E3B732;
+    --bluebutton:#50A9DC;
+    --bcerror:#F2DEDE;
+    --bordererror:#CC9696;
+    --colorfontError: #AC6363;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 

@@ -1,0 +1,89 @@
+
+.tabs {
+    display: flex;
+    align-items: center;
+    width: 41%;
+    margin-left: 15px;
+}
+
+.main_container__registros{
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding-top: 60px;
+}
+
+.tabs button {
+    background-color: #673AB7;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: var(--borderRadius) var(--borderRadius) 0 0;
+}
+
+.tabs button:hover {
+    background-color: #6d3bd4;
+}
+
+.tabs input {
+    padding: 10px;
+    margin-left: auto;
+    border: none;
+    border-radius: 5px;
+}
+
+.fila{
+    padding: 10px;
+}
+
+table{
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;  
+}
+thead {
+    background-color: #6da8cf;
+    color: white;
+}
+
+tbody:last-child > tr:last-child > td:first-child {
+    border-radius: 0  0 0 var(--borderRadius);
+}
+tbody:last-child > tr:last-child > td:last-child {
+    border-radius: 0  0 var(--borderRadius) 0 ;
+}
+tr>th:first-child{
+    border-radius: var(--borderRadius)  0  0  0;
+}
+
+tr>th:last-child{
+    border-radius: 0  var(--borderRadius)  0  0 ;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #dddddd;
+    text-align: left;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.pagination {
+    display: flex;
+    width: 15%;
+
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #ddd;
+    margin: 10px auto  ;
+}
+
+.box{
+    width: 250px;
+    background-color: red;
+}

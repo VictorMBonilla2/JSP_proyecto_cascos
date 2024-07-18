@@ -2,6 +2,11 @@
 .reportes__title{
     text-align: center;
 }
+
+.reportes__content hr:last-child{
+    display: none;
+}
+
 .report__item{
     display: flex;
     gap: 40px;
@@ -24,7 +29,7 @@
     margin: 5px 0;
 }
 
-.item__button{
+.report__button{
     width: 100%;
     padding: 10px 20px;
     background-color: #0085FF;
@@ -34,6 +39,6 @@
     cursor: pointer;
     transition: background-color 0.3s;
 }
-.item__button:hover{
+.report__button:hover{
     background-color: #055fb6;
 }
