@@ -1,4 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const logo = document.querySelector("#logo_icon");
+    const texto_logo = document.querySelector(".logo__text");
+    const background = document.querySelector(".background_login");
+    logo.addEventListener("click", (event) => {
+        if(background.classList.contains("background_login_aprendiz")){
+            background.classList.remove("background_login_aprendiz");
+            texto_logo.textContent = "Colaborador";
+        }else {
+            background.classList.add("background_login_aprendiz");
+            texto_logo.textContent = "Aprendiz";
+        }
+    });
     document.getElementById("Logeo").onsubmit = async function (event) {
         event.preventDefault();
         document.getElementById("Error").style.display = "none";

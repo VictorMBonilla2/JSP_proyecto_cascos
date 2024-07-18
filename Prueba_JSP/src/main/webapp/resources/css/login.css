@@ -3,27 +3,25 @@
   font-family: "Roboto", sans-serif;
 
 }
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-
-.background{
-  background-color: rgb(85, 7, 231);
+.background_login{
+  background-color: var(--backgroundColorGestor);
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100vh;
+  transition: 1.5s;
 }
 
-.Container{
+.background_login_aprendiz{
+  background-color: #4CAF50;
+}
+
+.Container_login{
   width: 80vb;
   height: auto;
   border-radius: var(--borderRadius);
-  background-color: white;
+  background-color: var(--blanco);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -34,21 +32,23 @@
   font-size: clamp(12px, 2vw, 24px)
 }
 
-.Container__logo{
+.Container_login__logo{
   display: flex;
-    flex-direction: column;
-    width: clamp(20%, 12vw, 20%);
-    height: auto;
-    padding: 30px 0px;
+  flex-direction: column;
+  width: clamp(35%, 12vw, 20%);
+  height: auto;
+  padding: 30px 0px;
+  align-items: center;
 }
 .logo__img{
-    max-width: 100%;
-    height: auto; /* Mantiene la proporción de la imagen */
+  max-width: 100%;
+  height: auto; /* Mantiene la proporción de la imagen */
 }
 .logo__text{
   font-size: 16px;
   font-weight: 700;
   text-align: center;
+
 }
 .Container__error{
   display: none;
@@ -64,39 +64,37 @@
 
 }
 
-
-
 .Inputs_Container{
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  
+
 }
-.formulario{
+.formulario_login{
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 15px 0px;
   gap: 30px;
 }
-.formulario__inputs{
+.formulario_login__inputs{
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 16px;
   justify-content: space-between;
   padding: 0 30px;
 }
-.formulario__inputs > input{
+.formulario_login__inputs > input{
   width: 45%;
   padding: 10px;
-  background-color: #ccc;
-  border: 1px solid #ccc;
+  background-color: var(--inputvacio);
+  border: 1px solid var(--inputvacio);
   border-radius: 5px;
   font-size: 16px;
 }
-.formulario__inputs > input:not(:placeholder-shown),
-.formulario__inputs > input:focus {
-    background-color: #e6e6e6; /* Cambia el color de fondo cuando tienen texto */
+.formulario_login__inputs > input:not(:placeholder-shown),
+.formulario_login__inputs > input:focus {
+  background-color: var(--inputenuso); /* Cambia el color de fondo cuando tienen texto */
 }
 
 #passWord {
@@ -104,37 +102,36 @@
 
 }
 
-
 select {
   width: 45%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
-  background-color: white; /* Cambia el color de fondo del select */
+  background-color: var(--blanco); /* Cambia el color de fondo del select */
 }
 /* Estilos para las opciones dentro del select */
 select option {
-    padding: 10px;
+  padding: 10px;
 }
 select:focus {
-    outline: none; 
-    border-color: #007bff; 
+  outline: none;
+  border-color: #007bff;
 }
 
-.formulario__button{
+.formulario_login__button{
   width: 35%;
   height: auto;
   border-radius: var(--borderRadius);
   padding: 10px 20px;
   border: none;
-  background-color: rgb(87, 154, 255);
+  background-color: var(--bluebutton);
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
-.formulario__button:hover{
-  background-color: rgb(43, 95, 173);
+.formulario_login__button:hover{
+  background-color: var(--hoverbluebutton);
 }
 
 .Container__forget{
@@ -145,16 +142,16 @@ select:focus {
   padding: 1% 0px;
 }
 .Container__forget:hover{
-  color: rgb(58, 58, 58)
+  color: var(--fontgrayhover);
 }
 .Container__register{
   font-size: 14px;
-  color: #62b9ff;
+  color: var(--fontceleste);
   text-align: center;
   transition: color 0.3s;
   padding-top: 10%;
   padding-bottom: 10%;
 }
 .Container__register:hover{
-  color:#007bff
+  color:var(--fontcelestehover);
 }

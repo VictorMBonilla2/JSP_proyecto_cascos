@@ -4,18 +4,28 @@
 @import url(home.css);
 @import url(casilleros.css);
 @import url(reports.css);
+@import url(profile_aprendiz.css);
 
 
 :root{/*Establecemos las variables*/
-    --backgroundColor:rgb(85, 7, 231);
+    --backgroundColorGestor:rgb(85, 7, 231);
+    --blanco:white;
     --borderRadius:15px;
     --bcInputs:rgb(180, 180, 180);
     --greenbutton:#5BB964;
     --yellowbutton:#E3B732;
     --bluebutton:#50A9DC;
+    --hoverbluebutton: #2B5FADFF;
     --bcerror:#F2DEDE;
     --bordererror:#CC9696;
     --colorfontError: #AC6363;
+    --fontgray: #797979FF;
+    --fontgrayhover: #3A3A3AFF;
+    --fontceleste:#62b9ff;
+    --fontcelestehover:#007bff;
+
+    --inputvacio:#ccc;
+    --inputenuso:#e6e6e6;
 }
 
 *{

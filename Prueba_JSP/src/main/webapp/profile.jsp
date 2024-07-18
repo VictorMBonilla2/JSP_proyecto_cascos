@@ -1,5 +1,3 @@
-<%-- Created by IntelliJ IDEA. User: Propietario Date: 3/05/2024 Time: 11:07 a. m. To change this template use File |
-  Settings | File Templates. --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <jsp:include page="resources/header.jsp" />
 
