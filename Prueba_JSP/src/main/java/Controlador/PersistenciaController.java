@@ -35,14 +35,14 @@ public class PersistenciaController {
         return espacioJPA.findTbEspacio(idEspacio);
     }
 
-    public TbCasco obtenerCasco(String placa) {
+    public TbVehiculo obtenerCasco(String placa) {
     return cascosJPA.buscarCascoPorPlaca(placa);
     }
-    public void CrearCasco(TbCasco casco) {
+    public void CrearCasco(TbVehiculo casco) {
 
         cascosJPA.create(casco);
     }
-    public void updateCasco(TbCasco casco) throws Exception {
+    public void updateCasco(TbVehiculo casco) throws Exception {
         cascosJPA.edit(casco);
     }
 

@@ -17,13 +17,13 @@ public class Persona {
     private Date fechaNacimiento;
     private String clave;
     private String rol;
+    private String id_vehiculo_FK;
 
 
     public Persona() {
     }
 
-
-    public Persona(int id, String nombre, String apellido, String tipoDocumento, int documento, String correo, Date fechaNacimiento, String clave, String rol) {
+    public Persona(int id, String nombre, String apellido, String tipoDocumento, int documento, String correo, Date fechaNacimiento, String clave, String rol, String id_vehiculo_FK) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -33,15 +33,7 @@ public class Persona {
         this.fechaNacimiento = fechaNacimiento;
         this.clave = clave;
         this.rol = rol;
-    }
-
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
+        this.id_vehiculo_FK = id_vehiculo_FK;
     }
 
     public int getId() {
@@ -106,5 +98,21 @@ public class Persona {
 
     public void setClave(String clave) {
         this.clave = clave;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+    public String getId_vehiculo_FK() {
+        return id_vehiculo_FK;
+    }
+
+    public void setId_vehiculo_FK(String id_vehiculo_FK) {
+        this.id_vehiculo_FK = id_vehiculo_FK;
     }
 }

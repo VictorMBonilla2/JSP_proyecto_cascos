@@ -66,11 +66,11 @@ public class Controladora_logica {
         return controladora.traerEspacio(idEspacio);
     }
 
-    public TbCasco buscarCascoPorPlaca(String placa) {
+    public TbVehiculo buscarCascoPorPlaca(String placa) {
         return controladora.obtenerCasco(placa);
     }
 
-    public void Crearcasco(TbCasco casco) {
+    public void Crearcasco(TbVehiculo casco) {
         controladora.CrearCasco(casco);
     }
 
@@ -88,7 +88,7 @@ public class Controladora_logica {
             }
         }
 
-    public void actualizarCasco(TbCasco casco) {
+    public void actualizarCasco(TbVehiculo casco) {
 
         try{
             controladora.updateCasco(casco);

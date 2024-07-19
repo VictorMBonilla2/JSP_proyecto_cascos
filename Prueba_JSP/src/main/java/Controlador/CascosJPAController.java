@@ -1,6 +1,6 @@
 package Controlador;
 
-import Modelo.TbCasco;
+import Modelo.TbVehiculo;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 
@@ -18,7 +18,7 @@ public class CascosJPAController implements Serializable {
         return fabricaEntidades.createEntityManager();
     }
 
-    public void create(TbCasco casco) {
+    public void create(TbVehiculo casco) {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -32,7 +32,7 @@ public class CascosJPAController implements Serializable {
         }
     }
 
-    public void edit(TbCasco casco) throws Exception {
+    public void edit(TbVehiculo casco) throws Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -42,7 +42,7 @@ public class CascosJPAController implements Serializable {
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.isEmpty()) {
-                int id = casco.getId();
+                int id = casco.getId_vehiculo();
                 if (findTbCasco(id) == null) {
                     throw new Exception("The espacio with id " + id + " no longer exists.");
                 }
@@ -60,14 +60,14 @@ public class CascosJPAController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            TbCasco casco;
+            TbVehiculo vehiculo;
             try {
-                casco = em.getReference(TbCasco.class, id);
-                casco.getId();
+                vehiculo = em.getReference(TbVehiculo.class, id);
+                vehiculo.getId_vehiculo();
             } catch (EntityNotFoundException enfe) {
                 throw new Exception("The espacio with id " + id + " no longer exists.", enfe);
             }
-            em.remove(casco);
+            em.remove(vehiculo);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -76,19 +76,19 @@ public class CascosJPAController implements Serializable {
         }
     }
 
-    public List<TbCasco> findTbCascoEntities() {
+    public List<TbVehiculo> findTbCascoEntities() {
         return findTbCascoEntities(true, -1, -1);
     }
 
-    public List<TbCasco> findTbCascoEntities(int maxResults, int firstResult) {
+    public List<TbVehiculo> findTbCascoEntities(int maxResults, int firstResult) {
         return findTbCascoEntities(false, maxResults, firstResult);
     }
 
-    private List<TbCasco> findTbCascoEntities(boolean all, int maxResults, int firstResult) {
+    private List<TbVehiculo> findTbCascoEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(TbCasco.class));
+            cq.select(cq.from(TbVehiculo.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -102,22 +102,22 @@ public class CascosJPAController implements Serializable {
         }
     }
 
-    public TbCasco findTbCasco(int id) {
+    public TbVehiculo findTbCasco(int id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(TbCasco.class, id);
+            return em.find(TbVehiculo.class, id);
         } finally {
             if (em != null) {
                 em.close();
             }
         }
     }
-    public TbCasco buscarCascoPorPlaca(String placa) {
+    public TbVehiculo buscarCascoPorPlaca(String placa) {
         EntityManager em = getEntityManager();
         try {
-            TypedQuery<TbCasco> query = em.createQuery("SELECT c FROM TbCasco c WHERE c.placa_casco = :placa", TbCasco.class);
+            TypedQuery<TbVehiculo> query = em.createQuery("SELECT c FROM TbVehiculo c WHERE c.placa_vehiculo = :placa", TbVehiculo.class);
             query.setParameter("placa", placa);
-            List<TbCasco> results = query.getResultList();
+            List<TbVehiculo> results = query.getResultList();
             return results.isEmpty() ? null : results.get(0);
         } finally {
             em.close();

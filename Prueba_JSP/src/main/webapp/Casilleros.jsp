@@ -1,6 +1,6 @@
 <%@ page import="Modelo.TbEspacio" %>
 <%@ page import="java.util.List" %>
-<%@ page import="Modelo.TbCasco" %>
+<%@ page import="Modelo.TbVehiculo" %>
 <%@ page import="java.util.Date" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <jsp:include page="resources/header.jsp" />
@@ -14,27 +14,26 @@
             List<TbEspacio> DatosEspacio = (List<TbEspacio>) request.getAttribute("Espacios");
             if (DatosEspacio != null) {
                 for (TbEspacio espacio : DatosEspacio) {
-                    TbCasco casco = espacio.getCasco();
-                    int espacioId = espacio.getId();
-
-                    if (casco != null) {
-                        String placaCasco = casco.getPlaca_casco();
-                        String ciudad = casco.getCiudad();
-                        Integer cantCascos= casco.getCant_casco();
+                    Integer doc_aprendiz = Integer.valueOf(espacio.getDocumento_aprendiz());
+                    int espacioId = espacio.getId_espacio();
+                    if (doc_aprendiz != null) {
+                        String placaCasco = espacio.getPlaca_vehiculo();
+                        String nombre = espacio.getNombre();
+                        Integer cantCascos= espacio.getCantidad_cascos();
                         Date tiempoEntrada = espacio.getHora_entrada();
                     %>
 
                 <div class="casillero" data-entrada="<%= tiempoEntrada.getTime() %>" data-tarifa="10.0">
                     <div class="casillero__title estilo__casillero">
                         <h1>Espacio <%=espacioId%></h1>
-                        <p>(Nombre aprendiz )</p>
+                        <p><%=nombre%></p>
                     </div>
 
                     <div class="casillero__contenido estilo__contenido">
                         <div class="contenido__info">
                             <div class="info__casillero">
                                 <h3>Documento</h3>
-                                <p>(Documento Aprendiz)</p>
+                                <p><%=doc_aprendiz%></p>
                             </div>
                             <div class="info__tiempo">
                                 <h3>Placa</h3>
@@ -42,7 +41,7 @@
                             </div>
                             <div class="info__costo">
                                 <h3>Cascos</h3>
-                                <p> (cantidad cascos) </p>
+                                <p> <%=cantCascos%> </p>
                             </div>
                         </div>
                         <div class="contenido__botones">

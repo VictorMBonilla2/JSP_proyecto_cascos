@@ -1,7 +1,7 @@
 package Servlets;
 
 import Modelo.Controladora_logica;
-import Modelo.TbCasco;
+import Modelo.TbVehiculo;
 import Modelo.TbEspacio;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.sql.Struct;
 import java.util.Date;
 import java.util.List;
 
@@ -29,15 +30,13 @@ public class SvCasilleros {
             List<TbEspacio> DatosEspacio= controladora_logica.DatosEspacio();
             for (TbEspacio espacio : DatosEspacio) {
             System.out.println("Ejecución servlet");
-                TbCasco casco = espacio.getCasco();
-                if (casco != null) {
-                    // Si hay un casco asociado al espacio, obtener la placa
-                    String placaCasco = casco.getPlaca_casco();
-                    // Ahora puedes hacer lo que necesites con la placa del casco
-                    System.out.println("Para el espacio " + espacio.getId() + ", la placa del casco es: " + placaCasco);
+                String placa_vehiculo = espacio.getPlaca_vehiculo();
+                if (placa_vehiculo != null) {
+                    // Ahora puedes hacer lo que necesites con la placa del vehiculo
+                    System.out.println("Para el espacio " + espacio.getId_espacio() + ", la placa del vehiculo es: " + placa_vehiculo);
                 } else {
-                    // No hay ningún casco asociado a este espacio
-                    System.out.println("Para el espacio " + espacio.getId() + ", no hay ningún casco asociado.");
+                    // No hay ningún vehiculo asociado a este espacio
+                    System.out.println("Para el espacio " + espacio.getId_espacio() + ", no hay ningún vehiculo asociado.");
                 }
             }
 
@@ -74,30 +73,32 @@ public class SvCasilleros {
             // Busca el espacio por ID
             System.out.println("Intentando Obtener el ID del espacio " + idEspacio);
             TbEspacio espacio = controladora_logica.buscarEspacio(idEspacio);
-            System.out.println("Espacio " + espacio.getId());
+            System.out.println("Espacio " + espacio.getId_espacio());
 
             try {
                 if (formType.equals("add")){
+                    String nombre = jsonObject.getString("nombre");
                     String placa = jsonObject.getString("placa");
                     String ciudad = jsonObject.getString("ciudad");
                     String cantcascos = jsonObject.getString("cantcascos");
                     if (espacio != null) {
                         // Busca el casco por placa
-                        TbCasco casco = controladora_logica.buscarCascoPorPlaca(placa);
+                        TbVehiculo vehiculo = controladora_logica.buscarCascoPorPlaca(placa);
 
-                        if (casco == null) {
+                        if (vehiculo == null) {
                             // Si el casco no existe, crearlo
-                            casco = new TbCasco();
-                            casco.setPlaca_casco(placa);
-                            casco.setCiudad(ciudad);
-                            casco.setCant_casco(Integer.valueOf(cantcascos));
+                            vehiculo = new TbVehiculo();
+                            vehiculo.setPlaca_vehiculo(placa);
+                            vehiculo.setCiudad_vehiculo(ciudad);
+                            vehiculo.setCant_casco(Integer.valueOf(cantcascos));
                             System.out.println(" intentando añadir casco");
-                            controladora_logica.Crearcasco(casco);
+                            controladora_logica.Crearcasco(vehiculo);
                             System.out.println("casco añadido");
                         }
 
                         // Actualizar el espacio
-                        espacio.setCasco(casco);
+                        espacio.setNombre(nombre);
+                        espacio.setCasco(vehiculo);
                         espacio.setEstado_espacio("Ocupado");
                         espacio.setHora_entrada(new Date());
 
@@ -125,10 +126,10 @@ public class SvCasilleros {
                     String ciudad = jsonObject.getString("ciudad");
                     String cantcascos = jsonObject.getString("cantcascos");
                     if (espacio != null) {
-                        TbCasco casco = espacio.getCasco();
+                        TbVehiculo casco = espacio.getCasco();
                         if (casco != null) {
-                            casco.setPlaca_casco(placa);
-                            casco.setCiudad(ciudad);
+                            casco.setPlaca_vehiculo(placa);
+                            casco.setCiudad_vehiculo(ciudad);
                             casco.setCant_casco(Integer.valueOf(cantcascos));
                             controladora_logica.actualizarCasco(casco);
 
@@ -156,9 +157,9 @@ public class SvCasilleros {
                     }
                 } else if (formType.equals("pay")) {
                     System.out.println("Ingresando al meotodo pay");
-                    TbCasco casco = espacio.getCasco();
+                    TbVehiculo casco = espacio.getCasco();
                     if (casco != null) {
-                        int idCasco = casco.getId();
+                        int idCasco = casco.getId_vehiculo();
                         if (true) {
                             espacio.setId(espacio.getId());
                             espacio.setCasco(null);
