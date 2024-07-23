@@ -4,11 +4,11 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 
-@Entity
+@Entity (name = "tb_reportes")
 public class TbReportes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_espacio", nullable = false)
+    @Column(name = "id_reporte", nullable = false)
     private Integer id_reporte;
     private Date fecha_reporte;
     private String nombre_reporte;

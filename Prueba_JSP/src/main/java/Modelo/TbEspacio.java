@@ -6,7 +6,7 @@ import java.util.Date;
 
 
 @Entity
-@Table(name = "tb_espacios")
+@Table(name = "tb_espacio")
 public class TbEspacio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,12 +23,13 @@ public class TbEspacio {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_casillero_fk", nullable = false) // Nombre de la columna de la clave foránea en esta entidad
     private TbCasillero casillero;
+    private  Integer estadoEspacio;
 
 
     public TbEspacio() {
     }
 
-    public TbEspacio(Integer id_espacio, String nombre, String placa_vehiculo, Integer documento_aprendiz, Date hora_entrada, Date hora_salida, Integer cantidad_cascos, String estado_espacio, TbCasillero casillero) {
+    public TbEspacio(Integer id_espacio, String nombre, String placa_vehiculo, Integer documento_aprendiz, Date hora_entrada, Date hora_salida, Integer cantidad_cascos, String estado_espacio, TbCasillero casillero, Integer estadoEspacio) {
         this.id_espacio = id_espacio;
         this.nombre = nombre;
         this.placa_vehiculo = placa_vehiculo;
@@ -38,6 +39,7 @@ public class TbEspacio {
         this.cantidad_cascos = cantidad_cascos;
         this.estado_espacio = estado_espacio;
         this.casillero = casillero;
+        this.estadoEspacio = estadoEspacio;
     }
 
     public TbCasillero getCasillero() {
@@ -110,6 +112,14 @@ public class TbEspacio {
 
     public void setEstado_espacio(String estado_espacio) {
         this.estado_espacio = estado_espacio;
+    }
+
+    public Integer getEstadoEspacio() {
+        return estadoEspacio;
+    }
+
+    public void setEstadoEspacio(Integer estadoEspacio) {
+        this.estadoEspacio = estadoEspacio;
     }
 }
 

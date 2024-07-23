@@ -8,7 +8,7 @@ import java.util.Date;
 public class TbRegistro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_espacio", nullable = false)
+    @Column(name = "id_regsitro", nullable = false)
     private Integer id_registro;
     private Date fecha_registro;
     @ManyToOne(fetch = FetchType.LAZY)

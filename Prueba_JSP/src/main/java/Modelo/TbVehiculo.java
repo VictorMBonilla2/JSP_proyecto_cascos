@@ -6,7 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "tb_cascos")
+@Table(name = "tb_vehiculo")
 public class TbVehiculo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,20 +16,19 @@ public class TbVehiculo {
     private String marca_vehiculo;
     private String modelo_vehiculo;
     private Integer cant_casco;
-    @OneToMany(mappedBy = "documento_FK", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Persona> documento = new LinkedHashSet<>();
+//    @OneToMany(mappedBy = "documento_FK", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private Set<Persona> documento = new LinkedHashSet<>();
     private String ciudad_vehiculo;
 
     public TbVehiculo() {
     }
 
-    public TbVehiculo(int id_vehiculo, String placa_vehiculo, String marca_vehiculo, String modelo_vehiculo, Integer cant_casco, Set<Persona> documento, String ciudad_vehiculo) {
+    public TbVehiculo(int id_vehiculo, String placa_vehiculo, String marca_vehiculo, String modelo_vehiculo, Integer cant_casco, String ciudad_vehiculo) {
         this.id_vehiculo = id_vehiculo;
         this.placa_vehiculo = placa_vehiculo;
         this.marca_vehiculo = marca_vehiculo;
         this.modelo_vehiculo = modelo_vehiculo;
         this.cant_casco = cant_casco;
-        this.documento = documento;
         this.ciudad_vehiculo = ciudad_vehiculo;
     }
 
@@ -73,13 +72,7 @@ public class TbVehiculo {
         this.cant_casco = cant_casco;
     }
 
-    public Set<Persona> getDocumento() {
-        return documento;
-    }
 
-    public void setDocumento(Set<Persona> documento) {
-        this.documento = documento;
-    }
 
     public String getCiudad_vehiculo() {
         return ciudad_vehiculo;

@@ -3,14 +3,14 @@ package Modelo;
 import jakarta.persistence.*;
 
 import java.util.Date;
-@Entity
+@Entity(name = "tb_persona")
 public class Persona {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nombre;
     private String apellido;
-    private String TipoDocumento;
+    private String tipoDocumento;
     private int documento;
     private String correo;
     @Temporal(TemporalType.DATE)
@@ -27,7 +27,7 @@ public class Persona {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
-        TipoDocumento = tipoDocumento;
+        this.tipoDocumento = tipoDocumento;
         this.documento = documento;
         this.correo = correo;
         this.fechaNacimiento = fechaNacimiento;
@@ -61,11 +61,11 @@ public class Persona {
     }
 
     public String getTipoDocumento() {
-        return TipoDocumento;
+        return tipoDocumento;
     }
 
     public void setTipoDocumento(String tipoDocumento) {
-        TipoDocumento = tipoDocumento;
+        this.tipoDocumento = tipoDocumento;
     }
 
     public int getDocumento() {

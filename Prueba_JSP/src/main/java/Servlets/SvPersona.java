@@ -44,6 +44,7 @@ public class SvPersona extends HttpServlet {
         if ("login".equals(action)) {
             int documento = jsonObject.getInt("documento");
             String tipoDocumento = jsonObject.getString("TipoDocumento");
+            System.out.println(tipoDocumento);
             String password = jsonObject.getString("password");
             boolean validacion = validarIngreso(documento, tipoDocumento, password);
             resp.setContentType("application/json");

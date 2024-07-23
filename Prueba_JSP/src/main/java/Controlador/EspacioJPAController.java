@@ -44,7 +44,7 @@ public class EspacioJPAController implements Serializable {
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                int id = espacio.getId();
+                int id = espacio.getId_espacio();
                 if (findTbEspacio(id) == null) {
                     throw new Exception("The espacio with id " + id + " no longer exists.");
                 }
@@ -65,7 +65,7 @@ public class EspacioJPAController implements Serializable {
             TbEspacio espacio;
             try {
                 espacio = em.getReference(TbEspacio.class, id);
-                espacio.getId();
+                espacio.getId_espacio();
             } catch (EntityNotFoundException enfe) {
                 throw new Exception("The espacio with id " + id + " no longer exists.", enfe);
             }

@@ -83,7 +83,7 @@ public class Controladora_logica {
             controladora.ActualizarEspacio(espacio);
             return true;
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error al actualizar el espacio con ID " + espacio.getId(), e);
+            logger.log(Level.SEVERE, "Error al actualizar el espacio con ID " + espacio.getId_espacio(), e);
             return false;
             }
         }
