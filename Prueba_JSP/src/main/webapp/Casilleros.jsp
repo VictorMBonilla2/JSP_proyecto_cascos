@@ -89,7 +89,8 @@
                             <h2>editar Casco</h2>
                             <form id="editCasco<%= espacioId %>" onsubmit="editCasco(event, <%= espacioId %>)" class="formulario">
                                 <div class="formulario__inputs">
-                                    <input type="text" id="editplaca<%=espacioId%>" placeholder="Documento del aprendiz" name="documento" value="<%=placa_vehiculo%>" required>
+                                    <input type="text" id="editdocumento<%=espacioId%>" placeholder="Documento del aprendiz" name="documento" value="<%=documento%>" required>
+                                    <input type="text" id="editnombre<%=espacioId%>" placeholder="Nombre del aprendiz" name="nombre" value="<%=nombre%>" required>
                                     <input type="text" id="editplaca<%=espacioId%>" placeholder="Placa del Vehiculo" name="placa" value="<%=placa_vehiculo%>" required>
                                     <input type="text" id="editciudad<%=espacioId%>" placeholder="Ciudad" name="ciudad" value="<%=nombre%>" required >
                                     <input type="number" id="editcant_cascos<%=espacioId%>" placeholder="Cantidad de cascos" name="cant_cascos" value="<%=cantCascos%>" required>
@@ -133,7 +134,8 @@
                             <h2>Nuevo Casco</h2>
                             <form id="addCasco<%= espacioId %>" onsubmit="addCasco(event, <%= espacioId %>)" class="formulario">
                                 <div class="formulario__inputs">
-                                    <input type="text" id="addplaca<%=espacioId%>" placeholder="Documento del aprendiz" name="documento" required>
+                                    <input type="text" id="adddocumento<%=espacioId%>" placeholder="Documento del aprendiz" name="documento" required>
+                                    <input type="text" id="addnombre<%=espacioId%>" placeholder="Nombre del aprendiz" name="nombre" required>
                                     <input type="text" id="addplaca<%=espacioId%>" placeholder="Placa del Vehiculo" name="placa" required>
                                     <input type="text" id="addciudad<%=espacioId%>" placeholder="Ciudad" name="ciudad" required>
                                     <input type="number" id="addcant_cascos<%=espacioId%>" placeholder="Cantidad de Cascos" name="cant_cascos" required>

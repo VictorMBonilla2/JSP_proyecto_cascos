@@ -23,13 +23,12 @@ public class TbEspacio {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_casillero_fk", nullable = false) // Nombre de la columna de la clave foránea en esta entidad
     private TbCasillero casillero;
-    private  Integer estadoEspacio;
 
 
     public TbEspacio() {
     }
 
-    public TbEspacio(Integer id_espacio, String nombre, String placa_vehiculo, Integer documento_aprendiz, Date hora_entrada, Date hora_salida, Integer cantidad_cascos, String estado_espacio, TbCasillero casillero, Integer estadoEspacio) {
+    public TbEspacio(Integer id_espacio, String nombre, String placa_vehiculo, Integer documento_aprendiz, Date hora_entrada, Date hora_salida, Integer cantidad_cascos, String estado_espacio, TbCasillero casillero) {
         this.id_espacio = id_espacio;
         this.nombre = nombre;
         this.placa_vehiculo = placa_vehiculo;
@@ -39,7 +38,7 @@ public class TbEspacio {
         this.cantidad_cascos = cantidad_cascos;
         this.estado_espacio = estado_espacio;
         this.casillero = casillero;
-        this.estadoEspacio = estadoEspacio;
+
     }
 
     public TbCasillero getCasillero() {
@@ -114,13 +113,6 @@ public class TbEspacio {
         this.estado_espacio = estado_espacio;
     }
 
-    public Integer getEstadoEspacio() {
-        return estadoEspacio;
-    }
-
-    public void setEstadoEspacio(Integer estadoEspacio) {
-        this.estadoEspacio = estadoEspacio;
-    }
 }
 
 

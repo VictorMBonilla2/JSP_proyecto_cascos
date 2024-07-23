@@ -41,12 +41,14 @@ public class SvPersona extends HttpServlet {
 
         String action = jsonObject.getString("action");
         HttpSession session = req.getSession(false);
+
         if ("login".equals(action)) {
             int documento = jsonObject.getInt("documento");
             String tipoDocumento = jsonObject.getString("TipoDocumento");
             System.out.println(tipoDocumento);
             String password = jsonObject.getString("password");
             boolean validacion = validarIngreso(documento, tipoDocumento, password);
+            System.out.println("la validacion es "+validacion);
             resp.setContentType("application/json");
             PrintWriter out = resp.getWriter();
 
@@ -65,8 +67,10 @@ public class SvPersona extends HttpServlet {
             }
 
             out.print(jsonResponse.toString());
-            out.flush();
 
+            System.out.println(out);
+            out.flush();
+            out.close();
         } else if ("logout".equals(action)) {
             JSONObject jsonResponse = new JSONObject();
             resp.setContentType("application/json");
@@ -122,3 +126,126 @@ public class SvPersona extends HttpServlet {
         }
     }
 }
+
+
+
+
+//protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//    try {
+//        // Parse the JSON request body
+//        StringBuilder jsonString = new StringBuilder();
+//        try (BufferedReader reader = req.getReader()) {
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                jsonString.append(line);
+//            }
+//        }
+//        JSONObject jsonObject = new JSONObject(jsonString.toString());
+//
+//        String action = jsonObject.getString("action");
+//        HttpSession session = req.getSession(false);
+//
+//        if ("login".equals(action)) {
+//            try {
+//                int documento = jsonObject.getInt("documento");
+//                String tipoDocumento = jsonObject.getString("TipoDocumento");
+//                String password = jsonObject.getString("password");
+//                boolean validacion = validarIngreso(documento, tipoDocumento, password);
+//
+//                resp.setContentType("application/json");
+//                try (PrintWriter out = resp.getWriter()) {
+//                    JSONObject jsonResponse = new JSONObject();
+//                    if (validacion) {
+//                        Persona user = controladora_logica.buscarusuario(documento);
+//
+//                        session = req.getSession(true);
+//                        session.setAttribute("documento", documento);
+//                        session.setAttribute("user", user);
+//                        jsonResponse.put("status", "success");
+//                        jsonResponse.put("message", "Login successful");
+//                    } else {
+//                        jsonResponse.put("status", "error");
+//                        jsonResponse.put("message", "Invalid credentials");
+//                    }
+//
+//                    out.print(jsonResponse.toString());
+//                    out.flush();
+//                }
+//            } catch (Exception e) {
+//                handleException(resp, e, "Error during login processing");
+//            }
+//
+//        } else if ("logout".equals(action)) {
+//            try {
+//                JSONObject jsonResponse = new JSONObject();
+//                resp.setContentType("application/json");
+//                try (PrintWriter out = resp.getWriter()) {
+//                    if (session != null) {
+//                        session.invalidate();
+//                    }
+//                    jsonResponse.put("status", "success");
+//                    out.print(jsonResponse.toString());
+//                    out.flush();
+//                }
+//            } catch (Exception e) {
+//                handleException(resp, e, "Error during logout processing");
+//            }
+//
+//        } else if ("registro".equals(action)) {
+//            try {
+//                String nombre = jsonObject.getString("nombre");
+//                String apellido = jsonObject.getString("apellido");
+//                String TipoDocumento = jsonObject.getString("TipoDocumento");
+//                int documento = jsonObject.getInt("documento");
+//                String correo = jsonObject.getString("correo");
+//                String clave = jsonObject.getString("password");
+//                String rol = jsonObject.getString("rol");
+//
+//                Persona persona = new Persona();
+//                persona.setNombre(nombre);
+//                persona.setApellido(apellido);
+//                persona.setTipoDocumento(TipoDocumento);
+//                persona.setDocumento(documento);
+//                persona.setCorreo(correo);
+//                persona.setClave(clave);
+//                persona.setRol(rol);
+//
+//                boolean validacion = controladora_logica.crearPersona(persona);
+//
+//                resp.setContentType("application/json");
+//                try (PrintWriter out = resp.getWriter()) {
+//                    JSONObject jsonResponse = new JSONObject();
+//                    if (validacion) {
+//                        jsonResponse.put("status", "success");
+//                        jsonResponse.put("message", "Registration successful");
+//                    } else {
+//                        jsonResponse.put("status", "error");
+//                        jsonResponse.put("message", "Failed to register");
+//                    }
+//
+//                    out.print(jsonResponse.toString());
+//                    out.flush();
+//                }
+//            } catch (Exception e) {
+//                handleException(resp, e, "Error during registration processing");
+//            }
+//
+//        } else {
+//            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Action not recognized");
+//        }
+//    } catch (Exception e) {
+//        handleException(resp, e, "Error processing the request");
+//    }
+//}
+//
+//private void handleException(HttpServletResponse resp, Exception e, String message) throws IOException {
+//    e.printStackTrace();
+//    resp.setContentType("application/json");
+//    try (PrintWriter out = resp.getWriter()) {
+//        JSONObject jsonResponse = new JSONObject();
+//        jsonResponse.put("status", "error");
+//        jsonResponse.put("message", message);
+//        out.print(jsonResponse.toString());
+//        out.flush();
+//    }
+//}

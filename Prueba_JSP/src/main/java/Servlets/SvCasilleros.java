@@ -3,6 +3,7 @@ package Servlets;
 import Modelo.Controladora_logica;
 import Modelo.TbVehiculo;
 import Modelo.TbEspacio;
+import com.sun.jdi.IntegerValue;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -76,35 +77,55 @@ public class SvCasilleros {
             System.out.println("Espacio " + espacio.getId_espacio());
 
             try {
-                if (formType.equals("add")){
+                if (formType.equals("add")) {
+                    Integer documento = Integer.valueOf(jsonObject.getString("documento"));
                     String nombre = jsonObject.getString("nombre");
                     String placa = jsonObject.getString("placa");
                     String ciudad = jsonObject.getString("ciudad");
                     String cantcascos = jsonObject.getString("cantcascos");
-                    if (espacio != null) {
-                        // Busca el casco por placa
-                        TbVehiculo vehiculo = controladora_logica.buscarCascoPorPlaca(placa);
 
-                        if (vehiculo == null) {
-                            // Si el casco no existe, crearlo
-                            vehiculo = new TbVehiculo();
-                            vehiculo.setPlaca_vehiculo(placa);
-                            vehiculo.setCiudad_vehiculo(ciudad);
-                            vehiculo.setCant_casco(Integer.valueOf(cantcascos));
-                            System.out.println(" intentando añadir casco");
-                            controladora_logica.Crearcasco(vehiculo);
-                            System.out.println("casco añadido");
+                    if (espacio != null) {
+                        // Verificar si el documento tiene un vehículo vinculado
+                        TbVehiculo vehiculoExistente = null;
+                        try {
+                            vehiculoExistente = controladora_logica.buscarVehiculoPorDocumento(documento);
+                        } catch (Exception e) {
+                            // Manejar cualquier excepción que ocurra durante la búsqueda
+                            System.err.println("Error al buscar vehículo por documento: " + e.getMessage());
+                            resp.setContentType("application/json");
+                            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                            resp.getWriter().write("{\"status\":\"error\", \"message\":\"Error en la búsqueda del vehículo\"}");
+                            return;
                         }
 
-                        // Actualizar el espacio
+                        if (vehiculoExistente != null) {
+                            // Si existe un vehículo vinculado al documento, usar su información
+                            espacio.setPlaca_vehiculo(vehiculoExistente.getPlaca_vehiculo());
+                            espacio.setCantidad_cascos(vehiculoExistente.getCant_casco());
+                        } else {
+                            // Si no existe un vehículo vinculado, usar la información proporcionada
+                            espacio.setPlaca_vehiculo(placa);
+                            espacio.setCantidad_cascos(Integer.valueOf(cantcascos));
+                        }
+
+                        // Asignar los demás datos al espacio
                         espacio.setNombre(nombre);
-                        espacio.setCasco(vehiculo);
+                        espacio.setDocumento_aprendiz(Integer.valueOf(documento));
                         espacio.setEstado_espacio("Ocupado");
                         espacio.setHora_entrada(new Date());
 
                         // Guardar los cambios en el espacio
-                        boolean added = controladora_logica.actualizarEspacio(espacio);
-                        System.out.println("Espacio actualizado");
+                        boolean added = false;
+                        try {
+                            added = controladora_logica.actualizarEspacio(espacio);
+                        } catch (Exception e) {
+                            // Manejar cualquier excepción que ocurra durante la actualización
+                            System.err.println("Error al actualizar el espacio: " + e.getMessage());
+                            resp.setContentType("application/json");
+                            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                            resp.getWriter().write("{\"status\":\"error\", \"message\":\"Error al actualizar el espacio\"}");
+                            return;
+                        }
 
                         if (added) {
                             resp.setContentType("application/json");
@@ -118,37 +139,28 @@ public class SvCasilleros {
                     } else {
                         resp.setContentType("application/json");
                         resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                        resp.getWriter().write("{\"status\":\"error\"," +
-                                " \"message\":\"Espacio no encontrado\"}");
+                        resp.getWriter().write("{\"status\":\"error\", \"message\":\"Espacio no encontrado\"}");
                     }
                 } else if (formType.equals("edit")) {
+                    Integer documento = Integer.valueOf(jsonObject.getString("documento"));
+                    String nombre = jsonObject.getString("nombre");
                     String placa = jsonObject.getString("placa");
                     String ciudad = jsonObject.getString("ciudad");
                     String cantcascos = jsonObject.getString("cantcascos");
                     if (espacio != null) {
-                        TbVehiculo casco = espacio.getCasco();
-                        if (casco != null) {
-                            casco.setPlaca_vehiculo(placa);
-                            casco.setCiudad_vehiculo(ciudad);
-                            casco.setCant_casco(Integer.valueOf(cantcascos));
-                            controladora_logica.actualizarCasco(casco);
 
-                            espacio.setCasco(casco);
-
-                            boolean updated = controladora_logica.actualizarEspacio(espacio);
-                            if (updated) {
-                                resp.setContentType("application/json");
-                                resp.setStatus(HttpServletResponse.SC_OK);
-                                resp.getWriter().write("{\"status\":\"success\"}");
-                            } else {
-                                resp.setContentType("application/json");
-                                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                                resp.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to update space\"}");
-                            }
+                        espacio.setPlaca_vehiculo(placa);
+                        espacio.setCantidad_cascos(Integer.valueOf(cantcascos));
+                        espacio.setNombre(nombre);
+                        boolean updated = controladora_logica.actualizarEspacio(espacio);
+                        if (updated) {
+                            resp.setContentType("application/json");
+                            resp.setStatus(HttpServletResponse.SC_OK);
+                            resp.getWriter().write("{\"status\":\"success\"}");
                         } else {
                             resp.setContentType("application/json");
-                            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                            resp.getWriter().write("{\"status\":\"error\", \"message\":\"Casco no encontrado\"}");
+                            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                            resp.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to update space\"}");
                         }
                     } else {
                         resp.setContentType("application/json");
@@ -157,33 +169,22 @@ public class SvCasilleros {
                     }
                 } else if (formType.equals("pay")) {
                     System.out.println("Ingresando al meotodo pay");
-                    TbVehiculo casco = espacio.getCasco();
-                    if (casco != null) {
-                        int idCasco = casco.getId_vehiculo();
-                        if (true) {
-                            espacio.setId(espacio.getId());
-                            espacio.setCasco(null);
-                            espacio.setEstado_espacio("Activo");
-                            boolean updated = controladora_logica.actualizarEspacio(espacio);
-                            if (updated) {
-                                controladora_logica.borrarCasco(idCasco);
-                                resp.setContentType("application/json");
-                                resp.setStatus(HttpServletResponse.SC_OK);
-                                resp.getWriter().write("{\"status\":\"success\"}");
-                            } else {
-                                resp.setContentType("application/json");
-                                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                                resp.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to update space\"}");
-                            }
-                        } else {
-                            resp.setContentType("application/json");
-                            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                            resp.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to delete casco\"}");
-                        }
+                    espacio.setId_espacio(espacio.getId_espacio());
+                    espacio.setDocumento_aprendiz(null);
+                    espacio.setNombre(null);
+                    espacio.setPlaca_vehiculo(null);
+                    espacio.setHora_entrada(null);
+                    espacio.setEstado_espacio(null);
+                    espacio.setEstado_espacio("Libre");
+                    boolean updated = controladora_logica.actualizarEspacio(espacio);
+                    if (updated) {
+                        resp.setContentType("application/json");
+                        resp.setStatus(HttpServletResponse.SC_OK);
+                        resp.getWriter().write("{\"status\":\"success\"}");
                     } else {
                         resp.setContentType("application/json");
-                        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                        resp.getWriter().write("{\"status\":\"error\", \"message\":\"Casco no encontrado\"}");
+                        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                        resp.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to update space\"}");
                     }
                 }
             } catch (JSONException e) {

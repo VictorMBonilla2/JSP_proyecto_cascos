@@ -10,6 +10,8 @@ public class PersistenciaController {
     CasillerosJPAController casillerosJPA = new CasillerosJPAController();
     EspacioJPAController espacioJPA = new EspacioJPAController();
     CascosJPAController cascosJPA = new CascosJPAController();
+    VehiculoJPAController vehiculoJPA = new VehiculoJPAController();
+
     Persona persona = new Persona();
 
     public void CrearPersona(Persona persona) throws Exception {
@@ -58,4 +60,10 @@ public class PersistenciaController {
     public Persona buscarpersona(int documento) {
         return persoJpa.findPersona(documento);
     }
+
+    public TbVehiculo buscarvehiculo(int id_vehiculo) {
+        return vehiculoJPA.findTbVehiculo(id_vehiculo);
+    }
+
+
 }
