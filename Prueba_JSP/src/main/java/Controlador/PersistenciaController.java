@@ -11,6 +11,7 @@ public class PersistenciaController {
     EspacioJPAController espacioJPA = new EspacioJPAController();
     CascosJPAController cascosJPA = new CascosJPAController();
     VehiculoJPAController vehiculoJPA = new VehiculoJPAController();
+    RegistroJPAController registroJPA = new RegistroJPAController();
 
     Persona persona = new Persona();
 
@@ -66,4 +67,7 @@ public class PersistenciaController {
     }
 
 
+    public void CrearRegistro(TbRegistro nuevoRegistro) {
+        registroJPA.create(nuevoRegistro);
+    }
 }

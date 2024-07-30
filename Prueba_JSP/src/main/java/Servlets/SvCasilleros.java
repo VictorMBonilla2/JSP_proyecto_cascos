@@ -1,8 +1,6 @@
 package Servlets;
 
-import Modelo.Controladora_logica;
-import Modelo.TbVehiculo;
-import Modelo.TbEspacio;
+import Modelo.*;
 import com.sun.jdi.IntegerValue;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -10,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,10 +30,10 @@ public class SvCasilleros {
             List<TbEspacio> DatosEspacio= controladora_logica.DatosEspacio();
             for (TbEspacio espacio : DatosEspacio) {
             System.out.println("Ejecución servlet");
-                String placa_vehiculo = espacio.getPlaca_vehiculo();
-                if (placa_vehiculo != null) {
+                TbVehiculo vehiculo = espacio.getVehiculo();
+                if (vehiculo != null) {
                     // Ahora puedes hacer lo que necesites con la placa del vehiculo
-                    System.out.println("Para el espacio " + espacio.getId_espacio() + ", la placa del vehiculo es: " + placa_vehiculo);
+                    System.out.println("Para el espacio " + espacio.getId_espacio() + ", la placa del vehiculo es: " + vehiculo.getPlaca_vehiculo());
                 } else {
                     // No hay ningún vehiculo asociado a este espacio
                     System.out.println("Para el espacio " + espacio.getId_espacio() + ", no hay ningún vehiculo asociado.");
@@ -80,17 +79,29 @@ public class SvCasilleros {
                 if (formType.equals("add")) {
                     Integer documento = Integer.valueOf(jsonObject.getString("documento"));
                     String nombre = jsonObject.getString("nombre");
-                    String placa = jsonObject.getString("placa");
-                    String ciudad = jsonObject.getString("ciudad");
                     String cantcascos = jsonObject.getString("cantcascos");
 
                     if (espacio != null) {
-                        // Verificar si el documento tiene un vehículo vinculado
                         TbVehiculo vehiculoExistente = null;
                         try {
-                            vehiculoExistente = controladora_logica.buscarVehiculoPorDocumento(documento);
+                            // Buscar la persona por documento y obtener el vehículo asociado si existe
+                            Persona persona = controladora_logica.buscarusuario(documento);
+                            if (persona != null) {
+                                vehiculoExistente = persona.getVehiculo();
+                                if (vehiculoExistente != null) {
+                                    // Si existe un vehículo vinculado, usar su información
+                                    espacio.setVehiculo(vehiculoExistente);
+                                    espacio.setCantidad_cascos(vehiculoExistente.getCant_casco());
+                                    // Asignar los demás datos al espacio
+                                    espacio.setNombre(nombre);
+                                    espacio.setPersona(persona);
+                                    espacio.setCantidad_cascos(Integer.valueOf(cantcascos));
+                                    espacio.setEstado_espacio("Ocupado");
+                                    espacio.setHora_entrada(new Date());
+                                }
+
+                            }
                         } catch (Exception e) {
-                            // Manejar cualquier excepción que ocurra durante la búsqueda
                             System.err.println("Error al buscar vehículo por documento: " + e.getMessage());
                             resp.setContentType("application/json");
                             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -98,28 +109,11 @@ public class SvCasilleros {
                             return;
                         }
 
-                        if (vehiculoExistente != null) {
-                            // Si existe un vehículo vinculado al documento, usar su información
-                            espacio.setPlaca_vehiculo(vehiculoExistente.getPlaca_vehiculo());
-                            espacio.setCantidad_cascos(vehiculoExistente.getCant_casco());
-                        } else {
-                            // Si no existe un vehículo vinculado, usar la información proporcionada
-                            espacio.setPlaca_vehiculo(placa);
-                            espacio.setCantidad_cascos(Integer.valueOf(cantcascos));
-                        }
-
-                        // Asignar los demás datos al espacio
-                        espacio.setNombre(nombre);
-                        espacio.setDocumento_aprendiz(Integer.valueOf(documento));
-                        espacio.setEstado_espacio("Ocupado");
-                        espacio.setHora_entrada(new Date());
-
                         // Guardar los cambios en el espacio
                         boolean added = false;
                         try {
                             added = controladora_logica.actualizarEspacio(espacio);
                         } catch (Exception e) {
-                            // Manejar cualquier excepción que ocurra durante la actualización
                             System.err.println("Error al actualizar el espacio: " + e.getMessage());
                             resp.setContentType("application/json");
                             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -141,6 +135,7 @@ public class SvCasilleros {
                         resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                         resp.getWriter().write("{\"status\":\"error\", \"message\":\"Espacio no encontrado\"}");
                     }
+
                 } else if (formType.equals("edit")) {
                     Integer documento = Integer.valueOf(jsonObject.getString("documento"));
                     String nombre = jsonObject.getString("nombre");
@@ -149,7 +144,6 @@ public class SvCasilleros {
                     String cantcascos = jsonObject.getString("cantcascos");
                     if (espacio != null) {
 
-                        espacio.setPlaca_vehiculo(placa);
                         espacio.setCantidad_cascos(Integer.valueOf(cantcascos));
                         espacio.setNombre(nombre);
                         boolean updated = controladora_logica.actualizarEspacio(espacio);
@@ -168,11 +162,38 @@ public class SvCasilleros {
                         resp.getWriter().write("{\"status\":\"error\", \"message\":\"Espacio no encontrado\"}");
                     }
                 } else if (formType.equals("pay")) {
-                    System.out.println("Ingresando al meotodo pay");
+                    System.out.println("Ingresando al método pay");
+
+                    // Crear un nuevo registro para la tabla TbRegistro
+                    TbRegistro nuevoRegistro = new TbRegistro();
+                    nuevoRegistro.setFecha_registro(new Date()); // Fecha del registro
+                    nuevoRegistro.setEspacio(espacio); // Asignar el espacio actual al registro
+                    nuevoRegistro.setVehiculo(espacio.getVehiculo()); // Asignar el vehículo actual al registro
+
+                    Persona aprendiz = espacio.getPersona(); // Obtener el aprendiz desde el espacio
+                    nuevoRegistro.setAprendiz(aprendiz);
+
+                    HttpSession session = req.getSession(false); // false para no crear una nueva sesión si no existe
+
+                    // Verificar si la sesión es válida y tiene el atributo "documento"
+                    if (session != null && session.getAttribute("documento") != null) {
+                        System.out.println("Documento conseguido");
+                        Integer documentosesionactual = (Integer) session.getAttribute("documento");
+                        Persona colaborador = controladora_logica.obtenerColaborador(documentosesionactual);
+                        nuevoRegistro.setColaborador(colaborador);
+
+                        controladora_logica.CrearRegistro(nuevoRegistro);
+                    } else {
+                        // Manejar el caso donde no hay sesión o el atributo "documento" no está presente
+                        System.err.println("No se pudo obtener el número de documento de la sesión actual.");
+                        resp.setContentType("application/json");
+                        resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // O el estado que prefieras
+                        resp.getWriter().write("{\"status\":\"error\", \"message\":\"Sesión no válida o documento no encontrado\"}");
+                    }
                     espacio.setId_espacio(espacio.getId_espacio());
-                    espacio.setDocumento_aprendiz(null);
+                    espacio.setPersona(null);
                     espacio.setNombre(null);
-                    espacio.setPlaca_vehiculo(null);
+                    espacio.setVehiculo(null);
                     espacio.setHora_entrada(null);
                     espacio.setEstado_espacio(null);
                     espacio.setEstado_espacio("Libre");

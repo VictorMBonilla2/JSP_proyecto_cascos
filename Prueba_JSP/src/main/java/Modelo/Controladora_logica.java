@@ -128,9 +128,9 @@ public class Controladora_logica {
 
         if (persona != null) {
             // Obtener el ID del vehículo desde la persona
-            String idVehiculoString = persona.getId_vehiculo_FK();
+            Integer idVehiculoString = persona.getVehiculo().getId_vehiculo();
 
-            if (idVehiculoString != null && !idVehiculoString.isEmpty()) {
+            if (idVehiculoString != null) {
                 try {
                     // Convertir el ID del vehículo a Integer
                     Integer vehiculoID = Integer.valueOf(idVehiculoString);
@@ -151,5 +151,21 @@ public class Controladora_logica {
             System.err.println("Persona no encontrada para el documento: " + documento);
             return null;
         }
+    }
+
+    public Persona obtenerColaborador(int documento) {
+
+       Persona Colaborador = buscarusuario(documento);
+
+       if (Colaborador != null && Colaborador.getRol().equals("Colaborador")) {
+
+           return Colaborador;
+       }
+
+        return null;
+    }
+
+    public void CrearRegistro(TbRegistro nuevoRegistro) {
+        controladora.CrearRegistro(nuevoRegistro);
     }
 }

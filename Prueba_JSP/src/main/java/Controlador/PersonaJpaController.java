@@ -58,7 +58,7 @@ public class PersonaJpaController implements Serializable {
         }catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                int id = persona.getId();
+                int id = persona.getDocumento();
                 if(findPersona(id)==null){
                     throw new Exception("The persona with id "+"no longer exists.");
                 }
@@ -79,7 +79,7 @@ public class PersonaJpaController implements Serializable {
             Persona persona;
             try {
                 persona = em.getReference(Persona.class, id);
-                persona.getId();
+                persona.getDocumento();
             } catch (EntityNotFoundException enfe) {
                 throw new Exception("The persona with id "+id+" no longer exists.", enfe);
             }

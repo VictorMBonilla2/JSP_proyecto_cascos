@@ -10,25 +10,33 @@ public class TbReportes {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_reporte", nullable = false)
     private Integer id_reporte;
+
     private Date fecha_reporte;
     private String nombre_reporte;
     private String descripcion_reporte;
     private String tipo_reporte;
     private String estado_reporte;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_casillero_fk", nullable = false) // Nombre de la columna de la clave foránea en esta entidad
+    @JoinColumn(name = "id_aprendiz_fk", nullable = false) // Clave foránea a Persona (aprendiz)
+    private Persona colaborador;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_gestor_fk", nullable = false) // Clave foránea a Persona (gestor)
     private Persona gestor;
+
 
     public TbReportes() {
     }
 
-    public TbReportes(Integer id_reporte, Date fecha_reporte, String nombre_reporte, String descripcion_reporte, String tipo_reporte, String estado_reporte, Persona gestor) {
+    public TbReportes(Integer id_reporte, Date fecha_reporte, String nombre_reporte, String descripcion_reporte, String tipo_reporte, String estado_reporte, Persona colaborador, Persona gestor) {
         this.id_reporte = id_reporte;
         this.fecha_reporte = fecha_reporte;
         this.nombre_reporte = nombre_reporte;
         this.descripcion_reporte = descripcion_reporte;
         this.tipo_reporte = tipo_reporte;
         this.estado_reporte = estado_reporte;
+        this.colaborador = colaborador;
         this.gestor = gestor;
     }
 
@@ -78,6 +86,14 @@ public class TbReportes {
 
     public void setEstado_reporte(String estado_reporte) {
         this.estado_reporte = estado_reporte;
+    }
+
+    public Persona getColaborador() {
+        return colaborador;
+    }
+
+    public void setColaborador(Persona colaborador) {
+        this.colaborador = colaborador;
     }
 
     public Persona getGestor() {
