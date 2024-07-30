@@ -91,12 +91,10 @@ function validateAndSubmit(addevent, espacioId, formType) {
         // Obtén los valores de los inputs
         const documento = document.getElementById(`${formType}documento${espacioId}`).value;
         const nombre = document.getElementById(`${formType}nombre${espacioId}`).value;
-        const placa = document.getElementById(`${formType}placa${espacioId}`).value;
-        const ciudad = document.getElementById(`${formType}ciudad${espacioId}`).value;
         const cantCascos = document.getElementById(`${formType}cant_cascos${espacioId}`).value;
 
         // Realiza la validación
-        if (documento.trim() === '' || nombre.trim() === '' || placa.trim() === '' || ciudad.trim() === '' || cantCascos.trim() === '') {
+        if (documento.trim() === '') {
             alert('Por favor, llena todos los campos');
             return false; // Previene el envío del formulario si hay errores de validación
         }
@@ -146,12 +144,8 @@ async function addDataCasilleros(form,espacioId, formType) {
 
     const documento = document.getElementById(`${formType}documento${espacioId}`).value
     const nombre = document.getElementById(`${formType}nombre${espacioId}`).value
-    const placa = document.getElementById(`${formType}placa${espacioId}`).value;
-    const ciudad = document.getElementById(`${formType}ciudad${espacioId}`).value;
     const cantcascos = document.getElementById(`${formType}cant_cascos${espacioId}`).value
     try {
-
-
         // Enviar la solicitud fetch al servidor
         const response = await fetch("SvCasillero", {
             method: "POST",
@@ -162,8 +156,6 @@ async function addDataCasilleros(form,espacioId, formType) {
                 espacio: espacioId,
                 nombre: nombre,
                 documento: documento,
-                placa: placa,
-                ciudad: ciudad,
                 cantcascos: cantcascos,
                 formType: formType
             })

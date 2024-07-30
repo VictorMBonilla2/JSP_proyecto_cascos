@@ -16,10 +16,11 @@
                 for (TbEspacio espacio : DatosEspacio) {
                     int espacioId = espacio.getId_espacio();
 
-                    String placa_vehiculo = espacio.getPlaca_vehiculo();
+                    TbVehiculo vehiculo = espacio.getVehiculo();
 
-                    if (placa_vehiculo != null) {
-                        Integer documento = espacio.getDocumento_aprendiz();
+                    if (vehiculo != null) {
+                        Integer documento = espacio.getPersona().getDocumento();
+                        String placa = vehiculo.getPlaca_vehiculo();
                         String nombre = espacio.getNombre();
                         Integer cantCascos= espacio.getCantidad_cascos();
                         Date tiempoEntrada = espacio.getHora_entrada();
@@ -39,7 +40,7 @@
                             </div>
                             <div class="info__tiempo">
                                 <h3>Placa</h3>
-                                <p> <%=placa_vehiculo%></p>
+                                <p> <%=placa%></p>
                             </div>
                             <div class="info__costo">
                                 <h3>Cascos</h3>
@@ -69,7 +70,7 @@
                                 <div class="formulario__inputs">
                                     <p>Tiempo transcurrido: riwmpo</p>
                                     <p>Costo Total: $1000</p>
-                                    <p>Placa: <%=placa_vehiculo%></p>
+                                    <p>Placa: <%=vehiculo%></p>
 
                                     <button type="submit" class="formulario__button">Añadir</button>
                                 </div>
@@ -90,8 +91,8 @@
                             <form id="editCasco<%= espacioId %>" onsubmit="editCasco(event, <%= espacioId %>)" class="formulario">
                                 <div class="formulario__inputs">
                                     <input type="text" id="editdocumento<%=espacioId%>" placeholder="Documento del aprendiz" name="documento" value="<%=documento%>" required>
-                                    <input type="text" id="editnombre<%=espacioId%>" placeholder="Nombre del aprendiz" name="nombre" value="<%=nombre%>" required>
-                                    <input type="text" id="editplaca<%=espacioId%>" placeholder="Placa del Vehiculo" name="placa" value="<%=placa_vehiculo%>" required>
+                                    <input type="text" id="editnombre<%=espacioId%>" placeholder="Nombre Opcional" name="nombre" value="<%=nombre%>">
+                                    <input type="text" id="editplaca<%=espacioId%>" placeholder="Placa del Vehiculo" name="placa" value="<%=vehiculo%>" required>
                                     <input type="text" id="editciudad<%=espacioId%>" placeholder="Ciudad" name="ciudad" value="<%=nombre%>" required >
                                     <input type="number" id="editcant_cascos<%=espacioId%>" placeholder="Cantidad de cascos" name="cant_cascos" value="<%=cantCascos%>" required>
                                     <button type="submit" class="formulario__button">Añadir</button>
@@ -135,10 +136,8 @@
                             <form id="addCasco<%= espacioId %>" onsubmit="addCasco(event, <%= espacioId %>)" class="formulario">
                                 <div class="formulario__inputs">
                                     <input type="text" id="adddocumento<%=espacioId%>" placeholder="Documento del aprendiz" name="documento" required>
-                                    <input type="text" id="addnombre<%=espacioId%>" placeholder="Nombre del aprendiz" name="nombre" required>
-                                    <input type="text" id="addplaca<%=espacioId%>" placeholder="Placa del Vehiculo" name="placa" required>
-                                    <input type="text" id="addciudad<%=espacioId%>" placeholder="Ciudad" name="ciudad" required>
-                                    <input type="number" id="addcant_cascos<%=espacioId%>" placeholder="Cantidad de Cascos" name="cant_cascos" required>
+                                    <input type="text" id="addnombre<%=espacioId%>" placeholder="Nombre del aprendiz" name="nombre">
+                                    <input type="number" id="addcant_cascos<%=espacioId%>" placeholder="Cantidad de Cascos" name="cant_cascos">
                                     <button type="submit" class="formulario__button">Añadir</button>
                                 </div>
                             </form>

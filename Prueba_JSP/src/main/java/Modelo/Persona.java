@@ -6,42 +6,47 @@ import java.util.Date;
 @Entity(name = "tb_persona")
 public class Persona {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int documento;
+
     private String nombre;
     private String apellido;
     private String tipoDocumento;
-    private int documento;
     private String correo;
+
     @Temporal(TemporalType.DATE)
     private Date fechaNacimiento;
+
     private String clave;
     private String rol;
-    private String id_vehiculo_FK;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "vehiculo_FK")
+    private TbVehiculo vehiculo;
+//  un salt para cifrado
+    // Getters y setters
 
     public Persona() {
+
     }
 
-    public Persona(int id, String nombre, String apellido, String tipoDocumento, int documento, String correo, Date fechaNacimiento, String clave, String rol, String id_vehiculo_FK) {
-        this.id = id;
+    public Persona(int documento, String nombre, String apellido, String tipoDocumento, String correo, Date fechaNacimiento, String clave, String rol, TbVehiculo vehiculo) {
+        this.documento = documento;
         this.nombre = nombre;
         this.apellido = apellido;
         this.tipoDocumento = tipoDocumento;
-        this.documento = documento;
         this.correo = correo;
         this.fechaNacimiento = fechaNacimiento;
         this.clave = clave;
         this.rol = rol;
-        this.id_vehiculo_FK = id_vehiculo_FK;
+        this.vehiculo = vehiculo;
     }
 
-    public int getId() {
-        return id;
+    public int getDocumento() {
+        return documento;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setDocumento(int documento) {
+        this.documento = documento;
     }
 
     public String getNombre() {
@@ -66,14 +71,6 @@ public class Persona {
 
     public void setTipoDocumento(String tipoDocumento) {
         this.tipoDocumento = tipoDocumento;
-    }
-
-    public int getDocumento() {
-        return documento;
-    }
-
-    public void setDocumento(int documento) {
-        this.documento = documento;
     }
 
     public String getCorreo() {
@@ -108,11 +105,11 @@ public class Persona {
         this.rol = rol;
     }
 
-    public String getId_vehiculo_FK() {
-        return id_vehiculo_FK;
+    public TbVehiculo getVehiculo() {
+        return vehiculo;
     }
 
-    public void setId_vehiculo_FK(String id_vehiculo_FK) {
-        this.id_vehiculo_FK = id_vehiculo_FK;
+    public void setVehiculo(TbVehiculo vehiculo) {
+        this.vehiculo = vehiculo;
     }
 }
