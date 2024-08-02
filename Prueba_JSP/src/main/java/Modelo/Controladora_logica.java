@@ -168,4 +168,20 @@ public class Controladora_logica {
     public void CrearRegistro(TbRegistro nuevoRegistro) {
         controladora.CrearRegistro(nuevoRegistro);
     }
+
+    public TbCasillero ConseguirCasillero(int casilleroId) {
+
+        return controladora.TraerCasillero(casilleroId);
+
+
+    }
+
+    public void crearEspacio(TbEspacio espacio) {
+        controladora.CrearEspacio(espacio);
+    }
+
+    public List<TbRegistro> ObtenerRegistros() {
+
+        return controladora.ObtenerRegistros();
+    }
 }

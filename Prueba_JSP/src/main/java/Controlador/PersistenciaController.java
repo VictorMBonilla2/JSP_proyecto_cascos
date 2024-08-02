@@ -70,4 +70,17 @@ public class PersistenciaController {
     public void CrearRegistro(TbRegistro nuevoRegistro) {
         registroJPA.create(nuevoRegistro);
     }
+
+    public TbCasillero TraerCasillero(int casilleroId) {
+        return casillerosJPA.findTbCasillero(casilleroId);
+    }
+
+    public void CrearEspacio(TbEspacio espacio) {
+        espacioJPA.create(espacio);
+    }
+
+    public List<TbRegistro> ObtenerRegistros() {
+
+        return registroJPA.findTbRegistroEntities();
+    }
 }

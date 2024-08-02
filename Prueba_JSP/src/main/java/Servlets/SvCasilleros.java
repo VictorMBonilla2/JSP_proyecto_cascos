@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.Struct;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -166,7 +167,7 @@ public class SvCasilleros {
 
                     // Crear un nuevo registro para la tabla TbRegistro
                     TbRegistro nuevoRegistro = new TbRegistro();
-                    nuevoRegistro.setFecha_registro(new Date()); // Fecha del registro
+                    nuevoRegistro.setFecha_reporte(LocalDateTime.now()); // Fecha del registro
                     nuevoRegistro.setEspacio(espacio); // Asignar el espacio actual al registro
                     nuevoRegistro.setVehiculo(espacio.getVehiculo()); // Asignar el vehículo actual al registro
 
