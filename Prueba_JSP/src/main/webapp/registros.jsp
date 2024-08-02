@@ -1,9 +1,18 @@
+<%@ page import="java.util.List" %>
+<%@ page import="Modelo.TbRegistro" %>
+<%@ page import="Modelo.TbEspacio" %>
+<%@ page import="java.lang.reflect.Field" %>
+<%@ page import="Servlets.Anotaciones" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <jsp:include page="resources/header.jsp" />
 
 <jsp:include page="resources/sidebar.jsp" />
+<%
+    List<TbRegistro> DatosRegistros = (List<TbRegistro>) request.getAttribute("Registros");
 
+
+%>
 <section class="main_container__registros">
     <div class="tabs">
         <button>hoy</button>
@@ -15,55 +24,50 @@
     <table>
         <thead>
         <tr>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Placa</th>
-            <th>Casillero(s)</th>
-            <th>Documento Aprendiz</th>
-            <th>Colaborador</th>
-        </tr>
-        </thead>
-        <tbody>
+            <%if (DatosRegistros != null) {
+
+                Class<?> clazz = TbRegistro.class;
+
+                Field[] fields = clazz.getDeclaredFields();
+                int contador = 0;
+                for (Field field : fields) {
+                    if(contador ==0){
+                        contador = 1;
+                        continue;
+                    }
+                    Anotaciones.PropertyName annotation = field.getAnnotation(Anotaciones.PropertyName.class);
+                    if (annotation != null) {
+                        System.out.println("Nombre de la propiedad: " + annotation.value());
+                    }
+
+
+            %>
+            <th><%=annotation.value()%></th>
+            <%}
+            %>
+            </tr>
+            </thead>
+            <tbody>
+
+        <%
+        for(TbRegistro registro : DatosRegistros){
+            %>
         <tr>
-            <td>2024-07-01</td>
-            <td>08:00</td>
-            <td>ABC-1234</td>
-            <td>1</td>
-            <td>12345678</td>
-            <td>Juan Pérez</td>
+            <td> <%=registro.getFecha_registro()%></td>
+            <td><%=registro.getEspacio().getId_espacio()%></td>
+            <td><%=registro.getVehiculo().getPlaca_vehiculo()%></td>
+            <td><%=registro.getAprendiz().getDocumento()%></td>
+            <td><%=registro.getColaborador().getDocumento()%></td>
         </tr>
-        <tr>
-            <td>2024-07-02</td>
-            <td>09:00</td>
-            <td>DEF-5678</td>
-            <td>2</td>
-            <td>87654321</td>
-            <td>María López</td>
-        </tr>
-        <tr>
-            <td>2024-07-03</td>
-            <td>10:00</td>
-            <td>GHI-9101</td>
-            <td>3</td>
-            <td>11223344</td>
-            <td>Carlos Sánchez</td>
-        </tr>
-        <tr>
-            <td>2024-07-04</td>
-            <td>11:00</td>
-            <td>JKL-1213</td>
-            <td>4</td>
-            <td>44332211</td>
-            <td>Ana Martínez</td>
-        </tr>
-        <tr>
-            <td>2024-07-05</td>
-            <td>12:00</td>
-            <td>MNO-1415</td>
-            <td>5</td>
-            <td>55667788</td>
-            <td>Pedro Gómez</td>
-        </tr>
+
+            <%
+
+
+        }
+
+    }
+            %>
+
         </tbody>
     </table>
     <div class="pagination">
@@ -76,6 +80,7 @@
 
 
 </main>
+<script src="resources/js/Registros.js"></script>
 <jsp:include page="resources/footer.jsp" />
 </body>
 </html>

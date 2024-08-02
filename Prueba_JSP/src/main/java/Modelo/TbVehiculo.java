@@ -16,7 +16,7 @@ public class TbVehiculo {
     private String marca_vehiculo;
     private String modelo_vehiculo;
     private Integer cant_casco;
-    @OneToMany(mappedBy = "vehiculo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "vehiculo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Persona> documento = new LinkedHashSet<>();
     private String ciudad_vehiculo;
 

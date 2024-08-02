@@ -9,6 +9,7 @@ public class TbReportes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_reporte", nullable = false)
+
     private Integer id_reporte;
 
     private Date fecha_reporte;
