@@ -64,6 +64,7 @@
                         </div>
                     </div>
                 </div>
+                <script src="resources/js/reportesCOntent.js"></script>
                 <script src="resources/js/reportes.js"></script>
             </section>
 
@@ -71,6 +72,7 @@
 
 
         </main>
+
 <jsp:include page="resources/footer.jsp" />
     </body>
 </html>

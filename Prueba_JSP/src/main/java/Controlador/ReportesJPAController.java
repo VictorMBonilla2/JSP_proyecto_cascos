@@ -1,17 +1,15 @@
 package Controlador;
 
-import Modelo.TbEspacio;
-import Modelo.TbVehiculo;
+
+import Modelo.TbReportes;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class VehiculoJPAController implements Serializable {
+public class ReportesJPAController {
 
-
-    public VehiculoJPAController() {
+    public ReportesJPAController() {
         fabricaEntidades = Persistence.createEntityManagerFactory("default");
     }
 
@@ -21,12 +19,12 @@ public class VehiculoJPAController implements Serializable {
         return fabricaEntidades.createEntityManager();
     }
 
-    public void create(TbVehiculo vehiculo) {
+    public void create(TbReportes reporte) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(vehiculo);
+            em.persist(reporte);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -35,19 +33,19 @@ public class VehiculoJPAController implements Serializable {
         }
     }
 
-    public void edit(TbVehiculo vehiculo) throws Exception {
+    public void edit(TbReportes reporte) throws Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            vehiculo = em.merge(vehiculo);
+            reporte = em.merge(reporte);
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                int id = vehiculo.getId_vehiculo();
-                if (findTbVehiculo(id) == null) {
-                    throw new Exception("The vehiculo with id " + id + " no longer exists.");
+                int id = reporte.getId_reporte();
+                if (findTbReportes(id) == null) {
+                    throw new Exception("The reporte with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -63,14 +61,14 @@ public class VehiculoJPAController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            TbVehiculo vehiculo;
+            TbReportes reporte;
             try {
-                vehiculo = em.getReference(TbVehiculo.class, id);
-                vehiculo.getId_vehiculo();
+                reporte = em.getReference(TbReportes.class, id);
+                reporte.getId_reporte();
             } catch (EntityNotFoundException enfe) {
-                throw new Exception("The vehiculo with id " + id + " no longer exists.", enfe);
+                throw new Exception("The reporte with id " + id + " no longer exists.", enfe);
             }
-            em.remove(vehiculo);
+            em.remove(reporte);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -78,17 +76,17 @@ public class VehiculoJPAController implements Serializable {
             }
         }
     }
-    public List<TbVehiculo> findTbVehiculoEntities() {
-        return findTbVehiculoEntities(true, -1, -1);
+    public List<TbReportes> findTbReportesEntities() {
+        return findTbReportesEntities(true, -1, -1);
     }
 
-    public List<TbVehiculo> findTbVehiculoEntities(int maxResults, int firstResult) {
-        return findTbVehiculoEntities(false, maxResults, firstResult);
+    public List<TbReportes> findTbReportesEntities(int maxResults, int firstResult) {
+        return findTbReportesEntities(false, maxResults, firstResult);
     }
-    public TbVehiculo findTbVehiculo(int id) {
+    public TbReportes findTbReportes(int id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(TbVehiculo.class, id);
+            return em.find(TbReportes.class, id);
         } finally {
             if (em != null) {
                 em.close();
@@ -96,11 +94,11 @@ public class VehiculoJPAController implements Serializable {
         }
     }
 
-    private List<TbVehiculo> findTbVehiculoEntities(boolean all, int maxResults, int firstResult) {
+    private List<TbReportes> findTbReportesEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(TbVehiculo.class));
+            cq.select(cq.from(TbReportes.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -113,5 +111,6 @@ public class VehiculoJPAController implements Serializable {
             }
         }
     }
-
 }
+
+

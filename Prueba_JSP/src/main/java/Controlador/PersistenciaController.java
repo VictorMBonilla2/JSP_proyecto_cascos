@@ -12,6 +12,7 @@ public class PersistenciaController {
     CascosJPAController cascosJPA = new CascosJPAController();
     VehiculoJPAController vehiculoJPA = new VehiculoJPAController();
     RegistroJPAController registroJPA = new RegistroJPAController();
+    ReportesJPAController reportesJPA = new ReportesJPAController();
 
     Persona persona = new Persona();
 
@@ -82,5 +83,9 @@ public class PersistenciaController {
     public List<TbRegistro> ObtenerRegistros() {
 
         return registroJPA.findTbRegistroEntities();
+    }
+
+    public List<TbReportes> ObtenerReportes() {
+        return reportesJPA.findTbReportesEntities();
     }
 }
