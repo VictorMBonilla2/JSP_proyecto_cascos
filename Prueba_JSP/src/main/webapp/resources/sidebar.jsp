@@ -15,7 +15,7 @@
             </a>
         </div>
         <div class="imgContainer">
-            <a href="SvRegistros">
+            <a href="registros.jsp">
             <img src="resources/imagenes/bookIcoin.svg" alt="bugs">
             <p>Registros</p>
             </a>
