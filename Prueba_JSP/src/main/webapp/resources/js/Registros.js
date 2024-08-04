@@ -1,50 +1,63 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const cuerpoTabla = document.querySelector("tbody");
+document.addEventListener("DOMContentLoaded", async () => {
+    const tabla = document.querySelector("table");
 
-    async function fetchRegistros() {
-        try {
-            const response = await fetch("SvRegistros");
-            if (!response.ok) {
-                throw new Error("Network response was not ok " + response.statusText);
+    try {
+        const responseDocument = await fetch("SvRegistros");
+        const result1 = await responseDocument.json();
+
+        // Crear el encabezado de la tabla
+        const header_encabezado = document.createElement("tr");
+        const cantproperty = Object.keys(result1[0]);
+        cantproperty.forEach(elemento => {
+            const lista = document.createElement("th");
+            lista.textContent = elemento;
+            header_encabezado.appendChild(lista);
+
+            // Agregar un encabezado adicional para la hora si el campo es "fecha_reporte"
+            if (elemento === "fecha_reporte") {
+                const horaEncabezado = document.createElement("th");
+                horaEncabezado.textContent = "Hora";
+                header_encabezado.appendChild(horaEncabezado);
             }
-            const registros = await response.json();
-            populateTable(registros);
-        } catch (error) {
-            console.error("Error fetching registros: ", error);
-        }
-    }
-
-    function populateTable(registros) {
-        cuerpoTabla.innerHTML = ''; // Limpiar tabla antes de llenarla
-        registros.forEach(registro => {
-            const row = document.createElement("tr");
-
-            const fechaCell = document.createElement("td");
-            fechaCell.textContent = registro.fecha_reporte;  // Ajusta esto según tu formato de fecha
-            row.appendChild(fechaCell);
-
-            const espacioCell = document.createElement("td");
-            espacioCell.textContent = registro.id_espacio;
-            row.appendChild(espacioCell);
-
-            const vehiculoCell = document.createElement("td");
-            vehiculoCell.textContent = registro.placa_vehiculo;
-            row.appendChild(vehiculoCell);
-
-            const aprendizCell = document.createElement("td");
-            aprendizCell.textContent = registro.documento_aprendiz;
-            row.appendChild(aprendizCell);
-
-            const colaboradorCell = document.createElement("td");
-            colaboradorCell.textContent = registro.documento_colaborador;
-            row.appendChild(colaboradorCell);
-
-            cuerpoTabla.appendChild(row);
         });
-    }
+        tabla.appendChild(header_encabezado);
 
-    fetchRegistros();
+        // Crear las filas de datos
+        result1.forEach(element => {
+            const contenido = document.createElement("tr");
+            cantproperty.forEach(key => {
+                const lista = document.createElement("td");
+                let value = element[key];
+
+                // Transformar la fecha y hora si el campo es "fecha_reporte"
+                if (key === "fecha_reporte") {
+                    const date = new Date(value);
+                    const fecha = date.toLocaleDateString();
+                    const hora = date.toLocaleTimeString();
+
+                    // Crear y agregar celda de fecha
+                    lista.textContent = fecha;
+                    contenido.appendChild(lista);
+
+                    // Crear y agregar celda de hora
+                    const horaCelda = document.createElement("td");
+                    horaCelda.textContent = hora;
+                    contenido.appendChild(horaCelda);
+                } else {
+                    lista.textContent = value;
+                    contenido.appendChild(lista);
+                }
+            });
+            tabla.appendChild(contenido);
+        });
+
+    } catch (error) {
+        console.error('Error fetching or parsing JSON:', error);
+    }
 });
+
+
+
 
 
 
