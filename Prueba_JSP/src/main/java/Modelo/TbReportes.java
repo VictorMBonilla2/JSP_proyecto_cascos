@@ -20,25 +20,25 @@ public class TbReportes {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_aprendiz_fk", nullable = false) // Clave foránea a Persona (aprendiz)
-    private Persona colaborador;
+    private Persona aprendiz;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_gestor_fk", nullable = false) // Clave foránea a Persona (gestor)
-    private Persona gestor;
+    private Persona colaborador;
 
 
     public TbReportes() {
     }
 
-    public TbReportes(Integer id_reporte, Date fecha_reporte, String nombre_reporte, String descripcion_reporte, String tipo_reporte, String estado_reporte, Persona colaborador, Persona gestor) {
+    public TbReportes(Integer id_reporte, Date fecha_reporte, String nombre_reporte, String descripcion_reporte, String tipo_reporte, String estado_reporte, Persona aprendiz, Persona colaborador) {
         this.id_reporte = id_reporte;
         this.fecha_reporte = fecha_reporte;
         this.nombre_reporte = nombre_reporte;
         this.descripcion_reporte = descripcion_reporte;
         this.tipo_reporte = tipo_reporte;
         this.estado_reporte = estado_reporte;
+        this.aprendiz = aprendiz;
         this.colaborador = colaborador;
-        this.gestor = gestor;
     }
 
     public Integer getId_reporte() {
@@ -89,20 +89,20 @@ public class TbReportes {
         this.estado_reporte = estado_reporte;
     }
 
+    public Persona getAprendiz() {
+        return aprendiz;
+    }
+
+    public void setAprendiz(Persona aprendiz) {
+        this.aprendiz = aprendiz;
+    }
+
     public Persona getColaborador() {
         return colaborador;
     }
 
     public void setColaborador(Persona colaborador) {
         this.colaborador = colaborador;
-    }
-
-    public Persona getGestor() {
-        return gestor;
-    }
-
-    public void setGestor(Persona gestor) {
-        this.gestor = gestor;
     }
 }
 

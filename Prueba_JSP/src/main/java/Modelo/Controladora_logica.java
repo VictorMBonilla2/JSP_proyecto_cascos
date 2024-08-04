@@ -184,4 +184,18 @@ public class Controladora_logica {
 
         return controladora.ObtenerRegistros();
     }
+
+    public List<TbReportes> ObtenerReportes() {
+        List<TbReportes> reportes = controladora.ObtenerReportes();
+
+        for (TbReportes reporte : reportes) {
+            int numeroAPrendiz= reporte.getAprendiz().getDocumento();
+            int numeroGestor=reporte.getColaborador().getDocumento();
+           reporte.setAprendiz(buscarusuario(numeroAPrendiz)); ;
+           reporte.setColaborador(buscarusuario(numeroGestor));
+        }
+
+        return reportes;
+
+    }
 }
