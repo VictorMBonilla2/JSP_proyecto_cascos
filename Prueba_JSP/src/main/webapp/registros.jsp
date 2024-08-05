@@ -13,21 +13,7 @@
         <input type="text" placeholder="Buscar">
     </div>
     <table>
-        <thead>
-            <tr>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </tbody>
+        <script src="resources/js/Registros.js"></script>
     </table>
     <div class="pagination">
         <span>15 de 350</span>
@@ -39,7 +25,7 @@
 
 
 </main>
-<script src="resources/js/Registros.js"></script>
+
 <jsp:include page="resources/footer.jsp" />
 </body>
 </html>

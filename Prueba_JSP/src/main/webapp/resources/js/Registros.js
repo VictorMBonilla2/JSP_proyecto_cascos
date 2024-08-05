@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
+
     const tabla = document.querySelector("table");
 
     try {
@@ -6,6 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const result1 = await responseDocument.json();
 
         // Crear el encabezado de la tabla
+        const header_table = document.createElement("thead")
         const header_encabezado = document.createElement("tr");
         const cantproperty = Object.keys(result1[0]);
         cantproperty.forEach(elemento => {
@@ -19,10 +21,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 horaEncabezado.textContent = "Hora";
                 header_encabezado.appendChild(horaEncabezado);
             }
+            header_table.appendChild(header_encabezado)
         });
-        tabla.appendChild(header_encabezado);
+        tabla.appendChild(header_table);
 
         // Crear las filas de datos
+        const hola = document.createElement("tbody")
         result1.forEach(element => {
             const contenido = document.createElement("tr");
             cantproperty.forEach(key => {
@@ -48,8 +52,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                     contenido.appendChild(lista);
                 }
             });
-            tabla.appendChild(contenido);
+            hola.appendChild(contenido);
         });
+        tabla.appendChild(hola)
+        document.appendChild(tabla)
 
     } catch (error) {
         console.error('Error fetching or parsing JSON:', error);
