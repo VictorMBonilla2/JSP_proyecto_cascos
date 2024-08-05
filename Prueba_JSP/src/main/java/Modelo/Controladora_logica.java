@@ -20,7 +20,7 @@ public class Controladora_logica {
         for (LoginDTO login : lista) {
             System.out.println(login.getTipoDocumento().equals(tipoDocumento));
             System.out.println(login.getClave().equals(clave));
-            if (login.getTipoDocumento().equals(tipoDocumento) && login.getClave().equals(clave)) {
+            if (login.getTipoDocumento().equals(tipoDocumento) && login.getClave().equals(clave) && login.getRol().equals("Colaborador")) {
                 return true;
             }
         }

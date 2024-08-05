@@ -120,7 +120,7 @@ public class PersonaJpaController implements Serializable {
         EntityManager em = getEntityManager();
         try{
             TypedQuery<Object[]> query= em.createQuery(
-                    "SELECT p.documento, p.tipoDocumento, p.clave FROM tb_persona p WHERE p.documento = :NumeroDoc", Object[].class);
+                    "SELECT p.documento, p.tipoDocumento, p.clave, p.rol FROM tb_persona p WHERE p.documento = :NumeroDoc", Object[].class);
             query.setParameter("NumeroDoc", documento);
             List<Object[]> resultados = query.getResultList();
             List<LoginDTO> loginDTOs = new ArrayList<>();
@@ -128,7 +128,8 @@ public class PersonaJpaController implements Serializable {
                 int numDoc = (int) resultado[0];
                 String TipDocument = (String) resultado[1];
                 String clave = (String) resultado[2];
-                loginDTOs.add(new LoginDTO(numDoc, TipDocument, clave));
+                String Rol = (String) resultado[3];
+                loginDTOs.add(new LoginDTO(numDoc, TipDocument, clave, Rol));
             }
             return loginDTOs; // Devolver la lista de LoginDTOs
 
