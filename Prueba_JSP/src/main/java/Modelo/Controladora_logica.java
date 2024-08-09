@@ -157,7 +157,7 @@ public class Controladora_logica {
 
        Persona Colaborador = buscarusuario(documento);
 
-       if (Colaborador != null && Colaborador.getRol().equals("Gestor")) {
+       if (Colaborador != null && Colaborador.getRol().equals("Colaborador")) {
 
            return Colaborador;
        }

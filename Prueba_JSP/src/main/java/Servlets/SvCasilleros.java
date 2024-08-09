@@ -85,12 +85,12 @@ public class SvCasilleros {
                     if (espacio != null) {
                         TbVehiculo vehiculoExistente = null;
                         try {
-                            // Buscar la persona por documento y obtener el vehículo asociado si existe
+                            // Buscar la persona por documento y obtener el vehículo asociado
                             Persona persona = controladora_logica.buscarusuario(documento);
                             if (persona != null) {
                                 vehiculoExistente = persona.getVehiculo();
                                 if (vehiculoExistente != null) {
-                                    // Si existe un vehículo vinculado, usar su información
+                                    // Si existe el vehículo vinculado, usar su información
                                     espacio.setVehiculo(vehiculoExistente);
                                     espacio.setCantidad_cascos(vehiculoExistente.getCant_casco());
                                     // Asignar los demás datos al espacio
@@ -176,19 +176,20 @@ public class SvCasilleros {
 
                     HttpSession session = req.getSession(false); // false para no crear una nueva sesión si no existe
 
-                    // Verificar si la sesión es válida y tiene el atributo "documento"
+                    // Verificar si la sesión es válida y tiene el atributo documento
                     if (session != null && session.getAttribute("documento") != null) {
                         System.out.println("Documento conseguido");
                         Integer documentosesionactual = (Integer) session.getAttribute("documento");
                         Persona colaborador = controladora_logica.obtenerColaborador(documentosesionactual);
+                        System.out.println(colaborador);
                         nuevoRegistro.setColaborador(colaborador);
 
                         controladora_logica.CrearRegistro(nuevoRegistro);
                     } else {
-                        // Manejar el caso donde no hay sesión o el atributo "documento" no está presente
+                        // Manejar el caso donde no hay sesión o el atributo documento no está presente
                         System.err.println("No se pudo obtener el número de documento de la sesión actual.");
                         resp.setContentType("application/json");
-                        resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // O el estado que prefieras
+                        resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         resp.getWriter().write("{\"status\":\"error\", \"message\":\"Sesión no válida o documento no encontrado\"}");
                     }
                     espacio.setId_espacio(espacio.getId_espacio());

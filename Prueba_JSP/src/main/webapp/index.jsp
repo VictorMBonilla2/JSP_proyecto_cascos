@@ -48,7 +48,7 @@
     </div>
     <p class="Container__forget">¿Has olvidado tu contraseña?</p>
 
-    <a href="register.jsp" class="Container__register">Nuevo Colaborador</a>
+    <a href="registro_aprendices.jsp" class="Container__register">Nuevo Aprendiz</a>
 
   </section>
 

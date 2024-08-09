@@ -31,7 +31,7 @@
     <div class="Inputs_Container">
       <form action="SvPersona" method="POST" class="formulario" id="registro">
         <div class="formulario__inputs">
-          <input type="hidden" id="rol" value="Colaborador">
+          <input type="hidden" id="rol" value="Aprendiz">
           <input type="text"  placeholder="Nombres" name="Nombres" id="Nombre" required>
           <input type="text"  placeholder="Apellidos" name="Apellidos" id="Apellido" required>
 
