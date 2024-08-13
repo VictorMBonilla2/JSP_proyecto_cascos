@@ -1,18 +1,17 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const tabla = document.querySelector(".reportes__content");
+    const reporteTemplate = document.getElementById('reporte-template').content;
+    const modalTemplate = document.getElementById('modal-template').content;
 
     try {
         const responseDocument = await fetch("SvReportes");
         const reportes = await responseDocument.json();
 
-        // Verifica si reportes es un array
         if (!Array.isArray(reportes)) {
             throw new Error("El JSON recibido no es un array.");
         }
 
-        // Agrupar reportes por fecha
         const reportesPorFecha = reportes.reduce((acc, reporte) => {
-            // Extraer solo la fecha sin la hora
             const fecha = reporte.fecha_reporte.split(" ")[0];
             if (!acc[fecha]) {
                 acc[fecha] = [];
@@ -21,56 +20,51 @@ document.addEventListener("DOMContentLoaded", async () => {
             return acc;
         }, {});
 
-        // Crear los elementos HTML
         for (const [fecha, reportes] of Object.entries(reportesPorFecha)) {
-            // Crear el div de fecha
             const fechaDiv = document.createElement("div");
             fechaDiv.classList.add("reportes__fecha", "estilo__casillero");
             fechaDiv.innerHTML = `<p>${fecha}</p>`;
             tabla.appendChild(fechaDiv);
 
-            // Crear los reportes para esa fecha
             reportes.forEach((reporte, index) => {
-                const reporteItemDiv = document.createElement("div");
-                reporteItemDiv.classList.add("report__item");
-
+                const reporteItem = document.importNode(reporteTemplate, true);
                 const modalId = `report${index}`;
 
-                reporteItemDiv.innerHTML = `
-                    <p>Casillero</p>
-                    <p class="item__casillero">${reporte.documento_aprendiz}</p>
-                    <p>Tipo</p>
-                    <p class="item__type">${reporte.tipo_reporte}</p>
-                    <p>Placa</p>
-                    <p class="item__placa">${reporte.placa_vehiculo}</p>
-                    <button class="report__button" report="${modalId}">Detalles</button>
-                `;
-                tabla.appendChild(reporteItemDiv);
+                reporteItem.querySelector('.item__casillero').textContent = reporte.documento_aprendiz;
+                reporteItem.querySelector('.item__type').textContent = reporte.tipo_reporte;
+                reporteItem.querySelector('.item__placa').textContent = reporte.placa_vehiculo;
+                reporteItem.querySelector('.report__button').setAttribute('data-modal-id', modalId);
 
-                const linea = document.createElement("hr");
-                linea.classList.add("linea");
-                tabla.appendChild(linea);
+                tabla.appendChild(reporteItem);
 
-                // Crear el modal correspondiente
-                const modalDiv = document.createElement("div");
-                modalDiv.id = modalId;
-                modalDiv.classList.add("modal");
+                const modalDiv = document.importNode(modalTemplate, true);
+                modalDiv.querySelector('.modal').id = modalId;
+                modalDiv.querySelector('.close').setAttribute('data-modal-id', modalId);
+                modalDiv.querySelector('.modal-body h3').textContent = reporte.descripcion_reporte;
 
-                modalDiv.innerHTML = `
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>Detalles Reporte</h2>
-                            <span class="close" data-modal-id="${modalId}">&times;</span>
-                        </div>
-                        <div class="modal-body">
-                            <h3>${reporte.descripcion_reporte}</h3>
-                        </div>
-                    </div>
-                `;
                 document.body.appendChild(modalDiv);
             });
         }
+
+        // Manejo de eventos para abrir y cerrar modales
+        document.addEventListener('click', (event) => {
+            if (event.target.matches('.report__button')) {
+                const modalId = event.target.getAttribute('data-modal-id');
+                document.getElementById(modalId).style.display = 'flex';
+            } else if (event.target.matches('.close')) {
+                const modalId = event.target.getAttribute('data-modal-id');
+                document.getElementById(modalId).style.display = 'none';
+            }
+        });
+
+        // Cerrar modales al hacer clic fuera de ellos
+        window.addEventListener('click', (event) => {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        });
+
     } catch (error) {
         console.error('Error fetching or parsing JSON:', error);
     }
-    });
+});

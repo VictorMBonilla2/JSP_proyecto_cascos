@@ -1,58 +1,69 @@
-const ctx = document.getElementById("myChart")
-const names = ["Lunes", "Martes", "Miercoles", "Jueves","Viernes","Sabado", "Domingo"];
-const ages = [19, 21, 18, 33, 11, 45, 54];
+document.addEventListener("DOMContentLoaded", async () => {
+    const ctx = document.getElementById("myChart").getContext("2d"); // Asegúrate de obtener el contexto 2D
 
-const myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: names,
-        datasets: [{
-            label: 'Cascos',
-            data: ages,
-            backgroundColor: [
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(153, 102, 255, 0.2)'
-            ],
-            borderColor: [
-                'rgba(75, 192, 192, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(153, 102, 255, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        },
-        plugins: {
-            legend: {
-                display: true, // Mostrar la leyenda
-                position: 'top', // Posición de la leyenda ('top', 'left', 'bottom', 'right')
-                labels: {
-                    color: 'rgb(255, 99, 132)', // Color de las etiquetas de la leyenda
-                    text: "Cascos.",
-                    font: {
-                        size: 14 // Tamaño de la fuente de las etiquetas
+    try {
+        // Realizar la solicitud fetch
+        const response = await fetch("SvHome"); // Ruta del servlet
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const jsonResponse = await response.json(); // Parsear el JSON
 
+        // Asegúrate de que jsonResponse contiene la propiedad 'data'
+        if (!jsonResponse.data) {
+            console.error('No data property found in JSON response');
+            return;
+        }
+
+        // Extraer la propiedad 'data' del objeto JSON
+        const data = jsonResponse.data;
+
+        // Verifica los datos recibidos
+        console.log('Data received:', data);
+
+        // Convertir fechas a nombres de días
+        const dateToDayName = date => {
+            const daysOfWeek = [ "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado","Domingo",];
+            const dayIndex = new Date(date).getDay();
+            return daysOfWeek[dayIndex];
+        };
+
+        // Ordenar las fechas y mapear a nombres de días
+        const sortedLabels = Object.keys(data).sort((a, b) => new Date(a) - new Date(b));
+        const sortedDayNames = sortedLabels.map(date => dateToDayName(date));
+        const sortedValues = sortedLabels.map(label => data[label]);
+
+        // Crear el gráfico
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: sortedDayNames,
+                datasets: [{
+                    label: 'Cascos',
+                    data: sortedValues,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
                     }
                 },
-                title: {
-                    display: true, // Mostrar el título de la leyenda
-                    text: "Cascos gestionados esta semana.", // Texto del título de la leyenda
-                    color: 'rgb(255, 99, 132)', // Color del título de la leyenda
-                    font: {
-                        size: 16 // Tamaño de la fuente del título
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
                     }
                 }
             }
-        },
+        });
+    } catch (error) {
+        console.error('Error fetching data:', error);
     }
 });
+
