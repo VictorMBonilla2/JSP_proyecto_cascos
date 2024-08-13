@@ -11,64 +11,43 @@
                     <p>Daños, extravios o cualquier irregularidad relacionada al casilleros o cascos se reportara a esta sección. </p>
                 </div>
                 <div class="reportes__content estilo__contenido">
-                    <div class="reportes__fecha estilo__casillero">
-                        <p>(FECHA)</p>
-                    </div>
-                    <div class="report__item">
-                        <p>Casillero</p>
-                        <p class="item__casillero">(id_casillero)</p>
-                        <p>Tipo</p>
-                        <p class="item__type">(tipo__reporte)</p>
-                        <p>Placa</p>
-                        <p class="item__placa">(tipo__reporte)</p>
-                        <button class="report__button" report="report1">Detalles</button>
-                    </div>
-                    <hr class="linea">
-                    <div class="report__item">
-                        <p>Casillero</p>
-                        <p class="item__casillero">(id_casillero)</p>
-                        <p>Tipo</p>
-                        <p class="item__type">(tipo__reporte)</p>
-                        <p>Placa</p>
-                        <p class="item__placa">(tipo__reporte)</p>
-                        <button class="report__button"  report="report2">Detalles</button>
-                    </div>
-                    <hr class="linea">
-                </div>
 
+                </div>
 
                 <!-- MODAL-->
-                <div id="report1" class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
 
-                            <h2>Detalles Reporte 1</h2>
-                            <span class="close" data-modal-id="report1">&times;</span>
-                        </div>
-                        <div class="modal-body">
-
-                            <h3>ESTE ES LA DESCRIPCION DEL REPORTE 1</h3>
-                        </div>
-                    </div>
-                </div>
-                <div id="report2" class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-
-                            <h2>Detalles Reporte 2</h2>
-                            <span class="close" data-modal-id="report2">&times;</span>
-                        </div>
-                        <div class="modal-body">
-
-                            <h3>ESTE ES LA DESCRIPCION DEL REPORTE 2</h3>
-                        </div>
-                    </div>
-                </div>
                 <script src="resources/js/reportesCOntent.js"></script>
-                <script src="resources/js/reportes.js"></script>
+
             </section>
 
+            <!-- Plantilla para los ítems de reporte -->
+            <template id="reporte-template">
+                <div class="report__item">
+                    <p>Casillero</p>
+                    <p class="item__casillero"></p>
+                    <p>Tipo</p>
+                    <p class="item__type"></p>
+                    <p>Placa</p>
+                    <p class="item__placa"></p>
+                    <button class="report__button" data-modal-id="">Detalles</button>
+                </div>
+                <hr class="linea">
+            </template>
 
+            <!-- Plantilla para los modales -->
+            <template id="modal-template">
+                <div class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Detalles Reporte</h2>
+                            <span class="close" data-modal-id="">×</span>
+                        </div>
+                        <div class="modal-body">
+                            <h3></h3>
+                        </div>
+                    </div>
+                </div>
+            </template>
 
 
         </main>

@@ -3,7 +3,7 @@
     <aside class="BarraIzq">
 
         <div class="imgContainer">
-            <a href="profile.jsp">
+            <a href="Home.jsp">
             <img src="resources/imagenes/perfilIcon.svg" alt="perfil">
             <p>Perfil</p>
             </a>

@@ -36,7 +36,7 @@
         <div class="hea_container__list">
 
             <ul class="list__buttons">
-                <li><a href="profile.jsp">Inicio</a></li>
+                <li><a href="Home.jsp">Inicio</a></li>
                 <li><a href="SvCasillero">Casilleros</a></li>
             </ul>
             <button id="botonMostrar" class="perfil-button">

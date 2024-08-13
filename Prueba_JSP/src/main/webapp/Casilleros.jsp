@@ -68,9 +68,9 @@
                             <h2>Pagar Casco</h2>
                             <form id="payCasco<%= espacioId %>" onsubmit="payCasco(event, <%= espacioId %>)" class="formulario">
                                 <div class="formulario__inputs">
-                                    <p>Tiempo transcurrido: riwmpo</p>
-                                    <p>Costo Total: $1000</p>
-                                    <p>Placa: <%=vehiculo%></p>
+                                    <p>Documento: <%=documento%></p>
+                                    <p>Nombre: <%=nombre%></p>
+                                    <p>Placa: <%=vehiculo.getPlaca_vehiculo()%></p>
 
                                     <button type="submit" class="formulario__button">Añadir</button>
                                 </div>
@@ -87,13 +87,10 @@
                             <span class="close" data-modal-id="editmodal<%=espacioId%>">&times;</span>
                         </div>
                         <div class="modal-body">
-                            <h2>editar Casco</h2>
+                            <h2>Editar Casco</h2>
                             <form id="editCasco<%= espacioId %>" onsubmit="editCasco(event, <%= espacioId %>)" class="formulario">
                                 <div class="formulario__inputs">
-                                    <input type="text" id="editdocumento<%=espacioId%>" placeholder="Documento del aprendiz" name="documento" value="<%=documento%>" required>
                                     <input type="text" id="editnombre<%=espacioId%>" placeholder="Nombre Opcional" name="nombre" value="<%=nombre%>">
-                                    <input type="text" id="editplaca<%=espacioId%>" placeholder="Placa del Vehiculo" name="placa" value="<%=vehiculo%>" required>
-                                    <input type="text" id="editciudad<%=espacioId%>" placeholder="Ciudad" name="ciudad" value="<%=nombre%>" required >
                                     <input type="number" id="editcant_cascos<%=espacioId%>" placeholder="Cantidad de cascos" name="cant_cascos" value="<%=cantCascos%>" required>
                                     <button type="submit" class="formulario__button">Añadir</button>
                                 </div>

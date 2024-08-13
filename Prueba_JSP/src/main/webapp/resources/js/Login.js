@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Verificar el resultado del inicio de sesión
             if (result.status === "success") {
                 // Redireccionar al usuario a la página de inicio
-                window.location.href = "profile.jsp";
+                window.location.href = "Home.jsp";
             } else {
                 // Mostrar mensaje de error en caso de credenciales inválidas
                 document.getElementById("Error").style.display = "block";
