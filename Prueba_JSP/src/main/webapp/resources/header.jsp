@@ -66,7 +66,7 @@
 
                 <div class="ui-menu">
 
-                    <a href="#" class="ui-menu__option">
+                    <a href="Profile_Colab.jsp" class="ui-menu__option">
                         <img src="resources/imagenes/MaterialSymbolsSettings.svg">
                         <p>Configuración</p>
                     </a>

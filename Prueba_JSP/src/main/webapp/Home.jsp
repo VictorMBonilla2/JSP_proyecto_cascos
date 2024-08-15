@@ -49,7 +49,7 @@
                       </div>
                     </div>
                 </section>
-            </section>
+                </section>
         </main>
 <jsp:include page="resources/footer.jsp" />
 <script src="resources/js/graficos.js"></script>

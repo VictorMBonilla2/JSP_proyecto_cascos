@@ -24,7 +24,9 @@ public class Controladora_logica {
         for (LoginDTO login : lista) {
             System.out.println(login.getTipoDocumento().equals(tipoDocumento));
             System.out.println(login.getClave().equals(clave));
-            if (login.getTipoDocumento().equals(tipoDocumento) && login.getClave().equals(clave) && login.getRol().equals("Colaborador")) {
+            System.out.println(login.getRol());
+            System.out.println("La validacion de rol es: "+login.getRol().equals("Colaborador"));
+            if (login.getTipoDocumento().equals(tipoDocumento) && login.getClave().equals(clave) && login.getRol().trim().equals("Colaborador")) {
                 return true;
             }
         }
@@ -161,7 +163,7 @@ public class Controladora_logica {
 
        Persona Colaborador = buscarusuario(documento);
 
-       if (Colaborador != null && Colaborador.getRol().equals("Colaborador")) {
+       if (Colaborador != null && Colaborador.getRol().trim().equals("Colaborador")) {
 
            return Colaborador;
        }
