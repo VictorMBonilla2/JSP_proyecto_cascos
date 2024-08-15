@@ -1,0 +1,12 @@
+.main_container__profile{
+    display: flex;
+    justify-content: space-between;
+}
+
+.info_user_container{
+    width: 60%;
+    height: 600px;
+    background-color: gray;
+    display: flex;
+    flex-direction: column;
+}
