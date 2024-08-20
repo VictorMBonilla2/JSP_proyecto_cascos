@@ -5,40 +5,73 @@
 
 
 <section class="main_container__profile">
+    <div class="Miranose">
+        <div class="info_user_container">
+            <div class="user_container_side1">
+                <div class="info_user_container__header">
+                    <img src="" alt="">
+                    <h1><%="Nombre"%></h1>
+                    <h3><%="Rol"%></h3>
+                </div>
 
-    <div class="info_user_container">
-        <div class="user_container_side1">
-            <div class="info_user_container__header">
-                <img src="" alt="">
-                <h1><%="Nombre"%></h1>
-                <h3><%="Rol"%></h3>
+                <div class="info_user_container__body">
+                    <div>
+                        <h1><%="hola"%></h1>
+                        <h3><%="hola"%></h3>
+                    </div>
+                    <div>
+                        <h1><%="hola"%></h1>
+                        <h3><%="hola"%></h3>
+                    </div>
+                    <div>
+                        <h1><%="hola"%></h1>
+                        <h3><%="hola"%></h3>
+                    </div>
+                </div>
+
+                <button class="formulario_login__button info_user_container__button">Editar perfil</button>
             </div>
+            <div class="user_container_side2">
+                <div class="info_box">
+                    <div class="info_data">
+                    <h1>Datos de contacto</h1>
+                    <hr>
+                    <p>Correo electronico: <%="hola"%></p>
+                    <p>Número de celular: <%="hola"%></p>
+                    </div>
+                    <div class="info_button">
+                    <button class="formulario_login__button info_user_container__button">Editar datos</button>
+                    </div>
+                </div>
+                <div class="info_box">
+                    <div class="info_data">
+                    <h1>Datos Personales</h1>
+                    <hr>
+                    <p>Puedes obtener una copia de tus datos que nosotros manejamos.</p>
+                    </div>
+                    <div class="info_button">
+                    <button class="formulario_login__button info_user_container__button">Pedir datos datos</button>
+                    </div>
+                </div>
+                <div class="info_box">
+                    <div class="info_data">
+                    <h1>Borrar cuenta</h1>
+                    <hr>
+                    <p>Si piensa borrar definitivamente tu cuenta, se perderan todos tus datos</p>
+                    </div>
+                    <div class="info_button">
+                    <button class="formulario_login__button info_user_container__button">Borrar Datos</button>
+                    </div>
+                </div>
 
-            <div class="info_user_container__body">
-                <div>
-                    <h1><%="hola"%></h1>
-                    <h3><%="hola"%></h3>
-                </div>
-                <div>
-                    <h1><%="hola"%></h1>
-                    <h3><%="hola"%></h3>
-                </div>
-                <div>
-                    <h1><%="hola"%></h1>
-                    <h3><%="hola"%></h3>
-                </div>
+
             </div>
-
-            <button class="formulario_login__button info_user_container__button">Editar perfil</button>
         </div>
-        <div class="user_container_side2">
-            <h1>Datos de contacto</h1>
-            <hr>
-            <p>Correo electronico: <%="hola"%></p>
-            <p>Número de celular: <%="hola"%></p>
-            <button class="formulario_login__button info_user_container__button">Editar datos</button>
+        <div class="button_miranose">
+            <button>Cancelar</button>
+            <div>Modificar</div>
         </div>
-        </div>
+    </div>
 
     <div class="detalles_user_container">
         <div class="detalles_user">
