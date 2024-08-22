@@ -48,12 +48,17 @@
 }
 
 .info_user_container__button{
+    width: 100%;
+    margin: 50% 0 ;
+}
+
+.info_user_container_side2__button{
     width: 45%;
     margin: auto;
 }
 
 .button_miranose{
-    display: flex;
+    display: none;
     justify-content: center;
 }
 
