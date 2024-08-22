@@ -30,6 +30,7 @@
                     <div class="casillero__title estilo__casillero">
                         <h1>Espacio <%=espacioId%></h1>
                         <p><%=nombre%></p>
+                        <img src="resources/imagenes/DashiconsWarning.png" class="report__img" data-report="reportmodal<%=espacioId%>">
                     </div>
 
                     <div class="casillero__contenido estilo__contenido">
@@ -49,7 +50,7 @@
                         </div>
                         <div class="contenido__botones">
                             <button class="botones botones__pago " data-pay="paymodal<%=espacioId%>">
-                                Pagar
+                                Liberar
                             </button>
                             <button class="botones botones__ajustar" data-edit="editmodal<%=espacioId%>">
                                 Ajustar
@@ -61,18 +62,18 @@
                 <div id="paymodal<%=espacioId%>" class="modal">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h2>Casillero <%=espacioId%></h2>
+                            <h2>Espacio <%=espacioId%></h2>
                             <span class="close" data-modal-id="paymodal<%=espacioId%>">&times;</span>
                         </div>
                         <div class="modal-body">
-                            <h2>Pagar Casco</h2>
+                            <h2>Liberar Espacio</h2>
                             <form id="payCasco<%= espacioId %>" onsubmit="payCasco(event, <%= espacioId %>)" class="formulario">
                                 <div class="formulario__inputs">
                                     <p>Documento: <%=documento%></p>
                                     <p>Nombre: <%=nombre%></p>
                                     <p>Placa: <%=vehiculo.getPlaca_vehiculo()%></p>
 
-                                    <button type="submit" class="formulario__button">Añadir</button>
+                                    <button type="submit" class="formulario__button">Liberar</button>
                                 </div>
                             </form>
                         </div>
@@ -83,15 +84,48 @@
                 <div id="editmodal<%=espacioId%>" class="modal">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h2>Casillero <%=espacioId%></h2>
+                            <h2>Espacio <%=espacioId%></h2>
                             <span class="close" data-modal-id="editmodal<%=espacioId%>">&times;</span>
                         </div>
                         <div class="modal-body">
-                            <h2>Editar Casco</h2>
+                            <h2>Editar Espacio</h2>
                             <form id="editCasco<%= espacioId %>" onsubmit="editCasco(event, <%= espacioId %>)" class="formulario">
                                 <div class="formulario__inputs">
                                     <input type="text" id="editnombre<%=espacioId%>" placeholder="Nombre Opcional" name="nombre" value="<%=nombre%>">
                                     <input type="number" id="editcant_cascos<%=espacioId%>" placeholder="Cantidad de cascos" name="cant_cascos" value="<%=cantCascos%>" required>
+                                    <button type="submit" class="formulario__button">Añadir</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ventana Reportar Espacio-->
+
+                <div id="reportmodal<%=espacioId%>" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Espacio <%=espacioId%></h2>
+                            <span class="close" data-modal-id="reportmodal<%=espacioId%>">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <h2>Editar Espacio</h2>
+                            <form id="reportCasco<%= espacioId %>" onsubmit="editCasco(event, <%= espacioId %>)" class="formulario">
+                                <div class="formulario__inputs">
+                                    <label for="selectOption">Tipo de Reporte:</label>
+                                    <select id="selectOption" name="options">
+                                        <option value="option1">Opción 1</option>
+                                        <option value="option2">Opción 2</option>
+                                        <option value="option3">Opción 3</option>
+                                    </select>
+
+
+                                    <label for="textBox">Texto:</label>
+                                    <input type="text" id="textBox" name="textBox" placeholder="Describe lo que paso">
+
+                                    <label for="description">Descripción</label>
+                                    <textarea id="description" name="description" rows="4" cols="50" placeholder="Escribe aquí tu descripción..."></textarea>
+
                                     <button type="submit" class="formulario__button">Añadir</button>
                                 </div>
                             </form>
@@ -125,11 +159,11 @@
                     <div class="modal-content">
                         <div class="modal-header">
 
-                            <h2>Casillero <%=espacioId%></h2>
+                            <h2>Espacio <%=espacioId%></h2>
                             <span class="close" data-modal-id="addmodal<%=espacioId%>">&times;</span>
                         </div>
                         <div class="modal-body">
-                            <h2>Nuevo Casco</h2>
+                            <h2>Nuevo Espacio</h2>
                             <form id="addCasco<%= espacioId %>" onsubmit="addCasco(event, <%= espacioId %>)" class="formulario">
                                 <div class="formulario__inputs">
                                     <input type="text" id="adddocumento<%=espacioId%>" placeholder="Documento del aprendiz" name="documento" required>
@@ -158,7 +192,7 @@
                         </div>
                         <div class="contenido__botones">
                             <button class="botones botones--largo botones__pago">
-                                Pagar
+                                Liberar
                             </button>
                         </div>
                     </div>

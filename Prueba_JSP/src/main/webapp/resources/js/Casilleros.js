@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', function () {
     let buttonsadd = document.getElementsByClassName("addCasilleroBtn");
     let buttonedit =document.getElementsByClassName("botones__ajustar");
     let buttonpay =document.getElementsByClassName("botones__pago");
+    let buttonreport=document.querySelectorAll(".report__img");
+
+    console.log(buttonreport)
 
 
     // Añade un event listener a cada botón pagar
@@ -28,6 +31,15 @@ document.addEventListener('DOMContentLoaded', function () {
             let modal = document.getElementById(modalId);
             modal.style.display = "flex";
         };
+    }
+    // Añade un event listener a cada botón reportar
+    for(let i = 0; i <buttonreport.length; i++){
+        buttonreport[i].onclick= function (){
+            console.log("has presionado")
+            let modalId= this.getAttribute("data-report");
+            let modal= document.getElementById(modalId);
+            modal.style.display= "flex";
+        }
     }
 
 
