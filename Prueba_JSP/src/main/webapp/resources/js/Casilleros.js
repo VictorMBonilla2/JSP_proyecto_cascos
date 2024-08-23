@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-function validateAndSubmit(addevent, espacioId, formType) {
+function validateAndSubmit(event, espacioId, formType) {
     event.preventDefault(); // Previene el envío del formulario
 
 
@@ -114,6 +114,13 @@ function validateAndSubmit(addevent, espacioId, formType) {
         // Si la validación es exitosa, puedes proceder a enviar el formulario
         const form = document.getElementById(`${formType}Casco${espacioId}`);
         return addDataCasilleros(form, espacioId, formType); // Envía el formulario
+    }
+    else if(formType==="report"){
+        const tipoReporte = document.getElementById(`${formType}Tipo${espacioId}`).value;
+        const nombreReporte = document.getElementById(`${formType}Nombre${espacioId}`).value;
+        const DescReporte = document.getElementById(`${formType}Descripcion${espacioId}`).value;
+        const form = document.getElementById(`${formType}Casco${espacioId}`);
+        return  reportEspacio(form, espacioId, formType)
     }
 
 
@@ -196,6 +203,50 @@ async function addDataCasilleros(form,espacioId, formType) {
     }
 
 }
+async function reportEspacio(form,espacioId,formType){
+    const tipoReporte = document.getElementById(`${formType}Tipo${espacioId}`).value;
+    const nombreReporte = document.getElementById(`${formType}Nombre${espacioId}`).value;
+    const DescReporte = document.getElementById(`${formType}Descripcion${espacioId}`).value;
+
+    try {
+        // Enviar la solicitud fetch al servidor
+        const response = await fetch("SvCasillero", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                espacio: espacioId,
+                tipoReporte: tipoReporte,
+                nombreReporte: nombreReporte,
+                DescReporte: DescReporte,
+                formType: formType
+            })
+        });
+        // Verificar si la respuesta es exitosa
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        // Obtener el resultado de la respuesta
+        const result = await response.json();
+
+        // Verificar el resultado del inicio de sesión
+        if (result.status === "success") {
+            // Redireccionar al usuario a la página de inicio
+
+            window.location.href = "SvCasillero";
+        } else {
+            // Mostrar mensaje de error en caso de credenciales inválidas
+            document.getElementById("Error").style.display = "block";
+        }
+    } catch (error) {
+        // Manejar cualquier error que ocurra durante la solicitud
+        console.error("There was a problem with the fetch operation:", error);
+        // Mostrar un mensaje de error genérico al usuario
+        document.getElementById("Error").style.display = "block";
+    }
+}
 //Metodo 2 para escuchar los formularios.
 
 function addCasco(event, espacioId) {
@@ -208,4 +259,7 @@ function editCasco(event, espacioId) {
 
 function payCasco(event, espacioId) {
     validateAndSubmit(event, espacioId, 'pay');
+}
+function reportCasco(event, espacioId) {
+    validateAndSubmit(event, espacioId, 'report');
 }

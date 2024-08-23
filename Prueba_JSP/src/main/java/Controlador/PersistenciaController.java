@@ -88,4 +88,8 @@ public class PersistenciaController {
     public List<TbReportes> ObtenerReportes() {
         return reportesJPA.findTbReportesEntities();
     }
+
+    public void CrearReporte(TbReportes nuevoReporte) {
+        reportesJPA.create(nuevoReporte);
+    }
 }

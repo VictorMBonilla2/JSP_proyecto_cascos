@@ -137,7 +137,8 @@ public class SvCasilleros {
                         resp.getWriter().write("{\"status\":\"error\", \"message\":\"Espacio no encontrado\"}");
                     }
 
-                } else if (formType.equals("edit")) {
+                }
+                else if (formType.equals("edit")) {
                     Integer documento = Integer.valueOf(jsonObject.getString("documento"));
                     String nombre = jsonObject.getString("nombre");
                     String placa = jsonObject.getString("placa");
@@ -162,7 +163,8 @@ public class SvCasilleros {
                         resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                         resp.getWriter().write("{\"status\":\"error\", \"message\":\"Espacio no encontrado\"}");
                     }
-                } else if (formType.equals("pay")) {
+                }
+                else if (formType.equals("pay")) {
                     System.out.println("Ingresando al método pay");
 
                     // Crear un nuevo registro para la tabla TbRegistro
@@ -185,6 +187,56 @@ public class SvCasilleros {
                         nuevoRegistro.setColaborador(colaborador);
 
                         controladora_logica.CrearRegistro(nuevoRegistro);
+                    } else {
+                        // Manejar el caso donde no hay sesión o el atributo documento no está presente
+                        System.err.println("No se pudo obtener el número de documento de la sesión actual.");
+                        resp.setContentType("application/json");
+                        resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        resp.getWriter().write("{\"status\":\"error\", \"message\":\"Sesión no válida o documento no encontrado\"}");
+                    }
+                    espacio.setId_espacio(espacio.getId_espacio());
+                    espacio.setPersona(null);
+                    espacio.setNombre(null);
+                    espacio.setVehiculo(null);
+                    espacio.setHora_entrada(null);
+                    espacio.setEstado_espacio(null);
+                    espacio.setEstado_espacio("Libre");
+                    boolean updated = controladora_logica.actualizarEspacio(espacio);
+                    if (updated) {
+                        resp.setContentType("application/json");
+                        resp.setStatus(HttpServletResponse.SC_OK);
+                        resp.getWriter().write("{\"status\":\"success\"}");
+                    } else {
+                        resp.setContentType("application/json");
+                        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                        resp.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to update space\"}");
+                    }
+                }
+                else if (formType.equals("report")) {
+                    String tipoReporte = jsonObject.getString("tipoReporte");
+                    String nombreReporte = jsonObject.getString("nombreReporte");
+                    String DescReporte = jsonObject.getString("DescReporte");
+                    System.out.println("Ingresando al método report");
+
+                    // Crear un nuevo registro para la tabla TbRegistro
+                    TbReportes nuevoReporte = new TbReportes();
+                    nuevoReporte.setNombre_reporte(tipoReporte);
+                    nuevoReporte.setFecha_reporte(new Date()); // Fecha del registro
+                    nuevoReporte.setNombre_reporte(nombreReporte); // Asignar el espacio actual al registro
+                    nuevoReporte.setDescripcion_reporte(DescReporte);
+
+                    Persona aprendiz = espacio.getPersona(); // Obtener el aprendiz desde el espacio
+                    nuevoReporte.setAprendiz(aprendiz);
+
+                    HttpSession session = req.getSession(false);// false para no crear una nueva sesión si no existe
+                    if (session != null && session.getAttribute("documento") != null) {
+                        System.out.println("Documento conseguido");
+                        Integer documentosesionactual = (Integer) session.getAttribute("documento");
+                        Persona colaborador = controladora_logica.obtenerColaborador(documentosesionactual);
+                        System.out.println(colaborador);
+                        nuevoReporte.setColaborador(colaborador);
+
+                        controladora_logica.CrearReporte(nuevoReporte);
                     } else {
                         // Manejar el caso donde no hay sesión o el atributo documento no está presente
                         System.err.println("No se pudo obtener el número de documento de la sesión actual.");

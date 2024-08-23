@@ -110,21 +110,22 @@
                         </div>
                         <div class="modal-body">
                             <h2>Editar Espacio</h2>
-                            <form id="reportCasco<%= espacioId %>" onsubmit="editCasco(event, <%= espacioId %>)" class="formulario">
+                            <form id="reportCasco<%= espacioId %>" onsubmit="reportCasco(event, <%= espacioId %>)" class="formulario">
                                 <div class="formulario__inputs">
-                                    <label for="selectOption">Tipo de Reporte:</label>
-                                    <select id="selectOption" name="options">
+                                    <input type="hidden" id="">
+                                    <label for="reportTipo<%=espacioId%>">Tipo de Reporte:</label>
+                                    <select id="reportTipo<%=espacioId%>" name="options">
                                         <option value="option1">Opción 1</option>
                                         <option value="option2">Opción 2</option>
                                         <option value="option3">Opción 3</option>
                                     </select>
 
 
-                                    <label for="textBox">Texto:</label>
-                                    <input type="text" id="textBox" name="textBox" placeholder="Describe lo que paso">
+                                    <label for="reportNombre<%=espacioId%>">Nombre Reporte:</label>
+                                    <input type="text" id="reportNombre<%=espacioId%>" name="textBox" placeholder="Describe lo que paso">
 
-                                    <label for="description">Descripción</label>
-                                    <textarea id="description" name="description" rows="4" cols="50" placeholder="Escribe aquí tu descripción..."></textarea>
+                                    <label for="reportDescripcion<%=espacioId%>">Descripción</label>
+                                    <textarea id="reportDescripcion<%=espacioId%>" name="description" rows="4" cols="50" placeholder="Escribe aquí tu descripción..."></textarea>
 
                                     <button type="submit" class="formulario__button">Añadir</button>
                                 </div>
