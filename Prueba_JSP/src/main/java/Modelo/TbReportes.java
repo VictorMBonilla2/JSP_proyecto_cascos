@@ -16,7 +16,6 @@ public class TbReportes {
     private String nombre_reporte;
     private String descripcion_reporte;
     private String tipo_reporte;
-    private String estado_reporte;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_aprendiz_fk", nullable = false) // Clave foránea a Persona (aprendiz)
@@ -30,13 +29,12 @@ public class TbReportes {
     public TbReportes() {
     }
 
-    public TbReportes(Integer id_reporte, Date fecha_reporte, String nombre_reporte, String descripcion_reporte, String tipo_reporte, String estado_reporte, Persona aprendiz, Persona colaborador) {
+    public TbReportes(Integer id_reporte, Date fecha_reporte, String nombre_reporte, String descripcion_reporte, String tipo_reporte, Persona aprendiz, Persona colaborador) {
         this.id_reporte = id_reporte;
         this.fecha_reporte = fecha_reporte;
         this.nombre_reporte = nombre_reporte;
         this.descripcion_reporte = descripcion_reporte;
         this.tipo_reporte = tipo_reporte;
-        this.estado_reporte = estado_reporte;
         this.aprendiz = aprendiz;
         this.colaborador = colaborador;
     }
@@ -79,14 +77,6 @@ public class TbReportes {
 
     public void setTipo_reporte(String tipo_reporte) {
         this.tipo_reporte = tipo_reporte;
-    }
-
-    public String getEstado_reporte() {
-        return estado_reporte;
-    }
-
-    public void setEstado_reporte(String estado_reporte) {
-        this.estado_reporte = estado_reporte;
     }
 
     public Persona getAprendiz() {

@@ -242,4 +242,8 @@ public class Controladora_logica {
         return registrosPorSemana;
     }
 
+    public void CrearReporte(TbReportes nuevoReporte) {
+
+        controladora.CrearReporte(nuevoReporte);
+    }
 }
