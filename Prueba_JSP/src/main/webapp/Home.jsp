@@ -1,11 +1,15 @@
+<%@ page import="Modelo.Persona" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <jsp:include page="resources/header.jsp" />
 
 <jsp:include page="resources/sidebar.jsp" />
-
+<%
+    HttpSession sesion = request.getSession();
+    Persona user = (Persona) session.getAttribute("user");
+%>
                 <section class="main_container__home">
                     <div class="info_user">
-                          <h1>Bienvenido (nombre)</h1>
+                          <h1>Bienvenido <%=user.getNombre()%></h1>
                         <section class="content">
                             <div class="Mygraph">
                                 <canvas id="myChart" height="900" width="900"></canvas>
@@ -21,19 +25,19 @@
                           <div class="info2-user__container">
                               <div class="info2-user__text">
                                   <h1>Nombre</h1>
-                                  <p> Jose</p>
+                                  <p> <%=user.getNombre()%></p>
                               </div>
                               <div class="info2-user__text">
                                   <h1>Apellido</h1>
-                                  <p> Antonio G.</p>
+                                  <p> <%=user.getApellido()%></p>
                               </div>
                               <div class="info2-user__text">
                                   <h1>Tipo Doc</h1>
-                                  <p> ???</p>
+                                  <p> <%=user.getTipoDocumento()%></p>
                               </div>
                               <div class="info2-user__text">
                                   <h1>num Doc</h1>
-                                  <p> 0485485</p>
+                                  <p> <%=user.getDocumento()%></p>
                               </div>
                               <div class="info2-user__text">
                                   <h1>fecha nac</h1>

@@ -1,30 +1,34 @@
+<%@ page import="Modelo.Persona" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <jsp:include page="resources/header.jsp" />
 
 <jsp:include page="resources/sidebar.jsp" />
 
-
+<%
+    HttpSession sesion = request.getSession();
+    Persona user = (Persona) session.getAttribute("user");
+%>
 <section class="main_container__profile">
     <div class="Miranose">
         <div class="info_user_container">
             <div class="user_container_side1" id="userinfo">
                 <div class="info_user_container__header">
                     <img src="resources/imagenes/IconPerfil.png" alt="">
-                    <h1><%="Nombre"%></h1>
-                    <h3><%="Rol"%></h3>
+                    <h1><%=user.getNombre()%></h1>
+                    <h3><%=user.getRol()%></h3>
                 </div>
 
                 <div class="info_user_container__body">
                     <div>
-                        <h1><%="hola"%></h1>
+                        <h1>Correo</h1>
+                        <h3><%=user.getCorreo()%></h3>
+                    </div>
+                    <div>
+                        <h1>>Celular</h1>
                         <h3><%="hola"%></h3>
                     </div>
                     <div>
-                        <h1><%="hola"%></h1>
-                        <h3><%="hola"%></h3>
-                    </div>
-                    <div>
-                        <h1><%="hola"%></h1>
+                        <h1>Fecha de Nacimiento</h1>
                         <h3><%="hola"%></h3>
                     </div>
                 </div>
@@ -36,7 +40,7 @@
                     <div class="info_data">
                     <h1>Datos de contacto</h1>
                     <hr>
-                    <p>Correo electronico: <%="hola"%></p>
+                    <p>Correo electronico: <%=user.getCorreo()%></p>
                     <p>Número de celular: <%="hola"%></p>
                     </div>
                     <div class="info_button">
@@ -77,8 +81,8 @@
         <div class="detalles_user">
             <h1>Documentacion</h1>
             <hr>
-            <p>Tipo de documento: <%="hola"%></p>
-            <p>Número de documento: <%="hola"%></p>
+            <p>Tipo de documento: <%=user.getTipoDocumento()%></p>
+            <p>Número de documento: <%=user.getDocumento()%></p>
 
             <h3>Cualquier tipo de cambio en tu documento debe ser realiado por un administrador!</h3>
 
@@ -102,22 +106,22 @@
 
     <template id="infoTemplate">
         <div class="info_user_container__header">
-            <img src="" alt="">
-            <h1><%="Nombre"%></h1>
-            <h3><%="Rol"%></h3>
+            <img src="resources/imagenes/IconPerfil.png" alt="">
+            <h1><%=user.getNombre()%></h1>
+            <h3><%=user.getRol()%></h3>
         </div>
 
         <div class="info_user_container__body">
             <div>
-                <h1><%="hola"%></h1>
+                <h1>Correo</h1>
+                <h3><%=user.getCorreo()%></h3>
+            </div>
+            <div>
+                <h1>>Celular</h1>
                 <h3><%="hola"%></h3>
             </div>
             <div>
-                <h1><%="hola"%></h1>
-                <h3><%="hola"%></h3>
-            </div>
-            <div>
-                <h1><%="hola"%></h1>
+                <h1>Fecha de Nacimiento</h1>
                 <h3><%="hola"%></h3>
             </div>
         </div>
@@ -127,19 +131,19 @@
 
     <template id="formTemplate">
         <div class="info_user_container__header">
-            <img src="" alt="">
-            <h1><%="Nombre"%></h1>
-            <h3><%="Rol"%></h3>
+            <img src="resources/imagenes/IconPerfil.png" alt="">
+            <h1><%=user.getNombre()%></h1>
+            <h3><%=user.getRol()%></h3>
         </div>
         <form class="form-container">
             <div class="Inputs_Container" >
                 <label>
                     Nombre:
-                    <input type="text" name="nombre" value="jose">
+                    <input type="text" name="nombre" value="<%=user.getNombre()%>>">
                 </label>
                 <label>
                     Apellido:
-                    <input type="text" name="apellido" value="juan">
+                    <input type="text" name="apellido" value="<%=user.getApellido()%>">
                 </label>
                 <label>
                     Fecha de Nacimiento:
@@ -154,8 +158,6 @@
 
 <script src="resources/js/Profile.js"></script>
 
-</head>
-<body>
-
+<jsp:include page="resources/footer.jsp" />
 </body>
 </html>
