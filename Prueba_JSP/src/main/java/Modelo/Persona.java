@@ -3,6 +3,9 @@ package Modelo;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Entity(name = "tb_persona")
 public class Persona {
     @Id
@@ -19,9 +22,8 @@ public class Persona {
     private String clave;
     private String rol;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "vehiculo_FK")
-    private TbVehiculo vehiculo;
+    @OneToMany(mappedBy = "persona", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<TbVehiculo> vehiculos = new LinkedHashSet<>();
 //  un salt para cifrado
     // Getters y setters
 
@@ -29,7 +31,7 @@ public class Persona {
 
     }
 
-    public Persona(int documento, String nombre, String apellido, String tipoDocumento, String correo, Date fechaNacimiento, String clave, String rol, TbVehiculo vehiculo) {
+    public Persona(int documento, String nombre, String apellido, String tipoDocumento, String correo, Date fechaNacimiento, String clave, String rol, Set<TbVehiculo> vehiculos) {
         this.documento = documento;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -38,7 +40,7 @@ public class Persona {
         this.fechaNacimiento = fechaNacimiento;
         this.clave = clave;
         this.rol = rol;
-        this.vehiculo = vehiculo;
+        this.vehiculos = vehiculos;
     }
 
     public int getDocumento() {
@@ -105,11 +107,11 @@ public class Persona {
         this.rol = rol;
     }
 
-    public TbVehiculo getVehiculo() {
-        return vehiculo;
+    public Set<TbVehiculo> getVehiculos() {
+        return vehiculos;
     }
 
-    public void setVehiculo(TbVehiculo vehiculo) {
-        this.vehiculo = vehiculo;
+    public void setVehiculos(Set<TbVehiculo> vehiculos) {
+        this.vehiculos = vehiculos;
     }
 }

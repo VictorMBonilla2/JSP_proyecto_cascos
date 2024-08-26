@@ -96,6 +96,20 @@ public class VehiculoJPAController implements Serializable {
         }
     }
 
+    public List<TbVehiculo> findVehiculosByPersona(int documentoPersona) {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<TbVehiculo> query = em.createQuery(
+                    "SELECT v FROM TbVehiculo v WHERE v.persona.documento = :documento", TbVehiculo.class);
+            query.setParameter("documento", documentoPersona);
+            return query.getResultList();
+        } finally {
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+    }
+
     private List<TbVehiculo> findTbVehiculoEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {

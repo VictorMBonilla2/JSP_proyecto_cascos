@@ -1,4 +1,4 @@
-package Servlets;
+package Utilidades;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

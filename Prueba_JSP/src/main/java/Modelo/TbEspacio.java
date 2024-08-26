@@ -19,7 +19,7 @@ public class TbEspacio {
     @JoinColumn(name = "id_vehiculo_fk")
     private TbVehiculo vehiculo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "documento_aprendiz")
     private Persona persona;
 

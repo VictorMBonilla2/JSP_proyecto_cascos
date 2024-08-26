@@ -2,6 +2,7 @@ package Servlets;
 
 import Modelo.Controladora_logica;
 import Modelo.Persona;
+import Utilidades.JsonReader;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,6 +15,9 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static Modelo.Controladora_logica.validarIngreso;
 
@@ -28,101 +32,162 @@ public class SvPersona extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // Leer el cuerpo de la solicitud
-        BufferedReader reader = req.getReader();
-        StringBuilder jsonBuilder = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            jsonBuilder.append(line);
+        JSONObject jsonObject;
+        try {
+            jsonObject = JsonReader.parsearJson(req);
+        } catch (Exception e) {
+            sendErrorResponse(resp, "Error al parsear el JSON de la solicitud.");
+            return;
         }
-        String json = jsonBuilder.toString();
 
-        // Parsear el JSON usando org.json
-        JSONObject jsonObject = new JSONObject(json);
-
-        String action = jsonObject.getString("action");
+        String action = jsonObject.optString("action");
         HttpSession session = req.getSession(false);
 
-        if ("login".equals(action)) {
-            int documento = jsonObject.getInt("documento");
-            String tipoDocumento = jsonObject.getString("TipoDocumento");
-            System.out.println(tipoDocumento);
-            String password = jsonObject.getString("password");
-            boolean validacion = validarIngreso(documento, tipoDocumento, password);
-            System.out.println("la validacion es "+validacion);
-            resp.setContentType("application/json");
-            PrintWriter out = resp.getWriter();
-
-            JSONObject jsonResponse = new JSONObject();
-            if (validacion) {
-                Persona user = controladora_logica.buscarusuario(documento);
-
-                session = req.getSession(true);
-                session.setAttribute("documento", documento);
-                session.setAttribute("user", user);
-                jsonResponse.put("status", "success");
-                jsonResponse.put("message", "Login successful");
-            } else {
-                jsonResponse.put("status", "error");
-                jsonResponse.put("message", "Invalid credentials");
+        try {
+            switch (action) {
+                case "login":
+                    Login(jsonObject, req, resp, session);
+                    break;
+                case "logout":
+                    Logout(resp, session);
+                    break;
+                case "registro":
+                    Registro(jsonObject, resp);
+                    break;
+                case "editPrimaryDAta":
+                    EditPrimaryData(jsonObject, resp , session);
+                default:
+                    resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no reconocida");
             }
-
-            out.print(jsonResponse.toString());
-
-            System.out.println(out);
-            out.flush();
-            out.close();
-        } else if ("logout".equals(action)) {
-            JSONObject jsonResponse = new JSONObject();
-            resp.setContentType("application/json");
-            PrintWriter out = resp.getWriter();
-            if (session != null) {
-                session.invalidate();
-            }
-            jsonResponse.put("status", "success");
-            out.print(jsonResponse.toString());
-            out.flush();
-        } else if ("registro".equals(action)) {
-
-            String nombre = jsonObject.getString("nombre");
-            String apellido = jsonObject.getString("apellido");
-            String TipoDocumento = jsonObject.getString("TipoDocumento");
-            int documento = jsonObject.getInt("documento");
-            String correo = jsonObject.getString("correo");
-            String clave = jsonObject.getString("password");
-            String rol = jsonObject.getString("rol");
-            System.out.println("Nombre: " + nombre);
-            System.out.println("Apellido: " + apellido);
-            System.out.println("TipoDocumento: " + TipoDocumento);
-            System.out.println("Documento: " + documento);
-            System.out.println("Correo: " + correo);
-            System.out.println("Clave: " + clave);
-            System.out.println("Rol: " + rol);
-            Persona persona = new Persona();
-            persona.setNombre(nombre);
-            persona.setApellido(apellido);
-            persona.setTipoDocumento(TipoDocumento);
-            persona.setDocumento(documento);
-            persona.setCorreo(correo);
-            persona.setClave(clave);
-            persona.setRol(rol);
-
-            boolean validacion = controladora_logica.crearPersona(persona);
-            resp.setContentType("application/json");
-            PrintWriter out = resp.getWriter();
-
-            JSONObject jsonResponse = new JSONObject();
-            if (validacion) {
-                jsonResponse.put("status", "success");
-                jsonResponse.put("message", "Login successful");
-            } else {
-                jsonResponse.put("status", "error");
-                jsonResponse.put("message", "Invalid credentials");
-            }
-
-            out.print(jsonResponse.toString());
-            out.flush();
-        } else {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no reconocida");
+        } catch (Exception e) {
+            sendErrorResponse(resp, "Error interno del servidor: " + e.getMessage());
         }
     }
+
+    private void EditPrimaryData(JSONObject jsonObject, HttpServletResponse resp, HttpSession session) throws IOException {
+        // Recupera el ID del usuario desde el JSON
+        int usuarioId = jsonObject.getInt("usuarioId");
+
+        // Recupera el usuario de la base de datos utilizando el ID
+        Persona user = controladora_logica.buscarusuario(usuarioId);
+        if (user == null) {
+            sendErrorResponse(resp, "Usuario no encontrado.");
+            return;
+        }
+
+        // Obtiene los datos del JSON
+        String nombre = jsonObject.optString("nombre");
+        String apellido = jsonObject.optString("apellido");
+        String fechaNacimientoStr = jsonObject.optString("fecha");
+
+        // Define el formato de la fecha esperado
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date fechaNacimiento = null;
+
+        try {
+            // Convierte el String a Date
+            fechaNacimiento = formatter.parse(fechaNacimientoStr);
+        } catch (ParseException e) {
+            sendErrorResponse(resp, "Formato de fecha inválido. Utiliza el formato dd/MM/yyyy.");
+            return;
+        }
+
+        // Actualiza los datos del usuario
+        user.setNombre(nombre);
+        user.setApellido(apellido);
+        user.setFechaNacimiento(fechaNacimiento); // Asigna la fecha convertida
+
+        // Guarda los cambios en la base de datos
+        boolean updateSuccess = controladora_logica.actualizarPersona(user);
+
+        if (updateSuccess) {
+            // Actualiza el usuario en la sesión para reflejar los cambios
+            session.setAttribute("user", user);
+
+            sendSuccessResponse(resp, "Datos actualizados con éxito");
+        } else {
+            sendErrorResponse(resp, "Error al actualizar los datos");
+        }
+    }
+
+
+
+
+    private void Login(JSONObject jsonObject, HttpServletRequest req, HttpServletResponse resp, HttpSession session) throws IOException {
+        int documento = jsonObject.getInt("documento");
+        String tipoDocumento = jsonObject.getString("tipoDocumento");
+        String password = jsonObject.getString("password");
+        String rol = jsonObject.getString("rol");
+
+        boolean validacion = validarIngreso(documento, tipoDocumento, password, rol);
+        if (validacion) {
+            Persona user = controladora_logica.buscarusuario(documento);
+            session = req.getSession(true);
+            session.setAttribute("documento", documento);
+            session.setAttribute("user", user);
+
+            sendSuccessResponse(resp, "Login successful");
+        } else {
+            sendErrorResponse(resp, "Invalid credentials");
+        }
+    }
+
+    private void Logout(HttpServletResponse resp, HttpSession session) throws IOException {
+        if (session != null) {
+            session.invalidate();
+        }
+        sendSuccessResponse(resp, "Logout successful");
+    }
+
+    private void Registro(JSONObject jsonObject, HttpServletResponse resp) throws IOException {
+        String nombre = jsonObject.getString("nombre");
+        String apellido = jsonObject.getString("apellido");
+        String tipoDocumento = jsonObject.getString("TipoDocumento");
+        int documento = jsonObject.getInt("documento");
+        String correo = jsonObject.getString("correo");
+        String clave = jsonObject.getString("password");
+        String rol = jsonObject.getString("rol");
+
+        Persona persona = new Persona();
+        persona.setNombre(nombre);
+        persona.setApellido(apellido);
+        persona.setTipoDocumento(tipoDocumento);
+        persona.setDocumento(documento);
+        persona.setCorreo(correo);
+        persona.setClave(clave);
+        persona.setRol(rol);
+
+        boolean validacion = controladora_logica.crearPersona(persona);
+
+        if (validacion) {
+            sendSuccessResponse(resp, "Registro successful");
+        } else {
+            sendErrorResponse(resp, "Error al registrar la persona");
+        }
+    }
+
+    private void sendSuccessResponse(HttpServletResponse resp, String message) throws IOException {
+        JSONObject jsonResponse = new JSONObject();
+        jsonResponse.put("status", "success");
+        jsonResponse.put("message", message);
+
+        sendJsonResponse(resp, jsonResponse);
+    }
+
+    private void sendErrorResponse(HttpServletResponse resp, String message) throws IOException {
+        JSONObject jsonResponse = new JSONObject();
+        jsonResponse.put("status", "error");
+        jsonResponse.put("message", message);
+
+        sendJsonResponse(resp, jsonResponse);
+    }
+
+    private void sendJsonResponse(HttpServletResponse resp, JSONObject jsonResponse) throws IOException {
+        resp.setContentType("application/json");
+        try (PrintWriter out = resp.getWriter()) {
+            out.print(jsonResponse.toString());
+            out.flush();
+        }
+    }
+
 }
