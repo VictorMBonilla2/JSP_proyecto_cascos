@@ -135,19 +135,20 @@
             <h1><%=user.getNombre()%></h1>
             <h3><%=user.getRol()%></h3>
         </div>
-        <form class="form-container">
+        <form class="form-container" id="editPrimaryDataForm">
+            <input type="hidden" id="usuarioId" value="<%= user.getDocumento() %>">
             <div class="Inputs_Container" >
                 <label>
                     Nombre:
-                    <input type="text" name="nombre" value="<%=user.getNombre()%>>">
+                    <input type="text" id="nombre" value="<%=user.getNombre()%>">
                 </label>
                 <label>
                     Apellido:
-                    <input type="text" name="apellido" value="<%=user.getApellido()%>">
+                    <input type="text" id="apellido" value="<%=user.getApellido()%>">
                 </label>
                 <label>
                     Fecha de Nacimiento:
-                    <input type="text" name="fecha_nacimiento" value="17/03/1992">
+                    <input type="text" id="fecha_nacimiento" value="17/03/1992">
                 </label>
 
             </div>
@@ -156,7 +157,8 @@
 </section>
 </section>
 
-<script src="resources/js/Profile.js"></script>
+<script type="module" src="resources/js/Profile.js"></script>
+
 
 <jsp:include page="resources/footer.jsp" />
 </body>

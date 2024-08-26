@@ -58,7 +58,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- ventana add Espacio-->
+                <!-- ventana liberar Espacio-->
                 <div id="paymodal<%=espacioId%>" class="modal">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -91,7 +91,10 @@
                             <h2>Editar Espacio</h2>
                             <form id="editCasco<%= espacioId %>" onsubmit="editCasco(event, <%= espacioId %>)" class="formulario">
                                 <div class="formulario__inputs">
-                                    <input type="text" id="editnombre<%=espacioId%>" placeholder="Nombre Opcional" name="nombre" value="<%=nombre%>">
+                                    <label for="editdocumento<%=espacioId%>">Documento Aprendiz</label>
+                                    <input type="text" id="editdocumento<%=espacioId%>" placeholder="Documento del aprendiz" name="documento" value="<%=documento%>" required disabled>
+                                    <input type="hidden" id="editvehiculolist<%=espacioId%>"  name="documento" value="<%=espacio.getVehiculo().getId_vehiculo()%>" required disabled>
+                                    <label for="editcant_cascos<%=espacioId%>"> Cantidad de Cascos</label>
                                     <input type="number" id="editcant_cascos<%=espacioId%>" placeholder="Cantidad de cascos" name="cant_cascos" value="<%=cantCascos%>" required>
                                     <button type="submit" class="formulario__button">Añadir</button>
                                 </div>
@@ -168,7 +171,9 @@
                             <form id="addCasco<%= espacioId %>" onsubmit="addCasco(event, <%= espacioId %>)" class="formulario">
                                 <div class="formulario__inputs">
                                     <input type="text" id="adddocumento<%=espacioId%>" placeholder="Documento del aprendiz" name="documento" required>
-                                    <input type="text" id="addnombre<%=espacioId%>" placeholder="Nombre del aprendiz" name="nombre">
+                                    <select id="addvehiculolist<%=espacioId%>" name="options">
+
+                                    </select>
                                     <input type="number" id="addcant_cascos<%=espacioId%>" placeholder="Cantidad de Cascos" name="cant_cascos">
                                     <button type="submit" class="formulario__button">Añadir</button>
                                 </div>
@@ -204,8 +209,10 @@
 
 
 
-                    <script src="resources/js/Casilleros.js"></script>
-                    <script src="resources/js/tiempoCasilleros.js"></script>
+                    <script type="module" src="resources/js/Casilleros.js"></script>
+                    <script src="resources/js/buttonListener.js"></script>
+                    <script src="resources/js/vehiculoSelect.js"></script>
+
 
             </section>
         </section>

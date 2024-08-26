@@ -17,19 +17,23 @@ public class TbReportes {
     private String descripcion_reporte;
     private String tipo_reporte;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_aprendiz_fk", nullable = false) // Clave foránea a Persona (aprendiz)
     private Persona aprendiz;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_gestor_fk", nullable = false) // Clave foránea a Persona (gestor)
     private Persona colaborador;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_vehiculo_fk", nullable = false) // Clave foránea a TbVehiculo
+    private TbVehiculo vehiculo; // Relación con el vehículo específico
 
 
     public TbReportes() {
     }
 
-    public TbReportes(Integer id_reporte, Date fecha_reporte, String nombre_reporte, String descripcion_reporte, String tipo_reporte, Persona aprendiz, Persona colaborador) {
+    public TbReportes(Integer id_reporte, Date fecha_reporte, String nombre_reporte, String descripcion_reporte, String tipo_reporte, Persona aprendiz, Persona colaborador, TbVehiculo vehiculo) {
         this.id_reporte = id_reporte;
         this.fecha_reporte = fecha_reporte;
         this.nombre_reporte = nombre_reporte;
@@ -37,6 +41,7 @@ public class TbReportes {
         this.tipo_reporte = tipo_reporte;
         this.aprendiz = aprendiz;
         this.colaborador = colaborador;
+        this.vehiculo = vehiculo;
     }
 
     public Integer getId_reporte() {
@@ -93,6 +98,14 @@ public class TbReportes {
 
     public void setColaborador(Persona colaborador) {
         this.colaborador = colaborador;
+    }
+
+    public TbVehiculo getVehiculo() {
+        return vehiculo;
+    }
+
+    public void setVehiculo(TbVehiculo vehiculo) {
+        this.vehiculo = vehiculo;
     }
 }
 

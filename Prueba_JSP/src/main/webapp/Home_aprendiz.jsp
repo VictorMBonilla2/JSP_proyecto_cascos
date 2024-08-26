@@ -1,46 +1,107 @@
+<%@ page import="Modelo.Persona" %>
+<%@ page import="Modelo.TbVehiculo" %>
+<%@ page import="java.util.Set" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <jsp:include page="resources/header_aprendiz.jsp" />
 
 <jsp:include page="resources/sidebar_aprendiz.jsp" />
+<%
+    HttpSession sesion = request.getSession();
+    Persona user = (Persona) session.getAttribute("user");
+
+
+    %>
+
+<%
+    Set<TbVehiculo> vehiculoUser = user.getVehiculos();
+    int index = 0;
+%>
 
 <section class="main_container__home">
     <div class="info_user">
-        <h1>Bienvenido (nombre)</h1>
+        <h1>Bienvenido, <%= user.getNombre() %></h1>
         <div class="content">
             <div class="vehiculo__content_data">
 
-                <h1>Datos vehiculo</h1>
+                <h1>Datos del Vehículo</h1>
                 <hr class="linea">
-                <div class="vehiculo_data">
+
+                <!-- Vehículos -->
+                <%
+                    for (TbVehiculo vehiculo : vehiculoUser) {
+                %>
+                <div class="vehiculo_data" id="vehiculo<%= index %>" style="<%= index == 0 ? "" : "display:none;" %>">
                     <div class="vehiculo_data__text">
                         <h1>Placa</h1>
-                        <p>HJF-485</p>
+                        <p><%= vehiculo.getPlaca_vehiculo() %></p>
                     </div>
                     <div class="vehiculo_data__text">
-                        <h1>Hyundai</h1>
-                        <p>HJF-485</p>
+                        <h1>Marca</h1>
+                        <p><%= vehiculo.getMarca_vehiculo() %></p>
                     </div>
                     <div class="vehiculo_data__text">
                         <h1>Modelo</h1>
-                        <p>XRZ-6000</p>
+                        <p><%= vehiculo.getModelo_vehiculo() %></p>
+                    </div>
+                    <div class="adicional_vehiculo_data">
+                        <h1>Datos Adicionales</h1>
+                        <hr class="linea">
+                        <div class="vehiculo_data__text">
+                            <h1>¿Lleva casco?</h1>
+                            <p><%= vehiculo.getCant_casco() == 0 ? "No" : "Sí" %></p>
+                        </div>
+                        <div class="vehiculo_data__text">
+                            <h1>Cantidad</h1>
+                            <p><%= vehiculo.getCant_casco() %></p>
+                        </div>
                     </div>
                 </div>
-                <div class="adicional_vehiculo_data">
-                    <h1>Datos Adicionales</h1>
-                    <hr class="linea">
-                    <div class="vehiculo_data__text">
-                        <h1>¿Lleva casco?</h1>
-                        <p>Si</p>
-                    </div>
-                    <div class="vehiculo_data__text">
-                        <h1>Cantidad</h1>
-                        <p>1</p>
-                    </div>
-                </div>
-            </div>
+                <%
+                        index++;
+                    }
+                %>
 
+                <!-- Botones para navegar entre vehículos -->
+                <div class="vehiculo_navigation">
+                    <button onclick="showPrevVehiculo()" id="prevButton" disabled>Anterior</button>
+                    <button onclick="showNextVehiculo()" id="nextButton">Siguiente</button>
+                </div>
+
+            </div>
         </div>
     </div>
+<script>
+    let currentIndex = 0;
+    const totalVehiculos = <%= vehiculoUser.size() %>;
+
+    function showVehiculo(index) {
+        // Oculta el vehículo actual
+        document.getElementById(`vehiculo${currentIndex}`).style.display = "none";
+
+        // Muestra el nuevo vehículo
+        document.getElementById(`vehiculo${index}`).style.display = "block";
+
+        // Actualiza el índice actual
+        currentIndex = index;
+
+        // Habilita o deshabilita botones según el índice actual
+        document.getElementById('prevButton').disabled = currentIndex === 0;
+        document.getElementById('nextButton').disabled = currentIndex === totalVehiculos - 1;
+    }
+
+    function showNextVehiculo() {
+        if (currentIndex < totalVehiculos - 1) {
+            showVehiculo(currentIndex + 1);
+        }
+    }
+
+    function showPrevVehiculo() {
+        if (currentIndex > 0) {
+            showVehiculo(currentIndex - 1);
+        }
+    }
+</script>
+
     <div class="Graph1" >
         <div class="bloque__user">
             <div class="info2-user__img">
@@ -50,25 +111,26 @@
             <div class="info2-user__container">
                 <div class="info2-user__text">
                     <h1>Nombre</h1>
-                    <p> Jose</p>
+                    <p> <%=user.getNombre()%></p>
                 </div>
                 <div class="info2-user__text">
                     <h1>Apellido</h1>
-                    <p> Antonio G.</p>
+                    <p> <%=user.getApellido()%></p>
                 </div>
                 <div class="info2-user__text">
                     <h1>Tipo Doc</h1>
-                    <p> ???</p>
+                    <p> <%=user.getTipoDocumento()%></p>
                 </div>
                 <div class="info2-user__text">
                     <h1>num Doc</h1>
-                    <p> 0485485</p>
+                    <p> <%=user.getDocumento()%></p>
                 </div>
                 <div class="info2-user__text">
                     <h1>fecha nac</h1>
                     <p> 17/35/1995</p>
                 </div>
             </div>
+        </div>
         </div>
     </div>
     <div class="Graph2" >

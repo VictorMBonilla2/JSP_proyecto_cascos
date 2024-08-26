@@ -1,4 +1,4 @@
-package Modelo;
+package DTO;
 
 public class LoginDTO {
     private int documento;

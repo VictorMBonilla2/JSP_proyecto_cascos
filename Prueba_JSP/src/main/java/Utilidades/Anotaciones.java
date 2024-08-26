@@ -1,4 +1,4 @@
-package Servlets;
+package Utilidades;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

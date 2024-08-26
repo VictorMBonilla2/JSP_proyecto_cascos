@@ -1,6 +1,6 @@
 package Controlador;
 
-import Modelo.LoginDTO;
+import DTO.LoginDTO;
 import Modelo.Persona;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;

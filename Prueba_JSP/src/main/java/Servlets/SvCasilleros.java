@@ -1,6 +1,7 @@
 package Servlets;
 
 import Modelo.*;
+import Utilidades.JsonReader;
 import com.sun.jdi.IntegerValue;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -54,225 +55,177 @@ public class SvCasilleros {
         @Override
         protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             System.out.println("INGRESANDO A METODO POST");
-            BufferedReader reader = req.getReader();
-            StringBuilder jsonBuilder = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                jsonBuilder.append(line);
-            }
-            String json = jsonBuilder.toString();
-            System.out.println("acceder al objeto json");
-            // Parsear el JSON usando org.json
-            JSONObject jsonObject = new JSONObject(json);
-            System.out.println("realizado objeto json");
 
-            Integer idEspacio = jsonObject.getInt("espacio");
-            System.out.println("idEspacio: " + idEspacio);
-
-            String formType = jsonObject.getString("formType");
-            System.out.println("tipo de form: "+formType);
-            // Busca el espacio por ID
-            System.out.println("Intentando Obtener el ID del espacio " + idEspacio);
-            TbEspacio espacio = controladora_logica.buscarEspacio(idEspacio);
-            System.out.println("Espacio " + espacio.getId_espacio());
+            JSONObject jsonObject = JsonReader.parsearJson(req);
 
             try {
-                if (formType.equals("add")) {
-                    Integer documento = Integer.valueOf(jsonObject.getString("documento"));
-                    String nombre = jsonObject.getString("nombre");
-                    String cantcascos = jsonObject.getString("cantcascos");
+                Integer idEspacio = jsonObject.getInt("espacio");
+                String formType = jsonObject.getString("formType");
 
-                    if (espacio != null) {
-                        TbVehiculo vehiculoExistente = null;
-                        try {
-                            // Buscar la persona por documento y obtener el vehículo asociado
-                            Persona persona = controladora_logica.buscarusuario(documento);
-                            if (persona != null) {
-                                vehiculoExistente = persona.getVehiculo();
-                                if (vehiculoExistente != null) {
-                                    // Si existe el vehículo vinculado, usar su información
-                                    espacio.setVehiculo(vehiculoExistente);
-                                    espacio.setCantidad_cascos(vehiculoExistente.getCant_casco());
-                                    // Asignar los demás datos al espacio
-                                    espacio.setNombre(nombre);
-                                    espacio.setPersona(persona);
-                                    espacio.setCantidad_cascos(Integer.valueOf(cantcascos));
-                                    espacio.setEstado_espacio("Ocupado");
-                                    espacio.setHora_entrada(new Date());
-                                }
-
-                            }
-                        } catch (Exception e) {
-                            System.err.println("Error al buscar vehículo por documento: " + e.getMessage());
-                            resp.setContentType("application/json");
-                            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                            resp.getWriter().write("{\"status\":\"error\", \"message\":\"Error en la búsqueda del vehículo\"}");
-                            return;
-                        }
-
-                        // Guardar los cambios en el espacio
-                        boolean added = false;
-                        try {
-                            added = controladora_logica.actualizarEspacio(espacio);
-                        } catch (Exception e) {
-                            System.err.println("Error al actualizar el espacio: " + e.getMessage());
-                            resp.setContentType("application/json");
-                            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                            resp.getWriter().write("{\"status\":\"error\", \"message\":\"Error al actualizar el espacio\"}");
-                            return;
-                        }
-
-                        if (added) {
-                            resp.setContentType("application/json");
-                            resp.setStatus(HttpServletResponse.SC_OK);
-                            resp.getWriter().write("{\"status\":\"success\"}");
-                        } else {
-                            resp.setContentType("application/json");
-                            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                            resp.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to update space\"}");
-                        }
-                    } else {
-                        resp.setContentType("application/json");
-                        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                        resp.getWriter().write("{\"status\":\"error\", \"message\":\"Espacio no encontrado\"}");
-                    }
-
+                TbEspacio espacio = controladora_logica.buscarEspacio(idEspacio);
+                if (espacio == null) {
+                    enviarRespuesta(resp, HttpServletResponse.SC_NOT_FOUND, "error", "Espacio no encontrado");
+                    return;
                 }
-                else if (formType.equals("edit")) {
-                    Integer documento = Integer.valueOf(jsonObject.getString("documento"));
-                    String nombre = jsonObject.getString("nombre");
-                    String placa = jsonObject.getString("placa");
-                    String ciudad = jsonObject.getString("ciudad");
-                    String cantcascos = jsonObject.getString("cantcascos");
-                    if (espacio != null) {
 
-                        espacio.setCantidad_cascos(Integer.valueOf(cantcascos));
-                        espacio.setNombre(nombre);
-                        boolean updated = controladora_logica.actualizarEspacio(espacio);
-                        if (updated) {
-                            resp.setContentType("application/json");
-                            resp.setStatus(HttpServletResponse.SC_OK);
-                            resp.getWriter().write("{\"status\":\"success\"}");
-                        } else {
-                            resp.setContentType("application/json");
-                            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                            resp.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to update space\"}");
-                        }
-                    } else {
-                        resp.setContentType("application/json");
-                        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                        resp.getWriter().write("{\"status\":\"error\", \"message\":\"Espacio no encontrado\"}");
-                    }
-                }
-                else if (formType.equals("pay")) {
-                    System.out.println("Ingresando al método pay");
-
-                    // Crear un nuevo registro para la tabla TbRegistro
-                    TbRegistro nuevoRegistro = new TbRegistro();
-                    nuevoRegistro.setFecha_reporte(LocalDateTime.now()); // Fecha del registro
-                    nuevoRegistro.setEspacio(espacio); // Asignar el espacio actual al registro
-                    nuevoRegistro.setVehiculo(espacio.getVehiculo()); // Asignar el vehículo actual al registro
-
-                    Persona aprendiz = espacio.getPersona(); // Obtener el aprendiz desde el espacio
-                    nuevoRegistro.setAprendiz(aprendiz);
-
-                    HttpSession session = req.getSession(false); // false para no crear una nueva sesión si no existe
-
-                    // Verificar si la sesión es válida y tiene el atributo documento
-                    if (session != null && session.getAttribute("documento") != null) {
-                        System.out.println("Documento conseguido");
-                        Integer documentosesionactual = (Integer) session.getAttribute("documento");
-                        Persona colaborador = controladora_logica.obtenerColaborador(documentosesionactual);
-                        System.out.println(colaborador);
-                        nuevoRegistro.setColaborador(colaborador);
-
-                        controladora_logica.CrearRegistro(nuevoRegistro);
-                    } else {
-                        // Manejar el caso donde no hay sesión o el atributo documento no está presente
-                        System.err.println("No se pudo obtener el número de documento de la sesión actual.");
-                        resp.setContentType("application/json");
-                        resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        resp.getWriter().write("{\"status\":\"error\", \"message\":\"Sesión no válida o documento no encontrado\"}");
-                    }
-                    espacio.setId_espacio(espacio.getId_espacio());
-                    espacio.setPersona(null);
-                    espacio.setNombre(null);
-                    espacio.setVehiculo(null);
-                    espacio.setHora_entrada(null);
-                    espacio.setEstado_espacio(null);
-                    espacio.setEstado_espacio("Libre");
-                    boolean updated = controladora_logica.actualizarEspacio(espacio);
-                    if (updated) {
-                        resp.setContentType("application/json");
-                        resp.setStatus(HttpServletResponse.SC_OK);
-                        resp.getWriter().write("{\"status\":\"success\"}");
-                    } else {
-                        resp.setContentType("application/json");
-                        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                        resp.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to update space\"}");
-                    }
-                }
-                else if (formType.equals("report")) {
-                    String tipoReporte = jsonObject.getString("tipoReporte");
-                    String nombreReporte = jsonObject.getString("nombreReporte");
-                    String DescReporte = jsonObject.getString("DescReporte");
-                    System.out.println("Ingresando al método report");
-
-                    // Crear un nuevo registro para la tabla TbRegistro
-                    TbReportes nuevoReporte = new TbReportes();
-                    nuevoReporte.setNombre_reporte(tipoReporte);
-                    nuevoReporte.setFecha_reporte(new Date()); // Fecha del registro
-                    nuevoReporte.setNombre_reporte(nombreReporte); // Asignar el espacio actual al registro
-                    nuevoReporte.setDescripcion_reporte(DescReporte);
-
-                    Persona aprendiz = espacio.getPersona(); // Obtener el aprendiz desde el espacio
-                    nuevoReporte.setAprendiz(aprendiz);
-
-                    HttpSession session = req.getSession(false);// false para no crear una nueva sesión si no existe
-                    if (session != null && session.getAttribute("documento") != null) {
-                        System.out.println("Documento conseguido");
-                        Integer documentosesionactual = (Integer) session.getAttribute("documento");
-                        Persona colaborador = controladora_logica.obtenerColaborador(documentosesionactual);
-                        System.out.println(colaborador);
-                        nuevoReporte.setColaborador(colaborador);
-
-                        controladora_logica.CrearReporte(nuevoReporte);
-                    } else {
-                        // Manejar el caso donde no hay sesión o el atributo documento no está presente
-                        System.err.println("No se pudo obtener el número de documento de la sesión actual.");
-                        resp.setContentType("application/json");
-                        resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        resp.getWriter().write("{\"status\":\"error\", \"message\":\"Sesión no válida o documento no encontrado\"}");
-                    }
-                    espacio.setId_espacio(espacio.getId_espacio());
-                    espacio.setPersona(null);
-                    espacio.setNombre(null);
-                    espacio.setVehiculo(null);
-                    espacio.setHora_entrada(null);
-                    espacio.setEstado_espacio(null);
-                    espacio.setEstado_espacio("Libre");
-                    boolean updated = controladora_logica.actualizarEspacio(espacio);
-                    if (updated) {
-                        resp.setContentType("application/json");
-                        resp.setStatus(HttpServletResponse.SC_OK);
-                        resp.getWriter().write("{\"status\":\"success\"}");
-                    } else {
-                        resp.setContentType("application/json");
-                        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                        resp.getWriter().write("{\"status\":\"error\", \"message\":\"Failed to update space\"}");
-                    }
+                switch (formType) {
+                    case "add":
+                        manejarAdd(req, resp, espacio, jsonObject);
+                        break;
+                    case "edit":
+                        manejarEdit(resp, espacio, jsonObject);
+                        break;
+                    case "pay":
+                        manejarPay(req, resp, espacio);
+                        break;
+                    case "report":
+                        manejarReport(req, resp, espacio, jsonObject);
+                        break;
+                    default:
+                        enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Tipo de formulario no válido");
+                        break;
                 }
             } catch (JSONException e) {
-                System.err.println("Error al procesar el JSON: " + e.getMessage());
-                resp.setContentType("application/json");
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().write("{\"status\":\"error\", \"message\":\"Invalid JSON format\"}");
+                enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Invalid JSON format");
             } catch (Exception e) {
-                System.err.println("Error en el servidor: " + e.getMessage());
-                resp.setContentType("application/json");
-                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                resp.getWriter().write("{\"status\":\"error\", \"message\":\"" + e.getMessage() + "\"}");
+                enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error en el servidor: " + e.getMessage());
             }
         }
+
+        private void manejarAdd(HttpServletRequest req, HttpServletResponse resp, TbEspacio espacio, JSONObject jsonObject) throws IOException {
+            try {
+                Integer documento = Integer.valueOf(jsonObject.getString("documento"));
+                int idVehiculo = Integer.parseInt(jsonObject.getString("idVehiculo"));
+                String cantcascos = jsonObject.getString("cantcascos");
+
+                Persona persona = controladora_logica.buscarusuario(documento);
+                if (persona == null || persona.getVehiculos() == null) {
+                    enviarRespuesta(resp, HttpServletResponse.SC_NOT_FOUND, "error", "Persona no encontrada o sin vehículos asociados");
+                    return;
+                }
+
+                TbVehiculo vehiculoExistente = persona.getVehiculos().stream()
+                        .filter(vehiculo -> vehiculo.getId_vehiculo() == idVehiculo)
+                        .findFirst()
+                        .orElse(null);
+
+                if (vehiculoExistente == null) {
+                    enviarRespuesta(resp, HttpServletResponse.SC_NOT_FOUND, "error", "Vehículo no encontrado para el documento dado");
+                    return;
+                }
+
+                espacio.setVehiculo(vehiculoExistente);
+                espacio.setCantidad_cascos(Integer.valueOf(cantcascos));
+                espacio.setPersona(persona);
+                espacio.setEstado_espacio("Ocupado");
+                espacio.setHora_entrada(new Date());
+
+                actualizarEspacioYEnviarRespuesta(resp, espacio);
+            } catch (NumberFormatException e) {
+                enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Formato de número incorrecto");
+            }
+        }
+
+        private void manejarEdit(HttpServletResponse resp, TbEspacio espacio, JSONObject jsonObject) throws IOException {
+
+            String cantcascos = jsonObject.getString("cantcascos");
+
+            espacio.setCantidad_cascos(Integer.valueOf(cantcascos));
+
+            actualizarEspacioYEnviarRespuesta(resp, espacio);
+        }
+
+        private void manejarPay(HttpServletRequest req, HttpServletResponse resp, TbEspacio espacio) throws IOException {
+            System.out.println("Ingresando al método pay");
+
+            // Crear un nuevo registro para la tabla TbRegistro
+            TbRegistro nuevoRegistro = new TbRegistro();
+            nuevoRegistro.setFecha_reporte(LocalDateTime.now());
+            nuevoRegistro.setEspacio(espacio);
+            nuevoRegistro.setVehiculo(espacio.getVehiculo());
+            nuevoRegistro.setAprendiz(espacio.getPersona());
+
+            // Verificar si la sesión es válida y tiene el atributo documento
+            Persona colaborador = obtenerColaboradorDesdeSesion(req, resp);
+            if (colaborador != null) {
+                nuevoRegistro.setColaborador(colaborador);
+                controladora_logica.CrearRegistro(nuevoRegistro);
+                limpiarYActualizarEspacio(resp, espacio);
+            }
+        }
+
+
+        private void manejarReport(HttpServletRequest req, HttpServletResponse resp, TbEspacio espacio, JSONObject jsonObject) throws IOException {
+            System.out.println("Ingresando al método report");
+
+            // Crear un nuevo registro para la tabla TbReportes
+            TbReportes nuevoReporte = new TbReportes();
+            nuevoReporte.setNombre_reporte(jsonObject.getString("tipoReporte"));
+
+            nuevoReporte.setFecha_reporte(new Date());
+            nuevoReporte.setNombre_reporte(jsonObject.getString("nombreReporte"));
+            nuevoReporte.setDescripcion_reporte(jsonObject.getString("DescReporte"));
+            nuevoReporte.setAprendiz(espacio.getPersona());
+            nuevoReporte.setVehiculo(espacio.getVehiculo());
+            System.out.println("Tipo del reporte "+ jsonObject.getString("tipoReporte"));
+            System.out.println("Nombre del reporte "+ jsonObject.getString("nombreReporte"));
+            System.out.println("Desc del reporte "+ jsonObject.getString("DescReporte"));
+            System.out.println("Persona del reporte "+ espacio.getPersona());
+            // Verificar si la sesión es válida y tiene el atributo documento
+            Persona colaborador = obtenerColaboradorDesdeSesion(req, resp);
+            System.out.println(colaborador);
+            if (colaborador != null) {
+                nuevoReporte.setColaborador(colaborador);
+                controladora_logica.CrearReporte(nuevoReporte);
+                limpiarYActualizarEspacio(resp, espacio);
+            }
+        }
+
+        private Persona obtenerColaboradorDesdeSesion(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+            HttpSession session = req.getSession(false); // false para no crear una nueva sesión si no existe
+            if (session != null && session.getAttribute("documento") != null) {
+                System.out.println("Documento conseguido");
+                Integer documentosesionactual = (Integer) session.getAttribute("documento");
+                return controladora_logica.obtenerColaborador(documentosesionactual);
+            } else {
+                // Manejar el caso donde no hay sesión o el atributo documento no está presente
+                System.err.println("No se pudo obtener el número de documento de la sesión actual.");
+                enviarRespuesta(resp, HttpServletResponse.SC_UNAUTHORIZED, "error", "Sesión no válida o documento no encontrado");
+                return null;
+            }
+        }
+
+        private void limpiarYActualizarEspacio(HttpServletResponse resp, TbEspacio espacio) throws IOException {
+            espacio.setPersona(null);
+            espacio.setNombre(null);
+            espacio.setVehiculo(null);
+            espacio.setHora_entrada(null);
+            espacio.setEstado_espacio("Libre");
+            actualizarEspacioYEnviarRespuesta(resp, espacio);
+        }
+
+        private void actualizarEspacioYEnviarRespuesta(HttpServletResponse resp, TbEspacio espacio) throws IOException {
+            try {
+                boolean updated = controladora_logica.actualizarEspacio(espacio);
+                if (updated) {
+                    enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", null);
+                } else {
+                    enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Failed to update space");
+                }
+            } catch (Exception e) {
+                enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error al actualizar el espacio: " + e.getMessage());
+            }
+        }
+
+        private void enviarRespuesta(HttpServletResponse resp, int statusCode, String status, String message) throws IOException {
+            resp.setContentType("application/json");
+            resp.setStatus(statusCode);
+            if (message != null) {
+                resp.getWriter().write(String.format("{\"status\":\"%s\", \"message\":\"%s\"}", status, message));
+            } else {
+                resp.getWriter().write(String.format("{\"status\":\"%s\"}", status));
+            }
+        }
+
     }
 }

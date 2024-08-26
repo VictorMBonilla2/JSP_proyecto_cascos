@@ -1,265 +1,131 @@
-document.addEventListener('DOMContentLoaded', function () {
-    // Obtén todos los botones con la clase addCasilleroBtn
-    let buttonsadd = document.getElementsByClassName("addCasilleroBtn");
-    let buttonedit =document.getElementsByClassName("botones__ajustar");
-    let buttonpay =document.getElementsByClassName("botones__pago");
-    let buttonreport=document.querySelectorAll(".report__img");
+import {sendRequest} from "./ajax.js";
 
-    console.log(buttonreport)
+document.addEventListener('DOMContentLoaded', function() {
 
+    // Funciones para manejar la validación y envío
+    function validateAndSubmit(event, espacioId, formType) {
+        event.preventDefault(); // Previene el envío del formulario
 
-    // Añade un event listener a cada botón pagar
-    for (let i = 0; i < buttonpay.length; i++) {
-        buttonpay[i].onclick = function () {
-            let modalId = this.getAttribute("data-pay");
-            let modal = document.getElementById(modalId);
-            modal.style.display = "flex";
-        };
-    }
-    // Añade un event listener a cada botón añadir
-    for (let i = 0; i < buttonsadd.length; i++) {
-        buttonsadd[i].onclick = function () {
-            let modalId = this.getAttribute("data-add");
-            let modal = document.getElementById(modalId);
-            modal.style.display = "flex";
-        };
-    }
-    // Añade un event listener a cada botón editar
-    for (let i = 0; i < buttonedit.length; i++) {
-        buttonedit[i].onclick = function () {
-            let modalId = this.getAttribute("data-edit");
-            let modal = document.getElementById(modalId);
-            modal.style.display = "flex";
-        };
-    }
-    // Añade un event listener a cada botón reportar
-    for(let i = 0; i <buttonreport.length; i++){
-        buttonreport[i].onclick= function (){
-            console.log("has presionado")
-            let modalId= this.getAttribute("data-report");
-            let modal= document.getElementById(modalId);
-            modal.style.display= "flex";
-        }
-    }
-
-
-    // Obtén todos los elementos <span> que cierran los modales
-    let closeButtons = document.getElementsByClassName("close");
-
-    // Añade un event listener a cada botón de cierre
-    for (let i = 0; i < closeButtons.length; i++) {
-        closeButtons[i].onclick = function () {
-            let modalId = this.getAttribute("data-modal-id");
-            let modal = document.getElementById(modalId);
-            modal.style.display = "none";
-        };
-    }
-
-    // Cuando el usuario hace clic fuera del modal, cierra el modal
-    window.onclick = function (event) {
-        if (event.target.classList.contains('modal')) {
-            event.target.style.display = "none";
-        }
-    }
-
-   //Metodo uno para escuchar a los form
-
-    // // Encuentra todos los formularios que empiezan con "addCasco"
-    // const addforms = document.querySelectorAll('form[id^="addCasco"]');
-    // const editforms = document.querySelectorAll('form[id^="editCasco"]');
-    // const payforms = document.querySelectorAll('form[id^="payCasco"]');
-    //
-    // // Asigna el manejador de eventos a cada formulario
-    // addforms.forEach(form => {
-    //     form.onsubmit = function (addevent) {
-    //         const espacioId = this.id.replace('addCasco', '');
-    //         return validateAndSubmit(addevent, espacioId, 'add');
-    //     };
-    // });
-    // editforms.forEach(form => {
-    //     form.onsubmit = function (editevent) {
-    //         const espacioId = this.id.replace('editCasco', '');
-    //         return validateAndSubmit(editevent, espacioId, 'edit');
-    //     };
-    // });
-    // payforms.forEach(form => {
-    //     form.onsubmit = function (payevent) {
-    //         const espacioId = this.id.replace('payCasco', '');
-    //         return validateAndSubmit(payevent, espacioId, 'pay');
-    //     };
-    // });
-
-});
-
-function validateAndSubmit(event, espacioId, formType) {
-    event.preventDefault(); // Previene el envío del formulario
-
-
-    if (formType === "pay") {
-        const form = document.getElementById(`${formType}Casco${espacioId}`);
-        return payCasillero(form, espacioId, formType);
-
-    }else if (formType === "add" || formType === "edit") {
-        // Obtén los valores de los inputs
-        const documento = document.getElementById(`${formType}documento${espacioId}`).value;
-        const nombre = document.getElementById(`${formType}nombre${espacioId}`).value;
-        const cantCascos = document.getElementById(`${formType}cant_cascos${espacioId}`).value;
-
-        // Realiza la validación
-        if (documento.trim() === '') {
+        // Realizar la validación basada en el tipo de formulario
+        if (!validarFormulario(espacioId, formType)) {
             alert('Por favor, llena todos los campos');
             return false; // Previene el envío del formulario si hay errores de validación
         }
 
-        // Si la validación es exitosa, puedes proceder a enviar el formulario
-        const form = document.getElementById(`${formType}Casco${espacioId}`);
-        return addDataCasilleros(form, espacioId, formType); // Envía el formulario
+        // Mapa de funciones para manejar los diferentes tipos de formulario
+        const functionMap = {
+            "add": addDataCasilleros,
+            "edit": addDataCasilleros, // Reutiliza la misma función para "add" y "edit"
+            "pay": payCasillero,
+            "report": reportEspacio
+        };
+
+        // Ejecuta la función correspondiente si existe en el mapa
+        if (functionMap[formType]) {
+            const form = document.getElementById(`${formType}Casco${espacioId}`);
+            return functionMap[formType](form, espacioId, formType); // Llama a la función correspondiente
+        } else {
+            console.error(`Tipo de formulario desconocido: ${formType}`);
+            mostrarError(`Tipo de formulario desconocido: ${formType}`);
+        }
     }
-    else if(formType==="report"){
+
+    function validarFormulario(espacioId, formType) {
+        // Validar campos comunes
+        const documento = document.getElementById(`${formType}documento${espacioId}`);
+        console.log(documento)
+        const idVehiculo = document.getElementById(`${formType}vehiculolist${espacioId}`);
+        console.log(idVehiculo)
+        const cantCascos = document.getElementById(`${formType}cant_cascos${espacioId}`);
+        console.log(cantCascos)
+
+        if (formType === "add") {
+            // Validación específica para "add" y "edit"
+            return documento && documento.value.trim() !== '' &&
+                idVehiculo && idVehiculo.value.trim() !== '' &&
+                cantCascos && cantCascos.value !== '';
+        }
+        if(formType === "edit"){
+          return  cantCascos && cantCascos.value !== '';
+        }
+
+        if (formType === "report") {
+            const tipoReporte = document.getElementById(`${formType}Tipo${espacioId}`);
+            const nombreReporte = document.getElementById(`${formType}Nombre${espacioId}`);
+            const DescReporte = document.getElementById(`${formType}Descripcion${espacioId}`);
+            // Validación específica para "report"
+            return tipoReporte && tipoReporte.value.trim() !== '' &&
+                nombreReporte && nombreReporte.value.trim() !== '' &&
+                DescReporte && DescReporte.value.trim() !== '';
+        }
+
+        // No se requiere validación adicional para "pay"
+        return true;
+    }
+
+    async function addDataCasilleros(form, espacioId, formType) {
+        const documento = document.getElementById(`${formType}documento${espacioId}`).value;
+        const idVehiculo = document.getElementById(`${formType}vehiculolist${espacioId}`).value;
+        console.log(idVehiculo)
+        const cantcascos = document.getElementById(`${formType}cant_cascos${espacioId}`).value;
+
+        const data = {
+            espacio: espacioId,
+            idVehiculo: idVehiculo,
+            documento: documento,
+            cantcascos: cantcascos,
+            formType: formType
+        };
+
+        await sendRequest("SvCasillero", data);
+    }
+
+    async function payCasillero(form, espacioId, formType) {
+        const data = {
+            espacio: espacioId,
+            formType: formType
+        };
+
+        await sendRequest("SvCasillero", data);
+    }
+
+    async function reportEspacio(form, espacioId, formType) {
         const tipoReporte = document.getElementById(`${formType}Tipo${espacioId}`).value;
         const nombreReporte = document.getElementById(`${formType}Nombre${espacioId}`).value;
         const DescReporte = document.getElementById(`${formType}Descripcion${espacioId}`).value;
-        const form = document.getElementById(`${formType}Casco${espacioId}`);
-        return  reportEspacio(form, espacioId, formType)
+
+        const data = {
+            espacio: espacioId,
+            tipoReporte: tipoReporte,
+            nombreReporte: nombreReporte,
+            DescReporte: DescReporte,
+            formType: formType
+        };
+
+        await sendRequest("SvCasillero", data);
     }
 
-
-}
-async function payCasillero(form, espacioID, formType){
-    try {
-        const response = await fetch("SvCasillero",{
-            method: "POST",
-            headers: {
-                "content-Type":"application/json"
-            },
-            body: JSON.stringify({
-                espacio: espacioID,
-                formType: formType
-            })
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        // Obtener el resultado de la respuesta
-        const result = await response.json();
-
-        // Verificar el resultado del inicio de sesión
-        if (result.status === "success") {
-            // Redireccionar al usuario a la página de inicio
-            window.location.href = "SvCasillero";
-        } else {
-            // Mostrar mensaje de error en caso de credenciales inválidas
-            document.getElementById("Error").style.display = "block";
-        }
-    } catch (error) {
-        // Manejar cualquier error que ocurra durante la solicitud
-        console.error("There was a problem with the fetch operation:", error);
-        // Mostrar un mensaje de error genérico al usuario
-        document.getElementById("Error").style.display = "block";
-    }
-}
-async function addDataCasilleros(form,espacioId, formType) {
-
-    const documento = document.getElementById(`${formType}documento${espacioId}`).value
-    const nombre = document.getElementById(`${formType}nombre${espacioId}`).value
-    const cantcascos = document.getElementById(`${formType}cant_cascos${espacioId}`).value
-    try {
-        // Enviar la solicitud fetch al servidor
-        const response = await fetch("SvCasillero", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                espacio: espacioId,
-                nombre: nombre,
-                documento: documento,
-                cantcascos: cantcascos,
-                formType: formType
-            })
-        });
-        // Verificar si la respuesta es exitosa
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        // Obtener el resultado de la respuesta
-        const result = await response.json();
-
-        // Verificar el resultado del inicio de sesión
-        if (result.status === "success") {
-            // Redireccionar al usuario a la página de inicio
-            window.location.href = "SvCasillero";
-        } else {
-            // Mostrar mensaje de error en caso de credenciales inválidas
-            document.getElementById("Error").style.display = "block";
-        }
-    } catch (error) {
-        // Manejar cualquier error que ocurra durante la solicitud
-        console.error("There was a problem with the fetch operation:", error);
-        // Mostrar un mensaje de error genérico al usuario
-        document.getElementById("Error").style.display = "block";
+    function mostrarError(mensaje) {
+        const errorElement = document.getElementById("Error");
+        errorElement.textContent = mensaje;
+        errorElement.style.display = "block";
     }
 
-}
-async function reportEspacio(form,espacioId,formType){
-    const tipoReporte = document.getElementById(`${formType}Tipo${espacioId}`).value;
-    const nombreReporte = document.getElementById(`${formType}Nombre${espacioId}`).value;
-    const DescReporte = document.getElementById(`${formType}Descripcion${espacioId}`).value;
-
-    try {
-        // Enviar la solicitud fetch al servidor
-        const response = await fetch("SvCasillero", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                espacio: espacioId,
-                tipoReporte: tipoReporte,
-                nombreReporte: nombreReporte,
-                DescReporte: DescReporte,
-                formType: formType
-            })
-        });
-        // Verificar si la respuesta es exitosa
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        // Obtener el resultado de la respuesta
-        const result = await response.json();
-
-        // Verificar el resultado del inicio de sesión
-        if (result.status === "success") {
-            // Redireccionar al usuario a la página de inicio
-
-            window.location.href = "SvCasillero";
-        } else {
-            // Mostrar mensaje de error en caso de credenciales inválidas
-            document.getElementById("Error").style.display = "block";
-        }
-    } catch (error) {
-        // Manejar cualquier error que ocurra durante la solicitud
-        console.error("There was a problem with the fetch operation:", error);
-        // Mostrar un mensaje de error genérico al usuario
-        document.getElementById("Error").style.display = "block";
+    // Método para escuchar los formularios.
+    window.addCasco = function(event, espacioId) {
+        console.log("Se ejecuta Añadir casco")
+        validateAndSubmit(event, espacioId, 'add');
     }
-}
-//Metodo 2 para escuchar los formularios.
 
-function addCasco(event, espacioId) {
-    validateAndSubmit(event, espacioId, 'add');
-}
+    window.editCasco = function(event, espacioId) {
+        validateAndSubmit(event, espacioId, 'edit');
+    }
 
-function editCasco(event, espacioId) {
-    validateAndSubmit(event, espacioId, 'edit');
-}
+    window.payCasco = function(event, espacioId) {
+        validateAndSubmit(event, espacioId, 'pay');
+    }
 
-function payCasco(event, espacioId) {
-    validateAndSubmit(event, espacioId, 'pay');
-}
-function reportCasco(event, espacioId) {
-    validateAndSubmit(event, espacioId, 'report');
-}
+    window.reportCasco = function(event, espacioId) {
+        validateAndSubmit(event, espacioId, 'report');
+    }
+});

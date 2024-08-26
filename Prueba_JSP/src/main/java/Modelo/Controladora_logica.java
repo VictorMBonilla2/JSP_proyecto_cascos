@@ -1,10 +1,11 @@
 package Modelo;
 
 import Controlador.PersistenciaController;
+import DTO.LoginDTO;
+import DTO.VehiculoDTO;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.WeekFields;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,16 +18,15 @@ public class Controladora_logica {
     static PersistenciaController controladora = new PersistenciaController();
 
     //Proceso Logeo
-    public static boolean validarIngreso(int documento, String tipoDocumento, String clave) {
+    public static boolean validarIngreso(int documento, String tipoDocumento, String clave, String rol) {
 
         List<LoginDTO> lista = controladora.login(documento);
 
         for (LoginDTO login : lista) {
-            System.out.println(login.getTipoDocumento().equals(tipoDocumento));
-            System.out.println(login.getClave().equals(clave));
-            System.out.println(login.getRol());
-            System.out.println("La validacion de rol es: "+login.getRol().equals("Colaborador"));
-            if (login.getTipoDocumento().equals(tipoDocumento) && login.getClave().equals(clave) && login.getRol().trim().equals("Colaborador")) {
+            System.out.println("La coincidencia con el Tipo de documento es: "+ login.getTipoDocumento().equals(tipoDocumento));
+            System.out.println("La coincidencia con la clave es: "+ login.getClave().equals(clave));
+            System.out.println("La coincidencia con el rol es : "+ rol+ login.getRol().equals(rol));
+            if (login.getTipoDocumento().equals(tipoDocumento) && login.getClave().equals(clave) && login.getRol().trim().equals(rol)) {
                 return true;
             }
         }
@@ -128,36 +128,36 @@ public class Controladora_logica {
         return null;
     }
 
-    public TbVehiculo buscarVehiculoPorDocumento(Integer documento) {
-        // Buscar la persona asociada al documento
-        Persona persona = controladora.buscarpersona(documento);
-
-        if (persona != null) {
-            // Obtener el ID del vehículo desde la persona
-            Integer idVehiculoString = persona.getVehiculo().getId_vehiculo();
-
-            if (idVehiculoString != null) {
-                try {
-                    // Convertir el ID del vehículo a Integer
-                    Integer vehiculoID = Integer.valueOf(idVehiculoString);
-                    // Buscar el vehículo asociado al ID
-                    return controladora.buscarvehiculo(vehiculoID);
-                } catch (NumberFormatException e) {
-                    // Manejar el caso en el que el ID del vehículo no se puede convertir a Integer
-                    System.err.println("Error al convertir id_vehiculo_FK a Integer: " + e.getMessage());
-                    return null;
-                }
-            } else {
-                // id_vehiculo_FK es null o vacío
-                System.err.println("id_vehiculo_FK es null o vacío para el documento: " + documento);
-                return null;
-            }
-        } else {
-            // Persona no encontrada
-            System.err.println("Persona no encontrada para el documento: " + documento);
-            return null;
-        }
-    }
+//    public TbVehiculo buscarVehiculoPorDocumento(Integer documento) {
+//        // Buscar la persona asociada al documento
+//        Persona persona = controladora.buscarpersona(documento);
+//
+//        if (persona != null) {
+//            // Obtener el ID del vehículo desde la persona
+//            Integer idVehiculoString = persona.getVehiculo().getId_vehiculo();
+//
+//            if (idVehiculoString != null) {
+//                try {
+//                    // Convertir el ID del vehículo a Integer
+//                    Integer vehiculoID = Integer.valueOf(idVehiculoString);
+//                    // Buscar el vehículo asociado al ID
+//                    return controladora.buscarvehiculo(vehiculoID);
+//                } catch (NumberFormatException e) {
+//                    // Manejar el caso en el que el ID del vehículo no se puede convertir a Integer
+//                    System.err.println("Error al convertir id_vehiculo_FK a Integer: " + e.getMessage());
+//                    return null;
+//                }
+//            } else {
+//                // id_vehiculo_FK es null o vacío
+//                System.err.println("id_vehiculo_FK es null o vacío para el documento: " + documento);
+//                return null;
+//            }
+//        } else {
+//            // Persona no encontrada
+//            System.err.println("Persona no encontrada para el documento: " + documento);
+//            return null;
+//        }
+//    }
 
     public Persona obtenerColaborador(int documento) {
 
@@ -245,5 +245,43 @@ public class Controladora_logica {
     public void CrearReporte(TbReportes nuevoReporte) {
 
         controladora.CrearReporte(nuevoReporte);
+    }
+
+    public List<VehiculoDTO> obtenerVehiculosDePersona(String documento) {
+        List<VehiculoDTO> ListaNueva = new ArrayList<>();
+
+        try {
+            int documentoInt = Integer.parseInt(documento);
+            List<TbVehiculo> Lista = controladora.obtenerVehiculos(documentoInt);
+
+            if (Lista == null || Lista.isEmpty()) {
+                throw new Exception("No hay vehículos registrados para el documento: " + documento);
+            }
+
+            ListaNueva = Lista.stream()
+                    .map(vehiculo -> new VehiculoDTO(vehiculo.getId_vehiculo(), vehiculo.getPlaca_vehiculo(), vehiculo.getMarca_vehiculo(), vehiculo.getCant_casco()))
+                    .collect(Collectors.toList());
+
+        } catch (NumberFormatException e) {
+            System.err.println("El documento proporcionado no es un número válido: " + e.getMessage());
+            // Manejo adicional si es necesario, como lanzar una excepción personalizada o devolver una lista vacía.
+        } catch (Exception e) {
+            System.err.println("Error al obtener vehículos: " + e.getMessage());
+            // Puedes manejar esto devolviendo una lista vacía, lanzando una excepción, o lo que consideres adecuado.
+        }
+
+        return ListaNueva;
+    }
+
+    public boolean actualizarPersona(Persona user)  {
+        try {
+            controladora.EditarPersona(user);
+            return true; // La actualización fue exitosa
+        } catch (Exception e) {
+            // Manejo del error
+            System.err.println("Error al actualizar la persona: " + e.getMessage());
+            e.printStackTrace(); // O puedes optar por loggear la excepción en lugar de imprimirla
+            return false; // La actualización falló
+        }
     }
 }

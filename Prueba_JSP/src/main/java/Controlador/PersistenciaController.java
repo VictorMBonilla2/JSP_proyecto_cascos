@@ -1,5 +1,6 @@
 package Controlador;
 
+import DTO.LoginDTO;
 import Modelo.*;
 
 import java.util.List;
@@ -91,5 +92,14 @@ public class PersistenciaController {
 
     public void CrearReporte(TbReportes nuevoReporte) {
         reportesJPA.create(nuevoReporte);
+    }
+
+
+    public List<TbVehiculo> obtenerVehiculos(int documentoInt) {
+        return vehiculoJPA.findVehiculosByPersona(documentoInt);
+    }
+
+    public void EditarPersona(Persona user) throws Exception {
+         persoJpa.edit(user);
     }
 }

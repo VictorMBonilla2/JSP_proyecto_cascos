@@ -16,21 +16,27 @@ public class TbVehiculo {
     private String marca_vehiculo;
     private String modelo_vehiculo;
     private Integer cant_casco;
-    @OneToMany(mappedBy = "vehiculo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Persona> documento = new LinkedHashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "persona_documento")
+    private Persona persona;
     private String ciudad_vehiculo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_tipovehiculo")  // Clave foránea que conecta con TbTipovehiculo
+    private TbTipovehiculo tipovehiculo;
+
 
     public TbVehiculo() {
     }
 
-    public TbVehiculo(int id_vehiculo, String placa_vehiculo, String marca_vehiculo, String modelo_vehiculo, Integer cant_casco, Set<Persona> documento, String ciudad_vehiculo) {
+    public TbVehiculo(int id_vehiculo, String placa_vehiculo, String marca_vehiculo, String modelo_vehiculo, Integer cant_casco, Persona persona, String ciudad_vehiculo, TbTipovehiculo tipovehiculo) {
         this.id_vehiculo = id_vehiculo;
         this.placa_vehiculo = placa_vehiculo;
         this.marca_vehiculo = marca_vehiculo;
         this.modelo_vehiculo = modelo_vehiculo;
         this.cant_casco = cant_casco;
-        this.documento = documento;
+        this.persona = persona;
         this.ciudad_vehiculo = ciudad_vehiculo;
+        this.tipovehiculo = tipovehiculo;
     }
 
     public int getId_vehiculo() {
@@ -73,12 +79,12 @@ public class TbVehiculo {
         this.cant_casco = cant_casco;
     }
 
-    public Set<Persona> getDocumento() {
-        return documento;
+    public Persona getPersona() {
+        return persona;
     }
 
-    public void setDocumento(Set<Persona> documento) {
-        this.documento = documento;
+    public void setPersona(Persona persona) {
+        this.persona = persona;
     }
 
     public String getCiudad_vehiculo() {
@@ -87,5 +93,13 @@ public class TbVehiculo {
 
     public void setCiudad_vehiculo(String ciudad_vehiculo) {
         this.ciudad_vehiculo = ciudad_vehiculo;
+    }
+
+    public TbTipovehiculo getTipovehiculo() {
+        return tipovehiculo;
+    }
+
+    public void setTipovehiculo(TbTipovehiculo tipovehiculo) {
+        this.tipovehiculo = tipovehiculo;
     }
 }

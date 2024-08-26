@@ -1,10 +1,10 @@
 package Modelo;
 
-import Servlets.Anotaciones;
+import Utilidades.Anotaciones;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+
 @Entity
 @Table(name = "tb_registro")
 public class TbRegistro {
