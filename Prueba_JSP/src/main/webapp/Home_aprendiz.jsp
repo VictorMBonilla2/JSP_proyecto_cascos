@@ -61,6 +61,9 @@
                     }
                 %>
 
+                <!-- Campo oculto para el conteo de vehículos -->
+                <input type="hidden" id="vehiculoCount" value="<%= vehiculoUser.size() %>" />
+
                 <!-- Botones para navegar entre vehículos -->
                 <div class="vehiculo_navigation">
                     <button onclick="showPrevVehiculo()" id="prevButton" disabled>Anterior</button>
@@ -70,37 +73,6 @@
             </div>
         </div>
     </div>
-<script>
-    let currentIndex = 0;
-    const totalVehiculos = <%= vehiculoUser.size() %>;
-
-    function showVehiculo(index) {
-        // Oculta el vehículo actual
-        document.getElementById(`vehiculo${currentIndex}`).style.display = "none";
-
-        // Muestra el nuevo vehículo
-        document.getElementById(`vehiculo${index}`).style.display = "block";
-
-        // Actualiza el índice actual
-        currentIndex = index;
-
-        // Habilita o deshabilita botones según el índice actual
-        document.getElementById('prevButton').disabled = currentIndex === 0;
-        document.getElementById('nextButton').disabled = currentIndex === totalVehiculos - 1;
-    }
-
-    function showNextVehiculo() {
-        if (currentIndex < totalVehiculos - 1) {
-            showVehiculo(currentIndex + 1);
-        }
-    }
-
-    function showPrevVehiculo() {
-        if (currentIndex > 0) {
-            showVehiculo(currentIndex - 1);
-        }
-    }
-</script>
 
     <div class="Graph1" >
         <div class="bloque__user">
@@ -142,6 +114,7 @@
 </section>
 </section>
 </main>
+<script src="resources/js/VehiculoINFO.js"></script>
 <jsp:include page="resources/footer.jsp" />
 </body>
 

@@ -40,7 +40,7 @@
 
         <ul class="list__buttons">
             <li><a href="profile_aprendiz.jsp">Inicio</a></li>
-            <li><a href="Vehiculos.jps">Vehiculo</a></li>
+            <li><a href="Vehiculos.jsp">Vehiculo</a></li>
         </ul>
         <button id="botonMostrar" class="perfil-button">
             <img src="resources/imagenes/IconPerfil.png">

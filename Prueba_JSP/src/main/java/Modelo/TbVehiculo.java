@@ -20,7 +20,7 @@ public class TbVehiculo {
     @JoinColumn(name = "persona_documento")
     private Persona persona;
     private String ciudad_vehiculo;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_tipovehiculo")  // Clave foránea que conecta con TbTipovehiculo
     private TbTipovehiculo tipovehiculo;
 

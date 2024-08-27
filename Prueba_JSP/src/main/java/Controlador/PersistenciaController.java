@@ -14,6 +14,7 @@ public class PersistenciaController {
     VehiculoJPAController vehiculoJPA = new VehiculoJPAController();
     RegistroJPAController registroJPA = new RegistroJPAController();
     ReportesJPAController reportesJPA = new ReportesJPAController();
+    TiposVehiculosJPAController TpVehiculo = new TiposVehiculosJPAController();
 
     Persona persona = new Persona();
 
@@ -101,5 +102,9 @@ public class PersistenciaController {
 
     public void EditarPersona(Persona user) throws Exception {
          persoJpa.edit(user);
+    }
+
+    public List<TbTipovehiculo> BuscarTiposVehiculo() {
+        return TpVehiculo.findtipovehiculoEntities();
     }
 }
