@@ -1,30 +1,34 @@
 
-    let currentIndex = 0;
-    const totalVehiculos = <%= vehiculoUser.size() %>;
+let currentIndex = 0;
+const vehiculoCount = parseInt(document.getElementById("vehiculoCount").value);
 
-    function showVehiculo(index) {
-    // Oculta el vehículo actual
-    document.getElementById(`vehiculo${currentIndex}`).style.display = "none";
-
-    // Muestra el nuevo vehículo
-    document.getElementById(`vehiculo${index}`).style.display = "block";
-
-    // Actualiza el índice actual
-    currentIndex = index;
-
-    // Habilita o deshabilita botones según el índice actual
-    document.getElementById('prevButton').disabled = currentIndex === 0;
-    document.getElementById('nextButton').disabled = currentIndex === totalVehiculos - 1;
+function showVehiculo(index) {
+    // Ocultar todos los vehículos
+    for (let i = 0; i < vehiculoCount; i++) {
+        document.getElementById('vehiculo' + i).style.display = 'none';
+    }
+    // Mostrar el vehículo actual
+    document.getElementById('vehiculo' + index).style.display = 'block';
+    // Actualizar botones
+    document.getElementById('prevButton').disabled = index === 0;
+    document.getElementById('nextButton').disabled = index === vehiculoCount - 1;
 }
 
-    function showNextVehiculo() {
-    if (currentIndex < totalVehiculos - 1) {
-    showVehiculo(currentIndex + 1);
-}
-}
-
-    function showPrevVehiculo() {
+function showPrevVehiculo() {
     if (currentIndex > 0) {
-    showVehiculo(currentIndex - 1);
+        currentIndex--;
+        showVehiculo(currentIndex);
+    }
 }
+
+function showNextVehiculo() {
+    if (currentIndex < vehiculoCount - 1) {
+        currentIndex++;
+        showVehiculo(currentIndex);
+    }
 }
+
+// Inicializar mostrando el primer vehículo
+document.addEventListener("DOMContentLoaded", function() {
+    showVehiculo(0);
+});

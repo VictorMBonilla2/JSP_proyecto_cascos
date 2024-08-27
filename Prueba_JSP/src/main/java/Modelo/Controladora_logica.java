@@ -284,4 +284,31 @@ public class Controladora_logica {
             return false; // La actualización falló
         }
     }
+
+    public List<TbTipovehiculo> ObtenerTiposVehiculo() {
+
+        return controladora.BuscarTiposVehiculo();
+    }
+
+    public List<TbVehiculo> buscarVehiculoDePersona(String id) {
+        List<TbVehiculo>  ListaVehiculos = new ArrayList<>();
+        try {
+            int documentoInt = Integer.parseInt(id);
+            List<TbVehiculo> Lista = controladora.obtenerVehiculos(documentoInt);
+
+            if (Lista == null || Lista.isEmpty()) {
+                throw new Exception("No hay vehículos registrados para el documento: " + id);
+            }
+            ListaVehiculos = Lista;
+
+        } catch (NumberFormatException e) {
+        System.err.println("El documento proporcionado no es un número válido: " + e.getMessage());
+        // Manejo adicional si es necesario, como lanzar una excepción personalizada o devolver una lista vacía.
+        } catch (Exception e) {
+        System.err.println("Error al obtener vehículos: " + e.getMessage());
+        // Puedes manejar esto devolviendo una lista vacía, lanzando una excepción, o lo que consideres adecuado.
+        }
+
+        return ListaVehiculos;
+    }
 }
