@@ -107,4 +107,17 @@ public class PersistenciaController {
     public List<TbTipovehiculo> BuscarTiposVehiculo() {
         return TpVehiculo.findtipovehiculoEntities();
     }
+
+    public TbTipovehiculo obtenerTipoVehiculoPorId(int tipoVehiculo) {
+
+       return TpVehiculo.findtipovehiculo(tipoVehiculo);
+    }
+
+    public void CrearVehiculo(TbVehiculo vehiculo)  throws Exception{
+        vehiculoJPA.create(vehiculo);
+    }
+
+    public void ActualizarVehiculo(TbVehiculo vehiculo) throws Exception {
+        vehiculoJPA.edit(vehiculo);
+    }
 }

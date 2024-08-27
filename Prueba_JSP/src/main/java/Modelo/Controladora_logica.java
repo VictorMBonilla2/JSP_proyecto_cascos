@@ -311,4 +311,33 @@ public class Controladora_logica {
 
         return ListaVehiculos;
     }
+
+    public TbTipovehiculo buscarTipoVehiculo(int tipoVehiculo) {
+        return controladora.obtenerTipoVehiculoPorId(tipoVehiculo);
+    }
+
+    public boolean crearVehiculo(TbVehiculo vehiculo) {
+
+        try{
+            controladora.CrearVehiculo(vehiculo);
+            return true;
+        }catch (Exception e) {
+            System.err.println("Error al crear al vehiculo " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    public boolean actualizarVehiculo(TbVehiculo vehiculo) {
+
+        try{
+            controladora.ActualizarVehiculo(vehiculo);
+            return  true;
+        }catch ( Exception e){
+            System.err.println("Error al actualizar al vehiculo " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

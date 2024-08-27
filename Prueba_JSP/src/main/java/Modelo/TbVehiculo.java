@@ -16,6 +16,7 @@ public class TbVehiculo {
     private String marca_vehiculo;
     private String modelo_vehiculo;
     private Integer cant_casco;
+    private String color_vehiculo;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "persona_documento")
     private Persona persona;
@@ -28,12 +29,13 @@ public class TbVehiculo {
     public TbVehiculo() {
     }
 
-    public TbVehiculo(int id_vehiculo, String placa_vehiculo, String marca_vehiculo, String modelo_vehiculo, Integer cant_casco, Persona persona, String ciudad_vehiculo, TbTipovehiculo tipovehiculo) {
+    public TbVehiculo(int id_vehiculo, String placa_vehiculo, String marca_vehiculo, String modelo_vehiculo, Integer cant_casco, String color_vehiculo, Persona persona, String ciudad_vehiculo, TbTipovehiculo tipovehiculo) {
         this.id_vehiculo = id_vehiculo;
         this.placa_vehiculo = placa_vehiculo;
         this.marca_vehiculo = marca_vehiculo;
         this.modelo_vehiculo = modelo_vehiculo;
         this.cant_casco = cant_casco;
+        this.color_vehiculo = color_vehiculo;
         this.persona = persona;
         this.ciudad_vehiculo = ciudad_vehiculo;
         this.tipovehiculo = tipovehiculo;
@@ -101,5 +103,13 @@ public class TbVehiculo {
 
     public void setTipovehiculo(TbTipovehiculo tipovehiculo) {
         this.tipovehiculo = tipovehiculo;
+    }
+
+    public String getColor_vehiculo() {
+        return color_vehiculo;
+    }
+
+    public void setColor_vehiculo(String color_vehiculo) {
+        this.color_vehiculo = color_vehiculo;
     }
 }
