@@ -2,13 +2,9 @@ import {sendRequest} from "./ajax.js";
 
 document.addEventListener('DOMContentLoaded', async function (){
     const DocumentoAprendiz = document.querySelector("#documentoUser").value;
-    const EnviarEdicion = document.querySelector("#sendEdit");
-    const EnviarCreacion = document.querySelector("#sendCreate");
-    const CancelarEdicion= document.querySelector("#cancelEdit");
-    const formVehiculos= document.querySelector("#formVehiculos");
+    const ejecutor = document.querySelector(".accionador");
     const vehiculoList = document.querySelector(".vehiculo__grid");
     console.log('DocumentoAprendiz:', DocumentoAprendiz); // Verifica el valor
-    EnviarEdicion.style.display="none"
     let vehiculos = await ObtenerVehiculos(DocumentoAprendiz);
 
      if (vehiculos.length > 0) {
@@ -36,8 +32,8 @@ document.addEventListener('DOMContentLoaded', async function (){
 
             div.addEventListener('click', () => {
                 llenarFormulario(vehiculo);
-                EnviarEdicion.style.display="block"
-                EnviarCreacion.style.display="none"
+                ejecutor.id="sendEdit";
+                ejecutor.textContent="Editar"
             });
         });
 
@@ -45,8 +41,8 @@ document.addEventListener('DOMContentLoaded', async function (){
         addItem.classList.add('vehiculo__list__item', 'add');
         addItem.addEventListener("click", ()=>{
             vaciarFormulario();
-            EnviarEdicion.style.display="none"
-            EnviarCreacion.style.display="block"
+            ejecutor.id="sendCreate";
+            ejecutor.textContent="Crear"
         })
         const addText = document.createElement('p');
         addText.textContent = 'Add';
@@ -57,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async function (){
         console.log('No se encontraron vehículos.');
     }
      document.addEventListener("click", async (event) => {
-         if(event.target === EnviarCreacion){
+         if(event.target.id==="sendCreate"){
              const placa = document.querySelector("#placaVehiculo").value ;
              const marca = document.querySelector("#marcaVehiculo").value ;
              const modelo =  document.querySelector("#modeloVehiculo").value ;
@@ -65,14 +61,6 @@ document.addEventListener('DOMContentLoaded', async function (){
              const cant_casco =  document.querySelector("#cantCasco").value
              const color =  document.querySelector("#colorVehiculo").value ;
              const ciudad =  document.querySelector("#ciudadVehiculo").value ;
-             console.log(DocumentoAprendiz)
-             console.log(placa);
-             console.log(marca);
-             console.log(modelo)
-             console.log(tipo)
-             console.log(cant_casco)
-             console.log(color)
-             console.log(ciudad)
              const data ={
                  "user": DocumentoAprendiz,
                  "action": "add",
@@ -85,7 +73,29 @@ document.addEventListener('DOMContentLoaded', async function (){
                  "ciudad":ciudad
              }
              await sendRequest("/Prueba_JSP_war_exploded/Vehiculo",data)
-
+         }
+         if(event.target.id === "sendEdit"){
+             const id_vehiculo = document.querySelector("#idVehiculo").value;
+             const placa = document.querySelector("#placaVehiculo").value ;
+             const marca = document.querySelector("#marcaVehiculo").value ;
+             const modelo =  document.querySelector("#modeloVehiculo").value ;
+             const tipo =  document.querySelector("#tipoVehiculo").value ;
+             const cant_casco =  document.querySelector("#cantCasco").value
+             const color =  document.querySelector("#colorVehiculo").value ;
+             const ciudad =  document.querySelector("#ciudadVehiculo").value ;
+             const data ={
+                 "user": DocumentoAprendiz,
+                 "action": "edit",
+                 "id_vehiculo":id_vehiculo,
+                 "placa_vehiculo": placa,
+                 "marca_vehiculo":marca,
+                 "modelo_vehiculo":modelo,
+                 "tipo_vehiculo":tipo,
+                 "cantidad_cascos":cant_casco,
+                 "color":color,
+                 "ciudad":ciudad
+             }
+             await sendRequest("/Prueba_JSP_war_exploded/Vehiculo",data)
          }
      })
 
@@ -106,6 +116,7 @@ async function ObtenerVehiculos(DocumentoAprendiz){
 }
 function llenarFormulario(vehiculo) {
     // Llenar el formulario con la información del vehículo seleccionado
+    document.querySelector("#idVehiculo").value = vehiculo.id_vehiculo;
     document.querySelector("#placaVehiculo").value = vehiculo.placa;
     document.querySelector("#marcaVehiculo").value = vehiculo.marca;
     document.querySelector("#modeloVehiculo").value = vehiculo.modelo;

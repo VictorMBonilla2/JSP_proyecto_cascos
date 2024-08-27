@@ -92,6 +92,7 @@ public class SvVehiculo extends HttpServlet {
 
     private void actualizarVehiculo(HttpServletRequest req, HttpServletResponse resp, JSONObject jsonObject) throws IOException {
         try {
+            int usuario = Integer.parseInt(jsonObject.optString("user"));
             int id_vehiculo = Integer.parseInt(jsonObject.optString("id_vehiculo"));
             String placa = jsonObject.optString("placa_vehiculo");
             String marca = jsonObject.optString("marca_vehiculo");
@@ -102,7 +103,7 @@ public class SvVehiculo extends HttpServlet {
             String ciudad = jsonObject.optString("ciudad");
 
             TbTipovehiculo tipovehiculo = controladora_logica.buscarTipoVehiculo(tipo_vehiculo);
-
+            Persona persona = controladora_logica.buscarusuario(usuario);
             TbVehiculo vehiculo = new TbVehiculo();
             vehiculo.setId_vehiculo(id_vehiculo);
             vehiculo.setPlaca_vehiculo(placa);
@@ -112,6 +113,7 @@ public class SvVehiculo extends HttpServlet {
             vehiculo.setCiudad_vehiculo(ciudad);
             vehiculo.setTipovehiculo(tipovehiculo);
             vehiculo.setCant_casco(cantidad_cascos);
+            vehiculo.setPersona(persona);
 
             boolean updated = controladora_logica.actualizarVehiculo(vehiculo);
             if (updated) {
@@ -132,7 +134,7 @@ public class SvVehiculo extends HttpServlet {
             String modelo_vehiculo = jsonObject.optString("modelo_vehiculo");
             int tipo_vehiculo = Integer.parseInt(jsonObject.optString("tipo_vehiculo"));
             Integer cantidad_cascos = Integer.parseInt(jsonObject.optString("cantidad_cascos"));
-            String color_vehiculo = jsonObject.optString("color_vehiculo");
+            String color_vehiculo = jsonObject.optString("color");
             String ciudad = jsonObject.optString("ciudad");
 
             TbTipovehiculo tipovehiculo = controladora_logica.buscarTipoVehiculo(tipo_vehiculo);

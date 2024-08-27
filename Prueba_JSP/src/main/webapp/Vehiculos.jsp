@@ -19,6 +19,7 @@
 
                         <form class="vehiculo__form" id="formVehiculos">
                             <input type="hidden" id="documentoUser" value="<%=user.getDocumento()%>">
+                            <input type="hidden" id="idVehiculo" value="">
                             <h1>Datos del vehiculo</h1>
                             <hr>
                             <div class="formulario__inputs">
@@ -44,11 +45,11 @@
 
                         </form>
                         <div class="button_vehiculo">
-                            <button class="formulario_login__button" type="submit" id="sendEdit">Guardar</button>
-                            <button class="formulario_login__button" type="submit" id="sendCreate">Crear</button>
+                            <button class="formulario_login__button accionador" type="submit" id="sendCreate">Crear</button>
                             <button class="formulario_login__button" type="button" id="cancelEdit">Cancelar</button>
                         </div>
                     </div>
+
 
 
                     <div class="vehiculo__list">
