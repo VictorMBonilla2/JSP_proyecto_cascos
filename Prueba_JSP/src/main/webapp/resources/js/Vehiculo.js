@@ -1,3 +1,5 @@
+import {sendRequest} from "./ajax.js";
+
 document.addEventListener('DOMContentLoaded', async function (){
     const DocumentoAprendiz = document.querySelector("#documentoUser").value;
     const EnviarEdicion = document.querySelector("#sendEdit");
@@ -9,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async function (){
     EnviarEdicion.style.display="none"
     let vehiculos = await ObtenerVehiculos(DocumentoAprendiz);
 
-    if (vehiculos.length > 0) {
+     if (vehiculos.length > 0) {
         vehiculoList.innerHTML = '';
 
         vehiculos.forEach((vehiculo, index) => {
@@ -54,6 +56,38 @@ document.addEventListener('DOMContentLoaded', async function (){
     } else {
         console.log('No se encontraron vehículos.');
     }
+     document.addEventListener("click", async (event) => {
+         if(event.target === EnviarCreacion){
+             const placa = document.querySelector("#placaVehiculo").value ;
+             const marca = document.querySelector("#marcaVehiculo").value ;
+             const modelo =  document.querySelector("#modeloVehiculo").value ;
+             const tipo =  document.querySelector("#tipoVehiculo").value ;
+             const cant_casco =  document.querySelector("#cantCasco").value
+             const color =  document.querySelector("#colorVehiculo").value ;
+             const ciudad =  document.querySelector("#ciudadVehiculo").value ;
+             console.log(DocumentoAprendiz)
+             console.log(placa);
+             console.log(marca);
+             console.log(modelo)
+             console.log(tipo)
+             console.log(cant_casco)
+             console.log(color)
+             console.log(ciudad)
+             const data ={
+                 "user": DocumentoAprendiz,
+                 "action": "add",
+                 "placa_vehiculo": placa,
+                 "marca_vehiculo":marca,
+                 "modelo_vehiculo":modelo,
+                 "tipo_vehiculo":tipo,
+                 "cantidad_cascos":cant_casco,
+                 "color":color,
+                 "ciudad":ciudad
+             }
+             await sendRequest("/Prueba_JSP_war_exploded/Vehiculo",data)
+
+         }
+     })
 
 })
 async function ObtenerVehiculos(DocumentoAprendiz){
@@ -75,7 +109,8 @@ function llenarFormulario(vehiculo) {
     document.querySelector("#placaVehiculo").value = vehiculo.placa;
     document.querySelector("#marcaVehiculo").value = vehiculo.marca;
     document.querySelector("#modeloVehiculo").value = vehiculo.modelo;
-    console.log(vehiculo.modelo)
+    document.querySelector("#ciudadVehiculo").value = vehiculo.ciudad;
+    document.querySelector("#colorVehiculo").value = vehiculo.color_vehiculo;
     document.querySelector("#tipoVehiculo").value = vehiculo.tipo_vehiculo;
 
     const cascoCantidad = vehiculo.cantidad_cascos;
@@ -90,10 +125,12 @@ function llenarFormulario(vehiculo) {
 
 function vaciarFormulario() {
     // Vaciar los campos del formulario
-    document.querySelector("#placaVehiculo").value = '';  // Vacia el campo de placa
-    document.querySelector("#marcaVehiculo").value = '';  // Vacia el campo de marca
-    document.querySelector("#modeloVehiculo").value = ''; // Vacia el campo de modelo
-    document.querySelector("#tipoVehiculo").value = '';   // Deselecciona el tipo de vehículo
-    document.querySelector("#cascoConfirm").checked = false; // Desmarca el checkbox de casco
-    document.querySelector("#cantCasco").value = '';      // Vacia el campo de cantidad de cascos
+    document.querySelector("#placaVehiculo").value = '';
+    document.querySelector("#marcaVehiculo").value = '';
+    document.querySelector("#modeloVehiculo").value = '';
+    document.querySelector("#tipoVehiculo").value = '';
+    document.querySelector("#cascoConfirm").checked = false;
+    document.querySelector("#cantCasco").value = '';
+    document.querySelector("#colorVehiculo").value = '';
+    document.querySelector("#ciudadVehiculo").value = '';
 }

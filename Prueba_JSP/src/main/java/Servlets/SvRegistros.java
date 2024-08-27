@@ -23,8 +23,6 @@ public class SvRegistros extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<TbRegistro> registros = controladora_logica.ObtenerRegistros();
 
-
-
     try{
         // Configurar la respuesta para JSON
         response.setContentType("application/json");

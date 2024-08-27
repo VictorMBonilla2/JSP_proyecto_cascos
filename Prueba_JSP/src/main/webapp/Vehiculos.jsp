@@ -31,6 +31,10 @@
                                 <input type="text" id="marcaVehiculo" name="marca" placeholder="Marca de tu vehiculo">
                                 <label for="modeloVehiculo">Modelo:</label>
                                 <input type="text" id="modeloVehiculo" name="modelo" placeholder="Modelo de tu Vehiculo">
+                                <label for="ciudadVehiculo">Modelo:</label>
+                                <input type="text" id="ciudadVehiculo" name="ciudad" placeholder="Ciudad de tu Vehiculo">
+                                <label for="colorVehiculo">Color:</label>
+                                <input type="text" id="colorVehiculo" name="ciudad" placeholder="Color de tu Vehiculo">
                                 <hr>
                                 <label for="cascoConfirm">¿Lleva Casco?</label>
                                 <input type="checkbox" id="cascoConfirm" name="placa">
@@ -72,7 +76,7 @@
 
         </main>
     <script src="resources/js/TiposVehiculosSelect.js"></script>
-    <script src="resources/js/Vehiculo.js"></script>
+    <script type="module" src="resources/js/Vehiculo.js"></script>
     <jsp:include page="resources/footer.jsp" />
     </body>
 </html>

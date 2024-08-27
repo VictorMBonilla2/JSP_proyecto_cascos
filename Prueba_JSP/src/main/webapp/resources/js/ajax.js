@@ -8,20 +8,29 @@ export async function sendRequest(url, data) {
             body: JSON.stringify(data)
         });
 
-        const result = await response.json();
-
         if (!response.ok) {
-            throw new Error(result.message || 'Network response was not ok');
+            const errorText = await response.text(); // Get raw response text
+            throw new Error(errorText || 'Network response was not ok');
         }
 
+        const result = await response.json();
+
         if (result.status === "success") {
+            // Handle success case
         } else {
-            document.getElementById("Error").textContent = result.message || "Ocurrió un error.";
-            document.getElementById("Error").style.display = "block";
+            const errorElement = document.getElementById("Error");
+            if (errorElement) {
+                errorElement.textContent = result.message || "Ocurrió un error.";
+                errorElement.style.display = "block";
+            }
         }
     } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
-        document.getElementById("Error").textContent = error.message || "Ocurrió un error al procesar la solicitud.";
-        document.getElementById("Error").style.display = "block";
+        const errorElement = document.getElementById("Error");
+        if (errorElement) {
+            errorElement.textContent = error.message || "Ocurrió un error al procesar la solicitud.";
+            errorElement.style.display = "block";
+        }
     }
 }
+
