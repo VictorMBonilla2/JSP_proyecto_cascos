@@ -2,19 +2,16 @@ package DTO;
 
 public class LoginDTO {
     private int documento;
-    private String TipoDocumento;
+    private String tipoDocumento;
     private String clave;
-    private String rol;
+    private int rolId; // Cambiado a int para almacenar el ID del rol
 
-    // Constructor, getters y setters
     // Constructor
-
-
-    public LoginDTO(int documento, String tipoDocumento, String clave, String rol) {
+    public LoginDTO(int documento, String tipoDocumento, String clave, int rolId) {
         this.documento = documento;
-        TipoDocumento = tipoDocumento;
+        this.tipoDocumento = tipoDocumento;
         this.clave = clave;
-        this.rol = rol;
+        this.rolId = rolId;
     }
 
     public int getDocumento() {
@@ -26,11 +23,11 @@ public class LoginDTO {
     }
 
     public String getTipoDocumento() {
-        return TipoDocumento;
+        return tipoDocumento;
     }
 
     public void setTipoDocumento(String tipoDocumento) {
-        TipoDocumento = tipoDocumento;
+        this.tipoDocumento = tipoDocumento;
     }
 
     public String getClave() {
@@ -41,12 +38,11 @@ public class LoginDTO {
         this.clave = clave;
     }
 
-    public String getRol() {
-        return rol;
-
-    }
-    public void setRol(String rol) {
-        this.rol = rol;
+    public int getRolId() {
+        return rolId;
     }
 
+    public void setRolId(int rolId) {
+        this.rolId = rolId;
+    }
 }

@@ -15,6 +15,7 @@ public class PersistenciaController {
     RegistroJPAController registroJPA = new RegistroJPAController();
     ReportesJPAController reportesJPA = new ReportesJPAController();
     TiposVehiculosJPAController TpVehiculo = new TiposVehiculosJPAController();
+    RolesJPAController rolesJPA = new RolesJPAController();
 
     Persona persona = new Persona();
 
@@ -119,5 +120,10 @@ public class PersistenciaController {
 
     public void ActualizarVehiculo(TbVehiculo vehiculo) throws Exception {
         vehiculoJPA.edit(vehiculo);
+    }
+
+
+    public Roles ObtenerLogin(int rol) {
+        return rolesJPA.findRol(rol);
     }
 }

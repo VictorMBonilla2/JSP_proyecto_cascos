@@ -21,12 +21,14 @@ public class Controladora_logica {
     public static boolean validarIngreso(int documento, String tipoDocumento, String clave, String rol) {
 
         List<LoginDTO> lista = controladora.login(documento);
+        int rolInt = Integer.parseInt(rol);
 
         for (LoginDTO login : lista) {
             System.out.println("La coincidencia con el Tipo de documento es: "+ login.getTipoDocumento().equals(tipoDocumento));
             System.out.println("La coincidencia con la clave es: "+ login.getClave().equals(clave));
-            System.out.println("La coincidencia con el rol es : "+ rol+ login.getRol().equals(rol));
-            if (login.getTipoDocumento().equals(tipoDocumento) && login.getClave().equals(clave) && login.getRol().trim().equals(rol)) {
+            boolean resultado = login.getRolId() == rolInt;
+            System.out.println("La coincidencia con el rol es : " + resultado);
+            if (login.getTipoDocumento().equals(tipoDocumento) && login.getClave().equals(clave) && login.getRolId() == rolInt) {
                 return true;
             }
         }
@@ -118,14 +120,10 @@ public class Controladora_logica {
 
     public Persona buscarusuario(int documento) {
 
-        List<Persona> lista = controladora.TraerPersonas();
+        Persona lista = controladora.buscarpersona(documento);
 
-        for (Persona persona : lista) {
-            if (persona.getDocumento() == documento) {
-                return persona;
-            }
-        }
-        return null;
+        return lista;
+
     }
 
 //    public TbVehiculo buscarVehiculoPorDocumento(Integer documento) {
@@ -163,7 +161,7 @@ public class Controladora_logica {
 
        Persona Colaborador = buscarusuario(documento);
 
-       if (Colaborador != null && Colaborador.getRol().trim().equals("Colaborador")) {
+       if (Colaborador != null && Colaborador.getRol().getId() == 1) {
 
            return Colaborador;
        }
@@ -339,5 +337,17 @@ public class Controladora_logica {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public Roles ObtenerRol(int rol) {
+        Roles roles = null;
+        try{
+            roles = controladora.ObtenerLogin(rol);
+        } catch (Exception e){
+            System.err.println("Error al obtener rol " + e.getMessage());
+            e.printStackTrace();
+            return roles;
+        }
+        return roles;
     }
 }

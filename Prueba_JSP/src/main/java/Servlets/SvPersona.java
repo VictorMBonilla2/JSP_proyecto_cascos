@@ -2,6 +2,7 @@ package Servlets;
 
 import Modelo.Controladora_logica;
 import Modelo.Persona;
+import Modelo.Roles;
 import Utilidades.JsonReader;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -121,12 +122,17 @@ public class SvPersona extends HttpServlet {
 
         boolean validacion = validarIngreso(documento, tipoDocumento, password, rol);
         if (validacion) {
-            Persona user = controladora_logica.buscarusuario(documento);
-            session = req.getSession(true);
-            session.setAttribute("documento", documento);
-            session.setAttribute("user", user);
+            try {
+                Persona user = controladora_logica.buscarusuario(documento);
 
-            sendSuccessResponse(resp, "Login successful");
+                session = req.getSession(true);
+                session.setAttribute("documento", documento);
+                session.setAttribute("user", user);
+                sendSuccessResponse(resp, "Login successful");
+            }catch (Exception e){
+                sendErrorResponse(resp, "Error interno del servidor: " + e.getMessage());
+            }
+
         } else {
             sendErrorResponse(resp, "Invalid credentials");
         }
@@ -146,8 +152,9 @@ public class SvPersona extends HttpServlet {
         int documento = jsonObject.getInt("documento");
         String correo = jsonObject.getString("correo");
         String clave = jsonObject.getString("password");
-        String rol = jsonObject.getString("rol");
+        int rol = Integer.parseInt(jsonObject.getString("rol"));
 
+        Roles roll = controladora_logica.ObtenerRol(rol);
         Persona persona = new Persona();
         persona.setNombre(nombre);
         persona.setApellido(apellido);
@@ -155,7 +162,7 @@ public class SvPersona extends HttpServlet {
         persona.setDocumento(documento);
         persona.setCorreo(correo);
         persona.setClave(clave);
-        persona.setRol(rol);
+        persona.setRol(roll);
 
         boolean validacion = controladora_logica.crearPersona(persona);
 

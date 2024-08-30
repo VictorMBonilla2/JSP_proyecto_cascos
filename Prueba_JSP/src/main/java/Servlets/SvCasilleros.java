@@ -151,6 +151,8 @@ public class SvCasilleros {
                 nuevoRegistro.setColaborador(colaborador);
                 controladora_logica.CrearRegistro(nuevoRegistro);
                 limpiarYActualizarEspacio(resp, espacio);
+            }else{
+                System.out.println("No se puede crear el registro");
             }
         }
 
@@ -184,9 +186,18 @@ public class SvCasilleros {
         private Persona obtenerColaboradorDesdeSesion(HttpServletRequest req, HttpServletResponse resp) throws IOException {
             HttpSession session = req.getSession(false); // false para no crear una nueva sesión si no existe
             if (session != null && session.getAttribute("documento") != null) {
-                System.out.println("Documento conseguido");
+                System.out.println("Documento conseguido" + session.getAttribute("documento"));
                 Integer documentosesionactual = (Integer) session.getAttribute("documento");
-                return controladora_logica.obtenerColaborador(documentosesionactual);
+                System.out.println("Documento " + documentosesionactual);
+                Persona colaborador=null;
+                try{
+                    return controladora_logica.obtenerColaborador(documentosesionactual);
+                } catch (Exception e){
+                    System.out.println("Error al obtener colaborador");
+                    System.out.println(e);
+                }
+                return colaborador;
+
             } else {
                 // Manejar el caso donde no hay sesión o el atributo documento no está presente
                 System.err.println("No se pudo obtener el número de documento de la sesión actual.");
@@ -220,12 +231,12 @@ public class SvCasilleros {
         private void enviarRespuesta(HttpServletResponse resp, int statusCode, String status, String message) throws IOException {
             resp.setContentType("application/json");
             resp.setStatus(statusCode);
-            if (message != null) {
-                resp.getWriter().write(String.format("{\"status\":\"%s\", \"message\":\"%s\"}", status, message));
-            } else {
-                resp.getWriter().write(String.format("{\"status\":\"%s\"}", status));
-            }
+            String responseMessage = (message != null) ? String.format("{\"status\":\"%s\", \"message\":\"%s\"}", status, message) : String.format("{\"status\":\"%s\"}", status);
+            System.out.println("Enviando respuesta: " + responseMessage); // Logging
+            resp.getWriter().write(responseMessage);
+            resp.getWriter().flush();
         }
+
 
     }
 }
