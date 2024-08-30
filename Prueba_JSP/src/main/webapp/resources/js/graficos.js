@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Crear el gráfico
         const myChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'doughnut',
             data: {
                 labels: sortedDayNames,
                 datasets: [{

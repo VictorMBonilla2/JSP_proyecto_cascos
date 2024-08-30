@@ -2,6 +2,7 @@ package Controlador;
 
 import DTO.LoginDTO;
 import Modelo.Persona;
+import Modelo.Roles;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.servlet.annotation.WebServlet;
@@ -116,10 +117,10 @@ public class PersonaJpaController implements Serializable {
             }
         }
     }
-    public List<LoginDTO> login(int documento){
+    public List<LoginDTO> login(int documento) {
         EntityManager em = getEntityManager();
-        try{
-            TypedQuery<Object[]> query= em.createQuery(
+        try {
+            TypedQuery<Object[]> query = em.createQuery(
                     "SELECT p.documento, p.tipoDocumento, p.clave, p.rol FROM tb_persona p WHERE p.documento = :NumeroDoc", Object[].class);
             query.setParameter("NumeroDoc", documento);
             List<Object[]> resultados = query.getResultList();
@@ -128,21 +129,17 @@ public class PersonaJpaController implements Serializable {
                 int numDoc = (int) resultado[0];
                 String TipDocument = (String) resultado[1];
                 String clave = (String) resultado[2];
-                String Rol = (String) resultado[3];
-                loginDTOs.add(new LoginDTO(numDoc, TipDocument, clave, Rol));
+                Roles rol = (Roles) resultado[3]; // Cambiado de String a Roles
+                loginDTOs.add(new LoginDTO(numDoc, TipDocument, clave, rol.getId())); // Usar el ID del rol
             }
             return loginDTOs; // Devolver la lista de LoginDTOs
 
-        }catch (NoResultException e) {
-            // Se maneja el caso en que no se encuentren resultados
+        } catch (NoResultException e) {
             System.out.println("No se encontraron resultados para el documento: " + documento);
             return new ArrayList<>(); // Devolver una lista vacía en este caso
-        }finally {
+        } finally {
             em.close();
-
         }
-
-
     }
 
     public Persona findPersona(int id) {

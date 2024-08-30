@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const documento = document.getElementById("documento").value;
         const tipoDocumento = document.getElementById("TipoDocumento").value;
         const password = document.getElementById("passWord").value;
-        const rol = background.classList.contains("background_login_aprendiz") ? "Aprendiz" : "Colaborador";
+        const rol = background.classList.contains("background_login_aprendiz") ? "2" : "1";
 
         if (isNaN(documento)) {
             errorOnlyDigitsDiv.style.display = "block";
@@ -44,13 +44,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (result.status === "success") {
                 // Redireccionar según el rol del usuario
-                if (rol === "Aprendiz") {
+                if (rol === "2") {
                     window.location.href = "Home_aprendiz.jsp";
                 } else {
                     window.location.href = "Home.jsp";
                 }
             } else {
                 errorDiv.style.display = "block";
+                console.log(result)
             }
         } catch (error) {
             console.error("There was a problem with the fetch operation:", error);

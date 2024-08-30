@@ -20,28 +20,18 @@ public class Persona {
     private Date fechaNacimiento;
 
     private String clave;
-    private String rol;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_rol", nullable = false)
+    private Roles rol;
 
     @OneToMany(mappedBy = "persona", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<TbVehiculo> vehiculos = new LinkedHashSet<>();
-//  un salt para cifrado
+    // Un salt para cifrado
+
     // Getters y setters
 
-    public Persona() {
-
-    }
-
-    public Persona(int documento, String nombre, String apellido, String tipoDocumento, String correo, Date fechaNacimiento, String clave, String rol, Set<TbVehiculo> vehiculos) {
-        this.documento = documento;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.tipoDocumento = tipoDocumento;
-        this.correo = correo;
-        this.fechaNacimiento = fechaNacimiento;
-        this.clave = clave;
-        this.rol = rol;
-        this.vehiculos = vehiculos;
-    }
+    public Persona() {}
 
     public int getDocumento() {
         return documento;
@@ -99,11 +89,11 @@ public class Persona {
         this.clave = clave;
     }
 
-    public String getRol() {
+    public Roles getRol() {
         return rol;
     }
 
-    public void setRol(String rol) {
+    public void setRol(Roles rol) {
         this.rol = rol;
     }
 
