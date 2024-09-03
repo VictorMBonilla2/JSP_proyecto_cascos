@@ -4,7 +4,6 @@ import Modelo.Controladora_logica;
 import Modelo.Persona;
 import Modelo.TbTipovehiculo;
 import Modelo.TbVehiculo;
-import Utilidades.JsonReader;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,7 +13,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 

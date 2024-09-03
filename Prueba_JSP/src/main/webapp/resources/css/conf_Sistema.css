@@ -1,0 +1,18 @@
+.main_container__conf_Sistema{
+    width: 80%;
+    margin: 0 auto;
+    padding-top: 60px;
+}
+.info_box__container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 95%;
+    background-color: #fff;
+    border-radius: var(--borderRadius);
+    padding: 25px;
+    justify-items: center;
+}
+.config_box{
+    width: 80%;
+    height: 90%;
+}

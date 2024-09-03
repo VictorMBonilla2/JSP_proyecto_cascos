@@ -11,18 +11,20 @@
     Persona user = (Persona) session.getAttribute("user");
 
     boolean isGestor = user.getRol().getId()==1;
+    boolean isAprendiz= user.getRol().getId()==2;
+    boolean isAdmin = user.getRol().getId()==3;
 %>
 
 <section class="main_container__home">
     <div class="info_user">
         <h1>Bienvenido, <%= user.getNombre() %></h1>
         <div class="content">
-            <% if (isGestor) { %>
+            <% if (isGestor || isAdmin) { %>
             <!-- Gráfico del colaborador -->
             <div class="Mygraph">
                 <canvas id="myChart" height="900" width="900"></canvas>
             </div>
-            <% } else { %>
+            <% } else if (isAprendiz) { %>
             <!-- Información de los vehículos del aprendiz -->
             <div class="vehiculo__content_data">
                 <h1>Datos del Vehículo</h1>

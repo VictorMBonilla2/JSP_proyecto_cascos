@@ -16,6 +16,9 @@
 .background_login_aprendiz{
   background-color: #4CAF50;
 }
+.background_login_Admin{
+  background-color: #17468b;
+}
 
 .Container_login{
   width: 80vb;

@@ -2,7 +2,6 @@ package Servlets;
 
 import Modelo.*;
 import Utilidades.JsonReader;
-import com.sun.jdi.IntegerValue;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,9 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.sql.Struct;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;

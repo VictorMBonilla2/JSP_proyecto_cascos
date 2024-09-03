@@ -2,8 +2,6 @@ package Servlets;
 
 import DTO.VehiculoDTO;
 import Modelo.Controladora_logica;
-import Modelo.TbVehiculo;
-import Utilidades.JsonReader;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
