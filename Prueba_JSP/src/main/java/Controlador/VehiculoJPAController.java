@@ -1,6 +1,5 @@
 package Controlador;
 
-import Modelo.TbEspacio;
 import Modelo.TbVehiculo;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;

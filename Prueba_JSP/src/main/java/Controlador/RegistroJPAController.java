@@ -1,7 +1,6 @@
 package Controlador;
 
 import Modelo.TbRegistro;
-
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 

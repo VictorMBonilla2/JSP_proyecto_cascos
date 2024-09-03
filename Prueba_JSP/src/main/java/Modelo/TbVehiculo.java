@@ -2,9 +2,6 @@ package Modelo;
 
 import jakarta.persistence.*;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 @Entity
 @Table(name = "tb_vehiculo")
 public class TbVehiculo {

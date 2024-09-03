@@ -7,6 +7,9 @@
         response.sendRedirect("index.jsp");
         return;
     }
+    boolean isGestor = user.getRol().getId()==1;
+    boolean isAprendiz= user.getRol().getId()==2;
+    boolean isAdmin = user.getRol().getId()==3;
 
 %>
 <html>
@@ -28,7 +31,7 @@
 <input type="hidden" id="sesionStatus" value="<%= sesionStatus%>" />
 
     <%
-    if (user.getRol().getId()==1){
+    if (isGestor || isAdmin){
 
 
 %>
@@ -89,7 +92,7 @@
 <main>
     <section class="main_container">
             <%
-    } else if (user.getRol().getId()==2) {
+    } else if (isAprendiz) {
 
 %>
         <header class="hea_container">
