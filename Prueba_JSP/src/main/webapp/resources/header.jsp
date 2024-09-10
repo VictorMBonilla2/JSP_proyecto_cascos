@@ -105,7 +105,7 @@
             <div class="hea_container__list">
 
                 <ul class="list__buttons">
-                    <li><a href="profile_aprendiz.jsp">Inicio</a></li>
+                    <li><a href="Home.jsp">Inicio</a></li>
                     <li><a href="Vehiculos.jsp">Vehiculo</a></li>
                 </ul>
                 <button id="botonMostrar" class="perfil-button">
@@ -120,6 +120,7 @@
                     cursor: pointer;
                 }
             </style>
+
             <% %>
 
             <div id="right-sidebar">

@@ -1,5 +1,6 @@
 package Servlets;
 
+import Logica.Controladora_logica;
 import Modelo.*;
 import Utilidades.JsonReader;
 import jakarta.servlet.RequestDispatcher;

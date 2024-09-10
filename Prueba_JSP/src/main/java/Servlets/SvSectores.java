@@ -1,6 +1,6 @@
 package Servlets;
 
-import Modelo.Controladora_logica;
+import Logica.Controladora_logica;
 import Modelo.TbSectores;
 import Utilidades.CasilleroServices;
 import Utilidades.JsonReader;

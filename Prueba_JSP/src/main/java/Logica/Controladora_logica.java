@@ -1,8 +1,9 @@
-package Modelo;
+package Logica;
 
 import Controlador.PersistenciaController;
 import DTO.LoginDTO;
 import DTO.VehiculoDTO;
+import Modelo.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -83,11 +84,6 @@ public class Controladora_logica {
         return controladora.obtenerCasco(placa);
     }
 
-    public void Crearcasco(TbVehiculo casco) {
-        controladora.CrearCasco(casco);
-    }
-
-
 
 
     public boolean actualizarEspacio(TbEspacio espacio) {
@@ -101,25 +97,7 @@ public class Controladora_logica {
             }
         }
 
-    public void actualizarCasco(TbVehiculo casco) {
 
-        try{
-            controladora.updateCasco(casco);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public boolean borrarCasco(int idCasco) {
-        try {
-            controladora.deleteCasco(idCasco);
-            return true; // Devuelve true si la eliminación es exitosa
-        } catch (Exception e) {
-            // Registra el error para el diagnóstico
-            System.err.println("Error al eliminar el casco con ID " + idCasco + ": " + e.getMessage());
-            return false; // Devuelve false si se produce una excepción
-        }
-    }
 
     public Persona buscarusuario(int documento) {
 

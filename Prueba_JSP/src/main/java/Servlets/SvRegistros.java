@@ -1,6 +1,6 @@
 package Servlets;
 
-import Modelo.Controladora_logica;
+import Logica.Controladora_logica;
 import Modelo.TbRegistro;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

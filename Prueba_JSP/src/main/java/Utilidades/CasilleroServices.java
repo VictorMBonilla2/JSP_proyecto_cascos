@@ -1,10 +1,9 @@
 package Utilidades;
 
-import Modelo.Controladora_logica;
+import Logica.Controladora_logica;
 import Modelo.TbSectores;
 import Modelo.TbEspacio;
 
-import javax.swing.*;
 import java.util.Iterator;
 import java.util.Set;
 

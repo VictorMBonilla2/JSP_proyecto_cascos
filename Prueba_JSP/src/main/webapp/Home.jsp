@@ -61,8 +61,7 @@
                         </div>
                     </div>
                 </div>
-                <%
-                        index++;
+                <%index++;
                     }
                 %>
 
@@ -76,7 +75,6 @@
             <% } %>
         </div>
     </div>
-
     <div class="Graph1">
         <div class="bloque__user">
             <div class="info2-user__img">
