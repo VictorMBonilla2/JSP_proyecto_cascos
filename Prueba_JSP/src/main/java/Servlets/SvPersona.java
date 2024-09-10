@@ -1,6 +1,7 @@
 package Servlets;
 
-import Logica.Controladora_logica;
+import Logica.Logica_Persona;
+import Logica.Logica_Rol;
 import Modelo.Persona;
 import Modelo.Roles;
 import Utilidades.JsonReader;
@@ -18,12 +19,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static Logica.Controladora_logica.validarIngreso;
 
 @WebServlet(name = "SvPersona", urlPatterns = {"/SvPersona"})
 public class SvPersona extends HttpServlet {
     //CONTROLADORA LOGICA
-    Controladora_logica controladora_logica = new Controladora_logica();
+    Logica_Persona logica_persona = new Logica_Persona();
+    Logica_Rol logica_rol = new Logica_Rol();
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -68,7 +69,7 @@ public class SvPersona extends HttpServlet {
         int usuarioId = jsonObject.getInt("usuarioId");
 
         // Recupera el usuario de la base de datos utilizando el ID
-        Persona user = controladora_logica.buscarusuario(usuarioId);
+        Persona user = logica_persona.buscarpersona(usuarioId);
         if (user == null) {
             sendErrorResponse(resp, "Usuario no encontrado.");
             return;
@@ -97,7 +98,7 @@ public class SvPersona extends HttpServlet {
         user.setFechaNacimiento(fechaNacimiento); // Asigna la fecha convertida
 
         // Guarda los cambios en la base de datos
-        boolean updateSuccess = controladora_logica.actualizarPersona(user);
+        boolean updateSuccess = logica_persona.actualizarPersona(user);
 
         if (updateSuccess) {
             // Actualiza el usuario en la sesión para reflejar los cambios
@@ -118,11 +119,11 @@ public class SvPersona extends HttpServlet {
         String password = jsonObject.getString("password");
         String rol = jsonObject.getString("rol");
 
-        boolean validacion = validarIngreso(documento, tipoDocumento, password, rol);
+        boolean validacion = logica_persona.validarIngreso(documento, tipoDocumento, password, rol);
         if (validacion) {
             try {
                 // Buscar el usuario desde la lógica de negocio
-                Persona user = controladora_logica.buscarusuario(documento);
+                Persona user = logica_persona.buscarpersona(documento);
 
 
                 // Configurar la sesión con los atributos necesarios
@@ -155,7 +156,7 @@ public class SvPersona extends HttpServlet {
         String clave = jsonObject.getString("password");
         int rol = Integer.parseInt(jsonObject.getString("rol"));
 
-        Roles roll = controladora_logica.ObtenerRol(rol);
+        Roles roll = logica_rol.ObtenerRol(rol);
         Persona persona = new Persona();
         persona.setNombre(nombre);
         persona.setApellido(apellido);
@@ -165,7 +166,7 @@ public class SvPersona extends HttpServlet {
         persona.setClave(clave);
         persona.setRol(roll);
 
-        boolean validacion = controladora_logica.crearPersona(persona);
+        boolean validacion = logica_persona.crearPersona(persona);
 
         if (validacion) {
             sendSuccessResponse(resp, "Registro successful");

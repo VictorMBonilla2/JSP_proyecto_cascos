@@ -1,6 +1,6 @@
 package Servlets;
 
-import Logica.Controladora_logica;
+import Logica.Logica_Registro;
 import Modelo.TbRegistro;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,10 +16,10 @@ import java.util.List;
 
 @WebServlet(name = "SvRegistros", urlPatterns = {"/SvRegistros"})
 public class SvRegistros extends HttpServlet {
-    Controladora_logica controladora_logica = new Controladora_logica();
+    Logica_Registro logica_registro = new Logica_Registro();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<TbRegistro> registros = controladora_logica.ObtenerRegistros();
+        List<TbRegistro> registros = logica_registro.ObtenerRegistros();
 
     try{
         // Configurar la respuesta para JSON

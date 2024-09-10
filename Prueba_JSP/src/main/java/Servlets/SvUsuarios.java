@@ -1,6 +1,7 @@
 package Servlets;
 
-import Logica.Controladora_logica;
+import Logica.Logica_Persona;
+import Logica.Logica_Rol;
 import Modelo.Persona;
 import Modelo.Roles;
 import Utilidades.JsonReader;
@@ -20,7 +21,8 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/usuarios")
 public class SvUsuarios extends HttpServlet {
-    Controladora_logica controladora_logica = new Controladora_logica();
+    Logica_Persona logica_persona = new Logica_Persona();
+    Logica_Rol logica_rol = new Logica_Rol();
     protected void doGet(HttpServletRequest request, HttpServletResponse response)  throws ServletException, IOException {
         String paginaParam = request.getParameter("Pagination");
 
@@ -35,7 +37,7 @@ public class SvUsuarios extends HttpServlet {
         }
 
 //        List<Persona> Lista= controladora_logica.ObtenerUsuariosPorPagina(numeroPagina);
-        List<Persona> Lista= controladora_logica.ObtenerUsuariosPorPagina(numeroPagina);
+        List<Persona> Lista= logica_persona.ObtenerUsuariosPorPagina(numeroPagina);
         JSONArray jsonArray = new JSONArray();
 
         for (Persona usuario : Lista){
@@ -100,10 +102,10 @@ public class SvUsuarios extends HttpServlet {
             persona.setFechaNacimiento(fechaNacimiento);
 
             int rol = Integer.parseInt(jsonObject.getString("rol"));
-            Roles roles = controladora_logica.ObtenerRol(rol);
+            Roles roles = logica_rol.ObtenerRol(rol);
             persona.setRol(roles);
 
-            controladora_logica.actualizarPersona(persona);
+            logica_persona.actualizarPersona(persona);
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().write("{\"status\":\"success\", \"message\":\"Usuario actualizado correctamente\"}");
         } catch (ParseException e) {
@@ -132,10 +134,10 @@ public class SvUsuarios extends HttpServlet {
             persona.setFechaNacimiento(fechaNacimiento);
 
             int rol = Integer.parseInt(jsonObject.getString("rol"));
-            Roles roles = controladora_logica.ObtenerRol(rol);
+            Roles roles = logica_rol.ObtenerRol(rol);
             persona.setRol(roles);
 
-            controladora_logica.crearPersona(persona);
+            logica_persona.crearPersona(persona);
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().write("{\"status\":\"success\", \"message\":\"Usuario actualizado correctamente\"}");
         } catch (ParseException e) {
@@ -150,9 +152,8 @@ public class SvUsuarios extends HttpServlet {
 
         int documneto= jsonObject.getInt("id");
 
-
         try{
-            controladora_logica.borrarUsuario(documneto);
+            logica_persona.borrarUsuario(documneto);
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().write("{\"status\":\"success\", \"message\":\"Usuario eliminado correctamente\"}");
         } catch (Exception e){

@@ -1,18 +1,22 @@
 package Utilidades;
 
 import Logica.Controladora_logica;
-import Modelo.TbSectores;
+import Logica.Logica_Espacios;
+import Logica.Logica_Sectores;
 import Modelo.TbEspacio;
+import Modelo.TbSectores;
 
 import java.util.Iterator;
 import java.util.Set;
 
 public class CasilleroServices {
     Controladora_logica controladora_logica = new Controladora_logica();
+    Logica_Sectores logica_sectores = new Logica_Sectores();
+    Logica_Espacios logica_espacios = new Logica_Espacios();
 
 
     public void crearEspaciosParaSector(int sectorId) throws Exception {
-        TbSectores sector = controladora_logica.ConseguirCasillero(sectorId);
+        TbSectores sector = logica_sectores.ConseguirSector(sectorId);
 
         int cantidadEspaciosEsperada = sector.getCant_espacio();
         Set<TbEspacio> espaciosExistentes = sector.getEspacios();
@@ -26,7 +30,7 @@ public class CasilleroServices {
                 espacio.setEstado_espacio("Libre");
                 espacio.setCantidad_cascos(0);
                 espacio.setNombre("Espacio" + (i + 1));
-                controladora_logica.crearEspacio(espacio);
+                logica_espacios.crearEspacio(espacio);
             }
             System.out.println("Se crearon " + (cantidadEspaciosEsperada - cantidadActual) + " espacios adicionales.");
         } else if (cantidadActual > cantidadEspaciosEsperada) {
@@ -36,7 +40,7 @@ public class CasilleroServices {
             while (iterator.hasNext() && espaciosARemover > 0) {
                 TbEspacio espacio = iterator.next();
                 if( espacio.getEstado_espacio().equals("libre")){
-                    controladora_logica.eliminarEspacio(espacio);
+                    logica_espacios.eliminarEspacio(espacio);
                     iterator.remove();
                     espaciosARemover--;
                 }

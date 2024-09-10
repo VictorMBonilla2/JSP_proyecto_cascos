@@ -1,4 +1,5 @@
 import {sendRequest} from "./ajax.js";
+
 document.addEventListener("DOMContentLoaded",  async () => {
     const editButtons = document.querySelectorAll(".user_button_edit");
     const deleteButtons = document.querySelectorAll(".user_button_delete");

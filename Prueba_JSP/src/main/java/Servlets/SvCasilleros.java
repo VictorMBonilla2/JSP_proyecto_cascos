@@ -1,6 +1,9 @@
 package Servlets;
 
-import Logica.Controladora_logica;
+import Logica.Logica_Espacios;
+import Logica.Logica_Persona;
+import Logica.Logica_Registro;
+import Logica.Logica_Reportes;
 import Modelo.*;
 import Utilidades.JsonReader;
 import jakarta.servlet.RequestDispatcher;
@@ -22,12 +25,15 @@ public class SvCasilleros {
     @WebServlet(name = "SvCasillero", urlPatterns = {"/SvCasillero"})
 
     public static class SvCasillero extends HttpServlet {
-        Controladora_logica controladora_logica = new Controladora_logica();
+        Logica_Espacios logica_espacios = new Logica_Espacios();
+        Logica_Persona logica_persona = new Logica_Persona();
+        Logica_Registro logica_registro = new Logica_Registro();
+        Logica_Reportes logica_reportes = new Logica_Reportes();
 
         protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
 
-            List<TbEspacio> DatosEspacio= controladora_logica.DatosEspacio();
+            List<TbEspacio> DatosEspacio= logica_espacios.DatosEspacio();
             for (TbEspacio espacio : DatosEspacio) {
             System.out.println("Ejecución servlet");
                 TbVehiculo vehiculo = espacio.getVehiculo();
@@ -40,7 +46,7 @@ public class SvCasilleros {
                 }
             }
 
-            Integer CantidadCascos= controladora_logica.ObtenerEspacios(1);
+            Integer CantidadCascos= logica_espacios.EspaciosPorSector(1);
 
             System.out.println("hola");
             request.setAttribute("Espacios", DatosEspacio);
@@ -60,7 +66,7 @@ public class SvCasilleros {
                 Integer idEspacio = jsonObject.getInt("espacio");
                 String formType = jsonObject.getString("formType");
 
-                TbEspacio espacio = controladora_logica.buscarEspacio(idEspacio);
+                TbEspacio espacio = logica_espacios.buscarEspacio(idEspacio);
                 if (espacio == null) {
                     enviarRespuesta(resp, HttpServletResponse.SC_NOT_FOUND, "error", "Espacio no encontrado");
                     return;
@@ -96,7 +102,7 @@ public class SvCasilleros {
                 int idVehiculo = Integer.parseInt(jsonObject.getString("idVehiculo"));
                 String cantcascos = jsonObject.getString("cantcascos");
 
-                Persona persona = controladora_logica.buscarusuario(documento);
+                Persona persona = logica_persona.buscarpersona(documento);
                 if (persona == null || persona.getVehiculos() == null) {
                     enviarRespuesta(resp, HttpServletResponse.SC_NOT_FOUND, "error", "Persona no encontrada o sin vehículos asociados");
                     return;
@@ -147,7 +153,7 @@ public class SvCasilleros {
             Persona colaborador = obtenerColaboradorDesdeSesion(req, resp);
             if (colaborador != null) {
                 nuevoRegistro.setColaborador(colaborador);
-                controladora_logica.CrearRegistro(nuevoRegistro);
+                logica_registro.CrearRegistro(nuevoRegistro);
                 limpiarYActualizarEspacio(resp, espacio);
             }else{
                 System.out.println("No se puede crear el registro");
@@ -176,7 +182,7 @@ public class SvCasilleros {
             System.out.println(colaborador);
             if (colaborador != null) {
                 nuevoReporte.setColaborador(colaborador);
-                controladora_logica.CrearReporte(nuevoReporte);
+                logica_reportes.CrearReporte(nuevoReporte);
                 limpiarYActualizarEspacio(resp, espacio);
             }
         }
@@ -189,7 +195,7 @@ public class SvCasilleros {
                 System.out.println("Documento " + documentosesionactual);
                 Persona colaborador=null;
                 try{
-                    return controladora_logica.obtenerColaborador(documentosesionactual);
+                    return logica_persona.obtenerColaborador(documentosesionactual);
                 } catch (Exception e){
                     System.out.println("Error al obtener colaborador");
                     System.out.println(e);
@@ -215,7 +221,7 @@ public class SvCasilleros {
 
         private void actualizarEspacioYEnviarRespuesta(HttpServletResponse resp, TbEspacio espacio) throws IOException {
             try {
-                boolean updated = controladora_logica.actualizarEspacio(espacio);
+                boolean updated = logica_espacios.actualizarEspacio(espacio);
                 if (updated) {
                     enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", null);
                 } else {

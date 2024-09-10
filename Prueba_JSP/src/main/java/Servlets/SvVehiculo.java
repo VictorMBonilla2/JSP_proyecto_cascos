@@ -1,6 +1,7 @@
 package Servlets;
 
-import Logica.Controladora_logica;
+import Logica.Logica_Persona;
+import Logica.Logica_Vehiculo;
 import Modelo.Persona;
 import Modelo.TbTipovehiculo;
 import Modelo.TbVehiculo;
@@ -20,12 +21,13 @@ import static Utilidades.JsonReader.parsearJson;
 
 @WebServlet(name = "SvVehiculo", urlPatterns = {"/Vehiculo"})
 public class SvVehiculo extends HttpServlet {
-    Controladora_logica controladora_logica = new Controladora_logica();
+    Logica_Vehiculo logica_vehiculo = new Logica_Vehiculo();
+    Logica_Persona logica_persona = new Logica_Persona();
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String documento = request.getParameter("documento");
 
-        List<TbVehiculo> vehiculos = controladora_logica.buscarVehiculoDePersona(documento);
+        List<TbVehiculo> vehiculos = logica_vehiculo.buscarVehiculoDePersona(documento);
 
 
         // Si la lista está vacía, devolvemos un JSON vacío
@@ -100,8 +102,8 @@ public class SvVehiculo extends HttpServlet {
             String color_vehiculo = jsonObject.optString("color_vehiculo");
             String ciudad = jsonObject.optString("ciudad");
 
-            TbTipovehiculo tipovehiculo = controladora_logica.buscarTipoVehiculo(tipo_vehiculo);
-            Persona persona = controladora_logica.buscarusuario(usuario);
+            TbTipovehiculo tipovehiculo = logica_vehiculo.buscarTipoVehiculo(tipo_vehiculo);
+            Persona persona = logica_persona.buscarpersona(usuario);
             TbVehiculo vehiculo = new TbVehiculo();
             vehiculo.setId_vehiculo(id_vehiculo);
             vehiculo.setPlaca_vehiculo(placa);
@@ -113,7 +115,7 @@ public class SvVehiculo extends HttpServlet {
             vehiculo.setCant_casco(cantidad_cascos);
             vehiculo.setPersona(persona);
 
-            boolean updated = controladora_logica.actualizarVehiculo(vehiculo);
+            boolean updated = logica_vehiculo.actualizarVehiculo(vehiculo);
             if (updated) {
                 enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", null);
             } else {
@@ -135,8 +137,8 @@ public class SvVehiculo extends HttpServlet {
             String color_vehiculo = jsonObject.optString("color");
             String ciudad = jsonObject.optString("ciudad");
 
-            TbTipovehiculo tipovehiculo = controladora_logica.buscarTipoVehiculo(tipo_vehiculo);
-            Persona persona = controladora_logica.buscarusuario(usuario);
+            TbTipovehiculo tipovehiculo = logica_vehiculo.buscarTipoVehiculo(tipo_vehiculo);
+            Persona persona = logica_persona.buscarpersona(usuario);
 
             TbVehiculo vehiculo = new TbVehiculo();
             vehiculo.setPlaca_vehiculo(placa);
@@ -148,7 +150,7 @@ public class SvVehiculo extends HttpServlet {
             vehiculo.setCant_casco(cantidad_cascos);
             vehiculo.setPersona(persona);
 
-            boolean created = controladora_logica.crearVehiculo(vehiculo);
+            boolean created = logica_vehiculo.crearVehiculo(vehiculo);
             if (created) {
                 enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", null);
             } else {

@@ -1,7 +1,7 @@
 package Servlets;
 
 
-import Logica.Controladora_logica;
+import Logica.Logica_Reportes;
 import Modelo.Persona;
 import Modelo.TbReportes;
 import Modelo.TbVehiculo;
@@ -19,11 +19,10 @@ import java.util.List;
 
 @WebServlet(name = "SvReportes", urlPatterns = {"/SvReportes"})
 public class SvReportes extends HttpServlet {
-    Controladora_logica controladora_logica = new Controladora_logica();
+    Logica_Reportes logica_reportes = new Logica_Reportes();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<TbReportes> reportes = controladora_logica.ObtenerReportes();
-
+        List<TbReportes> reportes = logica_reportes.ObtenerReportes();
         try {
         // Configurar la respuesta para JSON
         response.setContentType("application/json");
