@@ -1,0 +1,43 @@
+.users_list__container{
+    background-color: var(--blanco);
+    width: 80%;
+    height: 90%;
+    border-radius: var(--borderRadius);
+    overflow: auto;
+}
+
+.user_list__item{
+    width:100%;
+
+}
+
+
+.users_list__data{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 30px;
+    transition: 1s;
+}
+
+.new_user__item{
+    justify-content: center;
+    border: 2px dashed black; /* Borde de 2px de grosor, con estilo de guiones y color negro */
+    padding: 16px; /* Espacio interno para separar el contenido del borde */
+    margin: 10px 0; /* Margen superior e inferior */
+    text-align: center; /* Centra el texto horizontalmente */
+    border-radius: 5px; /* Opcional: redondea las esquinas */ /* Añade espacio para separar el borde del contenido */
+}
+
+
+.user_item{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+.form_persona{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+

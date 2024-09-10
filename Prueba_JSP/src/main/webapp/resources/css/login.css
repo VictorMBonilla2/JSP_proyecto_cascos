@@ -132,6 +132,7 @@ select:focus {
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
+
 }
 .formulario_login__button:hover{
   background-color: var(--hoverbluebutton);

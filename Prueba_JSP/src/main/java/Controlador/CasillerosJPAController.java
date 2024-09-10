@@ -1,6 +1,6 @@
 package Controlador;
 
-import Modelo.TbCasillero;
+import Modelo.TbSectores;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 
@@ -20,7 +20,7 @@ public class CasillerosJPAController implements Serializable {
         return fabricaEntidades.createEntityManager();
     }
 
-    public void create(TbCasillero casillero) {
+    public void create(TbSectores casillero) {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -34,7 +34,7 @@ public class CasillerosJPAController implements Serializable {
         }
     }
 
-    public void edit(TbCasillero casillero) throws Exception {
+    public void edit(TbSectores casillero) throws Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -62,9 +62,9 @@ public class CasillerosJPAController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            TbCasillero casillero;
+            TbSectores casillero;
             try {
-                casillero = em.getReference(TbCasillero.class, id);
+                casillero = em.getReference(TbSectores.class, id);
                 casillero.getId();
             } catch (EntityNotFoundException enfe) {
                 throw new Exception("The casillero with id " + id + " no longer exists.", enfe);
@@ -78,19 +78,19 @@ public class CasillerosJPAController implements Serializable {
         }
     }
 
-    public List<TbCasillero> findTbCasilleroEntities() {
+    public List<TbSectores> findTbCasilleroEntities() {
         return findTbCasilleroEntities(true, -1, -1);
     }
 
-    public List<TbCasillero> findTbCasilleroEntities(int maxResults, int firstResult) {
+    public List<TbSectores> findTbCasilleroEntities(int maxResults, int firstResult) {
         return findTbCasilleroEntities(false, maxResults, firstResult);
     }
 
-    private List<TbCasillero> findTbCasilleroEntities(boolean all, int maxResults, int firstResult) {
+    private List<TbSectores> findTbCasilleroEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(TbCasillero.class));
+            cq.select(cq.from(TbSectores.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -104,10 +104,10 @@ public class CasillerosJPAController implements Serializable {
         }
     }
 
-    public TbCasillero findTbCasillero(int id) {
+    public TbSectores findTbCasillero(int id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(TbCasillero.class, id);
+            return em.find(TbSectores.class, id);
         } finally {
             if (em != null) {
                 em.close();

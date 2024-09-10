@@ -28,7 +28,7 @@
         <%}%>
         <% if (isAdmin) { %>
         <div class="imgContainer">
-            <a href="SvCasillero">
+            <a href="Usuarios.jsp">
                 <img src="resources/imagenes/BxsUser.svg" alt="casilleros">
                 <p>Usuarios</p>
             </a>

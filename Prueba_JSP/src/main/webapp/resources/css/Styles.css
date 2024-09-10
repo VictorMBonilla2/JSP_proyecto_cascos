@@ -8,6 +8,7 @@
 @import url(Profile.css);
 @import url(vehiculo.css);
 @import url(conf_Sistema.css);
+@import url(usuarios.css);
 
 :root{/*Establecemos las variables*/
     --backgroundColorGestor:rgb(85, 7, 231);

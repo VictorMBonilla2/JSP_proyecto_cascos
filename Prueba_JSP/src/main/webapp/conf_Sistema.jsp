@@ -17,7 +17,7 @@
                 <p>Podras modificar los sectores y los espacios de los mismos hQue Gestionaran los Colaboradores.</p>
             </div>
             <div class="info_button">
-                <button class="formulario_login__button info_user_container_side2__button">Editar Sectores</button>
+                <a href="conf_sectores.jsp" class="formulario_login__button info_user_container_side2__button">Editar Sectores</a>
             </div>
         </div>
         <div class="info_box config_box">
@@ -27,7 +27,7 @@
                 <p>Podras gestionar los vehiculos de los aprendices  registrados en el sistema.</p>
             </div>
             <div class="info_button">
-                <button class="formulario_login__button info_user_container_side2__button">Editar Vehiculos</button>
+                <a  href="conf_vehiculos.jsp" class="formulario_login__button info_user_container_side2__button">Editar Vehiculos</a>
             </div>
         </div>
         <div class="info_box config_box">
@@ -37,7 +37,7 @@
                 <p>Podras gestionar los tipos de documentos presentes en el Sistema</p>
             </div>
             <div class="info_button">
-                <button class="formulario_login__button info_user_container_side2__button">Editar Documentos</button>
+                <a href="conf_documentos.jsp" class="formulario_login__button info_user_container_side2__button">Editar Documentos</a>
             </div>
         </div>
         <div class="info_box config_box"v>
@@ -47,7 +47,7 @@
                 <p>Podras gestionar los tipos, marcas y modelos de los vehiculos disponibles en el sistema</p>
             </div>
             <div class="info_button">
-                <button class="formulario_login__button info_user_container_side2__button">Editar Vehiculos</button>
+                <a href="conf_tipoVehiculos.jsp" class="formulario_login__button info_user_container_side2__button">Editar Vehiculos</a>
             </div>
         </div>
         <div class="info_box config_box">
@@ -57,7 +57,7 @@
                 <p>Podras gestionar los roles que se usan en el sistema</p>
             </div>
             <div class="info_button">
-                <button class="formulario_login__button info_user_container_side2__button">Editar Roles</button>
+                <a href="conf_roles.jsp" class="formulario_login__button info_user_container_side2__button">Editar Roles</a>
             </div>
         </div>
     </div>
