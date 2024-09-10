@@ -1,10 +1,9 @@
 package Servlets;
 
-import Modelo.Controladora_logica;
+import Logica.Controladora_logica;
 import Modelo.Persona;
 import Modelo.Roles;
 import Utilidades.JsonReader;
-import com.mysql.cj.xdevapi.JsonParser;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

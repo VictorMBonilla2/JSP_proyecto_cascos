@@ -2,7 +2,7 @@
 <%@ page import="java.util.Set" %>
 <%@ page import="Modelo.Persona" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<jsp:include page="resources/header_aprendiz.jsp" />
+<jsp:include page="resources/header.jsp" />
 <%
     HttpSession sesion = request.getSession();
     Persona user = (Persona) session.getAttribute("user");
@@ -10,8 +10,7 @@
     int index = 0;
 %>
 
-
-<jsp:include page="resources/sidebar_aprendiz.jsp" />
+<jsp:include page="resources/sidebar.jsp" />
             <section class="main_container__vehiculo">
 
                <div class="container__vehiculo">
@@ -49,8 +48,6 @@
                             <button class="formulario_login__button" type="button" id="cancelEdit">Cancelar</button>
                         </div>
                     </div>
-
-
 
                     <div class="vehiculo__list">
                         <h1>Datos del vehiculo</h1>

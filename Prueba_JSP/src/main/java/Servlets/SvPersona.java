@@ -1,6 +1,6 @@
 package Servlets;
 
-import Modelo.Controladora_logica;
+import Logica.Controladora_logica;
 import Modelo.Persona;
 import Modelo.Roles;
 import Utilidades.JsonReader;
@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.hibernate.Hibernate;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -19,7 +18,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static Modelo.Controladora_logica.validarIngreso;
+import static Logica.Controladora_logica.validarIngreso;
 
 @WebServlet(name = "SvPersona", urlPatterns = {"/SvPersona"})
 public class SvPersona extends HttpServlet {

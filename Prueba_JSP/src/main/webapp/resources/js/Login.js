@@ -51,11 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (result.status === "success") {
                 // Redireccionar según el rol del usuario
-                if (rol === "2") {
-                    window.location.href = "Home_aprendiz.jsp";
-                } else {
                     window.location.href = "Home.jsp";
-                }
             } else {
                 errorDiv.style.display = "block";
                 console.log(result)
