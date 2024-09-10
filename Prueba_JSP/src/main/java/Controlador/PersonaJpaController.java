@@ -4,7 +4,10 @@ import DTO.LoginDTO;
 import Modelo.Persona;
 import Modelo.Roles;
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Root;
 import jakarta.servlet.annotation.WebServlet;
 
 import java.io.Serializable;
@@ -100,20 +103,27 @@ public class PersonaJpaController implements Serializable {
         return findPersonaEntities(false,maxResults,firstResult);
     }
 
-    private List<Persona> findPersonaEntities(boolean all, int maxResults, int firstResult){
+    private List<Persona> findPersonaEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Persona.class));
-            Query q = em.createQuery(cq);
-            if(!all){
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
+            // Crear la consulta JPQL con JOIN FETCH para cargar la relación `rol`
+            String jpql = "SELECT p FROM tb_persona p LEFT JOIN FETCH p.rol";
+
+            // Crear la consulta TypedQuery basada en la consulta JPQL y se espera un resultado de tipo Persona
+            TypedQuery<Persona> query = em.createQuery(jpql, Persona.class);
+
+            // Aplicar paginación si no se deben traer todas las entidades
+            if (!all) {
+                query.setMaxResults(maxResults);
+                query.setFirstResult(firstResult);
             }
-            return q.getResultList();
+
+            // Ejecutar la consulta y obtener la lista de resultados
+
+            return query.getResultList();
         } finally {
-            if(em != null && em.isOpen() ){
-                em.close();
+            if (em != null && em.isOpen()) {
+                em.close(); // Cerrar el EntityManager después de completar las operaciones
             }
         }
     }
@@ -155,5 +165,46 @@ public class PersonaJpaController implements Serializable {
 
 
 }
+
+
+//En caso de Cambiar la Gestion de las consultas por "CriteriaQuery", Se guarda en este fragmento un ejemplo funcional de la sintaxis a usar.
+// La funcion devuelve una Lista tipo Persona la cual se le hace un Join Fetch del modelo Rol.
+
+//private List<Persona> findPersonaEntities(boolean all, int maxResults, int firstResult) {
+//    EntityManager em = getEntityManager();
+//    try {
+//        // Crear CriteriaBuilder y CriteriaQuery
+//        CriteriaBuilder cb = em.getCriteriaBuilder();
+//        CriteriaQuery<Persona> cq = cb.createQuery(Persona.class);
+//
+//        // Definir la raíz de la consulta
+//        Root<Persona> root = cq.from(Persona.class);
+//
+//        // Agregar JOIN FETCH para inicializar la relación `rol`
+//        root.fetch("rol", JoinType.LEFT); // Esto cargará la relación `rol` junto con la entidad `Persona`
+//
+//        // Construir la consulta
+//        cq.select(root);
+//
+//        // Crear la consulta
+//        TypedQuery<Persona> query = em.createQuery(cq);
+//
+//        // Aplicar paginación si no se deben traer todas las entidades
+//        if (!all) {
+//            query.setMaxResults(maxResults);
+//            query.setFirstResult(firstResult);
+//        }
+//
+//        // Ejecutar la consulta y obtener la lista de resultados
+//        List<Persona> personas = query.getResultList();
+//
+//
+//        return personas;
+//    } finally {
+//        if (em != null && em.isOpen()) {
+//            em.close(); // Cerrar el EntityManager después de completar las operaciones
+//        }
+//    }
+//}
 
 

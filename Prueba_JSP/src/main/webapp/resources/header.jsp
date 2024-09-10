@@ -7,14 +7,17 @@
         response.sendRedirect("index.jsp");
         return;
     }
-    boolean isGestor = user.getRol().getId()==1;
-    boolean isAprendiz= user.getRol().getId()==2;
-    boolean isAdmin = user.getRol().getId()==3;
+
+    Roles roles= user.getRol();
+    boolean isGestor = roles.getId()==1;
+    boolean isAprendiz= roles.getId()==2;
+    boolean isAdmin = roles.getId()==3;
 
 %>
 <html>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="Modelo.Persona" %>
+<%@ page import="Modelo.Roles" %>
 <head>
     <meta charset="UTF-8">
     <title>Inicio</title>
@@ -67,7 +70,7 @@
                 <img src="" class="user_class">
                 <span class="close-button" modal-id="modal">&times;</span>
                 <h3><%= user.getNombre()%> </h3>
-                <p><%= user.getRol()%></p>
+                <p><%= roles.getNombre()%></p>
                 <hr class="linea">
             </div>
 

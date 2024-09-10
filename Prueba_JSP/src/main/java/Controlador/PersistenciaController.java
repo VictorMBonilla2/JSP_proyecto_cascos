@@ -8,7 +8,7 @@ import java.util.List;
 public class PersistenciaController {
 //Aca se Instancian de todos los controladores Jpa, y se retorna las consultas deseadas
     PersonaJpaController persoJpa = new PersonaJpaController();
-    CasillerosJPAController casillerosJPA = new CasillerosJPAController();
+    CasillerosJPAController sectoresJPA = new CasillerosJPAController();
     EspacioJPAController espacioJPA = new EspacioJPAController();
     CascosJPAController cascosJPA = new CascosJPAController();
     VehiculoJPAController vehiculoJPA = new VehiculoJPAController();
@@ -28,8 +28,8 @@ public class PersistenciaController {
     public List<LoginDTO> login(int documento){
         return  persoJpa.login(documento);
     }
-    public List<TbCasillero>  ObtEspacios() {
-        return casillerosJPA.findTbCasilleroEntities();
+    public List<TbSectores> ObtenerSectores() {
+        return sectoresJPA.findTbCasilleroEntities();
     }
     public List<TbEspacio> DatosEspacios(){
         return espacioJPA.findTbEspacioEntities();
@@ -75,8 +75,8 @@ public class PersistenciaController {
         registroJPA.create(nuevoRegistro);
     }
 
-    public TbCasillero TraerCasillero(int casilleroId) {
-        return casillerosJPA.findTbCasillero(casilleroId);
+    public TbSectores TraerCasillero(int casilleroId) {
+        return sectoresJPA.findTbCasillero(casilleroId);
     }
 
     public void CrearEspacio(TbEspacio espacio) {
@@ -123,7 +123,33 @@ public class PersistenciaController {
     }
 
 
-    public Roles ObtenerLogin(int rol) {
+    public Roles ObtenerRol(int rol) {
         return rolesJPA.findRol(rol);
+    }
+
+    public List<Persona> TraerPersonasPorPagina(int data_inicio, int data_fin) {
+
+        return  persoJpa.findPersonaEntities(data_fin,data_inicio);
+    }
+
+    public List<Persona> ObtenerPersonas() {
+        return persoJpa.findPersonaEntities();
+    }
+
+    public void eliminarUsuario(int documneto) throws Exception {
+
+        persoJpa.destroy(documneto);
+    }
+
+    public void CrearSector(TbSectores sector)  throws  Exception{
+        sectoresJPA.create(sector);
+    }
+
+    public void eliminarEspacio(Integer espacio) throws Exception {
+        espacioJPA.destroy(espacio);
+    }
+
+    public void ActualizarSector(TbSectores sector) throws Exception {
+        sectoresJPA.edit(sector);
     }
 }

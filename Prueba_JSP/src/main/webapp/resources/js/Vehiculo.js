@@ -105,7 +105,7 @@ async function ObtenerVehiculos(DocumentoAprendiz){
     const response = await fetch(`/Prueba_JSP_war_exploded/Vehiculo?documento=${DocumentoAprendiz}`);
     if (response.status === 204) {
         console.log('No se encontraron vehículos.');
-        return []; // o alguna otra acción
+        return [];
     }
     const data = await response.json();
     if (data.length === 0) {

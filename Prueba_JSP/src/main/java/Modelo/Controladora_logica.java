@@ -57,10 +57,10 @@ public class Controladora_logica {
 
     //Solicitud de espacios de un Casillero especifico.
     public Integer ObtenerEspacios(int id) {
-        List<TbCasillero> casilleros= controladora.ObtEspacios();
+        List<TbSectores> casilleros= controladora.ObtenerSectores();
         int espacios = 0;
 
-        for (TbCasillero c : casilleros) {
+        for (TbSectores c : casilleros) {
             if (c.getId().equals(id)) { // Verificar si el ID del casillero coincide con el ID específico
                 espacios = c.getCant_espacio(); // Obtener la cantidad de espacios del casillero
                 break; // Salir del bucle una vez que se encuentre el casillero con el ID específico
@@ -176,7 +176,7 @@ public class Controladora_logica {
         controladora.CrearRegistro(nuevoRegistro);
     }
 
-    public TbCasillero ConseguirCasillero(int casilleroId) {
+    public TbSectores ConseguirCasillero(int casilleroId) {
 
         return controladora.TraerCasillero(casilleroId);
 
@@ -345,12 +345,68 @@ public class Controladora_logica {
     public Roles ObtenerRol(int rol) {
         Roles roles = null;
         try{
-            roles = controladora.ObtenerLogin(rol);
+            roles = controladora.ObtenerRol(rol);
         } catch (Exception e){
             System.err.println("Error al obtener rol " + e.getMessage());
             e.printStackTrace();
             return roles;
         }
         return roles;
+    }
+
+
+    public List<Persona> ObtenerUsuariosPorPagina(int numeroPagina) {
+        int tamanioPagina = 10; // Tamaño de página fijo, ajusta según tus necesidades
+        int data_inicio = (numeroPagina - 1) * tamanioPagina; // Índice inicial basado en la página solicitada
+        int data_fin = tamanioPagina; // Número de resultados por página
+
+        return controladora.TraerPersonasPorPagina(data_inicio, data_fin);
+    }
+
+    public List<Persona> ObtenerUsuarios() {
+        List<Persona>  personas= controladora.TraerPersonas();
+
+        for (Persona persona : personas){
+            int idrol= persona.getRol().getId();
+
+            Roles rolobjeto = controladora.ObtenerRol(idrol);
+
+            persona.setRol(rolobjeto);
+        }
+        return  personas;
+    }
+
+    public void borrarUsuario(int documneto) throws Exception {
+        controladora.eliminarUsuario(documneto);
+
+    }
+
+    public List<TbSectores> ObtenerSectores() {
+        return controladora.ObtenerSectores();
+    }
+
+    public boolean crearSector(TbSectores sector) {
+        try{
+            controladora.CrearSector(sector);
+            return true;
+        } catch (Exception e){
+            System.out.println("Error al Crear el secotr= "+ e);
+            return false;
+        }
+    }
+
+    public void eliminarEspacio(TbEspacio espacio) throws Exception {
+
+        controladora.eliminarEspacio(espacio.getId_espacio());
+    }
+
+    public boolean actualizarSector(TbSectores sector) {
+        try{
+            controladora.ActualizarSector(sector);
+            return true;
+        } catch (Exception e){
+            System.out.println("Error al Crear el secotr= "+ e);
+            return false;
+        }
     }
 }

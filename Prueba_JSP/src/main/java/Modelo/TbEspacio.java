@@ -31,14 +31,14 @@ public class TbEspacio {
     // Foránea de la clase Casillero
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_casillero_fk", nullable = false)
-    private TbCasillero casillero;
+    private TbSectores casillero;
 
 
 
     public TbEspacio() {
     }
 
-    public TbEspacio(Integer id_espacio, String nombre, TbVehiculo vehiculo, Persona persona, Date hora_entrada, Date hora_salida, Integer cantidad_cascos, String estado_espacio, TbCasillero casillero) {
+    public TbEspacio(Integer id_espacio, String nombre, TbVehiculo vehiculo, Persona persona, Date hora_entrada, Date hora_salida, Integer cantidad_cascos, String estado_espacio, TbSectores casillero) {
         this.id_espacio = id_espacio;
         this.nombre = nombre;
         this.vehiculo = vehiculo;
@@ -114,11 +114,11 @@ public class TbEspacio {
         this.estado_espacio = estado_espacio;
     }
 
-    public TbCasillero getCasillero() {
+    public TbSectores getCasillero() {
         return casillero;
     }
 
-    public void setCasillero(TbCasillero casillero) {
+    public void setCasillero(TbSectores casillero) {
         this.casillero = casillero;
     }
 }

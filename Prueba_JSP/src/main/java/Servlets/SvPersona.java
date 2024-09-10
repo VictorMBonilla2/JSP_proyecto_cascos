@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.hibernate.Hibernate;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -121,16 +122,19 @@ public class SvPersona extends HttpServlet {
         boolean validacion = validarIngreso(documento, tipoDocumento, password, rol);
         if (validacion) {
             try {
+                // Buscar el usuario desde la lógica de negocio
                 Persona user = controladora_logica.buscarusuario(documento);
 
+
+                // Configurar la sesión con los atributos necesarios
                 session = req.getSession(true);
                 session.setAttribute("documento", documento);
                 session.setAttribute("user", user);
+
                 sendSuccessResponse(resp, "Login successful");
-            }catch (Exception e){
+            } catch (Exception e) {
                 sendErrorResponse(resp, "Error interno del servidor: " + e.getMessage());
             }
-
         } else {
             sendErrorResponse(resp, "Invalid credentials");
         }
