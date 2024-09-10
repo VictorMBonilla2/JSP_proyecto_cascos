@@ -1,8 +1,7 @@
 package Servlets;
 
-import Logica.Controladora_logica;
+import Logica.Logica_Sectores;
 import Modelo.TbSectores;
-import Utilidades.CasilleroServices;
 import Utilidades.JsonReader;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -14,12 +13,11 @@ import java.io.IOException;
 import java.util.List;
 
 public class SvSectores extends HttpServlet {
-    Controladora_logica controladora_logica = new Controladora_logica();
-    CasilleroServices casilleroServices = new CasilleroServices();
+    Logica_Sectores logica_sectores = new Logica_Sectores();
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        List<TbSectores> Sectores= controladora_logica.ObtenerSectores();
+        List<TbSectores> Sectores= logica_sectores.ObtenerSectores();
 
     }
 
@@ -53,16 +51,8 @@ public class SvSectores extends HttpServlet {
 
         sector.setCant_espacio(jsonObject.getInt("cantidad_espacios"));
 
-        boolean result = controladora_logica.crearSector(sector);
-        if (result){
-            int idSector= sector.getId();
-            try{
-                casilleroServices.crearEspaciosParaSector(idSector);
-            } catch (Exception e){
+        boolean result = logica_sectores.crearSector(sector);
 
-            }
-
-        }
     }
 
     private void editSector(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) {
@@ -70,16 +60,8 @@ public class SvSectores extends HttpServlet {
         sector.setId(jsonObject.getInt("id_sector"));
         sector.setCant_espacio(jsonObject.getInt("cantidad_espacios"));
 
-        boolean result = controladora_logica.actualizarSector(sector);
-        if (result){
-            int idSector= sector.getId();
-            try{
-                casilleroServices.crearEspaciosParaSector(idSector);
-            } catch (Exception e){
+        boolean result = logica_sectores.actualizarSector(sector);
 
-            }
-
-        }
 
     }
     private void deleteSector(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) {

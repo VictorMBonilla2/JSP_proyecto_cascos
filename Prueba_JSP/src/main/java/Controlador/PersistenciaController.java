@@ -25,6 +25,7 @@ public class PersistenciaController {
     public List<Persona> TraerPersonas() {
         return persoJpa.findPersonaEntities();
     }
+
     public List<LoginDTO> login(int documento){
         return  persoJpa.login(documento);
     }
@@ -141,15 +142,27 @@ public class PersistenciaController {
         persoJpa.destroy(documneto);
     }
 
-    public void CrearSector(TbSectores sector)  throws  Exception{
-        sectoresJPA.create(sector);
+    public boolean CrearSector(TbSectores sector)  throws  Exception{
+        try {
+            sectoresJPA.create(sector);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
     public void eliminarEspacio(Integer espacio) throws Exception {
         espacioJPA.destroy(espacio);
     }
 
-    public void ActualizarSector(TbSectores sector) throws Exception {
-        sectoresJPA.edit(sector);
+    public boolean ActualizarSector(TbSectores sector) throws Exception {
+        try {
+            sectoresJPA.edit(sector);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 }

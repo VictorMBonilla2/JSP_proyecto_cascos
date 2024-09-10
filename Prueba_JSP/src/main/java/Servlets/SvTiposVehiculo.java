@@ -1,7 +1,7 @@
 package Servlets;
 
 
-import Logica.Controladora_logica;
+import Logica.Logica_Vehiculo;
 import Modelo.TbTipovehiculo;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,10 +17,9 @@ import java.util.List;
 
 @WebServlet(name = "SvTiposVehiculo", urlPatterns = {"/listaTiposVehiculos"})
 public class SvTiposVehiculo extends HttpServlet {
-    Controladora_logica controladora_logica = new Controladora_logica();
+    Logica_Vehiculo logica_vehiculo = new Logica_Vehiculo();
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<TbTipovehiculo> tiposVehiculo = controladora_logica.ObtenerTiposVehiculo();
-
+        List<TbTipovehiculo> tiposVehiculo = logica_vehiculo.ObtenerTiposVehiculo();
         try{
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");

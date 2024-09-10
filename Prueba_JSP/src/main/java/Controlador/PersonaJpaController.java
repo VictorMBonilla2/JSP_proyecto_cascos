@@ -4,10 +4,6 @@ import DTO.LoginDTO;
 import Modelo.Persona;
 import Modelo.Roles;
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Root;
 import jakarta.servlet.annotation.WebServlet;
 
 import java.io.Serializable;

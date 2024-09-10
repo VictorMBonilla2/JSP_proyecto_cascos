@@ -1,7 +1,7 @@
 package Servlets;
 
 import DTO.VehiculoDTO;
-import Logica.Controladora_logica;
+import Logica.Logica_Vehiculo;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,12 +15,12 @@ import java.util.List;
 
 @WebServlet(name = "SvListaVehiculos", urlPatterns = {"/listaVehiculos"})
 public class SvListaVehiculos extends HttpServlet {
-    Controladora_logica controladora_logica = new Controladora_logica();
+    Logica_Vehiculo logica_vehiculo = new Logica_Vehiculo();
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         String documento = request.getParameter("documento");
         System.out.println("El documento a consultar es: " + documento);
 
-        List<VehiculoDTO> listaVehiculos = controladora_logica.obtenerVehiculosDePersona(documento);
+        List<VehiculoDTO> listaVehiculos = logica_vehiculo.obtenerVehiculosDePersona(documento);
 
         // Si la lista está vacía, devolvemos un JSON vacío
         if (listaVehiculos == null || listaVehiculos.isEmpty()) {

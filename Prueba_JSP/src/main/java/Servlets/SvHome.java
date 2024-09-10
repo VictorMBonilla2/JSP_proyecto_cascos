@@ -1,6 +1,6 @@
 package Servlets;
 
-import Logica.Controladora_logica;
+import Logica.Logica_Registro;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,10 +14,10 @@ import java.util.Map;
 
 @WebServlet(name = "SvHome", urlPatterns = {"/SvHome"})
 public class SvHome extends HttpServlet {
-
+    Logica_Registro logica = new Logica_Registro();
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Controladora_logica controladora = new Controladora_logica();
-        Map<String, Integer> registrosPorSemana = controladora.obtenerRegistrosPorSemana();
+
+        Map<String, Integer> registrosPorSemana = logica.obtenerRegistrosPorSemana();
 
         // Crear el objeto JSON
         JSONObject jsonResponse = new JSONObject();
