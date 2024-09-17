@@ -5,6 +5,7 @@ import Logica.Logica_Persona;
 import Logica.Logica_Registro;
 import Logica.Logica_Reportes;
 import Modelo.*;
+import Utilidades.EspacioServiceManager;
 import Utilidades.JsonReader;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -25,7 +26,7 @@ public class SvCasilleros {
     @WebServlet(name = "SvCasillero", urlPatterns = {"/SvCasillero"})
 
     public static class SvCasillero extends HttpServlet {
-        Logica_Espacios logica_espacios = new Logica_Espacios();
+        Logica_Espacios logica_espacios = EspacioServiceManager.getInstance().getLogicaEspacios();
         Logica_Persona logica_persona = new Logica_Persona();
         Logica_Registro logica_registro = new Logica_Registro();
         Logica_Reportes logica_reportes = new Logica_Reportes();

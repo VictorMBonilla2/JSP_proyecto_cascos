@@ -9,13 +9,13 @@ document.addEventListener("DOMContentLoaded",  async () => {
     const itemTemplate = document.querySelector("#item__list").content;
 
     let personas= await ObtenerUsuarios("1");
-
+    console.log(personas)
     if(personas.length>0){
         personas.forEach((persona, index) =>{
             const clone = document.importNode(itemTemplate, true);
 
             // Modificar el contenido del clon
-            clone.querySelector(".user_list__item").setAttribute('data-user', index);
+            clone.querySelector(".user_list__item").setAttribute('data-user', persona.documento);
 
             clone.querySelector(".user_item_document > p").textContent = persona.documento;
 
@@ -23,9 +23,9 @@ document.addEventListener("DOMContentLoaded",  async () => {
 
             clone.querySelector(".user_item_rol > p").textContent = persona.rol.nombre;
 
-            clone.querySelector(".user_button_edit").setAttribute('data-edit', index);
+            clone.querySelector(".user_button_edit").setAttribute('data-edit', persona.documento);
 
-            clone.querySelector(".user_button_delete").setAttribute('data-delete', index);
+            clone.querySelector(".user_button_delete").setAttribute('data-delete', persona.documento);
 
             // Insertar el clon modificado en la lista
             lista.appendChild(clone);
@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded",  async () => {
     }else{
         console.log("no hay personas")
     }
-
 
 
     editButtons.forEach(button => {
@@ -78,8 +77,25 @@ document.addEventListener("DOMContentLoaded",  async () => {
             let data_edit = e.target.getAttribute("data-edit");
             const user_item = document.querySelector(`[data-user="${data_edit}"]`);
             console.log(user_item);
-            user_item.style.height = "66%";
-            const dato_usuario= personas[data_edit]
+
+            //Retirar los form_Active actuales
+            const formActive = document.querySelector('.user_list__item.form_active .user_list__form');
+
+            // Verifica que el formulario exista antes de continuar
+            if (formActive) {
+                formActive.remove()
+            }
+            document.querySelectorAll('.user_list__item.form_active').forEach(form => {
+                form.classList.remove('form_active');
+            });
+            // Añadir la clase "form_active" solo al formulario correspondiente
+            user_item.classList.add("form_active");
+
+            console.log("Data-edit es: ", data_edit);
+            console.log("Data-edit es: ",data_edit)
+            const dato_usuario = personas.find(persona => persona.documento === parseInt(data_edit) );
+
+            console.log("Los datos del usuario es=",dato_usuario)
             const clone = document.importNode(formTemplate, true);
 
             const formulario = clone.querySelector(".formulario");
@@ -89,13 +105,10 @@ document.addEventListener("DOMContentLoaded",  async () => {
                     event.preventDefault();
                     editUser(event, dato_usuario.documento);
                 });
-                formulario.setAttribute("data_user",dato_usuario.documento)
+                formulario.setAttribute("data-user",dato_usuario.documento)
             }
 
-
             clone.querySelector("#Nombre").value = dato_usuario.nombre;
-            console.log( clone.querySelector(".Nombre"));
-
             clone.querySelector("#Apellido").value = dato_usuario.apellido;
 
             clone.querySelector("#Correo").value = dato_usuario.correo;
@@ -141,9 +154,9 @@ async function ObtenerUsuarios(Pagina_Actual){
 }
 
 async function editUser(evento, documento_user){
-
-    const Form = document.querySelector(`[data-user="${documento_user}"]`)
-
+    console.log(documento_user)
+    const Form = document.querySelector(`form[data-user="${documento_user}"]`)
+    console.log(Form)
 
     const nombre= Form.querySelector("#Nombre").value
     const apellido= Form.querySelector("#Apellido").value
