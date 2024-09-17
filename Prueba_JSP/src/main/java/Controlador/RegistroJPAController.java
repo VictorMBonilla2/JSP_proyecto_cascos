@@ -1,18 +1,22 @@
 package Controlador;
 
 import Modelo.TbRegistro;
-import jakarta.persistence.*;
+import Utilidades.JPAUtils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaQuery;
 
 import java.util.List;
 
 public class RegistroJPAController {
 
-    public RegistroJPAController() {
-        fabricaEntidades = Persistence.createEntityManagerFactory("default");
-    }
+    private EntityManagerFactory fabricaEntidades;
 
-    private EntityManagerFactory fabricaEntidades= null;
+    public RegistroJPAController() {
+        this.fabricaEntidades = JPAUtils.getEntityManagerFactory();
+    }
 
     public EntityManager getEntityManager() {
         return fabricaEntidades.createEntityManager();

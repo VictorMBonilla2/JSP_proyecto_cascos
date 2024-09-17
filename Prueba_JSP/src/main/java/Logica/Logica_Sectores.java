@@ -19,7 +19,8 @@ public class Logica_Sectores {
             boolean result =  controladora.CrearSector(sector);
             if (result){
                 int idSector= sector.getId();
-                casilleroServices.crearEspaciosParaSector(idSector);
+                TbSectores sectors = ConseguirSector(idSector);
+                casilleroServices.crearEspaciosParaSector(sectors);
             }
             return true;
         } catch (Exception e){
@@ -27,8 +28,6 @@ public class Logica_Sectores {
             return false;
         }
     }
-
-
 
 
     public TbSectores ConseguirSector(int sectorId) {
@@ -42,7 +41,8 @@ public class Logica_Sectores {
             boolean result= controladora.ActualizarSector(sector);
             if (result){
                 int idSector= sector.getId();
-                casilleroServices.crearEspaciosParaSector(idSector);
+                TbSectores sectors = ConseguirSector(idSector);
+                casilleroServices.crearEspaciosParaSector(sectors);
             }
             return true;
 

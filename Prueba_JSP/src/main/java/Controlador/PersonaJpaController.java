@@ -3,6 +3,7 @@ package Controlador;
 import DTO.LoginDTO;
 import Modelo.Persona;
 import Modelo.Roles;
+import Utilidades.JPAUtils;
 import jakarta.persistence.*;
 import jakarta.servlet.annotation.WebServlet;
 
@@ -14,12 +15,11 @@ import java.util.List;
 @WebServlet("/PersonaJpaController")//Se le da nombre al controlador de persistencia de la clase.
 public class PersonaJpaController implements Serializable {
 
+    private EntityManagerFactory fabricaEntidades;
+
     public PersonaJpaController() {
-        fabricaEntidades = Persistence.createEntityManagerFactory("default");
-        //Se crea un manager de entidad, haciendo referencia a la persistencia del proyecto.
+        this.fabricaEntidades = JPAUtils.getEntityManagerFactory();
     }
-    //Se instacia la variable con valor null
-    private EntityManagerFactory fabricaEntidades = null;
 
     public EntityManager getEntityManager() {
         return fabricaEntidades.createEntityManager();

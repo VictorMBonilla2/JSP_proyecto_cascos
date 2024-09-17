@@ -2,22 +2,27 @@ package Controlador;
 
 
 import Modelo.TbReportes;
-import jakarta.persistence.*;
+import Utilidades.JPAUtils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaQuery;
 
 import java.util.List;
 
 public class ReportesJPAController {
 
-    public ReportesJPAController() {
-        fabricaEntidades = Persistence.createEntityManagerFactory("default");
-    }
+    private EntityManagerFactory fabricaEntidades;
 
-    private EntityManagerFactory fabricaEntidades= null;
+    public ReportesJPAController() {
+        this.fabricaEntidades = JPAUtils.getEntityManagerFactory();
+    }
 
     public EntityManager getEntityManager() {
         return fabricaEntidades.createEntityManager();
     }
+
 
     public void create(TbReportes reporte) {
         EntityManager em = null;

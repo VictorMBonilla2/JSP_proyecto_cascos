@@ -1,6 +1,7 @@
 package Controlador;
 
 import Modelo.TbVehiculo;
+import Utilidades.JPAUtils;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 
@@ -9,10 +10,11 @@ import java.util.List;
 
 public class CascosJPAController implements Serializable {
 
+    private EntityManagerFactory fabricaEntidades;
+
     public CascosJPAController() {
-        fabricaEntidades = Persistence.createEntityManagerFactory("default");
+        this.fabricaEntidades = JPAUtils.getEntityManagerFactory();
     }
-    private EntityManagerFactory fabricaEntidades= null;
 
     public EntityManager getEntityManager() {
         return fabricaEntidades.createEntityManager();

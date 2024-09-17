@@ -1,7 +1,11 @@
 package Controlador;
 
 import Modelo.TbSectores;
-import jakarta.persistence.*;
+import Utilidades.JPAUtils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaQuery;
 
 import java.io.Serializable;
@@ -10,11 +14,11 @@ import java.util.List;
 public class CasillerosJPAController implements Serializable {
 
 
+    private EntityManagerFactory fabricaEntidades;
 
     public CasillerosJPAController() {
-        fabricaEntidades = Persistence.createEntityManagerFactory("default");
+        this.fabricaEntidades = JPAUtils.getEntityManagerFactory();
     }
-    private EntityManagerFactory fabricaEntidades= null;
 
     public EntityManager getEntityManager() {
         return fabricaEntidades.createEntityManager();

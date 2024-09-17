@@ -10,13 +10,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class CasilleroServices {
-    Controladora_logica controladora_logica = new Controladora_logica();
-    Logica_Sectores logica_sectores = new Logica_Sectores();
     Logica_Espacios logica_espacios = new Logica_Espacios();
 
-
-    public void crearEspaciosParaSector(int sectorId) throws Exception {
-        TbSectores sector = logica_sectores.ConseguirSector(sectorId);
+    public void crearEspaciosParaSector(TbSectores sector) throws Exception {
 
         int cantidadEspaciosEsperada = sector.getCant_espacio();
         Set<TbEspacio> espaciosExistentes = sector.getEspacios();
