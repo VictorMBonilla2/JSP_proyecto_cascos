@@ -1,6 +1,7 @@
 package Controlador;
 
 import Modelo.TbVehiculo;
+import Utilidades.JPAUtils;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 
@@ -10,11 +11,11 @@ import java.util.List;
 public class VehiculoJPAController implements Serializable {
 
 
-    public VehiculoJPAController() {
-        fabricaEntidades = Persistence.createEntityManagerFactory("default");
-    }
+    private EntityManagerFactory fabricaEntidades;
 
-    private EntityManagerFactory fabricaEntidades= null;
+    public VehiculoJPAController() {
+        this.fabricaEntidades = JPAUtils.getEntityManagerFactory();
+    }
 
     public EntityManager getEntityManager() {
         return fabricaEntidades.createEntityManager();

@@ -3,6 +3,7 @@ package Controlador;
 
 
 import Modelo.TbTipovehiculo;
+import Utilidades.JPAUtils;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,10 +13,12 @@ import java.util.List;
 
 @WebServlet
 public class TiposVehiculosJPAController  implements Serializable {
-    private EntityManagerFactory fabricaEntidades = null;
-    public TiposVehiculosJPAController(){
-        fabricaEntidades = Persistence.createEntityManagerFactory("default");
+    private EntityManagerFactory fabricaEntidades;
+
+    public TiposVehiculosJPAController() {
+        this.fabricaEntidades = JPAUtils.getEntityManagerFactory();
     }
+
     public EntityManager getEntityManager() {
         return fabricaEntidades.createEntityManager();
     }

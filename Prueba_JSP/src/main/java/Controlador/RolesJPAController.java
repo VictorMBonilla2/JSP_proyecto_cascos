@@ -1,7 +1,11 @@
 package Controlador;
 
 import Modelo.Roles;
-import jakarta.persistence.*;
+import Utilidades.JPAUtils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaQuery;
 
 import java.io.Serializable;
@@ -9,12 +13,11 @@ import java.util.List;
 
 public class RolesJPAController implements Serializable {
 
-    private EntityManagerFactory fabricaEntidades = null;
+    private EntityManagerFactory fabricaEntidades;
 
     public RolesJPAController() {
-        fabricaEntidades = Persistence.createEntityManagerFactory("default");
+        this.fabricaEntidades = JPAUtils.getEntityManagerFactory();
     }
-
 
     public EntityManager getEntityManager() {
         return fabricaEntidades.createEntityManager();
