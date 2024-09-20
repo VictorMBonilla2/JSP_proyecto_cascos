@@ -1,8 +1,9 @@
 <%@ page import="Modelo.Persona" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:include page="resources/header.jsp" />
 
-<jsp:include page="resources/sidebar.jsp" />
+
+<jsp:include page="resources/header.jsp"/>
+<jsp:include page="resources/sidebar.jsp"/>
 
 <%
     HttpSession sesion = request.getSession();
@@ -134,6 +135,6 @@
 
     </div>
 </template>
-
+<jsp:include page="resources/footer.jsp" />
 </body>
 </html>

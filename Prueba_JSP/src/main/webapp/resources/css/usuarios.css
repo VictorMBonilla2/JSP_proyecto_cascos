@@ -1,19 +1,25 @@
 .users_list__container{
     background-color: var(--blanco);
     width: 80%;
-    height: 90%;
+    height: 60%;
+    max-height: 70vh;
     border-radius: var(--borderRadius);
     overflow: auto;
 }
 
+
+
 .user_list__item{
     width:100%;
-
+    height: 10%;
+    transition: 2s;
 }
 .form_active{
-    width: 66%;
+    height: 80%;
 }
-
+.button_miranose{
+    width: 60%;
+}
 
 .users_list__data{
     width: 100%;
@@ -21,7 +27,7 @@
     display: flex;
     justify-content: space-between;
     padding: 10px 30px;
-    transition: 1s;
+
 }
 
 .new_user__item{
@@ -38,6 +44,7 @@
     display: flex;
     align-items: center;
     gap: 30px;
+    width: 18%;
 }
 .form_persona{
     display: grid;

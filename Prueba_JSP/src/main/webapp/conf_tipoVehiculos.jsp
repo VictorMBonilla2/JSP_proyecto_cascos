@@ -23,8 +23,8 @@
                 <form class="formulario">
                     <div class="formulario__inputs_config">
                         <div class="input_form">
-                            <label for="uten_selector"> Selecciona el Tipo:</label>
-                            <select id="uten_selector"></select>
+                            <label for="item_selector"> Selecciona el Tipo:</label>
+                            <select id="item_selector"></select>
                         </div>
                         <div class="input_form">
                             <label id="spac_input">Nombre del Tipo:</label>
@@ -44,7 +44,7 @@
         <div class="conf_sectores__sideTwo modific_item__container">
             <div class="title__side">
                 <div class="title__container">
-                    <h2>Crear Nuevo Sector</h2>
+                    <h2>Crear Nuevo Tipo de Documento</h2>
                 </div>
 
             </div>

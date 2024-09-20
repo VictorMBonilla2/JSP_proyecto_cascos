@@ -36,14 +36,14 @@ async function fetchVehiculos(espacioId) {
         // Procesar la lista de vehículos
         let contador = 1; // Inicializar contador fuera del forEach
 
-        data.forEach(vehiculo => {
+    data.forEach(vehiculo => {
             const option = document.createElement('option');
             option.value = vehiculo.id;
             option.textContent = `${contador}. ${vehiculo.marca} - ${vehiculo.placa}`;
             option.dataset.cantidadCascos = vehiculo.cantidad_cascos; // Guardar cantidad de cascos como un atributo de datos
             selectVehiculo.appendChild(option);
             contador++;
-        });
+    });
 
         // Escuchar cambios en la selección del vehículo
         selectVehiculo.addEventListener('change', function() {
