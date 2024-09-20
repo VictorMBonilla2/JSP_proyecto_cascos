@@ -58,7 +58,20 @@ document.addEventListener("DOMContentLoaded",  async () => {
         if(e.target.matches(".new_user__item")){
             const user_item= e.target;
             const clone = document.importNode(formNewTemplate, true);
-            user_item.style.height = "66%";
+
+            //Retirar los form_Active actuales
+            const formActive = document.querySelector('.user_list__item.form_active .user_list__form');
+
+            // Verifica que el formulario exista antes de continuar
+            if (formActive) {
+                formActive.remove()
+            }
+
+            document.querySelectorAll('.user_list__item.form_active').forEach(form => {
+                form.classList.remove('form_active');
+            });
+            user_item.classList.add("form_active");
+
             const formulario = clone.querySelector(".formulario");
             if (formulario) {
                 // Añade el evento submit mediante addEventListener
@@ -77,7 +90,6 @@ document.addEventListener("DOMContentLoaded",  async () => {
             let data_edit = e.target.getAttribute("data-edit");
             const user_item = document.querySelector(`[data-user="${data_edit}"]`);
             console.log(user_item);
-
             //Retirar los form_Active actuales
             const formActive = document.querySelector('.user_list__item.form_active .user_list__form');
 
@@ -87,15 +99,10 @@ document.addEventListener("DOMContentLoaded",  async () => {
             }
             document.querySelectorAll('.user_list__item.form_active').forEach(form => {
                 form.classList.remove('form_active');
+
             });
-            // Añadir la clase "form_active" solo al formulario correspondiente
             user_item.classList.add("form_active");
-
-            console.log("Data-edit es: ", data_edit);
-            console.log("Data-edit es: ",data_edit)
             const dato_usuario = personas.find(persona => persona.documento === parseInt(data_edit) );
-
-            console.log("Los datos del usuario es=",dato_usuario)
             const clone = document.importNode(formTemplate, true);
 
             const formulario = clone.querySelector(".formulario");
@@ -110,15 +117,16 @@ document.addEventListener("DOMContentLoaded",  async () => {
 
             clone.querySelector("#Nombre").value = dato_usuario.nombre;
             clone.querySelector("#Apellido").value = dato_usuario.apellido;
-
             clone.querySelector("#Correo").value = dato_usuario.correo;
             clone.querySelector("#Tipo_documento").value = dato_usuario.tipo_documento;
             clone.querySelector("#numero_documento").value = dato_usuario.numero_documento;
             clone.querySelector("#Fecha_nacimiento").value = dato_usuario.fecha_nacimineto;
             clone.querySelector("#Rol").value = dato_usuario.rol.idRol;
 
+            setTimeout(()=>{
+                user_item.appendChild(clone);
+            } ,2100)
 
-            user_item.appendChild(clone);
         }
         if (e.target.matches("#delete_button")){
 

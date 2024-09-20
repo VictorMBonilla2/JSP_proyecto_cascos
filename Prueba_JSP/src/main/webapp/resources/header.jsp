@@ -35,7 +35,7 @@
 
     <%
     if (isGestor || isAdmin){
-
+    System.out.println("Es un header de Gestor - Admin");
 
 %>
 
@@ -75,7 +75,6 @@
             </div>
 
             <div class="ui-menu">
-
                 <a href="Profile_Colab.jsp" class="ui-menu__option">
                     <img src="resources/imagenes/MaterialSymbolsSettings.svg">
                     <p>Configuración</p>
@@ -84,8 +83,6 @@
                     <img src="resources/imagenes/Logout.svg">
                     <p>Cerrar Sesión </p>
                 </a>
-
-
                 <script src="resources/js/logout.js"></script>
             </div>
         </div>
@@ -96,8 +93,9 @@
     <section class="main_container">
             <%
     } else if (isAprendiz) {
-
+        System.out.println("Es un header de Aprendiz");
 %>
+
         <header class="hea_container">
             <div class="hea_container__logo">
                 <img src="resources/imagenes/Logo.png" alt="" class="logo__img">
@@ -134,7 +132,6 @@
                     </div>
 
                     <div class="ui-menu">
-
                         <a href="#" class="ui-menu__option">
                             <img src="resources/imagenes/MaterialSymbolsSettings.svg">
                             <p>Configuración</p>
@@ -143,8 +140,6 @@
                             <img src="resources/imagenes/Logout.svg">
                             <p>Cerrar Sesión </p>
                         </a>
-
-
                         <script src="resources/js/logout.js"></script>
                     </div>
                 </div>

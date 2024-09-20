@@ -1,6 +1,7 @@
 package Servlets;
 
 import Logica.Logica_Sectores;
+import Modelo.Persona;
 import Modelo.TbSectores;
 import Utilidades.EspacioServiceManager;
 import Utilidades.JsonReader;
@@ -10,6 +11,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -25,9 +27,19 @@ public class SvSectores extends HttpServlet {
         List<TbSectores> sectores = logica_sectores.ObtenerSectores();
         request.setAttribute("sectores", sectores);
 
-        // Redirigir a una vista si es necesario
-        RequestDispatcher dispatcher = request.getRequestDispatcher("Sectores.jsp");
-        dispatcher.forward(request, response);
+
+        JSONArray jsonArray = new JSONArray();
+
+        for (TbSectores sector : sectores){
+            JSONObject jsonObject= new JSONObject();
+            jsonObject.put("id_sector", sector.getId());
+            jsonObject.put("cant_espacio", sector.getCant_espacio());
+            jsonArray.put(jsonObject);
+        }
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(jsonArray.toString());
     }
 
     @Override

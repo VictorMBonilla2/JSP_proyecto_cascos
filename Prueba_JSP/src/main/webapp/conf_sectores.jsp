@@ -20,10 +20,11 @@
             </div>
             <div class="form__side">
                 <form class="formulario">
+                    <input type="hidden" name="formType" value="edit">
                     <div class="formulario__inputs_config">
                         <div class="input_form">
-                            <label for="uten_selector"> Selecciona el sector:</label>
-                            <select id="uten_selector"></select>
+                            <label for="item_selector"> Selecciona el sector:</label>
+                            <select id="item_selector" name="sector_select"></select>
                         </div>
                         <div class="input_form">
                             <label id="spac_input">Espacios del sector:</label>
@@ -49,14 +50,15 @@
             </div>
             <div class="form__side">
                 <form class="formulario">
+                    <input type="hidden" name="formType" value="add">
                     <div class="formulario__inputs ">
                         <div class="input_form">
                             <label for="sector_name"> Nombre del sector:</label>
-                            <input id="sector_name">
+                            <input id="sector_name" name="nombre_sector">
                         </div>
                         <div class="input_form">
                             <label for="space_new_input">Cantidad de Espacios:</label>
-                            <input id="space_new_input">
+                            <input id="space_new_input" name="cantidad_espacio">
                         </div>
                     </div>
                     <div class="contenido__botones">
@@ -72,6 +74,7 @@
 
 </section>
 
+<script type="module" src="resources/js/systemForms/sectoresEspacios.js"></script>
 
 </body>
 </html>
