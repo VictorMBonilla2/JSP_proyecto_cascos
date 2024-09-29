@@ -1,4 +1,4 @@
-import {sendRequest} from "../ajax";
+import {sendRequest} from "../ajax.js";
 
 document.addEventListener("DOMContentLoaded",  async ()=>{
 
@@ -84,7 +84,6 @@ async function eliminarSector (form){
     };
     await sendRequest('SvSectores',data)
 }
-
 
 
 async function obtenerSectores () {

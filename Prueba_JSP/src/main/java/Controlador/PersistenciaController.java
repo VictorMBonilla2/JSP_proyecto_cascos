@@ -15,7 +15,9 @@ public class PersistenciaController {
     RegistroJPAController registroJPA = new RegistroJPAController();
     ReportesJPAController reportesJPA = new ReportesJPAController();
     TiposVehiculosJPAController TpVehiculo = new TiposVehiculosJPAController();
+    TipoDocumentoJPAController TpDocumento = new TipoDocumentoJPAController();
     RolesJPAController rolesJPA = new RolesJPAController();
+
 
 
     //JPA PERSONA
@@ -57,7 +59,7 @@ public class PersistenciaController {
     public List<TbSectores> ObtenerSectores() {
         return sectoresJPA.findTbCasilleroEntities();
     }
-    public TbSectores TraerCasillero(int casilleroId) {
+    public TbSectores TraerSector(int casilleroId) {
         return sectoresJPA.findTbCasillero(casilleroId);
     }
 
@@ -66,7 +68,8 @@ public class PersistenciaController {
             sectoresJPA.create(sector);
             return true;
         } catch (Exception e) {
-            return false;
+            System.err.println("Error al Crear el Sector: " + e.getMessage());
+            throw e; // Propagar la excepción
         }
 
     }
@@ -75,10 +78,22 @@ public class PersistenciaController {
             sectoresJPA.edit(sector);
             return true;
         } catch (Exception e) {
-            return false;
+            System.err.println("Error al Actualizar el Sector: " + e.getMessage());
+            throw e; // Propagar la excepción
         }
 
     }
+
+    public boolean eliminarSector(int idSector) throws Exception {
+        try{
+            sectoresJPA.destroy(idSector);
+            return true;
+        }catch (Exception e) {
+            System.err.println("Error al Actualizar el Sector: " + e.getMessage());
+            throw e; // Propagar la excepción
+        }
+    }
+
 
     //JPA ESPACIOS
     public List<TbEspacio> DatosEspacios(){
@@ -96,7 +111,9 @@ public class PersistenciaController {
         espacioJPA.create(espacio);
     }
 
-
+    public List<TbEspacio> ObtenerEspaciosPorSector(int idSector){
+        return espacioJPA.obtenerEspaciosPorSectorNativo(idSector);
+    }
     //JPA CASCOS
 
     public TbVehiculo obtenerCasco(String placa) {
@@ -153,6 +170,14 @@ public class PersistenciaController {
     }
 
 
+    //JPA TIPO DOCUMENTO
+    public List <TbTipoDocumento> BuscarTiposDocumento(){
+        return TpDocumento.findTbTipoDocumentoEntities();
+    };
+    public TbTipoDocumento BuscarTipoDocumentoPorId(int idDocumento) {
+        return TpDocumento.findTbTipoDocumento(idDocumento);
+    }
+
     //JPA TIPO VEHICULO
     public List<TbTipovehiculo> BuscarTiposVehiculo() {
         return TpVehiculo.findtipovehiculoEntities();
@@ -170,9 +195,10 @@ public class PersistenciaController {
         return rolesJPA.findRol(rol);
     }
 
-    public void eliminarEspacio(Integer espacio) throws Exception {
+    public void eliminarEspacio(int espacio) throws Exception {
         espacioJPA.destroy(espacio);
     }
+
 
 
 }

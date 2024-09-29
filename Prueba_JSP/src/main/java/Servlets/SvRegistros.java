@@ -30,15 +30,15 @@ public class SvRegistros extends HttpServlet {
         for (TbRegistro registro : registros) {
             JSONObject jsonObject = new JSONObject();
             System.out.println(registro.getFecha_registro());
-            System.out.println(registro.getEspacio().getId_espacio());
-            System.out.println(registro.getVehiculo().getPlaca_vehiculo());
-            System.out.println(registro.getAprendiz().getDocumento());
-            System.out.println(registro.getColaborador().getDocumento());
+            System.out.println(registro.getId_espacio());
+            System.out.println(registro.getPlacaVehiculo());
+            System.out.println(registro.getDocumentoAprendiz());
+            System.out.println(registro.getDocumentoGestor());
             jsonObject.put("fecha_reporte", registro.getFecha_registro());
-            jsonObject.put("id_espacio", registro.getEspacio().getId_espacio());
-            jsonObject.put("placa_vehiculo", registro.getVehiculo().getPlaca_vehiculo());
-            jsonObject.put("documento_aprendiz", registro.getAprendiz().getDocumento());
-            jsonObject.put("documento_colaborador", registro.getColaborador().getDocumento());
+            jsonObject.put("id_espacio", registro.getId_espacio());
+            jsonObject.put("placa_vehiculo", registro.getPlacaVehiculo());
+            jsonObject.put("documento_aprendiz", registro.getDocumentoAprendiz());
+            jsonObject.put("documento_colaborador", registro.getDocumentoGestor());
             jsonArray.put(jsonObject);
         }
 

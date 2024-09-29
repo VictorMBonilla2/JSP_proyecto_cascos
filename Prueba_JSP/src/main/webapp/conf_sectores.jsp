@@ -16,25 +16,33 @@
                 <div class="title__container">
                     <h2>Modificar Sectores Existentes</h2>
                 </div>
-
             </div>
             <div class="form__side">
                 <form class="formulario">
                     <input type="hidden" name="formType" value="edit">
                     <div class="formulario__inputs_config">
-                        <div class="input_form">
+                        <div class="input_container">
                             <label for="item_selector"> Selecciona el sector:</label>
-                            <select id="item_selector" name="sector_select"></select>
+                            <select id="item_selector" name="sector_select">
+                            </select>
                         </div>
-                        <div class="input_form">
-                            <label id="spac_input">Espacios del sector:</label>
-                            <input class="config_input" id="space_input">
+                        <div class="input_container">
+                            <label for="name_input">Nombre del Sector:</label>
+                            <input class="config_input"  name="nombre_sector" id="name_input" placeholder="">
+                        </div>
+                        <div class="input_container">
+                            <label for="space_input">Espacios del sector:</label>
+                            <input class="config_input"  name="cantidad_espacio" id="space_input" placeholder="">
                         </div>
                     </div>
-                    <div class="contenido__botones">
-                        <button class="sector_button_edit formulario_login__button data_button" id="edit_button">Editar</button>
-                        <button class="sector_button_cancel formulario_login__button" id="cancel_edit__button">Cancelar</button>
-                        <button class="sector_button_delete formulario_login__button data_button info_user_container_side2__button" id="delete_button">Eliminar</button>
+                    <div class="button-container">
+                        <button class="button_primary"
+                                type="submit" id="edit_button">Editar</button>
+                        <button class="button_secundary"
+                                type="reset" id="cancel_edit__button">Cancelar</button>
+                        <button
+                                class="button_secundary button--delete"
+                                type="button" id="delete_button">Eliminar</button>
                     </div>
                 </form>
 
@@ -52,18 +60,19 @@
                 <form class="formulario">
                     <input type="hidden" name="formType" value="add">
                     <div class="formulario__inputs ">
-                        <div class="input_form">
+                        <div class="input_container">
                             <label for="sector_name"> Nombre del sector:</label>
-                            <input id="sector_name" name="nombre_sector">
+                            <input id="sector_name" name="nombre_sector" placeholder="">
                         </div>
-                        <div class="input_form">
+                        <div class="input_container">
                             <label for="space_new_input">Cantidad de Espacios:</label>
-                            <input id="space_new_input" name="cantidad_espacio">
+                            <input id="space_new_input" name="cantidad_espacio" placeholder="">
                         </div>
                     </div>
-                    <div class="contenido__botones">
-                        <button class="sector_button_edit formulario_login__button data_button" id="create_button">Editar</button>
-                        <button class="sector_button_cancel formulario_login__button">Cancelar</button>
+                    <div class="button-container">
+                        <button class="button_primary"
+                                id="create_button">Editar</button>
+                        <button class="button_secundary">Cancelar</button>
                     </div>
                 </form>
 
@@ -73,8 +82,10 @@
     </div>
 
 </section>
-
+<jsp:include page="resources/confirm.jsp"/>
+<jsp:include page="resources/success.jsp"/>
+<jsp:include page="resources/error.jsp"/>
 <script type="module" src="resources/js/systemForms/sectoresEspacios.js"></script>
-
+<jsp:include page="resources/footer.jsp" />
 </body>
 </html>

@@ -34,43 +34,51 @@
     border-radius: 5px;
 }
 
-.fila{
-    padding: 10px;
+/* Contenedor de la tabla con scroll vertical */
+.table-container {
+    max-height: 60vh; /* Limitar la altura del contenedor */
+    overflow-y: auto;  /* Habilitar el scroll vertical */
+    width: 100%; /* Asegurar que la tabla ocupe todo el ancho disponible */
 }
 
-table{
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;  
-}
-thead {
-    background-color: #6da8cf;
-    color: white;
+/* Tabla */
+table {
+    width: 100%; /* Asegura que la tabla ocupe todo el ancho del contenedor */
+    border-collapse: collapse;
 }
 
-tbody:last-child > tr:last-child > td:first-child {
-    border-radius: 0  0 0 var(--borderRadius);
-}
-tbody:last-child > tr:last-child > td:last-child {
-    border-radius: 0  0 var(--borderRadius) 0 ;
-}
-tr>th:first-child{
-    border-radius: var(--borderRadius)  0  0  0;
-}
-
-tr>th:last-child{
-    border-radius: 0  var(--borderRadius)  0  0 ;
+/* Encabezado fijo */
+thead th {
+    position: sticky;
+    top: 0;
+    background-color: var(--color); /* Fondo del encabezado */
+    color: white; /* Color del texto */
+    z-index: 1; /* Asegura que el encabezado esté sobre el contenido */
+    padding: 12px;
+    border: 1px solid #dddddd;
 }
 
+/* Estilos de celdas */
 th, td {
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #dddddd;
     text-align: left;
 }
 
+/* Alternar colores de las filas */
 tbody tr:nth-child(even) {
     background-color: #f9f9f9;
 }
+
+/* Ajuste de la altura mínima de las filas */
+tbody tr {
+    min-height: 50px;
+}
+/* Clase de filas para ajustar espaciado interno */
+.fila {
+    padding: 10px;
+}
+
 
 .pagination {
     display: flex;

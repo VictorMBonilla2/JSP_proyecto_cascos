@@ -1,0 +1,80 @@
+.input_container{
+    display: flex;
+    gap: 20px;
+    padding: 15px 35px;
+    align-items: center;
+}
+
+.input_container--vertical {
+    flex-direction: column;
+    align-items: flex-start; /* Alinear elementos al inicio */
+    gap: 10px; /* Ajusta el espacio entre los elementos */
+    width: 100%;
+}
+
+.input_container>select{
+    flex: 1; /* Hace que los inputs ocupen el mismo espacio dentro del contenedor */
+    min-width: 120px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+/*
+.input_container>input{
+    flex: 1;  Hace que los inputs ocupen el mismo espacio dentro del contenedor 
+    min-width: 120px;
+    padding: 10px;
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+*/
+/* Flexibilidad en los inputs para que se ajusten mejor */
+.input_container > input, 
+.input_container > select {
+    flex: 1;
+    width: 100%; /* Los inputs ocuparán todo el ancho de la columna */
+    max-width: 300px; /* Limitar el ancho máximo */
+    min-width: 150px; /* Limitar el ancho mínimo */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+/* Asegúrate de que las etiquetas estén alineadas correctamente */
+.input_container > label {
+    width: auto; /* Las etiquetas se ajustarán al contenido */
+    margin-bottom: 5px; /* Añadir un pequeño espacio debajo de la etiqueta */
+    justify-self: start;
+}
+
+.input_container > input:not(:placeholder-shown),
+.input_container > input:focus {
+    background-color: #f3f3f3; /* Cambia el color de fondo cuando tienen texto */
+    outline: none;
+    border: 3px solid var(--secundary);
+}
+/*
+.input_container>label{
+    width: 150px;
+}
+*/
+.input_grid {
+    display: grid;
+    gap: 20px; /* Espacio entre las filas y columnas */
+    /*grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));  Distribuir columnas automáticamente */
+    grid-template-columns: repeat(3, minmax(150px, 1fr));  /* Distribuye en 3 columnas iguales */
+}
+
+.input_grid > label {
+    justify-self: start; /* Alinear etiquetas a la izquierda */
+}
+
+.input_grid > input, .input_grid > select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}

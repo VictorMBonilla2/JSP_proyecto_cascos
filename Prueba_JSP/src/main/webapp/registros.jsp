@@ -12,9 +12,11 @@
         <button>Año</button>
         <input type="text" placeholder="Buscar">
     </div>
-    <table>
-        <script src="resources/js/Registros.js"></script>
-    </table>
+    <script src="resources/js/Registros.js"></script>
+    <div class="table-container">
+        <table>
+        </table>
+    </div>
     <div class="pagination">
         <span>15 de 350</span>
         <span>&lt;&lt;Pag 1 &gt;&gt;</span>

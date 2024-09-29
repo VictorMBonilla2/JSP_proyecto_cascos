@@ -32,24 +32,19 @@ public class SvReportes extends HttpServlet {
         JSONArray jsonArray = new JSONArray();
         for (TbReportes reporte : reportes) {
 
-            Persona aprendiz = reporte.getAprendiz();
-            TbVehiculo vehiculo = reporte.getVehiculo();
-
             JSONObject jsonObject = new JSONObject();
             System.out.println(reporte.getFecha_reporte());
             System.out.println(reporte.getNombre_reporte());
             System.out.println(reporte.getDescripcion_reporte());
-            System.out.println(reporte.getTipo_reporte());
-            System.out.println(reporte.getAprendiz().getDocumento());
+            System.out.println(reporte.getTipoReporte());
+            System.out.println(reporte.getDocumentoAprendiz());
             jsonObject.put("fecha_reporte", reporte.getFecha_reporte());
             jsonObject.put("nombre_reporte", reporte.getNombre_reporte());
             jsonObject.put("descripcion_reporte", reporte.getDescripcion_reporte());
-            jsonObject.put("tipo_reporte", reporte.getTipo_reporte());
-            jsonObject.put("documento_aprendiz", reporte.getAprendiz().getDocumento());
-            jsonObject.put("nombre_aprendiz", aprendiz.getNombre());
-            jsonObject.put("placa_vehiculo", vehiculo.getPlaca_vehiculo());
-            jsonObject.put("nombre_colaborador", reporte.getColaborador().getNombre());
-            jsonObject.put("documento_colaborador", reporte.getColaborador().getDocumento());
+            jsonObject.put("tipo_reporte", reporte.getTipoReporte());
+            jsonObject.put("documento_aprendiz", reporte.getDocumentoAprendiz());
+            jsonObject.put("placa_vehiculo", reporte.getPlacaVehiculo());
+            jsonObject.put("documento_colaborador", reporte.getDocumentoColaborador());
             jsonArray.put(jsonObject);
         }
 

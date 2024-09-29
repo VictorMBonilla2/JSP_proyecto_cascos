@@ -18,7 +18,14 @@ public class Logica_Espacios {
     public List<TbEspacio> DatosEspacio() {
         return controladora.DatosEspacios();
     }
+    public List<TbEspacio> obtnerEspaciosPorSector (int idsector){
+        return controladora.ObtenerEspaciosPorSector(idsector);
+    }
 
+
+    public TbEspacio buscarEspacio(Integer idEspacio) {
+        return controladora.traerEspacio(idEspacio);
+    }
     public Integer EspaciosPorSector(int id) {
         Logica_Sectores logicaSectores = EspacioServiceManager.getInstance().getLogicaSectores();
         List<TbSectores> casilleros = logicaSectores.ObtenerSectores();
@@ -41,9 +48,6 @@ public class Logica_Espacios {
         controladora.eliminarEspacio(espacio.getId_espacio());
     }
 
-    public TbEspacio buscarEspacio(Integer idEspacio) {
-        return controladora.traerEspacio(idEspacio);
-    }
 
     public boolean actualizarEspacio(TbEspacio espacio) {
         try {

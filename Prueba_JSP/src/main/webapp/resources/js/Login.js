@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const errorDiv = document.getElementById("Error");
     const errorOnlyDigitsDiv = document.getElementById("ErrorOnlydigitos");
     const form = document.getElementById("Logeo");
-    let startTime, endTime;
+
     // Manejador del click en el logo para alternar el rol
     logo.addEventListener("click", () => {
         const isAprendiz = background.classList.toggle("background_login_aprendiz");
@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const isAprendiz = background.classList.toggle("background_login_Admin");
         texto_logo.textContent = "Administrador"
     });
+    selectDocumento();
     form.onsubmit = async (event) => {
         event.preventDefault();
         errorDiv.style.display = "none";
@@ -62,4 +63,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 });
+
+async function selectDocumento(){
+    const documentoSelect = document.getElementById("TipoDocumento");
+    const response = await  fetch('/Prueba_JSP_war_exploded/tipoDoc');
+    const data = await response.json();
+    console.log(data)
+    data.forEach(tipoDocumento =>{
+        const option = document.createElement("option");
+        option.value=tipoDocumento.id_Tipo;
+        option.textContent=tipoDocumento.nombre_Tipo;
+        documentoSelect.appendChild(option)
+    })
+}
 

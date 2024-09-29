@@ -1,6 +1,4 @@
-@import url(componets/header.css);
-@import url(componets/barraIqz.css);
- * {
+* {
   box-sizing: border-box;
 }
 html,
@@ -19,7 +17,6 @@ body {
   display: grid;
   grid-template-areas:
     "User Grafico1"
-    "Grafico2 Grafico1"
 }
 .info_user{
   margin-top: 95px;
@@ -45,11 +42,12 @@ body {
 }
 
 canvas{
-  width: 100%; !important;
+  width: 100% !important;
 }
+
 .bloque__user{
   width: 480px;
-  height: 600px;
+  height: 60vh;
   padding: 15px;
   display: flex;
   flex-direction: column;
@@ -63,13 +61,9 @@ canvas{
   gap: 60px;
   flex-flow: wrap;
   padding-left: 18%;
+  font-size: clamp(12px, 1vw, 20px);
 }
-.info2-user__text>h1{
-  font-size: 30px;
-}
-.info2-user__text>p{
-  font-size: 18px;
-}
+
 .info2-user__img{
   width: auto;
 }

@@ -1,9 +1,11 @@
 package Servlets;
 
+import Logica.Logica_Documentos;
 import Logica.Logica_Persona;
 import Logica.Logica_Rol;
 import Modelo.Persona;
 import Modelo.Roles;
+import Modelo.TbTipoDocumento;
 import Utilidades.JsonReader;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -25,6 +27,7 @@ public class SvPersona extends HttpServlet {
     //CONTROLADORA LOGICA
     Logica_Persona logica_persona = new Logica_Persona();
     Logica_Rol logica_rol = new Logica_Rol();
+    Logica_Documentos documentos = new Logica_Documentos();
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -115,7 +118,7 @@ public class SvPersona extends HttpServlet {
 
     private void Login(JSONObject jsonObject, HttpServletRequest req, HttpServletResponse resp, HttpSession session) throws IOException {
         int documento = jsonObject.getInt("documento");
-        String tipoDocumento = jsonObject.getString("tipoDocumento");
+        int tipoDocumento = jsonObject.getInt("tipoDocumento");
         String password = jsonObject.getString("password");
         String rol = jsonObject.getString("rol");
 
@@ -150,13 +153,14 @@ public class SvPersona extends HttpServlet {
     private void Registro(JSONObject jsonObject, HttpServletResponse resp) throws IOException {
         String nombre = jsonObject.getString("nombre");
         String apellido = jsonObject.getString("apellido");
-        String tipoDocumento = jsonObject.getString("TipoDocumento");
+        int idDocumento = jsonObject.getInt("TipoDocumento");
         int documento = jsonObject.getInt("documento");
         String correo = jsonObject.getString("correo");
         String clave = jsonObject.getString("password");
         int rol = Integer.parseInt(jsonObject.getString("rol"));
-
+        TbTipoDocumento tipoDocumento = documentos.obtenerDocumentoID(idDocumento);
         Roles roll = logica_rol.ObtenerRol(rol);
+
         Persona persona = new Persona();
         persona.setNombre(nombre);
         persona.setApellido(apellido);

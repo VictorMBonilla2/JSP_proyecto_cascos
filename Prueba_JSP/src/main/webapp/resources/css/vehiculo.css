@@ -1,5 +1,4 @@
 
-
 .main_container__vehiculo{
     width: 100%;
     display: flex;
@@ -12,27 +11,50 @@
     background-color: var(--blanco);
     width: 80%;
     height: 80%;
-    gap: 7rem;
 }
-.container__vehiculo__form{
-    width: 80%;
+
+
+.vehiculo__form{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: clamp(10px,4%,45px);
+    padding: 10px 20px;
 }
 
 .vehiculo__list{
-    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px,4%,45px);
+    padding: 10px 20px;
 }
 
 .vehiculo__grid{
-    display: flex;
+    display: grid;
     gap: 10px;
     width: 100%;
+    grid-template-columns: repeat(3, minmax(116px, 1fr));  /* Distribuye en 3 columnas iguales */
+}
+.child-end {
+    margin-top: auto;
 }
 
-.vehiculo__list__item{
+.vehiculo__list__item {
     text-align: center;
-    width: 90px;
-    height: 76px;
-    background-color: red;
+    width: 100%;
+    max-width: 125px;
+    height: 8vh;
+    max-height: 100px;
+    background-color: var(--color);
     border-radius: var(--borderRadius);
     padding: 10px;
+    font-size: clamp(12px, 2vw, 16px); /* Ajustar el uso de vw en lugar de vh */
+    overflow: hidden; /* Evitar que el contenido se desborde */
+    white-space: nowrap; /* Evitar que el texto se rompa en líneas si es necesario */
+    text-overflow: ellipsis; /* Añadir puntos suspensivos si el texto se desborda */
+}
+
+/* Opción para texto que puede envolver varias líneas */
+.vehiculo__list__item p {
+    overflow-wrap: break-word; /* Permitir que el texto se ajuste dentro del contenedor */
 }

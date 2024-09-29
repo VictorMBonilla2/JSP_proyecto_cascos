@@ -6,24 +6,28 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "tb_casillero")
+@Table(name = "tb_sectores")
 public class TbSectores {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cod_casillero", nullable = false)
+    @Column(name = "cod_sector", nullable = false)
     private Integer id;
     @Column
     private Integer cant_espacio;
+    @Column
+    private String nombreSector;
 
-    @OneToMany(mappedBy = "casillero", cascade = CascadeType.ALL)
-    private Set<TbEspacio> espacios = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "sector", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<TbEspacio> espacios;
+
 
     public TbSectores() {
     }
 
-    public TbSectores(Integer id, Integer cant_espacio, Set<TbEspacio> espacios) {
+    public TbSectores(Integer id, Integer cant_espacio, String nombreSector, Set<TbEspacio> espacios) {
         this.id = id;
         this.cant_espacio = cant_espacio;
+        this.nombreSector = nombreSector;
         this.espacios = espacios;
     }
 
@@ -41,6 +45,14 @@ public class TbSectores {
 
     public void setCant_espacio(Integer cant_espacio) {
         this.cant_espacio = cant_espacio;
+    }
+
+    public String getNombreSector() {
+        return nombreSector;
+    }
+
+    public void setNombreSector(String nombreSector) {
+        this.nombreSector = nombreSector;
     }
 
     public Set<TbEspacio> getEspacios() {
