@@ -7,7 +7,6 @@
 
 <jsp:include page="resources/sidebar.jsp" />
 
-
             <section class="main_container__casillero" id="casillerosContainer">
             <%
             Integer cantidadCasilleros = (Integer) request.getAttribute("Casilleros");
@@ -48,11 +47,11 @@
                                 <p> <%=cantCascos%> </p>
                             </div>
                         </div>
-                        <div class="contenido__botones">
-                            <button class="botones botones__pago " data-pay="paymodal<%=espacioId%>">
+                        <div class="button-container">
+                            <button class="button_primary botones__pago " data-pay="paymodal<%=espacioId%>">
                                 Liberar
                             </button>
-                            <button class="botones botones__ajustar" data-edit="editmodal<%=espacioId%>">
+                            <button class="button_secundary button--edit botones__ajustar" data-edit="editmodal<%=espacioId%>">
                                 Ajustar
                             </button>
                         </div>
@@ -68,12 +67,12 @@
                         <div class="modal-body">
                             <h2>Liberar Espacio</h2>
                             <form id="payCasco<%= espacioId %>" onsubmit="payCasco(event, <%= espacioId %>)" class="formulario">
-                                <div class="formulario__inputs">
+                                <div class="input_container input_container--vertical">
                                     <p>Documento: <%=documento%></p>
                                     <p>Nombre: <%=nombre%></p>
                                     <p>Placa: <%=vehiculo.getPlaca_vehiculo()%></p>
 
-                                    <button type="submit" class="formulario__button">Liberar</button>
+                                    <button type="submit" class="button_primary">Liberar</button>
                                 </div>
                             </form>
                         </div>
@@ -89,14 +88,14 @@
                         </div>
                         <div class="modal-body">
                             <h2>Editar Espacio</h2>
-                            <form id="editCasco<%= espacioId %>" onsubmit="editCasco(event, <%= espacioId %>)" class="formulario">
-                                <div class="formulario__inputs">
+                            <form id="editCasco<%= espacioId %>" onsubmit="editCasco(event, <%= espacioId %>)" class="">
+                                <div class="input_container input_container--vertical">
                                     <label for="editdocumento<%=espacioId%>">Documento Aprendiz</label>
                                     <input type="text" id="editdocumento<%=espacioId%>" placeholder="Documento del aprendiz" name="documento" value="<%=documento%>" required disabled>
                                     <input type="hidden" id="editvehiculolist<%=espacioId%>"  name="documento" value="<%=espacio.getVehiculo().getId_vehiculo()%>" required disabled>
                                     <label for="editcant_cascos<%=espacioId%>"> Cantidad de Cascos</label>
                                     <input type="number" id="editcant_cascos<%=espacioId%>" placeholder="Cantidad de cascos" name="cant_cascos" value="<%=cantCascos%>" required>
-                                    <button type="submit" class="formulario__button">Añadir</button>
+                                    <button type="submit" class="button_primary">Añadir</button>
                                 </div>
                             </form>
                         </div>
@@ -114,23 +113,24 @@
                         <div class="modal-body">
                             <h2>Editar Espacio</h2>
                             <form id="reportCasco<%= espacioId %>" onsubmit="reportCasco(event, <%= espacioId %>)" class="formulario">
-                                <div class="formulario__inputs">
+                                <div class="input_container input_container--vertical">
                                     <input type="hidden" id="">
+                                    <div class="input_container">
                                     <label for="reportTipo<%=espacioId%>">Tipo de Reporte:</label>
                                     <select id="reportTipo<%=espacioId%>" name="options">
                                         <option value="option1">Opción 1</option>
                                         <option value="option2">Opción 2</option>
                                         <option value="option3">Opción 3</option>
                                     </select>
-
-
+                                    </div>
+                                    <div class="input_container">
                                     <label for="reportNombre<%=espacioId%>">Nombre Reporte:</label>
                                     <input type="text" id="reportNombre<%=espacioId%>" name="textBox" placeholder="Describe lo que paso">
-
+                                    </div>
                                     <label for="reportDescripcion<%=espacioId%>">Descripción</label>
                                     <textarea id="reportDescripcion<%=espacioId%>" name="description" rows="4" cols="50" placeholder="Escribe aquí tu descripción..."></textarea>
 
-                                    <button type="submit" class="formulario__button">Añadir</button>
+                                    <button type="submit" class="button_primary">Añadir</button>
                                 </div>
                             </form>
                         </div>
@@ -150,8 +150,8 @@
                                 <h1>Libre</h1>
                             </div>
                         </div>
-                        <div class="contenido__botones">
-                            <button class="botones botones--largo botones__pago addCasilleroBtn" data-add="addmodal<%=espacioId%>">
+                        <div class="button-container">
+                            <button class="button_primary addCasilleroBtn" data-add="addmodal<%=espacioId%>">
                                 Añadir
                             </button>
                         </div>
@@ -169,13 +169,13 @@
                         <div class="modal-body">
                             <h2>Nuevo Espacio</h2>
                             <form id="addCasco<%= espacioId %>" onsubmit="addCasco(event, <%= espacioId %>)" class="formulario">
-                                <div class="formulario__inputs">
+                                <div class="input_container input_container--vertical">
                                     <input type="text" id="adddocumento<%=espacioId%>" placeholder="Documento del aprendiz" name="documento" required>
                                     <select id="addvehiculolist<%=espacioId%>" name="options">
 
                                     </select>
                                     <input type="number" id="addcant_cascos<%=espacioId%>" placeholder="Cantidad de Cascos" name="cant_cascos">
-                                    <button type="submit" class="formulario__button">Añadir</button>
+                                    <button type="submit" class="button_primary">Añadir</button>
                                 </div>
                             </form>
                         </div>

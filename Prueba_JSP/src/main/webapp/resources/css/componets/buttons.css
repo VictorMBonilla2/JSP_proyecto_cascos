@@ -1,0 +1,63 @@
+.button_primary{
+    background-color: var(--primary);
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    width: 100%;
+    height: clamp(35px, 4vw, 45px);
+    font-size: clamp(12px, 1vw, 20px);
+    color: var(--blanco);
+    text-decoration: none;
+    text-align: center;
+}
+
+.button_secundary{
+    background-color: var(--secundary);
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    width: 100%;
+    height: clamp(35px, 4vw, 45px);
+    font-size: clamp(12px, 1vw, 20px);
+    color: var(--blanco);
+    text-decoration: none;
+    text-align: center;
+}
+.button--width45{
+    width: 45%;
+}
+
+.button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.button--edit {
+    background-color: var(--focus); /* Color primario */
+    color: var(--blanco);
+    padding: 10px;
+}
+
+.button--edit:hover {
+    background-color: #c0971b; /* Un tono más oscuro en hover */
+}
+
+.button--delete {
+    background-color: var(--vinotinto); /* Vinotinto para acción destructiva */
+    color: white;
+    padding: 10px;
+}
+
+.button--delete:hover {
+    background-color: #4a1324; /* Un tono más oscuro en hover */
+}
+
+.button_container{
+    width: 60%;
+    gap: 10px;
+}

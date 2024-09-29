@@ -36,9 +36,6 @@
           <input type="text" id="documento" placeholder="Documento" name="documento" required>
 
           <select id="TipoDocumento" name="TipoDocumento">
-            <option value="Cedula de Ciudadania" class="CdC">Cedula de Ciudadania</option>
-            <option value="Tarjeta de identidad" class="TdI">Tarjeta de identidad</option>
-            <option value="Pasaporte" class="Psp">Pasaporte</option>
           </select>
 
           <input type="password" id="passWord" placeholder="Contraseña" name="password" required>

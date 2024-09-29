@@ -1,9 +1,11 @@
 package Servlets;
 
+import Logica.Logica_Documentos;
 import Logica.Logica_Persona;
 import Logica.Logica_Rol;
 import Modelo.Persona;
 import Modelo.Roles;
+import Modelo.TbTipoDocumento;
 import Utilidades.JsonReader;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,6 +25,7 @@ import java.util.List;
 public class SvUsuarios extends HttpServlet {
     Logica_Persona logica_persona = new Logica_Persona();
     Logica_Rol logica_rol = new Logica_Rol();
+    Logica_Documentos logicaDocumentos= new Logica_Documentos();
     protected void doGet(HttpServletRequest request, HttpServletResponse response)  throws ServletException, IOException {
         String paginaParam = request.getParameter("Pagination");
 
@@ -46,13 +49,16 @@ public class SvUsuarios extends HttpServlet {
             jsonObject.put("nombre", usuario.getNombre());
             jsonObject.put("apellido", usuario.getApellido());
             jsonObject.put("correo", usuario.getCorreo());
-            jsonObject.put("tipo_documento",usuario.getTipoDocumento());
             jsonObject.put("numero_documento", usuario.getDocumento());
             jsonObject.put("fecha_nacimineto", usuario.getFechaNacimiento());
             JSONObject rolObject = new JSONObject();
             if (usuario.getRol() != null) {
                 rolObject.put("idRol", usuario.getRol().getId());
                 rolObject.put("nombre", usuario.getRol().getNombre());
+            }
+            if (usuario.getTipoDocumento() != null) {
+                rolObject.put("idDocumento", usuario.getTipoDocumento().getId());
+                rolObject.put("nombreDocumento", usuario.getTipoDocumento().getNombreDocumento());
             }
             jsonObject.put("rol", rolObject); // Añadir el objeto rol desglosado
             jsonArray.put(jsonObject);
@@ -91,7 +97,6 @@ public class SvUsuarios extends HttpServlet {
             persona.setNombre(jsonObject.getString("nombre"));
             persona.setApellido(jsonObject.getString("apellido"));
             persona.setCorreo(jsonObject.getString("correo"));
-            persona.setTipoDocumento(jsonObject.getString("tipoDocumneto"));
             persona.setDocumento(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             System.out.println(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             String fechaNacimientoStr = jsonObject.optString("fechaNacimiento");
@@ -104,6 +109,10 @@ public class SvUsuarios extends HttpServlet {
             int rol = Integer.parseInt(jsonObject.getString("rol"));
             Roles roles = logica_rol.ObtenerRol(rol);
             persona.setRol(roles);
+
+            int idDocumento= jsonObject.getInt("tipoDocumneto");
+            TbTipoDocumento documento = logicaDocumentos.obtenerDocumentoID(idDocumento);
+            persona.setTipoDocumento(documento);
 
             logica_persona.actualizarPersona(persona);
             response.setStatus(HttpServletResponse.SC_OK);
@@ -122,7 +131,6 @@ public class SvUsuarios extends HttpServlet {
             persona.setNombre(jsonObject.getString("nombre"));
             persona.setApellido(jsonObject.getString("apellido"));
             persona.setCorreo(jsonObject.getString("correo"));
-            persona.setTipoDocumento(jsonObject.getString("tipoDocumneto"));
             persona.setDocumento(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             persona.setClave(jsonObject.getString("password"));
             System.out.println(Integer.parseInt(jsonObject.getString("numeroDocumento")));
@@ -136,6 +144,10 @@ public class SvUsuarios extends HttpServlet {
             int rol = Integer.parseInt(jsonObject.getString("rol"));
             Roles roles = logica_rol.ObtenerRol(rol);
             persona.setRol(roles);
+
+            int idDocumento= jsonObject.getInt("tipoDocumneto");
+            TbTipoDocumento documento = logicaDocumentos.obtenerDocumentoID(idDocumento);
+            persona.setTipoDocumento(documento);
 
             logica_persona.crearPersona(persona);
             response.setStatus(HttpServletResponse.SC_OK);

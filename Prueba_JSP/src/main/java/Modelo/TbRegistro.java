@@ -19,36 +19,28 @@ public class TbRegistro {
     private LocalDateTime fecha_registro;
 
     @Anotaciones.PropertyName("Espacio")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_espacio_fk", nullable = false) // Clave foránea a TbEspacio
-    private TbEspacio espacio;
+    private int id_espacio;
 
     @Anotaciones.PropertyName("Placa del Vehiculo")
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_vehiculo_fk", nullable = false) // Clave foránea a TbVehiculo
-    private TbVehiculo vehiculo;
+    private String placaVehiculo;
 
     @Anotaciones.PropertyName("Documento del Aprendiz")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_aprendiz_fk", nullable = false) // Clave foránea a Persona (aprendiz)
-    private Persona aprendiz;
+    private int documentoAprendiz;
 
     @Anotaciones.PropertyName("Documento del Gestor")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_colaborador_fk", nullable = false) // Clave foránea a Persona (colaborador)
-    private Persona colaborador;
+    private int documentoGestor;
 
 
     public TbRegistro() {
     }
 
-    public TbRegistro(Integer id_registro, LocalDateTime fecha_registro, TbEspacio espacio, TbVehiculo vehiculo, Persona aprendiz, Persona colaborador) {
+    public TbRegistro(Integer id_registro, LocalDateTime fecha_registro, int id_espacio, String placaVehiculo, int documentoAprendiz, int documentoGestor) {
         this.id_registro = id_registro;
         this.fecha_registro = fecha_registro;
-        this.espacio = espacio;
-        this.vehiculo = vehiculo;
-        this.aprendiz = aprendiz;
-        this.colaborador = colaborador;
+        this.id_espacio = id_espacio;
+        this.placaVehiculo = placaVehiculo;
+        this.documentoAprendiz = documentoAprendiz;
+        this.documentoGestor = documentoGestor;
     }
 
     public Integer getId_registro() {
@@ -67,36 +59,40 @@ public class TbRegistro {
         this.fecha_registro = fecha_registro;
     }
 
-    public TbEspacio getEspacio() {
-        return espacio;
+    public int getId_espacio() {
+        return id_espacio;
     }
 
-    public void setEspacio(TbEspacio espacio) {
-        this.espacio = espacio;
+    public void setId_espacio(int id_espacio) {
+        this.id_espacio = id_espacio;
     }
 
-    public TbVehiculo getVehiculo() {
-        return vehiculo;
+    public void setFecha_registro(LocalDateTime fecha_registro) {
+        this.fecha_registro = fecha_registro;
     }
 
-    public void setVehiculo(TbVehiculo vehiculo) {
-        this.vehiculo = vehiculo;
+    public String getPlacaVehiculo() {
+        return placaVehiculo;
     }
 
-    public Persona getAprendiz() {
-        return aprendiz;
+    public void setPlacaVehiculo(String placaVehiculo) {
+        this.placaVehiculo = placaVehiculo;
     }
 
-    public void setAprendiz(Persona aprendiz) {
-        this.aprendiz = aprendiz;
+    public int getDocumentoAprendiz() {
+        return documentoAprendiz;
     }
 
-    public Persona getColaborador() {
-        return colaborador;
+    public void setDocumentoAprendiz(int documentoAprendiz) {
+        this.documentoAprendiz = documentoAprendiz;
     }
 
-    public void setColaborador(Persona colaborador) {
-        this.colaborador = colaborador;
+    public int getDocumentoGestor() {
+        return documentoGestor;
+    }
+
+    public void setDocumentoGestor(int documentoGestor) {
+        this.documentoGestor = documentoGestor;
     }
 }
 

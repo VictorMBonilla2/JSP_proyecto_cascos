@@ -9,16 +9,8 @@ public class Logica_Reportes {
     PersistenciaController controladora = new PersistenciaController();
     Logica_Persona persona = new Logica_Persona();
     public List<TbReportes> ObtenerReportes() {
-        List<TbReportes> reportes = controladora.ObtenerReportes();
 
-        for (TbReportes reporte : reportes) {
-            int numeroAPrendiz= reporte.getAprendiz().getDocumento();
-            int numeroGestor=reporte.getColaborador().getDocumento();
-            reporte.setAprendiz(persona.buscarpersona(numeroAPrendiz)); ;
-            reporte.setColaborador(persona.buscarpersona(numeroGestor));
-        }
-
-        return reportes;
+        return controladora.ObtenerReportes();
     }
 
     public void CrearReporte(TbReportes nuevoReporte) {

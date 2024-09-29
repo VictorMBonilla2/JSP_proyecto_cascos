@@ -1,17 +1,18 @@
 .hea_container {
     width: 100%;
-    height: clamp(10%, 12vw, 12%);
-    background-color: #0085FF;
+    height: clamp(10%, 12vw, 14%);
+    background-color: var(--primary);
     display: flex;
 
 }
-
 .hea_container__logo {
-    width: 25vh;
+    width: 20vh;
     display: flex;
     justify-content: center;
-
-
+}
+.hea_container__logo svg {
+    width: 50%;
+    fill: white;
 }
 
 .hea_container__list{
@@ -41,7 +42,6 @@ ul.list__buttons a {
 .logo__img {
     width: 50%;
 }
-
 
 #right-sidebar {
     display: none; /* Oculto por defecto */
@@ -117,7 +117,7 @@ ul.list__buttons a {
 }
 
 .ui-menu__option:hover{
-    background-color: powderblue;
+    background-color: var(--apoyo);
 }
 
 

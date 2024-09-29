@@ -11,16 +11,17 @@
 %>
 <section class="main_container__conf_Sistema">
     <div class="users_list__container">
-        <div class="users_list__item new_user__item">
+        <div class="user_list__item new_user__item">
             Crear Nuevo Usuario
         </div>
+
     </div>
 
     <script type="module" src="resources/js/usuarios.js"></script>
 </section>
 
 <template id="item__list">
-    <div class="user_list__item" >
+    <div class="user_list__item">
         <div class="users_list__data">
             <div class="user_item user_item_document">
                 <h2>Documento</h2>
@@ -35,8 +36,11 @@
                 <p></p>
             </div>
             <div class="user_item user_item__buttons">
-                <button class="user_button_edit formulario_login__button data_button" id="edit_button">Editar</button>
-                <button class="user_button_delete formulario_login__button data_button info_user_container_side2__button" id="delete_button">Eliminar</button>
+                <button class="user_button_edit button_primary button--edit"
+                        id="edit_button">Editar</button>
+                <button
+                        class="user_button_delete button_secundary button--delete"
+                        id="delete_button">Eliminar</button>
             </div>
         </div>
 
@@ -61,9 +65,9 @@
                 </div>
                 <div class="formulario__inputs">
                     <label for="Tipo_documento"> Tipo de documento</label>
-                    <input type="text" id="Tipo_documento">
+                    <select name="tipoDocumento" id="Tipo_documento">
+                    </select>
                 </div>
-
                 <div class="formulario__inputs">
                     <label for="numero_documento">Numero de documento</label>
                     <input type="text" id="numero_documento">
@@ -74,13 +78,14 @@
                 </div>
                 <div class="formulario__inputs">
                     <label for="Rol">Rol del usuario</label>
-                    <input type="text" id="Rol">
+                    <select name="rol" id="Rol">
+                    </select>
                 </div>
 
             </div>
-            <div class="button_miranose" style="display: flex;">
-                <button class="formulario_login__button" type="submit">Guardar</button>
-                <button class="formulario_login__button" type="button" id="cancelEdit">Cancelar</button>
+            <div class="button_container" style="display: flex;">
+                <button class="button_primary" type="submit">Guardar</button>
+                <button class="button_secundary cancel-button" type="button">Cancelar</button>
             </div>
         </form>
 
@@ -127,9 +132,9 @@
                 </div>
 
             </div>
-            <div class="button_miranose" style="display: flex;">
-                <button class="formulario_login__button" type="submit">Guardar</button>
-                <button class="formulario_login__button" type="button" id="cancelEdit_new">Cancelar</button>
+            <div class="button_container" style="display: flex;">
+                <button class="button_primary" type="submit">Crear</button>
+                <button class="button_secundary cancel-button" type="button">Cancelar</button>
             </div>
         </form>
 

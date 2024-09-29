@@ -12,11 +12,9 @@ export async function sendRequest(url, data) {
             const errorText = await response.text(); // Get raw response text
             throw new Error(errorText || 'Network response was not ok');
         }
-
         const result = await response.json();
-
         if (result.status === "success") {
-            // Handle success case
+            return result
         } else {
             const errorElement = document.getElementById("Error");
             if (errorElement) {
@@ -26,11 +24,7 @@ export async function sendRequest(url, data) {
         }
     } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
-        const errorElement = document.getElementById("Error");
-        if (errorElement) {
-            errorElement.textContent = error.message || "Ocurrió un error al procesar la solicitud.";
-            errorElement.style.display = "block";
-        }
+        return { status: "error", message: error.message };
     }
 }
 

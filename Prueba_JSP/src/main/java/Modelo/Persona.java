@@ -13,7 +13,9 @@ public class Persona {
 
     private String nombre;
     private String apellido;
-    private String tipoDocumento;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_tipodocumento")
+    private TbTipoDocumento tipoDocumento;
     private String correo;
 
     @Temporal(TemporalType.DATE)
@@ -27,11 +29,21 @@ public class Persona {
 
     @OneToMany(mappedBy = "persona", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<TbVehiculo> vehiculos = new LinkedHashSet<>();
-    // Un salt para cifrado
 
-    // Getters y setters
+    public Persona() {
+    }
 
-    public Persona() {}
+    public Persona(int documento, String nombre, String apellido, TbTipoDocumento tipoDocumento, String correo, Date fechaNacimiento, String clave, Roles rol, Set<TbVehiculo> vehiculos) {
+        this.documento = documento;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.tipoDocumento = tipoDocumento;
+        this.correo = correo;
+        this.fechaNacimiento = fechaNacimiento;
+        this.clave = clave;
+        this.rol = rol;
+        this.vehiculos = vehiculos;
+    }
 
     public int getDocumento() {
         return documento;
@@ -57,11 +69,11 @@ public class Persona {
         this.apellido = apellido;
     }
 
-    public String getTipoDocumento() {
+    public TbTipoDocumento getTipoDocumento() {
         return tipoDocumento;
     }
 
-    public void setTipoDocumento(String tipoDocumento) {
+    public void setTipoDocumento(TbTipoDocumento tipoDocumento) {
         this.tipoDocumento = tipoDocumento;
     }
 

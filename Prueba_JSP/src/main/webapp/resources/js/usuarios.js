@@ -1,17 +1,17 @@
-import {sendRequest} from "./ajax.js";
+import { sendRequest } from "./ajax.js";
 
-document.addEventListener("DOMContentLoaded",  async () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const editButtons = document.querySelectorAll(".user_button_edit");
     const deleteButtons = document.querySelectorAll(".user_button_delete");
-    const lista= document.querySelector(".users_list__container");
+    const lista = document.querySelector(".users_list__container");
     const formTemplate = document.querySelector("#template_form").content;
-    const formNewTemplate= document.querySelector("#template_form_newUser").content ;
+    const formNewTemplate = document.querySelector("#template_form_newUser").content;
     const itemTemplate = document.querySelector("#item__list").content;
 
-    let personas= await ObtenerUsuarios("1");
+    let personas = await ObtenerUsuarios("1");
     console.log(personas)
-    if(personas.length>0){
-        personas.forEach((persona, index) =>{
+    if (personas.length > 0) {
+        personas.forEach((persona, index) => {
             const clone = document.importNode(itemTemplate, true);
 
             // Modificar el contenido del clon
@@ -30,42 +30,29 @@ document.addEventListener("DOMContentLoaded",  async () => {
             // Insertar el clon modificado en la lista
             lista.appendChild(clone);
         })
-    }else{
+    } else {
         console.log("no hay personas")
     }
-
-
-    editButtons.forEach(button => {
-        button.addEventListener("click", (event) => {
-            const data_user = event.target.getAttribute("data-edit");
-            console.log(data_user);
-
-
-            const user_item = document.querySelector(`[data-user="${data_user}"]`);
-            console.log(user_item);
-
-
-            user_item.style.height = "66%";
-
-
-            user_item.appendChild(formTemplate.cloneNode(true));
-        });
-    });
-
     document.addEventListener("click", async (e) => {
         console.log(e.target)
 
-        if(e.target.matches(".new_user__item")){
-            const user_item= e.target;
+        if (e.target.matches(".new_user__item")) {
+            const user_item = e.target;
+
+            // Si ya tiene la clase form_active, la quitamos y salimos
+            if (user_item.classList.contains("form_active")) {
+                user_item.classList.remove("form_active");
+                const formActive = user_item.querySelector('.user_list__form');
+                if (formActive) {
+                    formActive.remove(); // Remueve el formulario si ya está activo
+                }
+                return; // Salir sin continuar
+            }
+
             const clone = document.importNode(formNewTemplate, true);
 
-            //Retirar los form_Active actuales
-            const formActive = document.querySelector('.user_list__item.form_active .user_list__form');
-
-            // Verifica que el formulario exista antes de continuar
-            if (formActive) {
-                formActive.remove()
-            }
+            // Retirar el formulario existente antes de agregar otro
+            retirarFormsActivos();
 
             document.querySelectorAll('.user_list__item.form_active').forEach(form => {
                 form.classList.remove('form_active');
@@ -73,48 +60,76 @@ document.addEventListener("DOMContentLoaded",  async () => {
             user_item.classList.add("form_active");
 
             const formulario = clone.querySelector(".formulario");
+
+            // Inicialmente ocultamos el formulario
+            formulario.style.opacity = "0";
+            formulario.style.transition = "opacity 0.5s ease";
             if (formulario) {
                 // Añade el evento submit mediante addEventListener
                 formulario.addEventListener("submit", (event) => {
                     event.preventDefault();
                     crearUsuario();
                 });
-                formulario.setAttribute("data_user","createUser")
+                formulario.setAttribute("data_user", "createUser")
+            }
+
+            // Agregar el botón de cancelar
+            const cancelButton = clone.querySelector(".cancel-button");
+            if (cancelButton) {
+                cancelButton.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    const formActive = user_item.querySelector('.user_list__form');
+                    if (formActive) {
+                        formActive.remove(); // Remueve el formulario si ya está activo
+                    }
+                    user_item.classList.remove("form_active");
+                });
             }
             user_item.appendChild(clone)
+            setTimeout(() => {
+                formulario.style.opacity = "1";
+            }, 1500);
+
 
         }
 
         if (e.target.matches("#edit_button")) {
-            console.log("Se presiono edit")
+
             let data_edit = e.target.getAttribute("data-edit");
+
             const user_item = document.querySelector(`[data-user="${data_edit}"]`);
-            console.log(user_item);
-            //Retirar los form_Active actuales
-            const formActive = document.querySelector('.user_list__item.form_active .user_list__form');
-
-            // Verifica que el formulario exista antes de continuar
-            if (formActive) {
-                formActive.remove()
+            // Si ya tiene la clase form_active, la quitamos y salimos
+            if (user_item.classList.contains("form_active")) {
+                user_item.classList.remove("form_active");
+                const formActive = user_item.querySelector('.user_list__form');
+                if (formActive) {
+                    formActive.remove(); // Remueve el formulario si ya está activo
+                }
+                return; // Salir sin continuar
             }
-            document.querySelectorAll('.user_list__item.form_active').forEach(form => {
-                form.classList.remove('form_active');
 
-            });
+            // Retirar el formulario existente antes de agregar otro
+            retirarFormsActivos();
+
+            // Añadir la clase activo al form actual
             user_item.classList.add("form_active");
-            const dato_usuario = personas.find(persona => persona.documento === parseInt(data_edit) );
+            const dato_usuario = personas.find(persona => persona.documento === parseInt(data_edit));
             const clone = document.importNode(formTemplate, true);
 
             const formulario = clone.querySelector(".formulario");
+            // Ocultamos el formulario inicialmente
+            formulario.style.opacity = "0";
+            formulario.style.transition = "opacity 0.5s ease";
             if (formulario) {
                 // Añade el evento submit mediante addEventListener
                 formulario.addEventListener("submit", (event) => {
                     event.preventDefault();
                     editUser(event, dato_usuario.documento);
                 });
-                formulario.setAttribute("data-user",dato_usuario.documento)
+                formulario.setAttribute("data-user", dato_usuario.documento)
             }
 
+            // Asignar valores a los campos del formulario
             clone.querySelector("#Nombre").value = dato_usuario.nombre;
             clone.querySelector("#Apellido").value = dato_usuario.apellido;
             clone.querySelector("#Correo").value = dato_usuario.correo;
@@ -123,20 +138,33 @@ document.addEventListener("DOMContentLoaded",  async () => {
             clone.querySelector("#Fecha_nacimiento").value = dato_usuario.fecha_nacimineto;
             clone.querySelector("#Rol").value = dato_usuario.rol.idRol;
 
-            setTimeout(()=>{
-                user_item.appendChild(clone);
-            } ,2100)
-
+            // Agregar el botón de cancelar
+            const cancelButton = clone.querySelector(".cancel-button");
+            if (cancelButton) {
+                cancelButton.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    const formActive = user_item.querySelector('.user_list__form');
+                    if (formActive) {
+                        formActive.remove(); // Remueve el formulario si ya está activo
+                    }
+                    user_item.classList.remove("form_active");
+                });
+            }
+            user_item.appendChild(clone);
+            setTimeout(() => {
+                formulario.style.opacity = "1";
+            }, 2100);
         }
-        if (e.target.matches("#delete_button")){
+
+        if (e.target.matches("#delete_button")) {
 
             let data_delete = e.target.getAttribute("data-delete");
-            let advertencia=confirm( `Estas seguro de eliminar al usuario  ${personas[data_delete].nombre} ${personas[data_delete].apellido}`)
-            if(advertencia){
-                let response= borrarUsuario(personas[data_delete]);
-                if(response){
+            let advertencia = confirm(`Estas seguro de eliminar al usuario  ${personas[data_delete].nombre} ${personas[data_delete].apellido}`);
+            if (advertencia) {
+                let response = borrarUsuario(personas[data_delete]);
+                if (response) {
                     const user_item = document.querySelector(`[data-user="${data_delete}"]`);
-                    user_item.innerHTML=""
+                    user_item.innerHTML = "";
                 }
             }
         }
@@ -146,9 +174,23 @@ document.addEventListener("DOMContentLoaded",  async () => {
 
 
 });
-async function ObtenerUsuarios(Pagina_Actual){
 
-    const response = await fetch(`/Prueba_JSP_war_exploded/usuarios?Pagination=${Pagina_Actual}`);
+function retirarFormsActivos() {
+    const formActive = document.querySelector('.user_list__item.form_active .user_list__form');
+    // Verifica que el formulario exista antes de continuar
+    if (formActive) {
+        formActive.remove()
+    }
+    document.querySelectorAll('.user_list__item.form_active').forEach(form => {
+        form.classList.remove('form_active');
+
+    });
+}
+
+
+async function ObtenerUsuarios(Pagina_Actual) {
+
+    const response = await fetch(`http://localhost:8080/Prueba_JSP_war_exploded/usuarios?Pagination=${Pagina_Actual}`);
     if (response.status === 204) {
         console.log('No se encontraron personas.');
         return [];
@@ -161,29 +203,29 @@ async function ObtenerUsuarios(Pagina_Actual){
     }
 }
 
-async function editUser(evento, documento_user){
+async function editUser(evento, documento_user) {
     console.log(documento_user)
     const Form = document.querySelector(`form[data-user="${documento_user}"]`)
     console.log(Form)
 
-    const nombre= Form.querySelector("#Nombre").value
-    const apellido= Form.querySelector("#Apellido").value
-    const correo= Form.querySelector("#Correo").value
-    const tipoDocumneto= Form.querySelector("#Tipo_documento").value
-    const numeroDocumento= Form.querySelector("#numero_documento").value
+    const nombre = Form.querySelector("#Nombre").value
+    const apellido = Form.querySelector("#Apellido").value
+    const correo = Form.querySelector("#Correo").value
+    const tipoDocumneto = Form.querySelector("#Tipo_documento").value
+    const numeroDocumento = Form.querySelector("#numero_documento").value
     const fechaNacimientoInput = document.querySelector("#Fecha_nacimiento").value;
     const fechaFormateada = formatFecha(fechaNacimientoInput);
-    const rol= Form.querySelector("#Rol").value
-    const data={
+    const rol = Form.querySelector("#Rol").value
+    const data = {
         "action": "edit",
-        "documento":documento_user,
+        "documento": documento_user,
         "nombre": nombre,
         "apellido": apellido,
-        "correo":correo,
-        "tipoDocumneto":tipoDocumneto,
-        "numeroDocumento":numeroDocumento,
-        "fechaNacimiento":fechaFormateada,
-        "rol":rol
+        "correo": correo,
+        "tipoDocumneto": tipoDocumneto,
+        "numeroDocumento": numeroDocumento,
+        "fechaNacimiento": fechaFormateada,
+        "rol": rol
     }
     try {
         await sendRequest("/Prueba_JSP_war_exploded/usuarios", data);
@@ -194,11 +236,11 @@ async function editUser(evento, documento_user){
 }
 
 async function borrarUsuario(persona) {
-    const id_persona= persona.documento;
+    const id_persona = persona.documento;
     console.log(id_persona)
-    const data={
-        "action":"delete",
-        "id":id_persona
+    const data = {
+        "action": "delete",
+        "id": id_persona
     }
 
     try {
@@ -211,29 +253,29 @@ async function borrarUsuario(persona) {
     }
 
 }
-async function crearUsuario(){
+async function crearUsuario() {
     const Form = document.querySelector(".newUser");
     console.log(Form)
 
-    const nombre= Form.querySelector("#Nombre_new").value
-    const apellido= Form.querySelector("#Apellido_new").value
-    const correo= Form.querySelector("#Correo_new").value
-    const tipoDocumneto= Form.querySelector("#Tipo_documento_new").value
-    const numeroDocumento= Form.querySelector("#numero_documento_new").value
+    const nombre = Form.querySelector("#Nombre_new").value
+    const apellido = Form.querySelector("#Apellido_new").value
+    const correo = Form.querySelector("#Correo_new").value
+    const tipoDocumneto = Form.querySelector("#Tipo_documento_new").value
+    const numeroDocumento = Form.querySelector("#numero_documento_new").value
     const fechaNacimientoInput = document.querySelector("#Fecha_nacimiento_new").value;
     const password = Form.querySelector("#password_new").value;
     const fechaFormateada = formatFecha(fechaNacimientoInput);
-    const rol= Form.querySelector("#Rol_new").value
-    const data={
+    const rol = Form.querySelector("#Rol_new").value
+    const data = {
         "action": "add",
         "nombre": nombre,
         "apellido": apellido,
-        "correo":correo,
-        "tipoDocumneto":tipoDocumneto,
-        "numeroDocumento":numeroDocumento,
-        "fechaNacimiento":fechaFormateada,
-        "password":password,
-        "rol":rol
+        "correo": correo,
+        "tipoDocumneto": tipoDocumneto,
+        "numeroDocumento": numeroDocumento,
+        "fechaNacimiento": fechaFormateada,
+        "password": password,
+        "rol": rol
     }
     try {
         await sendRequest("/Prueba_JSP_war_exploded/usuarios", data);

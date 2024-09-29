@@ -2,10 +2,7 @@ package Controlador;
 
 import Modelo.TbSectores;
 import Utilidades.JPAUtils;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.Query;
+import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 
 import java.io.Serializable;
@@ -111,13 +108,21 @@ public class CasillerosJPAController implements Serializable {
     public TbSectores findTbCasillero(int id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(TbSectores.class, id);
+            // Usar una consulta JPQL para obtener el sector y sus espacios
+            String jpql = "SELECT s FROM TbSectores s LEFT JOIN FETCH s.espacios WHERE s.id = :id";
+            Query query = em.createQuery(jpql, TbSectores.class);
+            query.setParameter("id", id);
+
+            return (TbSectores) query.getSingleResult();
+        } catch (NoResultException e) {
+            return null; // Manejar el caso en que no se encuentre el sector
         } finally {
             if (em != null) {
                 em.close();
             }
         }
     }
+
 
 }
 

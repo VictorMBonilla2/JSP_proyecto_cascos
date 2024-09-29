@@ -6,4 +6,9 @@
     <option name="renamerInitialized" value="true" />
     <option name="reverseEngineeringLastDbConnectionId" value="88aac319-f957-40a6-b304-4840e6dddebd__proyecto_cascos" />
   </component>
+  <component name="JpaPluginProjectSettings">
+    <option name="entityNameTemplate" />
+    <option name="generateJpaOnGetter" value="true" />
+    <option name="scaffoldingLanguage" />
+  </component>
 </project>

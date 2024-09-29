@@ -5,14 +5,11 @@ import Modelo.Persona;
 import Modelo.Roles;
 import Utilidades.JPAUtils;
 import jakarta.persistence.*;
-import jakarta.servlet.annotation.WebServlet;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-@WebServlet("/PersonaJpaController")//Se le da nombre al controlador de persistencia de la clase.
 public class PersonaJpaController implements Serializable {
 
     private EntityManagerFactory fabricaEntidades;
@@ -103,7 +100,10 @@ public class PersonaJpaController implements Serializable {
         EntityManager em = getEntityManager();
         try {
             // Crear la consulta JPQL con JOIN FETCH para cargar la relación `rol`
-            String jpql = "SELECT p FROM tb_persona p LEFT JOIN FETCH p.rol";
+            String jpql = "SELECT p FROM tb_persona p " +
+                    "LEFT JOIN FETCH p.rol " +
+                    "LEFT JOIN FETCH p.tipoDocumento";
+
 
             // Crear la consulta TypedQuery basada en la consulta JPQL y se espera un resultado de tipo Persona
             TypedQuery<Persona> query = em.createQuery(jpql, Persona.class);
@@ -126,20 +126,12 @@ public class PersonaJpaController implements Serializable {
     public List<LoginDTO> login(int documento) {
         EntityManager em = getEntityManager();
         try {
-            TypedQuery<Object[]> query = em.createQuery(
-                    "SELECT p.documento, p.tipoDocumento, p.clave, p.rol FROM tb_persona p WHERE p.documento = :NumeroDoc", Object[].class);
+            TypedQuery<LoginDTO> query = em.createQuery(
+                    "SELECT new DTO.LoginDTO(p.documento, p.tipoDocumento.id, p.clave, p.rol.id) " +
+                            "FROM tb_persona p WHERE p.documento = :NumeroDoc", LoginDTO.class);
             query.setParameter("NumeroDoc", documento);
-            List<Object[]> resultados = query.getResultList();
-            List<LoginDTO> loginDTOs = new ArrayList<>();
-            for (Object[] resultado : resultados) {
-                int numDoc = (int) resultado[0];
-                String TipDocument = (String) resultado[1];
-                String clave = (String) resultado[2];
-                Roles rol = (Roles) resultado[3]; // Cambiado de String a Roles
-                loginDTOs.add(new LoginDTO(numDoc, TipDocument, clave, rol.getId())); // Usar el ID del rol
-            }
-            return loginDTOs; // Devolver la lista de LoginDTOs
-
+            List<LoginDTO> resultados = query.getResultList();
+            return resultados; // Devolver la lista de LoginDTOs
         } catch (NoResultException e) {
             System.out.println("No se encontraron resultados para el documento: " + documento);
             return new ArrayList<>(); // Devolver una lista vacía en este caso

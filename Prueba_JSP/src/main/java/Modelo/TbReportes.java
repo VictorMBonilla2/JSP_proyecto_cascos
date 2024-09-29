@@ -1,5 +1,6 @@
 package Modelo;
 
+import Modelo.enums.TipoReporte;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -15,33 +16,28 @@ public class TbReportes {
     private Date fecha_reporte;
     private String nombre_reporte;
     private String descripcion_reporte;
-    private String tipo_reporte;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_aprendiz_fk", nullable = false) // Clave foránea a Persona (aprendiz)
-    private Persona aprendiz;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_reporte")
+    private TipoReporte tipoReporte;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_gestor_fk", nullable = false) // Clave foránea a Persona (gestor)
-    private Persona colaborador;
+    private int documentoAprendiz;
+    private int documentoColaborador;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_vehiculo_fk", nullable = false) // Clave foránea a TbVehiculo
-    private TbVehiculo vehiculo; // Relación con el vehículo específico
-
+    private String placaVehiculo; // Relación con el vehículo específico
 
     public TbReportes() {
     }
 
-    public TbReportes(Integer id_reporte, Date fecha_reporte, String nombre_reporte, String descripcion_reporte, String tipo_reporte, Persona aprendiz, Persona colaborador, TbVehiculo vehiculo) {
+    public TbReportes(Integer id_reporte, Date fecha_reporte, String nombre_reporte, String descripcion_reporte, TipoReporte tipoReporte, int documentoAprendiz, int documentoColaborador, String placaVehiculo) {
         this.id_reporte = id_reporte;
         this.fecha_reporte = fecha_reporte;
         this.nombre_reporte = nombre_reporte;
         this.descripcion_reporte = descripcion_reporte;
-        this.tipo_reporte = tipo_reporte;
-        this.aprendiz = aprendiz;
-        this.colaborador = colaborador;
-        this.vehiculo = vehiculo;
+        this.tipoReporte = tipoReporte;
+        this.documentoAprendiz = documentoAprendiz;
+        this.documentoColaborador = documentoColaborador;
+        this.placaVehiculo = placaVehiculo;
     }
 
     public Integer getId_reporte() {
@@ -76,36 +72,36 @@ public class TbReportes {
         this.descripcion_reporte = descripcion_reporte;
     }
 
-    public String getTipo_reporte() {
-        return tipo_reporte;
+    public TipoReporte getTipoReporte() {
+        return tipoReporte;
     }
 
-    public void setTipo_reporte(String tipo_reporte) {
-        this.tipo_reporte = tipo_reporte;
+    public void setTipoReporte(TipoReporte tipoReporte) {
+        this.tipoReporte = tipoReporte;
     }
 
-    public Persona getAprendiz() {
-        return aprendiz;
+    public int getDocumentoAprendiz() {
+        return documentoAprendiz;
     }
 
-    public void setAprendiz(Persona aprendiz) {
-        this.aprendiz = aprendiz;
+    public void setDocumentoAprendiz(int documentoAprendiz) {
+        this.documentoAprendiz = documentoAprendiz;
     }
 
-    public Persona getColaborador() {
-        return colaborador;
+    public int getDocumentoColaborador() {
+        return documentoColaborador;
     }
 
-    public void setColaborador(Persona colaborador) {
-        this.colaborador = colaborador;
+    public void setDocumentoColaborador(int documentoColaborador) {
+        this.documentoColaborador = documentoColaborador;
     }
 
-    public TbVehiculo getVehiculo() {
-        return vehiculo;
+    public String getPlacaVehiculo() {
+        return placaVehiculo;
     }
 
-    public void setVehiculo(TbVehiculo vehiculo) {
-        this.vehiculo = vehiculo;
+    public void setPlacaVehiculo(String placaVehiculo) {
+        this.placaVehiculo = placaVehiculo;
     }
 }
 

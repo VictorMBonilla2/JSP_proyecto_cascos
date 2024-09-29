@@ -17,7 +17,6 @@
 
 <section class="main_container__home">
     <div class="info_user">
-        <h1>Bienvenido, <%= user.getNombre() %></h1>
         <div class="content">
             <% if (isGestor || isAdmin) { %>
             <!-- Gráfico del colaborador -->
@@ -68,8 +67,8 @@
                 <input type="hidden" id="vehiculoCount" value="<%= vehiculoUser.size() %>" />
 
                 <div class="vehiculo_navigation">
-                    <button onclick="showPrevVehiculo()" id="prevButton" disabled>Anterior</button>
-                    <button onclick="showNextVehiculo()" id="nextButton">Siguiente</button>
+                    <button onclick="showPrevVehiculo()" class="button_secundary button--width45" id="prevButton" disabled="">Anterior</button>
+                    <button onclick="showNextVehiculo()"  class="button_secundary button--width45" id="nextButton">Siguiente</button>
                 </div>
             </div>
             <% } %>
@@ -106,12 +105,6 @@
         </div>
     </div>
 
-    <div class="Graph2">
-        <div class="bloque__sesion">
-            <h1>Has iniciado sesíon en: (lugar)</h1>
-            <p>Ult. sesión activa: (fecha)<br> (hora)</p>
-        </div>
-    </div>
 </section>
 
 <jsp:include page="resources/footer.jsp" />

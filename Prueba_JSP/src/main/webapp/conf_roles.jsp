@@ -21,19 +21,19 @@
             <div class="form__side">
                 <form class="formulario">
                     <div class="formulario__inputs_config">
-                        <div class="input_form">
+                        <div class="input_container">
                             <label for="uten_selector"> Selecciona el Rol:</label>
                             <select id="uten_selector"></select>
                         </div>
-                        <div class="input_form">
+                        <div class="input_container">
                             <label id="spac_input">Nombre del Rol:</label>
                             <input class="config_input" id="space_input">
                         </div>
                     </div>
-                    <div class="contenido__botones">
-                        <button class="sector_button_edit formulario_login__button data_button" id="edit_button">Editar</button>
-                        <button class="sector_button_cancel formulario_login__button" id="cancel_edit__button">Cancelar</button>
-                        <button class="sector_button_delete formulario_login__button data_button info_user_container_side2__button" id="delete_button">Eliminar</button>
+                    <div class="button-container">
+                        <button class="sector_button_edit button_primary " id="edit_button">Editar</button>
+                        <button class="sector_button_cancel button_secundary" id="cancel_edit__button">Cancelar</button>
+                        <button class="sector_button_delete button_secundary button--delete info_user_container_side2__button" id="delete_button">Eliminar</button>
                     </div>
                 </form>
 
@@ -50,14 +50,14 @@
             <div class="form__side">
                 <form class="formulario">
                     <div class="formulario__inputs ">
-                        <div class="input_form">
+                        <div class="input_container">
                             <label for="sector_name"> Nombre del Rol:</label>
                             <input id="sector_name">
                         </div>
                     </div>
-                    <div class="contenido__botones">
-                        <button class="sector_button_edit formulario_login__button data_button" id="create_button">Editar</button>
-                        <button class="sector_button_cancel formulario_login__button">Cancelar</button>
+                    <div class="button-container">
+                        <button class="sector_button_edit button_primary " id="create_button">Editar</button>
+                        <button class="sector_button_cancel button_secundary">Cancelar</button>
                     </div>
                 </form>
 
@@ -67,5 +67,6 @@
     </div>
 
 </section>
+<jsp:include page="resources/footer.jsp" />
 </body>
 </html>

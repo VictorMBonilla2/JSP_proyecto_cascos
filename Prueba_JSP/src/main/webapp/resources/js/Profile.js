@@ -21,57 +21,78 @@ document.addEventListener("click", (ev) => {
 
 function mostrarFormulario() {
     divPerfil.classList.add("modificado");
-    divPerfil.style.gridTemplateColumns = '100% 0%';
-    divDetalles.style.opacity = '0%';
+    divDetalles.classList.add("oculto");
     setTimeout(() => {
         divDetalles.style.display = 'none';
-        divPerfil2.style.display = 'flex';
-        infoContainer.innerHTML = "";
-        infoContainer.appendChild(formTemplate.cloneNode(true));
-        buttonsInfoContainer.style.display = "flex";
+        infoContainer.innerHTML = ""; // Limpiar el contenedor antes de agregar el formulario
+
+        // Clonar el contenido del template
+        const clone = document.importNode(formTemplate, true); // Necesitas pasar 'true' para hacer una clonación profunda
+
+        // Insertar el formulario clonado en el contenedor
+        infoContainer.appendChild(clone);
 
         // Mover la configuración del evento aquí después de que el formulario se haya agregado al DOM
-        const saveButton = document.querySelector('.button_miranose button[type="submit"]');
-        const editProfileForm = document.getElementById('editPrimaryDataForm');
+        // Ahora seleccionamos los elementos desde el DOM, no desde el 'clone'
+        const saveButton = infoContainer.querySelector('#editForm');
+        const cancelEdit = infoContainer.querySelector('#cancelEdit');
 
-        saveButton.addEventListener('click', async (event) => {
+
+        saveButton.addEventListener('submit', async (event) => {
             event.preventDefault(); // Prevenir cualquier comportamiento por defecto
-            const usuarioId = editProfileForm.querySelector("#usuarioId").value;
-            const nombre = editProfileForm.querySelector("#nombre").value;
-            const apellido = editProfileForm.querySelector("#apellido").value;
-            const fecha = editProfileForm.querySelector("#fecha_nacimiento").value;
-
-            const data = {
-                action: "editPrimaryDAta",
-                usuarioId: usuarioId,
-                nombre: nombre,
-                apellido: apellido,
-                fecha: fecha,
-            };
-
-            try {
-                const response = await sendRequest("SvPersona", data);
-                // Manejar la respuesta si es necesario
-                if (response.status === "success") {
-                    console.log("Datos actualizados con éxito");
-                } else {
-                    console.error("Error al actualizar los datos:", response.message);
-                }
-            } catch (error) {
-                console.error("Error en la solicitud:", error);
-            }
+            enviar_formulario();
         });
 
-    }, "2100");
+        cancelEdit.addEventListener('click',()=>{
+            mostrarInformacion()
+        })
+
+    }, 2100);
 }
 
-const mostrarInformacion = () => {
+async function enviar_formulario(){
+    const usuarioId = editProfileForm.querySelector("#usuarioId").value;
+    const nombre = editProfileForm.querySelector("#nombre").value;
+    const apellido = editProfileForm.querySelector("#apellido").value;
+    const fecha = editProfileForm.querySelector("#fecha_nacimiento").value;
+    const data = {
+        action: "editPrimaryDAta",
+        usuarioId: usuarioId,
+        nombre: nombre,
+        apellido: apellido,
+        fecha: fecha,
+    };
+
+    try {
+        const response = await sendRequest("SvPersona", data);
+        // Manejar la respuesta si es necesario
+        if (response.status === "success") {
+            console.log("Datos actualizados con éxito");
+        } else {
+            console.error("Error al actualizar los datos:", response.message);
+        }
+    } catch (error) {
+        console.error("Error en la solicitud:", error);
+    }
+}
+
+function mostrarInformacion() {
     divPerfil.classList.remove("modificado");
-    divPerfil.style.gridTemplateColumns = '34% 66%';
+    divDetalles.classList.remove("oculto");
     divDetalles.style.opacity = '100%';
     divDetalles.style.display = 'flex';
-    divPerfil2.style.display = 'none';
+
+    // Limpiar el contenedor antes de agregar la información
     infoContainer.innerHTML = "";
-    infoContainer.appendChild(infoTemplate.cloneNode(true));
+
+    // Clonar el contenido del template de información
+    const clone = document.importNode(infoTemplate, true);
+
+    // Insertar el template clonado en el contenedor
+    infoContainer.appendChild(clone);
+
+    // Si tienes botones en el template de información que requieren eventos,
+    // puedes seleccionarlos aquí y asignarles los event listeners necesarios.
+
     buttonsInfoContainer.style.display = "none";
-};
+}

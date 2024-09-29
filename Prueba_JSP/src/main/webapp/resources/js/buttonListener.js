@@ -6,8 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let buttonreport=document.querySelectorAll(".report__img");
 
     console.log(buttonreport)
-
-
     // Añade un event listener a cada botón pagar
     for (let i = 0; i < buttonpay.length; i++) {
         buttonpay[i].onclick = function () {

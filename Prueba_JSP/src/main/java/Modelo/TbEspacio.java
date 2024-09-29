@@ -1,8 +1,11 @@
 package Modelo;
 
+import Modelo.enums.EstadoEspacio;
 import jakarta.persistence.*;
+import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Date;
+import java.util.Objects;
 
 
 @Entity
@@ -14,7 +17,6 @@ public class TbEspacio {
     private Integer id_espacio;
 
     private String nombre;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_vehiculo_fk")
     private TbVehiculo vehiculo;
@@ -26,19 +28,20 @@ public class TbEspacio {
     private Date hora_entrada;
     private Date hora_salida;
     private Integer cantidad_cascos;
-    private String estado_espacio;
-
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado_espacio")
+    private EstadoEspacio estado_espacio;
     // Foránea de la clase Casillero
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_casillero_fk", nullable = false)
-    private TbSectores casillero;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_sector", nullable = false)
+    private TbSectores sector;
 
 
 
     public TbEspacio() {
     }
 
-    public TbEspacio(Integer id_espacio, String nombre, TbVehiculo vehiculo, Persona persona, Date hora_entrada, Date hora_salida, Integer cantidad_cascos, String estado_espacio, TbSectores casillero) {
+    public TbEspacio(Integer id_espacio, String nombre, TbVehiculo vehiculo, Persona persona, Date hora_entrada, Date hora_salida, Integer cantidad_cascos, EstadoEspacio estado_espacio, TbSectores sector) {
         this.id_espacio = id_espacio;
         this.nombre = nombre;
         this.vehiculo = vehiculo;
@@ -47,7 +50,7 @@ public class TbEspacio {
         this.hora_salida = hora_salida;
         this.cantidad_cascos = cantidad_cascos;
         this.estado_espacio = estado_espacio;
-        this.casillero = casillero;
+        this.sector = sector;
     }
 
     public Integer getId_espacio() {
@@ -106,20 +109,20 @@ public class TbEspacio {
         this.cantidad_cascos = cantidad_cascos;
     }
 
-    public String getEstado_espacio() {
+    public EstadoEspacio getEstado_espacio() {
         return estado_espacio;
     }
 
-    public void setEstado_espacio(String estado_espacio) {
+    public void setEstado_espacio(EstadoEspacio estado_espacio) {
         this.estado_espacio = estado_espacio;
     }
 
-    public TbSectores getCasillero() {
-        return casillero;
+    public TbSectores getSector() {
+        return sector;
     }
 
-    public void setCasillero(TbSectores casillero) {
-        this.casillero = casillero;
+    public void setSector(TbSectores sector) {
+        this.sector = sector;
     }
 }
 
