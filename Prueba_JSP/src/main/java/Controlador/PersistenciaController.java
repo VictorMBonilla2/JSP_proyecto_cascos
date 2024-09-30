@@ -114,6 +114,10 @@ public class PersistenciaController {
     public List<TbEspacio> ObtenerEspaciosPorSector(int idSector){
         return espacioJPA.obtenerEspaciosPorSectorNativo(idSector);
     }
+    public void eliminarEspacio(int espacio) throws Exception {
+        espacioJPA.destroy(espacio);
+    }
+
     //JPA CASCOS
 
     public TbVehiculo obtenerCasco(String placa) {
@@ -178,6 +182,34 @@ public class PersistenciaController {
         return TpDocumento.findTbTipoDocumento(idDocumento);
     }
 
+    public boolean crearTipoDocumento(TbTipoDocumento documento) throws Exception {
+        try{
+            TpDocumento.create(documento);
+            return true;
+        }catch (Exception e) {
+            System.err.println("Error al Crear el Sector: " + e.getMessage());
+            throw e; // Propagar la excepción
+        }
+    }
+    public boolean ActualizarTipoDocumento(TbTipoDocumento documento) throws Exception {
+        try{
+            TpDocumento.edit(documento);
+            return true;
+        }catch (Exception e) {
+            System.err.println("Error al actualizar el tipo de documento: " + e.getMessage());
+            throw e; // Propagar la excepción
+        }
+    }
+    public boolean eliminarTipoDocumento(int idDocumento) throws Exception {
+        try {
+            TpDocumento.destroy(idDocumento);
+            return true;
+        }catch (Exception e){
+            System.err.println("Error al eliminar el tipo de documento: " + e.getMessage());
+            throw e;
+        }
+    }
+
     //JPA TIPO VEHICULO
     public List<TbTipovehiculo> BuscarTiposVehiculo() {
         return TpVehiculo.findtipovehiculoEntities();
@@ -195,10 +227,37 @@ public class PersistenciaController {
         return rolesJPA.findRol(rol);
     }
 
-    public void eliminarEspacio(int espacio) throws Exception {
-        espacioJPA.destroy(espacio);
+    public List<Roles> obtenerRoles() {
+        return rolesJPA.findRolesEntities();
     }
 
+    public boolean crearRol(Roles roles) {
+        try {
+            rolesJPA.create(roles);
+            return  true;
+        } catch (Exception e){
+            System.err.println("Error al crear el rol: " + e.getMessage());
+            throw e;
+        }
+    }
 
+    public boolean ActualizarRol(Roles roles) throws Exception {
+        try{
+            rolesJPA.edit(roles);
+            return true;
+        }catch (Exception e){
+            System.err.println("Error al actualizar el rol: " + e.getMessage());
+            throw e;
+        }
+    }
 
+    public boolean eliminarRol(int idRol) throws Exception {
+        try {
+            rolesJPA.destroy(idRol);
+            return true;
+        }catch (Exception e){
+            System.err.println("Error al eliminar el rol: " + e.getMessage());
+            throw e;
+        }
+    }
 }

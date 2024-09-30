@@ -8,23 +8,25 @@ export async function sendRequest(url, data) {
             body: JSON.stringify(data)
         });
 
-        if (!response.ok) {
-            const errorText = await response.text(); // Get raw response text
-            throw new Error(errorText || 'Network response was not ok');
-        }
+        // Parsear siempre la respuesta como JSON
         const result = await response.json();
-        if (result.status === "success") {
-            return result
-        } else {
-            const errorElement = document.getElementById("Error");
-            if (errorElement) {
-                errorElement.textContent = result.message || "Ocurrió un error.";
-                errorElement.style.display = "block";
-            }
+
+        // Si la respuesta no es exitosa, lanzar un error con el mensaje del servidor
+        if (!response.ok || result.status !== "success") {
+            throw new Error(result.message || "Ocurrió un error.");
         }
+
+        // Si todo salió bien, retornar el resultado
+        return result;
+
     } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
-        return { status: "error", message: error.message };
+
+        return {
+            status: "error",
+            message: error.message || "Error desconocido."
+        };
     }
 }
+
 

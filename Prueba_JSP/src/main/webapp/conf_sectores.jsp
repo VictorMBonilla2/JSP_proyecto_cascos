@@ -1,7 +1,7 @@
 <%@ page import="Modelo.Persona" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:include page="resources/header.jsp" />
-
+<link rel="stylesheet" href="resources/css/conf_Sistema.css">
 <jsp:include page="resources/sidebar.jsp" />
 
 <%
@@ -71,8 +71,8 @@
                     </div>
                     <div class="button-container">
                         <button class="button_primary"
-                                id="create_button">Editar</button>
-                        <button class="button_secundary">Cancelar</button>
+                                id="create_button" type="submit">Crear</button>
+                        <button class="button_secundary" type="reset">Cancelar</button>
                     </div>
                 </form>
 

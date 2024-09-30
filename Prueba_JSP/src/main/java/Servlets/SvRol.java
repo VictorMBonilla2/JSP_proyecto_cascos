@@ -1,15 +1,11 @@
 package Servlets;
 
-import Controlador.PersistenciaController;
-import Logica.Logica_Documentos;
-import Modelo.TbSectores;
-import Modelo.TbTipoDocumento;
-import Modelo.TbTipovehiculo;
+import Logica.Logica_Rol;
+import Modelo.Roles;
 import Utilidades.JsonReader;
 import Utilidades.ResultadoOperacion;
 import Utilidades.sendResponse;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,21 +17,20 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-@WebServlet(name = "tipodocumento", urlPatterns = "/tipoDoc")
-public class SvTipoDocumento extends HttpServlet {
-        Logica_Documentos logicaDocumentos = new Logica_Documentos();
+public class SvRol extends HttpServlet {
+    Logica_Rol logicaRol = new Logica_Rol();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<TbTipoDocumento> lista= logicaDocumentos.obtenerDocumentos();
+        List<Roles> lista = logicaRol.ObtenerRoles();
         try{
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-
             JSONArray jsonArray = new  JSONArray();
-            for (TbTipoDocumento tipo : lista){
+            for (Roles rol : lista){
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("id_documento", tipo.getId());
-                jsonObject.put("nombre_documento",tipo.getNombreDocumento());
+                jsonObject.put("id_rol", rol.getId());
+                jsonObject.put("nombre_rol",rol.getNombre());
                 jsonArray.put(jsonObject);
             }
             PrintWriter out = response.getWriter();
@@ -44,8 +39,6 @@ public class SvTipoDocumento extends HttpServlet {
         }catch (Exception e){
             System.out.println("Error al parsear el JSON "+e);
         }
-
-
     }
 
     @Override
@@ -55,45 +48,43 @@ public class SvTipoDocumento extends HttpServlet {
 
         switch (action) {
             case "add":
-                crearDocumento(request, response, jsonObject);
+                crearRol(request, response, jsonObject);
                 break;
             case "edit":
-                editDocumento(request, response, jsonObject);
+                editRol(request, response, jsonObject);
                 break;
             case "delete":
-                deleteDocumento(request, response, jsonObject);
+                deleteRol(request, response, jsonObject);
                 break;
             default:
                 System.out.println("Acción no reconocida");
         }
-
     }
 
-
-    private void crearDocumento(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
+    private void crearRol(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             // Obtener los parámetros del JSON
-            String nombre_Sector = jsonObject.getString("nombreDocumento");
+            String nombre_Rol = jsonObject.getString("nombreRol");
 
-            if (nombre_Sector != null && !nombre_Sector.trim().isEmpty()) {
+            if (nombre_Rol != null && !nombre_Rol.trim().isEmpty()) {
                 // Crear el objeto TbTipoDocumento
-                TbTipoDocumento documento = new TbTipoDocumento();
-                documento.setNombreDocumento(nombre_Sector);
+                Roles roles = new Roles();
+                roles.setNombre(nombre_Rol);
 
                 // Intentar crear el documento utilizando logica_sectores
-                ResultadoOperacion resultado = logicaDocumentos.crearDocumento(documento);
+                ResultadoOperacion resultado = logicaRol.crearRol(roles);
 
                 // Verificar si la creación del documento fue exitosa
                 if (resultado.isExito()) {
-                    System.out.println("Documento creado exitosamente.");
+                    System.out.println("Rol creado exitosamente.");
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
                 } else {
-                    System.out.println("Error al crear el Documento.");
+                    System.out.println("Error al crear el rol.");
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
                 }
             } else {
                 // Datos no válidos, enviar una respuesta de error
-                sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos inválidos para crear el Documento.");
+                sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos inválidos para crear el rol.");
             }
 
         } catch (JSONException e) {
@@ -107,33 +98,33 @@ public class SvTipoDocumento extends HttpServlet {
         }
     }
 
-    private void editDocumento(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
+    private void editRol(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             // Obtener los parámetros del JSON
-            int idDocumento = jsonObject.getInt("idDocumento");
-            String nombre = jsonObject.getString("nombreDocumento");
+            int idRol = jsonObject.getInt("idRol");
+            String nombre = jsonObject.getString("nombreRol");
 
             // Validar los parámetros
-            if (idDocumento > 0 && nombre != null && !nombre.trim().isEmpty()) {
+            if (idRol > 0 && nombre != null && !nombre.trim().isEmpty()) {
                 // Crear el objeto TbSectores con los datos nuevos
-                TbTipoDocumento documento = new TbTipoDocumento();
-                documento.setId(idDocumento);  // Establecer el ID del sector
-                documento.setNombreDocumento(nombre);
+                Roles roles = new Roles();
+                roles.setId(idRol);  // Establecer el ID del sector
+                roles.setNombre(nombre);
 
                 // Intentar actualizar el documento usando el nuevo enfoque de ResultadoOperacion
-                ResultadoOperacion resultado = logicaDocumentos.actualizarDocumento(documento);
+                ResultadoOperacion resultado = logicaRol.actualizarRol(roles);
 
                 // Verificar si la operación fue exitosa
                 if (resultado.isExito()) {
-                    System.out.println("Documento actualizado exitosamente.");
+                    System.out.println("Rol actualizado exitosamente.");
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
                 } else {
-                    System.out.println("Error al actualizar el documento: " + resultado.getMensaje());
+                    System.out.println("Error al actualizar el rol: " + resultado.getMensaje());
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
                 }
             } else {
                 // Si los datos no son válidos
-                sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos inválidos para actualizar el documento.");
+                sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos inválidos para actualizar el rol.");
             }
 
         } catch (JSONException e) {
@@ -147,13 +138,12 @@ public class SvTipoDocumento extends HttpServlet {
         }
     }
 
-
-    private void deleteDocumento(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
+    private void deleteRol(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
-            int idDocumento = jsonObject.getInt("idDocumento");
+            int idRol = jsonObject.getInt("idRol");
 
             // Llamar al método de lógica para eliminar el sector
-            ResultadoOperacion resultado = logicaDocumentos.eliminarTipoDocumento(idDocumento);
+            ResultadoOperacion resultado = logicaRol.eliminarRol(idRol);
 
             // Manejar la respuesta según el resultado de la operación
             if (resultado.isExito()) {
@@ -169,6 +159,6 @@ public class SvTipoDocumento extends HttpServlet {
             System.err.println("Error inesperado: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al eliminar el tipo de documento.");
         }
-    }
 
+    }
 }

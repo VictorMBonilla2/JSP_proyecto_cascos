@@ -1,14 +1,8 @@
-  <%--
-  Created by IntelliJ IDEA.
-  User: Propietario
-  Date: 3/05/2024
-  Time: 10:50 a. m.
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Registro</title>
+    <link rel="stylesheet" href="resources/css/Styles.css">
     <link rel="stylesheet" href="resources/css/register.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -1,14 +1,13 @@
 package Modelo;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table (name= "tb_tipodocumento")
 public class TbTipoDocumento {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_tipodocumento", nullable = false)
     private int id;
 
     @Column(name="nombre_documento")

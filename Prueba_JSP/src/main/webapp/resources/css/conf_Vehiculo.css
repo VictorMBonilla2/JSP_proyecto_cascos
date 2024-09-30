@@ -1,0 +1,78 @@
+.container-Editvehiculo {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: var(--container-bg);
+    width: 100%;
+    border-radius: var(--borderRadius);
+}
+
+.edit-Vehiculo{
+    display: flex;
+    width: 100%;
+    
+}
+.bodySearhForm{
+    display: flex;
+    align-items: center;
+}
+.search{
+    width: 100%;
+    border-bottom: 1px solid black;
+}
+
+.vehiculos_container{
+    width: 100%;
+}
+
+.selectTypeSearch{
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+}
+.formulario__body{
+    width: 50%;
+}
+
+
+.card-Vehiculos{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 3 columnas ajustables */
+    gap: 10px; /* Espaciado entre los elementos */
+    width: 50%;
+    padding: 20px
+}
+.itemVehiculo {
+    border-radius: var(--borderRadius);
+    padding: 15px;
+    height: fit-content;
+    width: 150px; 
+    gap: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s background-color;
+}
+.itemVehiculo:hover{
+    background-color: rgb(232, 255, 210);
+}
+
+.card-title {
+    font-size: 18px; /* Tamaño de título */
+    font-weight: bold;
+    margin-bottom: 10px; /* Espaciado inferior */
+}
+
+.card-subtitle {
+    font-size: 14px; /* Subtítulo con un tamaño menor */
+    font-weight: normal;
+    margin-bottom: 5px;
+}
+
+.card-text {
+    font-size: 12px;
+    font-weight: normal;
+}

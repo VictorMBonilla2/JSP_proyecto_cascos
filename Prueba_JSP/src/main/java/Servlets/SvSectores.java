@@ -46,7 +46,6 @@ public class SvSectores extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(jsonArray.toString());
     }
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         JSONObject jsonObject = JsonReader.parsearJson(request);
@@ -66,7 +65,6 @@ public class SvSectores extends HttpServlet {
                 System.out.println("Acción no reconocida");
         }
     }
-
     private void crearSector(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             // Obtener los parámetros del JSON
@@ -106,8 +104,6 @@ public class SvSectores extends HttpServlet {
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al crear el sector.");
         }
     }
-
-
     private void editSector(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             // Obtener los parámetros del JSON
@@ -149,9 +145,6 @@ public class SvSectores extends HttpServlet {
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al actualizar el sector.");
         }
     }
-
-
-
     private void deleteSector(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             int idSector = jsonObject.getInt("idSector");
@@ -174,6 +167,4 @@ public class SvSectores extends HttpServlet {
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al eliminar el sector.");
         }
     }
-
-
 }

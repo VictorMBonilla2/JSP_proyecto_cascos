@@ -4,6 +4,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <jsp:include page="resources/header.jsp" />
+<link rel="stylesheet" href="resources/css/home.css">
+<link rel="stylesheet" href="resources/css/profile_aprendiz.css">
 <jsp:include page="resources/sidebar.jsp" />
 
 <%

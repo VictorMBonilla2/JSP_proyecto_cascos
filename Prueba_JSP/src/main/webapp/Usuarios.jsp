@@ -3,6 +3,8 @@
 
 
 <jsp:include page="resources/header.jsp"/>
+<link rel="stylesheet" href="resources/css/conf_Sistema.css">
+<link rel="stylesheet" href="resources/css/usuarios.css">
 <jsp:include page="resources/sidebar.jsp"/>
 
 <%

@@ -3,6 +3,7 @@
 <%@ page import="Modelo.Persona" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <jsp:include page="resources/header.jsp" />
+<link rel="stylesheet" href="resources/css/vehiculo.css">
 <%
     HttpSession sesion = request.getSession();
     Persona user = (Persona) session.getAttribute("user");

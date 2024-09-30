@@ -1,7 +1,7 @@
 <%@ page import="Modelo.Persona" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:include page="resources/header.jsp" />
-
+<link rel="stylesheet" href="resources/css/conf_Sistema.css">
 <jsp:include page="resources/sidebar.jsp" />
 
 <%
@@ -22,18 +22,18 @@
                 <form class="formulario">
                     <div class="formulario__inputs_config">
                         <div class="input_container">
-                            <label for="uten_selector"> Selecciona el Rol:</label>
-                            <select id="uten_selector"></select>
+                            <label for="item_selector"> Selecciona el Rol:</label>
+                            <select id="item_selector" name="rolSelect"></select>
                         </div>
                         <div class="input_container">
-                            <label id="spac_input">Nombre del Rol:</label>
-                            <input class="config_input" id="space_input">
+                            <label for="nameRol_input">Nombre del Rol:</label>
+                            <input class="config_input" name="nombreRol" id="nameRol_input">
                         </div>
                     </div>
                     <div class="button-container">
-                        <button class="sector_button_edit button_primary " id="edit_button">Editar</button>
-                        <button class="sector_button_cancel button_secundary" id="cancel_edit__button">Cancelar</button>
-                        <button class="sector_button_delete button_secundary button--delete info_user_container_side2__button" id="delete_button">Eliminar</button>
+                        <button class="sector_button_edit button_primary " id="edit_button" type="submit">Editar</button>
+                        <button class="sector_button_cancel button_secundary" id="cancel_edit__button" type="reset">Cancelar</button>
+                        <button class="sector_button_delete button_secundary button--delete info_user_container_side2__button" id="delete_button" type="button">Eliminar</button>
                     </div>
                 </form>
 
@@ -52,12 +52,12 @@
                     <div class="formulario__inputs ">
                         <div class="input_container">
                             <label for="sector_name"> Nombre del Rol:</label>
-                            <input id="sector_name">
+                            <input id="sector_name" name="nombreRol">
                         </div>
                     </div>
                     <div class="button-container">
-                        <button class="sector_button_edit button_primary " id="create_button">Editar</button>
-                        <button class="sector_button_cancel button_secundary">Cancelar</button>
+                        <button class="sector_button_edit button_primary " id="create_button" type="submit">Editar</button>
+                        <button class="sector_button_cancel button_secundary" type="reset">Cancelar</button>
                     </div>
                 </form>
 
@@ -67,6 +67,10 @@
     </div>
 
 </section>
+<jsp:include page="resources/confirm.jsp"/>
+<jsp:include page="resources/success.jsp"/>
+<jsp:include page="resources/error.jsp"/>
+<script type="module" src="resources/js/systemForms/roles.js"></script>
 <jsp:include page="resources/footer.jsp" />
 </body>
 </html>
