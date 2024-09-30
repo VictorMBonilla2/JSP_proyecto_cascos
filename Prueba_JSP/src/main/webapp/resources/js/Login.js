@@ -71,8 +71,8 @@ async function selectDocumento(){
     console.log(data)
     data.forEach(tipoDocumento =>{
         const option = document.createElement("option");
-        option.value=tipoDocumento.id_Tipo;
-        option.textContent=tipoDocumento.nombre_Tipo;
+        option.value=tipoDocumento.id_documento;
+        option.textContent=tipoDocumento.nombre_documento;
         documentoSelect.appendChild(option)
     })
 }

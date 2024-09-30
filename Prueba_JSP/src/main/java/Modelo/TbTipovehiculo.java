@@ -2,6 +2,10 @@ package Modelo;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "tb_tipovehiculo")
 public class TbTipovehiculo {
@@ -14,6 +18,8 @@ public class TbTipovehiculo {
     @Column(name = "nombre_tipovehiculo")
     private String nombre;
 
+    @OneToMany(mappedBy = "tipoVehiculo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Tb_MarcaVehiculo> marcas = new LinkedHashSet<>();
 
     public TbTipovehiculo() {
     }

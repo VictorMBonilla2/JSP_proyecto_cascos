@@ -1,6 +1,4 @@
-.main_container{
-    display: flex;
-}
+
 .main_container__casillero{
     display: grid;
     width: 100%;

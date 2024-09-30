@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <jsp:include page="resources/header.jsp" />
-
+<link rel="stylesheet" href="resources/css/registros.css">
 <jsp:include page="resources/sidebar.jsp" />
 
 <section class="main_container__registros">

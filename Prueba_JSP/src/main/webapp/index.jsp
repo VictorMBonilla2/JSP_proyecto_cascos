@@ -4,7 +4,8 @@
 
 <head>
   <title>Logín</title>
-  <link rel="stylesheet" href="resources/css/Styles.css?1">
+  <link rel="stylesheet" href="resources/css/Styles.css">
+  <link rel="stylesheet" href="resources/css/login.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link

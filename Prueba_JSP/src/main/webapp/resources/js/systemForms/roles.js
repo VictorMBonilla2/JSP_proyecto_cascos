@@ -6,33 +6,33 @@ import {showErrorDialog} from "../alerts/error.js";
 
 document.addEventListener("DOMContentLoaded",  async ()=>{
 
-    const selectTipoDocumento = document.querySelector("#item_selector");
-    const inputNombreDocumento = document.querySelector("#nameDocument_input");
+    const selectRol = document.querySelector("#item_selector");
+    const inputNombreRol = document.querySelector("#nameRol_input");
     const deleteButton= document.querySelector("#delete_button");
 
 
     const data = await obtenerTipoDocumentos();
 
     if (data.length === 0) {
-        console.log('No se encontraron documentos.');
+        console.log('No se encontraron roles.');
     } else {
         console.log(data)
-        data.forEach(documento => {
+        data.forEach(rol => {
             const option = document.createElement('option');
-            option.value = documento.id_documento;
-            option.textContent = documento.nombre_documento;
-            selectTipoDocumento.appendChild(option);
+            option.value = rol.id_rol;
+            option.textContent = rol.nombre_rol;
+            selectRol.appendChild(option);
         });
         //introducir espacios del primer sector de la lista
-        inputNombreDocumento.value=data[0].nombre_documento;
+        inputNombreRol.value=data[0].nombre_rol;
 
     }
 
     //escuchar cambios en el selector de sectores
-    selectTipoDocumento.addEventListener("change",(e)=>{
-        const id_documento = e.target.value;
-        const dato_tipoDocumento = data.find(tipodocumento => tipodocumento.id_documento === parseInt(id_documento) );
-        inputNombreDocumento.value=dato_tipoDocumento.nombre_documento;
+    selectRol.addEventListener("change",(e)=>{
+        const id_rol = e.target.value;
+        const dato_rol = data.find(rol => rol.id_documento === parseInt(id_rol) );
+        inputNombreRol.value=dato_rol.nombre_rol;
 
     })
 
@@ -40,9 +40,9 @@ document.addEventListener("DOMContentLoaded",  async ()=>{
         const form = document.querySelector(".formulario");
         const formData = new FormData(form);
         showConfirmationDialog(
-            "Eliminar Tipo de Documento?",
-            "El sistema no permitira la eliminación de tipos de documentos en uso. Esta Acción es irreversible.",
-            ()=>eliminarTipoDocumento(formData),
+            "Eliminar rol?",
+            "El sistema no permitira la eliminación de roles en uso. Esta Acción es irreversible.",
+            ()=>eliminarRol(formData),
             () => console.log('Acción cancelada')
         )
     })
@@ -55,62 +55,62 @@ document.addEventListener("DOMContentLoaded",  async ()=>{
         const tipo=form.get("formType");
 
         if(tipo ==="add"){
-            addTipoDocumento(form)
+            addRol(form)
         }
         if(tipo ==="edit"){
-            editTipoDocumento(form)
+            editRol(form)
         }
     })
 
 
 })
 
-async function addTipoDocumento (form) {
-    const nombreDocumento= form.get("nombreDocumento")
+async function addRol (form) {
+    const nombreRol= form.get("nombreRol")
 
     const data = {
         action : "add",
-        nombreDocumento: nombreDocumento,
+        nombreRol: nombreRol,
     };
 
     const response= await sendRequest( `${host}/tipoDoc`,data)
     console.log(response)
     if(response.status === "success"){
-        console.log("Se ha Actualizado el tipo de documento correctamente")
+        console.log("Se ha Actualizado el rol correctamente")
         showSuccessAlert(response.message)
     }else{
         showErrorDialog(response.message)
     }
 }
-async function editTipoDocumento (form) {
-    const id_documento= form.get("documentoSelect")
-    const nombreDocumento= form.get("nombreDocumento")
+async function editRol (form) {
+    const id_rol= form.get("rolSelect")
+    const nombreRol= form.get("nombreRol")
     const data = {
         action : "edit",
-        idDocumento: id_documento,
-        nombreDocumento: nombreDocumento,
+        idRol: id_rol,
+        nombreRol: nombreRol,
     };
     const response= await sendRequest( `${host}/tipoDoc`,data)
     console.log(response)
     if(response.status === "success"){
-        console.log("Se ha Actualizado el tipo de documento correctamente")
+        console.log("Se ha Actualizado el rol correctamente")
         showSuccessAlert(response.message)
     }else{
         showErrorDialog(response.message)
     }
 }
 
-async function eliminarTipoDocumento (form){
-    const id_documento= form.get("documentoSelect")
+async function eliminarRol (form){
+    const id_documento= form.get("rolSelect")
 
     const data = {
         action : "delete",
-        idDocumento: id_documento,
+        idRol: id_documento,
     };
     const response= await sendRequest( `${host}/tipoDoc`,data)
 
     if(response.status === "success"){
-        console.log("Se ha Eliminado el tipo de documento correctamente")
+        console.log("Se ha Eliminado el rol correctamente")
         showSuccessAlert(response.message)
     }else {
         showErrorDialog(response.message)
@@ -125,5 +125,3 @@ async function obtenerTipoDocumentos() {
     }
     return await response.json();
 }
-
-

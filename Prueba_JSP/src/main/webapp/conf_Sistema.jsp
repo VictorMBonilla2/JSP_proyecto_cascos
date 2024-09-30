@@ -3,7 +3,7 @@
 <jsp:include page="resources/header.jsp" />
 
 <jsp:include page="resources/sidebar.jsp" />
-
+<link rel="stylesheet" href="resources/css/conf_Sistema.css">
 <%
     HttpSession sesion = request.getSession();
     Persona user = (Persona) session.getAttribute("user");

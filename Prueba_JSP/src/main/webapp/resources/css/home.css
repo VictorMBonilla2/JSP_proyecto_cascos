@@ -7,10 +7,7 @@ body {
   padding: 0;
   overflow: hidden;
 }
-.main_container{
-  display: flex;
-  background-color: #E6E6E6;
-}
+
 
 .main_container__home{
   width: 100%;

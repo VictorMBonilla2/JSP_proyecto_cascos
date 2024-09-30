@@ -114,19 +114,13 @@ public class Logica_Sectores {
             boolean result = controladora.eliminarSector(idSector);
 
             if (result) {
-                String mensaje = "Sector eliminado exitosamente.";
-                System.out.println(mensaje);
-                return new ResultadoOperacion(true, mensaje); // Retornar true si se eliminó con éxito
+                return new ResultadoOperacion(true, "Sector eliminado exitosamente."); // Retornar true si se eliminó con éxito
             } else {
-                String mensaje = "No se pudo eliminar el sector.";
-                System.out.println(mensaje);
-                return new ResultadoOperacion(false, mensaje); // Retornar false si no se pudo eliminar
+                return new ResultadoOperacion(false, "No se pudo eliminar el sector."); // Retornar false si no se pudo eliminar
             }
         } catch (Exception e) {
             // Manejar cualquier excepción y retornar false
-            String mensaje = "Error al eliminar el sector: " + e.getMessage();
-            System.out.println(mensaje);
-            return new ResultadoOperacion(false, mensaje); // En caso de error, retornar false con mensaje
+            return new ResultadoOperacion(false, "Error al eliminar el sector: " + e.getMessage()); // En caso de error, retornar false con mensaje
         }
     }
 
