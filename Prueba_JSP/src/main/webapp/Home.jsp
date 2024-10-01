@@ -39,26 +39,26 @@
                 <div class="vehiculo_data" id="vehiculo<%= index %>" style="<%= index == 0 ? "" : "display:none;" %>">
                     <div class="vehiculo_data__text">
                         <h1>Placa</h1>
-                        <p><%= vehiculo.getPlaca_vehiculo() %></p>
+                        <p><%= vehiculo.getPlacaVehiculo() %></p>
                     </div>
                     <div class="vehiculo_data__text">
                         <h1>Marca</h1>
-                        <p><%= vehiculo.getMarca_vehiculo() %></p>
+                        <p><%= vehiculo.getMarcaVehiculo() %></p>
                     </div>
                     <div class="vehiculo_data__text">
                         <h1>Modelo</h1>
-                        <p><%= vehiculo.getModelo_vehiculo() %></p>
+                        <p><%= vehiculo.getModeloVehiculo() %></p>
                     </div>
                     <div class="adicional_vehiculo_data">
                         <h1>Datos Adicionales</h1>
                         <hr class="linea">
                         <div class="vehiculo_data__text">
                             <h1>¿Lleva casco?</h1>
-                            <p><%= vehiculo.getCant_casco() == 0 ? "No" : "Sí" %></p>
+                            <p><%= vehiculo.getCantCasco() == 0 ? "No" : "Sí" %></p>
                         </div>
                         <div class="vehiculo_data__text">
                             <h1>Cantidad</h1>
-                            <p><%= vehiculo.getCant_casco() %></p>
+                            <p><%= vehiculo.getCantCasco() %></p>
                         </div>
                     </div>
                 </div>

@@ -4,6 +4,8 @@ import Controlador.PersistenciaController;
 import DTO.VehiculoDTO;
 import Modelo.TbTipovehiculo;
 import Modelo.TbVehiculo;
+import Modelo.Tb_MarcaVehiculo;
+import Modelo.Tb_ModeloVehiculo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +57,7 @@ public class Logica_Vehiculo {
             }
 
             ListaNueva = Lista.stream()
-                    .map(vehiculo -> new VehiculoDTO(vehiculo.getId_vehiculo(), vehiculo.getPlaca_vehiculo(), vehiculo.getMarca_vehiculo(), vehiculo.getCant_casco()))
+                    .map(vehiculo -> new VehiculoDTO(vehiculo.getId_vehiculo(), vehiculo.getPlacaVehiculo(), vehiculo.getMarcaVehiculo().getNombreMarca(), vehiculo.getCantCasco()))
                     .collect(Collectors.toList());
 
         } catch (NumberFormatException e) {
@@ -89,5 +91,27 @@ public class Logica_Vehiculo {
         }
 
         return ListaVehiculos;
+    }
+
+    public Tb_MarcaVehiculo buscarMarcaPorTipo(int marcaVehiculo, int tipoVehiculo) {
+        try{
+            return controladora.obtenerMarcaPorTipo(marcaVehiculo, tipoVehiculo);
+        }catch (Exception e){
+            System.err.println("Error al obtener vehículos: " + e.getMessage());
+            // Puedes manejar esto devolviendo una lista vacía, lanzando una excepción, o lo que consideres adecuado.
+            return null;
+        }
+
+    }
+
+    public Tb_ModeloVehiculo buscarModeloPorMarcaYTipo(int modeloVehiculo, int marcaVehiculo, int tipoVehiculo) {
+        try{
+            return controladora.obtenerModeloPorMarcaYTipo(modeloVehiculo, marcaVehiculo, tipoVehiculo);
+        }catch (Exception e){
+            System.err.println("Error al obtener vehículos: " + e.getMessage());
+            // Puedes manejar esto devolviendo una lista vacía, lanzando una excepción, o lo que consideres adecuado.
+            return null;
+        }
+
     }
 }

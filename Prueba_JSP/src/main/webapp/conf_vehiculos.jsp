@@ -38,10 +38,26 @@
                 <form id="vehiculoForm" class="formulario__body">
                     <h4>Datos del vehículo</h4>
                     <input type="hidden" name="formType" value="edit">
-                    <input type="hidden" name="idVehiculo">
+                    <input type="hidden" id="idVehiculo" name="idVehiculo">
+                    <input type="hidden" id="idAprendiz" name="idAprendiz">
+
                     <div class="input_container">
-                        <label for="tipo">Tipo:</label>
-                        <select type="text" id="tipo" name="tipoVehiculo"></select>
+                        <label for="tipoSelect">Tipo:</label>
+                        <select type="text" id="tipoSelect" name="tipoVehiculo"></select>
+                    </div>
+                    <div class="input_container">
+                        <label for="marcaSelect">Marca:</label>
+                        <select type="text" id="marcaSelect" name="marcaVehiculo"></select>
+                    </div>
+
+                    <div class="input_container">
+                        <label for="modeloSelect">Modelo:</label>
+                        <select type="text" id="modeloSelect" name="modeloVehiculo"></select>
+                    </div>
+
+                    <div class="input_container">
+                        <label for="ciudadSelect">ciudad:</label>
+                        <select type="text" id="ciudadSelect" name="ciudadVehiculo"></select>
                     </div>
 
                     <div class="input_container">
@@ -50,13 +66,8 @@
                     </div>
 
                     <div class="input_container">
-                        <label for="marca">Marca:</label>
-                        <input type="text" id="marca" name="marcaVehiculo">
-                    </div>
-
-                    <div class="input_container">
-                        <label for="modelo">Modelo:</label>
-                        <input type="text" id="modelo" name="modeloVehiculo" >
+                        <label for="colorSelect">Color:</label>
+                        <select type="text" id="colorSelect" name="colorVehiculo" ></select>
                     </div>
 
                     <div class="input_container">
@@ -65,13 +76,13 @@
                     </div>
 
                     <div class="input_container">
-                        <label for="cantidad">Cantidad:</label>
-                        <input type="number" id="cantidad" min="1" name="cantCasco">
+                        <label for="cantidadCasco">Cantidad:</label>
+                        <input type="number" id="cantidadCasco" min="1" name="cantCasco">
                     </div>
                     <div class="button-container">
                         <button class="button_primary" type="submit">Editar</button>
                         <button class="button_secundary" type="reset">cancelar</button>
-                        <button class="button_secundary button--delete" type="button">Eliminar</button>
+                        <button class="button_secundary button--delete" id="deleteButton" type="button">Eliminar</button>
                     </div>
                 </form>
 
@@ -84,8 +95,11 @@
     </div>
 
 </section>
-
+<jsp:include page="resources/confirm.jsp"/>
+<jsp:include page="resources/success.jsp"/>
+<jsp:include page="resources/error.jsp"/>
 <script type="module" src="resources/js/systemForms/config_vehiculos.js"></script>
+<jsp:include page="resources/footer.jsp" />
 </section>
 </main>
 <template id="vehiculoTemplate">

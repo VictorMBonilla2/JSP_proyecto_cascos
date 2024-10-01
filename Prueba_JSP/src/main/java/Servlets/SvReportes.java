@@ -2,9 +2,7 @@ package Servlets;
 
 
 import Logica.Logica_Reportes;
-import Modelo.Persona;
 import Modelo.TbReportes;
-import Modelo.TbVehiculo;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

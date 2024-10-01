@@ -1,4 +1,4 @@
-import { sendRequest } from "./ajax.js";
+import {sendRequest} from "./ajax.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const editButtons = document.querySelectorAll(".user_button_edit");

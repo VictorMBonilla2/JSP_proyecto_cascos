@@ -19,7 +19,7 @@
 
                     if (vehiculo != null) {
                         Integer documento = espacio.getPersona().getDocumento();
-                        String placa = vehiculo.getPlaca_vehiculo();
+                        String placa = vehiculo.getPlacaVehiculo();
                         String nombre = espacio.getNombre();
                         Integer cantCascos= espacio.getCantidad_cascos();
                         Date tiempoEntrada = espacio.getHora_entrada();
@@ -70,7 +70,7 @@
                                 <div class="input_container input_container--vertical">
                                     <p>Documento: <%=documento%></p>
                                     <p>Nombre: <%=nombre%></p>
-                                    <p>Placa: <%=vehiculo.getPlaca_vehiculo()%></p>
+                                    <p>Placa: <%=vehiculo.getPlacaVehiculo()%></p>
 
                                     <button type="submit" class="button_primary">Liberar</button>
                                 </div>

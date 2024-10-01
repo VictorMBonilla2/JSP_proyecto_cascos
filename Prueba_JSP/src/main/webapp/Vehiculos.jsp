@@ -24,7 +24,6 @@
 
                 </div>
                 <div class="vehiculo__form__header">
-
                     <h1>Datos del vehiculo</h1>
                     <hr>
                 </div>
@@ -58,6 +57,10 @@
                                placeholder="Ciudad de tu Vehiculo">
                     </div>
                     <div class="input_container">
+                        <label for="color">Color:</label>
+                        <input type="text" id="color" name="colorVehiculo" >
+                    </div>
+                    <div class="input_container">
                         <label for="colorVehiculo">Color:</label>
                         <input type="text" id="colorVehiculo" name="ciudad"
                                placeholder="Color de tu Vehiculo">
@@ -77,7 +80,6 @@
                     <button class="button_secundary button--delete" type="button" id="delete">Eliminar</button>
                 </div>
             </form>
-
         </div>
 
         <div class="vehiculo__list">

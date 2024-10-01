@@ -1,10 +1,7 @@
 package Servlets;
 
-import Controlador.PersistenciaController;
 import Logica.Logica_Documentos;
-import Modelo.TbSectores;
 import Modelo.TbTipoDocumento;
-import Modelo.TbTipovehiculo;
 import Utilidades.JsonReader;
 import Utilidades.ResultadoOperacion;
 import Utilidades.sendResponse;

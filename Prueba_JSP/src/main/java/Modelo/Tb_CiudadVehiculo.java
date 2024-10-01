@@ -12,11 +12,10 @@ public class Tb_CiudadVehiculo {
     @Column(name = "nombre_ciudad", nullable = false, unique = true)
     private String nombreCiudad;
 
-    // Constructor vacío
+
     public Tb_CiudadVehiculo() {
     }
 
-    // Constructor completo
     public Tb_CiudadVehiculo(int id, String nombreCiudad) {
         this.id = id;
         this.nombreCiudad = nombreCiudad;
