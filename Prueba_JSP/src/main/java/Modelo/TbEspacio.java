@@ -2,10 +2,8 @@ package Modelo;
 
 import Modelo.enums.EstadoEspacio;
 import jakarta.persistence.*;
-import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Date;
-import java.util.Objects;
 
 
 @Entity

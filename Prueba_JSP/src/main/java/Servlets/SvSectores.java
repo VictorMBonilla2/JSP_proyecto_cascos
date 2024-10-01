@@ -1,19 +1,16 @@
 package Servlets;
 
 import Logica.Logica_Sectores;
-import Modelo.Persona;
 import Modelo.TbSectores;
 import Utilidades.EspacioServiceManager;
 import Utilidades.JsonReader;
 import Utilidades.ResultadoOperacion;
 import Utilidades.sendResponse;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.hibernate.query.sqm.produce.function.ArgumentTypesValidator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -17,6 +17,9 @@ public class PersistenciaController {
     TiposVehiculosJPAController TpVehiculo = new TiposVehiculosJPAController();
     TipoDocumentoJPAController TpDocumento = new TipoDocumentoJPAController();
     RolesJPAController rolesJPA = new RolesJPAController();
+    CiudadVehiculosJPAController ciudadVehiculo= new CiudadVehiculosJPAController();
+    MarcaVehiculoJPAController marcaVehiculoJPA = new MarcaVehiculoJPAController();
+    ModeloVehiculoJPAController modeloVehiculoJPA = new ModeloVehiculoJPAController();
 
 
 
@@ -260,4 +263,65 @@ public class PersistenciaController {
             throw e;
         }
     }
+
+    //MARCA VEHICULO.
+    public Tb_MarcaVehiculo obtenerMarcaPorTipo(int marcaVehiculo, int tipoVehiculo) {
+        try{
+            return marcaVehiculoJPA.findMarcaEntitiesForType(marcaVehiculo,tipoVehiculo);
+        }catch (Exception e){
+            System.err.println("Error al eliminar el rol: " + e.getMessage());
+            throw e;
+        }
+    }
+    public List<Tb_MarcaVehiculo> buscarMarcasPorTipo(int idTipoVehiculo) {
+        try{
+            return marcaVehiculoJPA.findMarcasForType(idTipoVehiculo);
+        } catch ( Exception e){
+            System.err.println("Error al eliminar el rol: " + e.getMessage());
+            throw e;
+        }
+    }
+
+
+
+    //MODELO VEHICULO
+    public Tb_ModeloVehiculo obtenerModeloPorMarcaYTipo(int modeloVehiculo, int marcaVehiculo, int tipoVehiculo) {
+        try{
+            return modeloVehiculoJPA.findModeloEntitiesForTypeAndBrand(modeloVehiculo,marcaVehiculo,tipoVehiculo);
+        }catch (Exception e){
+            System.err.println("Error al eliminar el rol: " + e.getMessage());
+            throw e;
+        }
+
+    }
+
+
+    public List<Tb_ModeloVehiculo> ObtenerModelosPorMarcaYTipo(int idMarcaVehiculo, int idTipoVehiculo) {
+        try {
+            return modeloVehiculoJPA.findModelosPorMarcaYTipo(idMarcaVehiculo, idTipoVehiculo);
+        }catch (Exception e){
+            System.err.println("Error al eliminar el rol: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    //CIUDAD VEHICULO
+
+    public Tb_CiudadVehiculo BuscarCiudad(int ciudadId) {
+        try {
+            return ciudadVehiculo.findCiudadVehiculo(ciudadId);
+        }catch (Exception e){
+            System.err.println("Error al eliminar el rol: " + e.getMessage());
+            throw e;
+        }
+    }
+    public List<Tb_CiudadVehiculo> ObtenerCiudades(){
+        try {
+            return ciudadVehiculo.findCiudadVehiculoEntities();
+        }catch (Exception e){
+            System.err.println("Error al eliminar el rol: " + e.getMessage());
+            throw e;
+        }
+    }
+
 }

@@ -38,7 +38,8 @@
 
 <header class="hea_container">
     <div class="hea_container__logo">
-            <svg xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="svg12" sodipodi:docname="SENA logo.svg" x="0px" y="0px" viewBox="0 0 100 98" style="enable-background:new 0 0 100 98;" xml:space="preserve">
+            <svg xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                 xmlns="http://www.w3.org/2000/svg" version="1.1" id="svg12" sodipodi:docname="SENA logo.svg" x="0px" y="0px" viewBox="0 0 100 98" style="enable-background:new 0 0 100 98;" xml:space="preserve">
                 <sodipodi:namedview bordercolor="#666666" borderopacity="1" gridtolerance="1" guidetolerance="1" id="namedview14" inkscape:current-layer="svg12" inkscape:cx="96.265104" inkscape:cy="56.747294" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:showpageshadow="false" inkscape:window-height="705" inkscape:window-maximized="1" inkscape:window-width="1366" inkscape:window-x="-8" inkscape:window-y="-8" inkscape:zoom="1" objecttolerance="1" pagecolor="#ffffff" showgrid="false" units="px">
                 <inkscape:grid id="grid58" type="xygrid"/>
                 </sodipodi:namedview>
@@ -102,7 +103,11 @@
 
         <header class="hea_container">
             <div class="hea_container__logo">
-                <svg xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="svg12" sodipodi:docname="SENA logo.svg" x="0px" y="0px" viewBox="0 0 100 98" style="enable-background:new 0 0 100 98;" xml:space="preserve">
+                <svg xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                     xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                     xmlns="http://www.w3.org/2000/svg" version="1.1" id="svg12" sodipodi:docname="SENA logo.svg"
+                     x="0px" y="0px" viewBox="0 0 100 98" style="enable-background:new 0 0 100 98;"
+                     xml:space="preserve">
                 <sodipodi:namedview bordercolor="#666666" borderopacity="1" gridtolerance="1" guidetolerance="1" id="namedview14" inkscape:current-layer="svg12" inkscape:cx="96.265104" inkscape:cy="56.747294" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:showpageshadow="false" inkscape:window-height="705" inkscape:window-maximized="1" inkscape:window-width="1366" inkscape:window-x="-8" inkscape:window-y="-8" inkscape:zoom="1" objecttolerance="1" pagecolor="#ffffff" showgrid="false" units="px">
                     <inkscape:grid id="grid58" type="xygrid"/>
                 </sodipodi:namedview>

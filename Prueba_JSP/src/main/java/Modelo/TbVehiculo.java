@@ -1,41 +1,63 @@
 package Modelo;
 
+import Modelo.enums.ColorVehiculo;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tb_vehiculo")
 public class TbVehiculo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_vehiculo", nullable = false)
     private int id_vehiculo;
-    private String placa_vehiculo;
-    private String marca_vehiculo;
-    private String modelo_vehiculo;
-    private Integer cant_casco;
-    private String color_vehiculo;
+
+    @Column(name = "placa_vehiculo", nullable = false)
+    private String placaVehiculo;
+
+    @Column(name = "cant_casco")
+    private Integer cantCasco;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "color_vehiculo")
+    private ColorVehiculo colorVehiculo;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "persona_documento")
     private Persona persona;
-    private String ciudad_vehiculo;
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_tipovehiculo")  // Clave foránea que conecta con TbTipovehiculo
+    @JoinColumn(name = "id_ciudad", nullable = false)  // Relación con la tabla de ciudades
+    private Tb_CiudadVehiculo ciudadVehiculo;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_tipovehiculo", nullable = false)  // Clave foránea que conecta con TbTipovehiculo
     private TbTipovehiculo tipovehiculo;
+
+    // Nueva relación con Tb_MarcaVehiculo
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_marcavehiculo", nullable = false)  // Clave foránea que conecta con Tb_MarcaVehiculo
+    private Tb_MarcaVehiculo marcaVehiculo;
+
+    // Nueva relación con Tb_ModeloVehiculo
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_modelovehiculo", nullable = false)  // Clave foránea que conecta con Tb_ModeloVehiculo
+    private Tb_ModeloVehiculo modeloVehiculo;
 
 
     public TbVehiculo() {
     }
 
-    public TbVehiculo(int id_vehiculo, String placa_vehiculo, String marca_vehiculo, String modelo_vehiculo, Integer cant_casco, String color_vehiculo, Persona persona, String ciudad_vehiculo, TbTipovehiculo tipovehiculo) {
+    public TbVehiculo(int id_vehiculo, String placaVehiculo, Integer cantCasco, ColorVehiculo colorVehiculo, Persona persona, Tb_CiudadVehiculo ciudadVehiculo, TbTipovehiculo tipovehiculo, Tb_MarcaVehiculo marcaVehiculo, Tb_ModeloVehiculo modeloVehiculo) {
         this.id_vehiculo = id_vehiculo;
-        this.placa_vehiculo = placa_vehiculo;
-        this.marca_vehiculo = marca_vehiculo;
-        this.modelo_vehiculo = modelo_vehiculo;
-        this.cant_casco = cant_casco;
-        this.color_vehiculo = color_vehiculo;
+        this.placaVehiculo = placaVehiculo;
+        this.cantCasco = cantCasco;
+        this.colorVehiculo = colorVehiculo;
         this.persona = persona;
-        this.ciudad_vehiculo = ciudad_vehiculo;
+        this.ciudadVehiculo = ciudadVehiculo;
         this.tipovehiculo = tipovehiculo;
+        this.marcaVehiculo = marcaVehiculo;
+        this.modeloVehiculo = modeloVehiculo;
     }
 
     public int getId_vehiculo() {
@@ -46,36 +68,28 @@ public class TbVehiculo {
         this.id_vehiculo = id_vehiculo;
     }
 
-    public String getPlaca_vehiculo() {
-        return placa_vehiculo;
+    public String getPlacaVehiculo() {
+        return placaVehiculo;
     }
 
-    public void setPlaca_vehiculo(String placa_vehiculo) {
-        this.placa_vehiculo = placa_vehiculo;
+    public void setPlacaVehiculo(String placaVehiculo) {
+        this.placaVehiculo = placaVehiculo;
     }
 
-    public String getMarca_vehiculo() {
-        return marca_vehiculo;
+    public Integer getCantCasco() {
+        return cantCasco;
     }
 
-    public void setMarca_vehiculo(String marca_vehiculo) {
-        this.marca_vehiculo = marca_vehiculo;
+    public void setCantCasco(Integer cantCasco) {
+        this.cantCasco = cantCasco;
     }
 
-    public String getModelo_vehiculo() {
-        return modelo_vehiculo;
+    public ColorVehiculo getColorVehiculo() {
+        return colorVehiculo;
     }
 
-    public void setModelo_vehiculo(String modelo_vehiculo) {
-        this.modelo_vehiculo = modelo_vehiculo;
-    }
-
-    public Integer getCant_casco() {
-        return cant_casco;
-    }
-
-    public void setCant_casco(Integer cant_casco) {
-        this.cant_casco = cant_casco;
+    public void setColorVehiculo(ColorVehiculo colorVehiculo) {
+        this.colorVehiculo = colorVehiculo;
     }
 
     public Persona getPersona() {
@@ -86,12 +100,12 @@ public class TbVehiculo {
         this.persona = persona;
     }
 
-    public String getCiudad_vehiculo() {
-        return ciudad_vehiculo;
+    public Tb_CiudadVehiculo getCiudadVehiculo() {
+        return ciudadVehiculo;
     }
 
-    public void setCiudad_vehiculo(String ciudad_vehiculo) {
-        this.ciudad_vehiculo = ciudad_vehiculo;
+    public void setCiudadVehiculo(Tb_CiudadVehiculo ciudadVehiculo) {
+        this.ciudadVehiculo = ciudadVehiculo;
     }
 
     public TbTipovehiculo getTipovehiculo() {
@@ -102,11 +116,19 @@ public class TbVehiculo {
         this.tipovehiculo = tipovehiculo;
     }
 
-    public String getColor_vehiculo() {
-        return color_vehiculo;
+    public Tb_MarcaVehiculo getMarcaVehiculo() {
+        return marcaVehiculo;
     }
 
-    public void setColor_vehiculo(String color_vehiculo) {
-        this.color_vehiculo = color_vehiculo;
+    public void setMarcaVehiculo(Tb_MarcaVehiculo marcaVehiculo) {
+        this.marcaVehiculo = marcaVehiculo;
+    }
+
+    public Tb_ModeloVehiculo getModeloVehiculo() {
+        return modeloVehiculo;
+    }
+
+    public void setModeloVehiculo(Tb_ModeloVehiculo modeloVehiculo) {
+        this.modeloVehiculo = modeloVehiculo;
     }
 }

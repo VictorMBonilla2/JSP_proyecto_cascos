@@ -43,7 +43,7 @@ public class SvCasilleros {
                     TbVehiculo vehiculo = espacio.getVehiculo();
                     if (vehiculo != null) {
                         // Ahora puedes hacer lo que necesites con la placa del vehiculo
-                        System.out.println("Para el espacio " + espacio.getId_espacio() + ", la placa del vehiculo es: " + vehiculo.getPlaca_vehiculo());
+                        System.out.println("Para el espacio " + espacio.getId_espacio() + ", la placa del vehiculo es: " + vehiculo.getPlacaVehiculo());
                     } else {
                         // No hay ningún vehiculo asociado a este espacio
                         System.out.println("Para el espacio " + espacio.getId_espacio() + ", no hay ningún vehiculo asociado.");
@@ -145,7 +145,7 @@ public class SvCasilleros {
             TbRegistro nuevoRegistro = new TbRegistro();
             nuevoRegistro.setFecha_reporte(LocalDateTime.now());
             nuevoRegistro.setId_espacio(espacio.getId_espacio());
-            nuevoRegistro.setPlacaVehiculo(espacio.getVehiculo().getPlaca_vehiculo());
+            nuevoRegistro.setPlacaVehiculo(espacio.getVehiculo().getPlacaVehiculo());
             nuevoRegistro.setDocumentoAprendiz(espacio.getPersona().getDocumento());
 
             // Verificar si la sesión es válida y tiene el atributo documento
@@ -169,7 +169,7 @@ public class SvCasilleros {
             nuevoReporte.setNombre_reporte(jsonObject.getString("nombreReporte"));
             nuevoReporte.setDescripcion_reporte(jsonObject.getString("DescReporte"));
             nuevoReporte.setDocumentoAprendiz(espacio.getPersona().getDocumento());
-            nuevoReporte.setPlacaVehiculo(espacio.getVehiculo().getPlaca_vehiculo());
+            nuevoReporte.setPlacaVehiculo(espacio.getVehiculo().getPlacaVehiculo());
             System.out.println("Tipo del reporte "+ jsonObject.getString("tipoReporte"));
             System.out.println("Nombre del reporte "+ jsonObject.getString("nombreReporte"));
             System.out.println("Desc del reporte "+ jsonObject.getString("DescReporte"));

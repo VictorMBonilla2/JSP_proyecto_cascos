@@ -2,7 +2,6 @@ package Modelo;
 
 import jakarta.persistence.*;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -24,11 +23,11 @@ public class TbTipovehiculo {
     public TbTipovehiculo() {
     }
 
-    public TbTipovehiculo(int id, String nombre, TbVehiculo vehiculo) {
+    public TbTipovehiculo(int id, String nombre, Set<Tb_MarcaVehiculo> marcas) {
         this.id = id;
         this.nombre = nombre;
+        this.marcas = marcas;
     }
-    // Getters y Setters
 
     public int getId() {
         return id;
@@ -46,5 +45,11 @@ public class TbTipovehiculo {
         this.nombre = nombre;
     }
 
+    public Set<Tb_MarcaVehiculo> getMarcas() {
+        return marcas;
+    }
 
+    public void setMarcas(Set<Tb_MarcaVehiculo> marcas) {
+        this.marcas = marcas;
+    }
 }

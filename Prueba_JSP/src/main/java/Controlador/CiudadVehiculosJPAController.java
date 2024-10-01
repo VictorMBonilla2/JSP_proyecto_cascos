@@ -1,6 +1,6 @@
 package Controlador;
 
-import Modelo.TbTipoDocumento;
+import Modelo.Tb_CiudadVehiculo;
 import Utilidades.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -11,10 +11,11 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
 import java.util.List;
 
-public class TipoDocumentoJPAController implements Serializable {
+public class CiudadVehiculosJPAController implements Serializable {
 
     private EntityManagerFactory fabricaEntidades;
-    public TipoDocumentoJPAController() {
+
+    public CiudadVehiculosJPAController() {
         this.fabricaEntidades = JPAUtils.getEntityManagerFactory();
     }
 
@@ -22,32 +23,33 @@ public class TipoDocumentoJPAController implements Serializable {
         return fabricaEntidades.createEntityManager();
     }
 
-    public void create (TbTipoDocumento tipoDocumento){
-        EntityManager em= null;
-        try{
-            em= getEntityManager();
-            em.getTransaction().begin();
-            em.persist(tipoDocumento);
-            em.getTransaction().commit();
-        }finally {
-            if(em != null){
-                em.close();
-            }
-        }
-    }
-    public void edit(TbTipoDocumento tipoDocumento) throws Exception {
+    public void create(Tb_CiudadVehiculo ciudadVehiculo) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            tipoDocumento = em.merge(tipoDocumento);
+            em.persist(ciudadVehiculo);
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+    public void edit(Tb_CiudadVehiculo ciudadVehiculo) throws Exception {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            ciudadVehiculo = em.merge(ciudadVehiculo);
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
-            if (msg == null || msg.isEmpty()) {
-                int id = tipoDocumento.getId();
-                if (findTbTipoDocumento(id) == null) {
-                    throw new Exception("The espacio with id " + id + " no longer exists.");
+            if (msg == null || msg.length() == 0) {
+                int id = ciudadVehiculo.getId();
+                if (findCiudadVehiculo(id) == null) {
+                    throw new Exception("El ciudadVehiculo con id " + id + " ya no existe.");
                 }
             }
             throw ex;
@@ -63,14 +65,14 @@ public class TipoDocumentoJPAController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            TbTipoDocumento tipoDocumento;
+            Tb_CiudadVehiculo ciudadVehiculo;
             try {
-                tipoDocumento = em.getReference(TbTipoDocumento.class, id);
-                tipoDocumento.getId();
+                ciudadVehiculo = em.getReference(Tb_CiudadVehiculo.class, id);
+                ciudadVehiculo.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new Exception("The espacio with id " + id + " no longer exists.", enfe);
+                throw new Exception("El ciudadVehiculo con id " + id + " ya no existe.", enfe);
             }
-            em.remove(tipoDocumento);
+            em.remove(ciudadVehiculo);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -79,11 +81,18 @@ public class TipoDocumentoJPAController implements Serializable {
         }
     }
 
+    public List<Tb_CiudadVehiculo> findCiudadVehiculoEntities() {
+        return findCiudadVehiculoEntities(true, -1, -1);
+    }
 
-    public TbTipoDocumento findTbTipoDocumento(int id) {
+    public List<Tb_CiudadVehiculo> findCiudadVehiculoEntities(int maxResults, int firstResult) {
+        return findCiudadVehiculoEntities(false, maxResults, firstResult);
+    }
+
+    public Tb_CiudadVehiculo findCiudadVehiculo(int id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(TbTipoDocumento.class, id);
+            return em.find(Tb_CiudadVehiculo.class, id);
         } finally {
             if (em != null) {
                 em.close();
@@ -91,19 +100,11 @@ public class TipoDocumentoJPAController implements Serializable {
         }
     }
 
-    public List<TbTipoDocumento> findTbTipoDocumentoEntities() {
-        return findTbTipoDocumentoEntities(true, -1, -1);
-    }
-
-    public List<TbTipoDocumento> findTbTipoDocumentoEntities(int maxResults, int firstResult) {
-        return findTbTipoDocumentoEntities(false, maxResults, firstResult);
-    }
-
-    private List<TbTipoDocumento> findTbTipoDocumentoEntities(boolean all, int maxResults, int firstResult) {
+    private List<Tb_CiudadVehiculo> findCiudadVehiculoEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(TbTipoDocumento.class));
+            cq.select(cq.from(Tb_CiudadVehiculo.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -111,10 +112,9 @@ public class TipoDocumentoJPAController implements Serializable {
             }
             return q.getResultList();
         } finally {
-            if (em != null && em.isOpen()) {
+            if (em != null) {
                 em.close();
             }
         }
     }
-
 }
