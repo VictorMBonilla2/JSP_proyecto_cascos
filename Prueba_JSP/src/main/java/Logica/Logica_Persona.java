@@ -10,18 +10,18 @@ import java.util.List;
 
 public class Logica_Persona {
     PersistenciaController controladora = new PersistenciaController();
-    public boolean validarIngreso(int documento, int tipoDocumento, String clave, String rol) {
+    public List<LoginDTO> validarIngreso(int documento, int tipoDocumento, String clave, String rol) {
 
-        List<LoginDTO> lista = controladora.login(documento);
+        List<LoginDTO> logeo = controladora.login(documento);
         int rolInt = Integer.parseInt(rol);
 
         // Verifica si la lista está vacía antes de iterar
-        if (lista.isEmpty()) {
+        if (logeo.isEmpty()) {
             System.out.println("No se encontraron registros para el documento.");
-            return false;
+            return null;
         }
 
-        for (LoginDTO login : lista) {
+        for (LoginDTO login : logeo) {
             // Solo verificar si la clave es nula, el tipoDocumento no lo será.
             if (login.getClave() != null) {
                 boolean tipoDocCoincide = login.getTipoDocumento() == tipoDocumento;
@@ -32,12 +32,12 @@ public class Logica_Persona {
                 System.out.println("La coincidencia con la clave es: " + claveCoincide);
                 System.out.println("La coincidencia con el rol es : " + rolCoincide);
                 if (tipoDocCoincide && claveCoincide && rolCoincide) {
-                    return true;
+                    return logeo;
                 }
             }
         }
 
-        return false;
+        return null;
     }
     //Proceso Registro.
     public boolean crearPersona(Persona perso){
@@ -64,12 +64,20 @@ public class Logica_Persona {
         }
     }
 
-    public Persona buscarpersona(int documento) {
+    public Persona buscarpersonaPorId(int id) {
 
-        Persona lista = controladora.buscarpersona(documento);
+        Persona persona = controladora.buscarpersona(id);
 
-        return lista;
+        return persona;
+    }
 
+    public Persona buscarPersonaConDocumento(int documento) {
+        try{
+            return controladora.buscarPersonaDocumento(documento);
+        }catch (Exception e){
+            System.err.println("Error al obtener la persona: " + e.getMessage());
+            return null;
+        }
     }
 
     public void borrarUsuario(int documneto) throws Exception {
@@ -86,7 +94,7 @@ public class Logica_Persona {
     }
     public Persona obtenerColaborador(int documento) {
 
-        Persona Colaborador = buscarpersona(documento);
+        Persona Colaborador = buscarPersonaConDocumento(documento);
 
         if (Colaborador != null && Colaborador.getRol().getId() == 1) {
 

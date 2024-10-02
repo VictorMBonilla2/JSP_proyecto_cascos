@@ -9,6 +9,9 @@ import java.util.Set;
 @Entity(name = "tb_persona")
 public class Persona {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @Column(unique = true, nullable = false)
     private int documento;
 
     private String nombre;
@@ -33,7 +36,8 @@ public class Persona {
     public Persona() {
     }
 
-    public Persona(int documento, String nombre, String apellido, TbTipoDocumento tipoDocumento, String correo, Date fechaNacimiento, String clave, Roles rol, Set<TbVehiculo> vehiculos) {
+    public Persona(int id, int documento, String nombre, String apellido, TbTipoDocumento tipoDocumento, String correo, Date fechaNacimiento, String clave, Roles rol, Set<TbVehiculo> vehiculos) {
+        this.id = id;
         this.documento = documento;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -43,6 +47,15 @@ public class Persona {
         this.clave = clave;
         this.rol = rol;
         this.vehiculos = vehiculos;
+    }
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getDocumento() {

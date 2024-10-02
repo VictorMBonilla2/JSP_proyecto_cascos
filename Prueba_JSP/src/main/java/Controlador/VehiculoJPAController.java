@@ -100,7 +100,7 @@ public class VehiculoJPAController implements Serializable {
         EntityManager em = getEntityManager();
         try {
             TypedQuery<TbVehiculo> query = em.createQuery(
-                    "SELECT v FROM TbVehiculo v WHERE v.persona.documento = :documento", TbVehiculo.class);
+                    "SELECT v FROM TbVehiculo v WHERE v.persona.id = :documento", TbVehiculo.class);
             query.setParameter("documento", documentoPersona);
             return query.getResultList();
         } finally {

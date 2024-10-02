@@ -24,7 +24,7 @@ async function fetchVehiculos(espacioId) {
     }
 
     // Realiza una solicitud AJAX (fetch) al servidor
-    const response= await fetch(`listaVehiculos?documento=${documento}`);
+    const response= await fetch(`VehiculoAprendiz?documento=${documento}`);
     if (response.status === 204) {
         console.log('No se encontraron vehículos.');
         return []; // o alguna otra acción
@@ -38,8 +38,9 @@ async function fetchVehiculos(espacioId) {
 
     data.forEach(vehiculo => {
             const option = document.createElement('option');
-            option.value = vehiculo.id;
-            option.textContent = `${contador}. ${vehiculo.marca} - ${vehiculo.placa}`;
+            option.value = vehiculo.id_vehiculo;
+
+            option.textContent = `${contador}. ${vehiculo.marca.nombre} - ${vehiculo.placa}`;
             option.dataset.cantidadCascos = vehiculo.cantidad_cascos; // Guardar cantidad de cascos como un atributo de datos
             selectVehiculo.appendChild(option);
             contador++;

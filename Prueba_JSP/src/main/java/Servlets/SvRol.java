@@ -6,6 +6,7 @@ import Utilidades.JsonReader;
 import Utilidades.ResultadoOperacion;
 import Utilidades.sendResponse;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,7 +17,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-
+@WebServlet(name = "SvRoles", urlPatterns = "/listaRoles")
 public class SvRol extends HttpServlet {
     Logica_Rol logicaRol = new Logica_Rol();
 

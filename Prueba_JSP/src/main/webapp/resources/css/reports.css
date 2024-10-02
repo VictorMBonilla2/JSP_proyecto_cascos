@@ -6,6 +6,21 @@
 .reportes__content hr:last-child{
     display: none;
 }
+.estilo__casillero{
+    background-color: var(--color);
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    gap: 20px;
+    border-radius: var(--borderRadius) var(--borderRadius) 0 0
+}
+
+.estilo__contenido{
+    background-color: #FAFAFA;
+    flex-direction: column;
+    align-items: center;
+    border-radius: var(--borderRadius)
+}
 
 .report__item{
     display: flex;
@@ -45,4 +60,60 @@
 }
 .report__button:hover{
     background-color: #055fb6;
+}
+
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Fijo en pantalla */
+    z-index: 1; /* Sobre otros elementos */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Habilitar scroll si es necesario */
+    background-color: rgba(0,0,0,0.5); /* Fondo oscuro con opacidad */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content{
+    width: 26%;
+    min-width: 470px;
+    max-width: 550px;
+    display: flex;
+    border-radius: 15px;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 15px;
+    border-radius: var(--borderRadius) var(--borderRadius) 0 0;
+    background-color: #007bff;
+}
+
+.modal-body {
+    background-color: #fff;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 100%; /* Puede ajustarse según necesidad */
+    border-radius: 0 0 var(--borderRadius) var(--borderRadius);
+}
+
+/* Botón de cierre (x) */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }

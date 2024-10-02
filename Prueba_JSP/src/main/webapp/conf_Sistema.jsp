@@ -47,7 +47,7 @@
                 <p>Podras gestionar los tipos, marcas y modelos de los vehiculos disponibles en el sistema</p>
             </div>
             <div class="button-container">
-                <a href="conf_tipoVehiculos.jsp" class="button_primary button--width45">Editar Vehiculos</a>
+                <a href="conf_tipoVehiculos.jsp" class="button_primary button--width45">Editar Tipo</a>
             </div>
         </div>
         <div class="info_box config_box">
@@ -58,6 +58,36 @@
             </div>
             <div class="button-container">
                 <a href="conf_roles.jsp" class="button_primary button--width45">Editar Roles</a>
+            </div>
+        </div>
+        <div class="info_box config_box">
+            <div class="info_data">
+                <h1>Ciudad</h1>
+                <hr>
+                <p>Podras gestionar las ciudades que se usan en el sistema</p>
+            </div>
+            <div class="button-container">
+                <a href="conf_ciudad.jsp" class="button_primary button--width45">Editar Ciudades</a>
+            </div>
+        </div>
+        <div class="info_box config_box">
+            <div class="info_data">
+                <h1>Marca de Vehiculo</h1>
+                <hr>
+                <p>Podras gestionar las marcas de vehiculos que se usan en el sistema</p>
+            </div>
+            <div class="button-container">
+                <a href="conf_marcavehiculo.jsp" class="button_primary button--width45">Editar Marcas</a>
+            </div>
+        </div>
+        <div class="info_box config_box">
+            <div class="info_data">
+                <h1>Modelo de Vehiculo</h1>
+                <hr>
+                <p>Podras gestionar los modelos de vehiculos que se usan en el sistema</p>
+            </div>
+            <div class="button-container">
+                <a href="conf_modelovehiculo.jsp" class="button_primary button--width45">Editar modelo</a>
             </div>
         </div>
     </div>

@@ -97,7 +97,7 @@
                 </div>
                 <div class="info2-user__text">
                     <h1>num Doc</h1>
-                    <p><%= user.getDocumento() %></p>
+                    <p><%= user.getId() %></p>
                 </div>
                 <div class="info2-user__text">
                     <h1>fecha nac</h1>

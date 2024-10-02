@@ -8,66 +8,69 @@
     HttpSession sesion = request.getSession();
     Persona user = (Persona) session.getAttribute("user");
 %>
-
 <section class="main_container__conf_Sistema">
     <div class="conf__container">
         <div class="conf_container__sideOne modific_item__container">
             <div class="title__side">
                 <div class="back_button"><span> &lt; </span></div>
                 <div class="title__container">
-                    <h2>Modificar Tipo de Vehículo</h2>
+                    <h2>Modificar Ciudad</h2>
                 </div>
+
             </div>
             <div class="form__side">
                 <form class="formulario">
                     <div class="formulario__inputs_config">
                         <div class="input_container">
-                            <label for="item_selector">Selecciona el Tipo de Vehículo:</label>
-                            <select id="item_selector" name="tipoVehiculoSelect"></select>
+                            <label for="item_selector"> Selecciona el Ciudad:</label>
+                            <select id="item_selector" name="ciudadSelect"></select>
                         </div>
                         <div class="input_container">
-                            <label for="nameVehiculo_input">Nombre del Tipo:</label>
-                            <input class="config_input" name="nombreVehiculo" id="nameVehiculo_input">
+                            <label for="nameCiudad_input">Nombre del Ciudad:</label>
+                            <input class="config_input" name="nombreCiudad" id="nameCiudad_input">
                         </div>
                     </div>
                     <div class="button-container">
-                        <button class="sector_button_edit button_primary" id="edit_button" type="submit">Editar</button>
+                        <button class="sector_button_edit button_primary " id="edit_button" type="submit">Editar</button>
                         <button class="sector_button_cancel button_secundary" id="cancel_edit__button" type="reset">Cancelar</button>
-                        <button class="sector_button_delete button_secundary button--delete" id="delete_button" type="button">Eliminar</button>
+                        <button class="sector_button_delete button_secundary button--delete info_user_container_side2__button" id="delete_button" type="button">Eliminar</button>
                     </div>
                 </form>
-            </div>
-        </div>
 
+            </div>
+
+        </div>
         <div class="conf_sectores__sideTwo modific_item__container">
             <div class="title__side">
                 <div class="title__container">
-                    <h2>Crear Nuevo Tipo de Vehículo</h2>
+                    <h2>Crear Nueva Ciudad</h2>
                 </div>
+
             </div>
             <div class="form__side">
                 <form class="formulario">
-                    <div class="formulario__inputs">
+                    <div class="formulario__inputs ">
                         <div class="input_container">
-                            <label for="tipoVehiculo_name">Nombre del Tipo de Vehículo:</label>
-                            <input id="tipoVehiculo_name" name="nombreVehiculo">
+                            <label for="ciudad_name"> Nombre del Ciudad:</label>
+                            <input id="ciudad_name" name="nombreCiudad">
                         </div>
                     </div>
                     <div class="button-container">
-                        <button class="sector_button_edit button_primary" id="create_button" type="submit">Crear</button>
+                        <button class="sector_button_edit button_primary " id="create_button" type="submit">Editar</button>
                         <button class="sector_button_cancel button_secundary" type="reset">Cancelar</button>
                     </div>
                 </form>
+
             </div>
+
         </div>
     </div>
-</section>
 
+</section>
 <jsp:include page="resources/confirm.jsp"/>
 <jsp:include page="resources/success.jsp"/>
 <jsp:include page="resources/error.jsp"/>
-<script type="module" src="resources/js/systemForms/tipoVehiculos.js"></script>
+<script type="module" src="resources/js/systemForms/ciudades.js"></script>
 <jsp:include page="resources/footer.jsp" />
 </body>
 </html>
-

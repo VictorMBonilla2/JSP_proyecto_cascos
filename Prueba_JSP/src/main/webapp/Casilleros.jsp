@@ -18,7 +18,7 @@
                     TbVehiculo vehiculo = espacio.getVehiculo();
 
                     if (vehiculo != null) {
-                        Integer documento = espacio.getPersona().getDocumento();
+                        Integer documento = espacio.getPersona().getId();
                         String placa = vehiculo.getPlacaVehiculo();
                         String nombre = espacio.getNombre();
                         Integer cantCascos= espacio.getCantidad_cascos();

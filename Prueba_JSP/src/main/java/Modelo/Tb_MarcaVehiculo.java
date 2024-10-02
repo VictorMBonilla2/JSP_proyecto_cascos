@@ -27,13 +27,13 @@ public class Tb_MarcaVehiculo {
     public Tb_MarcaVehiculo() {
     }
 
-    // Constructor completo
-    public Tb_MarcaVehiculo(int id, String nombreMarca) {
+    public Tb_MarcaVehiculo(int id, String nombreMarca, TbTipovehiculo tipoVehiculo, Set<Tb_ModeloVehiculo> modelos) {
         this.id = id;
         this.nombreMarca = nombreMarca;
+        this.tipoVehiculo = tipoVehiculo;
+        this.modelos = modelos;
     }
 
-    // Getters y Setters
     public int getId() {
         return id;
     }
@@ -48,5 +48,21 @@ public class Tb_MarcaVehiculo {
 
     public void setNombreMarca(String nombreMarca) {
         this.nombreMarca = nombreMarca;
+    }
+
+    public TbTipovehiculo getTipoVehiculo() {
+        return tipoVehiculo;
+    }
+
+    public void setTipoVehiculo(TbTipovehiculo tipoVehiculo) {
+        this.tipoVehiculo = tipoVehiculo;
+    }
+
+    public Set<Tb_ModeloVehiculo> getModelos() {
+        return modelos;
+    }
+
+    public void setModelos(Set<Tb_ModeloVehiculo> modelos) {
+        this.modelos = modelos;
     }
 }

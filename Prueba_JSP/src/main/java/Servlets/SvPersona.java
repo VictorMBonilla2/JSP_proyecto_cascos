@@ -1,5 +1,6 @@
 package Servlets;
 
+import DTO.LoginDTO;
 import Logica.Logica_Documentos;
 import Logica.Logica_Persona;
 import Logica.Logica_Rol;
@@ -20,6 +21,7 @@ import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 
 @WebServlet(name = "SvPersona", urlPatterns = {"/SvPersona"})
@@ -72,7 +74,7 @@ public class SvPersona extends HttpServlet {
         int usuarioId = jsonObject.getInt("usuarioId");
 
         // Recupera el usuario de la base de datos utilizando el ID
-        Persona user = logica_persona.buscarpersona(usuarioId);
+        Persona user = logica_persona.buscarpersonaPorId(usuarioId);
         if (user == null) {
             sendErrorResponse(resp, "Usuario no encontrado.");
             return;
@@ -122,16 +124,18 @@ public class SvPersona extends HttpServlet {
         String password = jsonObject.getString("password");
         String rol = jsonObject.getString("rol");
 
-        boolean validacion = logica_persona.validarIngreso(documento, tipoDocumento, password, rol);
-        if (validacion) {
+        List<LoginDTO> validacion = logica_persona.validarIngreso(documento, tipoDocumento, password, rol);
+        if (validacion != null && !validacion.isEmpty()) {
             try {
-                // Buscar el usuario desde la lógica de negocio
-                Persona user = logica_persona.buscarpersona(documento);
+                // Obtener el primer elemento de la lista validacion
+                LoginDTO loginDTO = validacion.get(0);
 
+                // Buscar el usuario con el ID obtenido desde LoginDTO
+                Persona user = logica_persona.buscarpersonaPorId(loginDTO.getId());
 
                 // Configurar la sesión con los atributos necesarios
                 session = req.getSession(true);
-                session.setAttribute("documento", documento);
+                session.setAttribute("documento", loginDTO.getDocumento());
                 session.setAttribute("user", user);
 
                 sendSuccessResponse(resp, "Login successful");
@@ -141,6 +145,7 @@ public class SvPersona extends HttpServlet {
         } else {
             sendErrorResponse(resp, "Invalid credentials");
         }
+
     }
 
     private void Logout(HttpServletResponse resp, HttpSession session) throws IOException {
@@ -165,7 +170,7 @@ public class SvPersona extends HttpServlet {
         persona.setNombre(nombre);
         persona.setApellido(apellido);
         persona.setTipoDocumento(tipoDocumento);
-        persona.setDocumento(documento);
+        persona.setId(documento);
         persona.setCorreo(correo);
         persona.setClave(clave);
         persona.setRol(roll);

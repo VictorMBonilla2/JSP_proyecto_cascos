@@ -45,11 +45,11 @@ public class SvUsuarios extends HttpServlet {
 
         for (Persona usuario : Lista){
             JSONObject jsonObject= new JSONObject();
-            jsonObject.put("documento", usuario.getDocumento());
+            jsonObject.put("documento", usuario.getId());
             jsonObject.put("nombre", usuario.getNombre());
             jsonObject.put("apellido", usuario.getApellido());
             jsonObject.put("correo", usuario.getCorreo());
-            jsonObject.put("numero_documento", usuario.getDocumento());
+            jsonObject.put("numero_documento", usuario.getId());
             jsonObject.put("fecha_nacimineto", usuario.getFechaNacimiento());
             JSONObject rolObject = new JSONObject();
             if (usuario.getRol() != null) {
@@ -97,7 +97,7 @@ public class SvUsuarios extends HttpServlet {
             persona.setNombre(jsonObject.getString("nombre"));
             persona.setApellido(jsonObject.getString("apellido"));
             persona.setCorreo(jsonObject.getString("correo"));
-            persona.setDocumento(Integer.parseInt(jsonObject.getString("numeroDocumento")));
+            persona.setId(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             System.out.println(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             String fechaNacimientoStr = jsonObject.optString("fechaNacimiento");
             System.out.println("fechaNacimientoStr = " + fechaNacimientoStr);
@@ -131,7 +131,7 @@ public class SvUsuarios extends HttpServlet {
             persona.setNombre(jsonObject.getString("nombre"));
             persona.setApellido(jsonObject.getString("apellido"));
             persona.setCorreo(jsonObject.getString("correo"));
-            persona.setDocumento(Integer.parseInt(jsonObject.getString("numeroDocumento")));
+            persona.setId(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             persona.setClave(jsonObject.getString("password"));
             System.out.println(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             String fechaNacimientoStr = jsonObject.optString("fechaNacimiento");

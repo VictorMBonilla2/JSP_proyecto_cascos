@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function addDataCasilleros(form, espacioId, formType) {
         const documento = document.getElementById(`${formType}documento${espacioId}`).value;
+        console.log(documento)
         const idVehiculo = document.getElementById(`${formType}vehiculolist${espacioId}`).value;
         console.log(idVehiculo)
         const cantcascos = document.getElementById(`${formType}cant_cascos${espacioId}`).value;
