@@ -1,6 +1,7 @@
 package DTO;
 
 public class LoginDTO {
+    private int id;
     private int documento;
     private int tipoDocumento;
     private String clave;
@@ -9,11 +10,20 @@ public class LoginDTO {
     public LoginDTO() {
     }
 
-    public LoginDTO(int documento, int tipoDocumento, String clave, int rolId) {
+    public LoginDTO(int id, int documento, int tipoDocumento, String clave, int rolId) {
+        this.id = id;
         this.documento = documento;
         this.tipoDocumento = tipoDocumento;
         this.clave = clave;
         this.rolId = rolId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getDocumento() {

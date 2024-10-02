@@ -8,32 +8,31 @@
     HttpSession sesion = request.getSession();
     Persona user = (Persona) session.getAttribute("user");
 %>
-
 <section class="main_container__conf_Sistema">
     <div class="conf__container">
         <div class="conf_container__sideOne modific_item__container">
             <div class="title__side">
                 <div class="back_button"><span> &lt; </span></div>
                 <div class="title__container">
-                    <h2>Modificar Tipo de Vehículo</h2>
+                    <h2>Modificar Marca de Vehículo</h2>
                 </div>
             </div>
             <div class="form__side">
                 <form class="formulario">
                     <div class="formulario__inputs_config">
                         <div class="input_container">
-                            <label for="item_selector">Selecciona el Tipo de Vehículo:</label>
-                            <select id="item_selector" name="tipoVehiculoSelect"></select>
+                            <label for="item_selector">Selecciona la Marca:</label>
+                            <select id="item_selector" name="marcaSelect"></select>
                         </div>
                         <div class="input_container">
-                            <label for="nameVehiculo_input">Nombre del Tipo:</label>
-                            <input class="config_input" name="nombreVehiculo" id="nameVehiculo_input">
+                            <label for="nameMarca_input">Nombre de la Marca:</label>
+                            <input class="config_input" name="nombreMarca" id="nameMarca_input">
                         </div>
                     </div>
                     <div class="button-container">
-                        <button class="sector_button_edit button_primary" id="edit_button" type="submit">Editar</button>
+                        <button class="sector_button_edit button_primary " id="edit_button" type="submit">Editar</button>
                         <button class="sector_button_cancel button_secundary" id="cancel_edit__button" type="reset">Cancelar</button>
-                        <button class="sector_button_delete button_secundary button--delete" id="delete_button" type="button">Eliminar</button>
+                        <button class="sector_button_delete button_secundary button--delete info_user_container_side2__button" id="delete_button" type="button">Eliminar</button>
                     </div>
                 </form>
             </div>
@@ -42,15 +41,15 @@
         <div class="conf_sectores__sideTwo modific_item__container">
             <div class="title__side">
                 <div class="title__container">
-                    <h2>Crear Nuevo Tipo de Vehículo</h2>
+                    <h2>Crear Nueva Marca de Vehículo</h2>
                 </div>
             </div>
             <div class="form__side">
                 <form class="formulario">
-                    <div class="formulario__inputs">
+                    <div class="formulario__inputs ">
                         <div class="input_container">
-                            <label for="tipoVehiculo_name">Nombre del Tipo de Vehículo:</label>
-                            <input id="tipoVehiculo_name" name="nombreVehiculo">
+                            <label for="marca_name">Nombre de la Marca:</label>
+                            <input id="marca_name" name="nombreMarca">
                         </div>
                     </div>
                     <div class="button-container">
@@ -66,8 +65,7 @@
 <jsp:include page="resources/confirm.jsp"/>
 <jsp:include page="resources/success.jsp"/>
 <jsp:include page="resources/error.jsp"/>
-<script type="module" src="resources/js/systemForms/tipoVehiculos.js"></script>
+<script type="module" src="resources/js/systemForms/marcasVehiculo.js"></script>
 <jsp:include page="resources/footer.jsp" />
 </body>
 </html>
-

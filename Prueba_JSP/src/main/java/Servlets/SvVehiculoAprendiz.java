@@ -2,6 +2,7 @@ package Servlets;
 
 import Logica.Logica_Ciudad;
 import Logica.Logica_Persona;
+import Logica.Logica_TipoVehiculo;
 import Logica.Logica_Vehiculo;
 import Modelo.*;
 import Modelo.enums.ColorVehiculo;
@@ -25,6 +26,7 @@ public class SvVehiculoAprendiz extends HttpServlet {
     Logica_Vehiculo logica_vehiculo = new Logica_Vehiculo();
     Logica_Persona logica_persona = new Logica_Persona();
     Logica_Ciudad logica_ciudadVehiculo = new Logica_Ciudad();
+    Logica_TipoVehiculo logicaTipoVehiculo = new Logica_TipoVehiculo();
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String documento = request.getParameter("documento");
@@ -51,14 +53,22 @@ public class SvVehiculoAprendiz extends HttpServlet {
         for (TbVehiculo vehiculo : vehiculos) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id_vehiculo", vehiculo.getId_vehiculo());
-            jsonObject.put("id_aprendiz", vehiculo.getPersona().getDocumento());
+            jsonObject.put("id_aprendiz", vehiculo.getPersona().getId());
             // Obtener tipo, marca, y modelo de las relaciones
             TbTipovehiculo tipoVehiculo = vehiculo.getTipovehiculo();
             Tb_MarcaVehiculo marcaVehiculo = vehiculo.getMarcaVehiculo();
             Tb_ModeloVehiculo modeloVehiculo = vehiculo.getModeloVehiculo();
 
             jsonObject.put("tipo_vehiculo", tipoVehiculo != null ? tipoVehiculo.getId() : "N/A");
-            jsonObject.put("marca", marcaVehiculo != null ? marcaVehiculo.getId() : "N/A");
+
+            if (marcaVehiculo != null) {
+                JSONObject marcaObject = new JSONObject();
+                marcaObject.put("id_marca", marcaVehiculo.getId());
+                marcaObject.put("nombre", marcaVehiculo.getNombreMarca());
+                jsonObject.put("marca", marcaObject);
+            } else {
+                jsonObject.put("marca", JSONObject.NULL);
+            }
             jsonObject.put("modelo", modeloVehiculo != null ? modeloVehiculo.getId() : "N/A");
             jsonObject.put("placa", vehiculo.getPlacaVehiculo());
             jsonObject.put("color_vehiculo", vehiculo.getColorVehiculo().name()); // Usamos el enum
@@ -129,7 +139,7 @@ public class SvVehiculoAprendiz extends HttpServlet {
             int modelo_vehiculo = jsonObject.getInt("modeloVehiculo");
 
             // Validar que las entidades relacionadas existan
-            TbTipovehiculo tipovehiculo = logica_vehiculo.buscarTipoVehiculo(tipo_vehiculo);
+            TbTipovehiculo tipovehiculo = logicaTipoVehiculo.buscarTipoVehiculo(tipo_vehiculo);
             if (tipovehiculo == null) {
                 enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Tipo de vehículo no válido.");
                 return;
@@ -155,7 +165,7 @@ public class SvVehiculoAprendiz extends HttpServlet {
             }
 
             // Validar que el usuario/persona exista
-            Persona persona = logica_persona.buscarpersona(usuario);
+            Persona persona = logica_persona.buscarpersonaPorId(usuario);
             if (persona == null) {
                 enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Usuario no válido.");
                 return;
@@ -214,7 +224,7 @@ public class SvVehiculoAprendiz extends HttpServlet {
             int modelo_vehiculo = Integer.parseInt(jsonObject.optString("modelo_vehiculo"));
 
             // Verificar que el tipo, la marca y el modelo son consistentes
-            TbTipovehiculo tipovehiculo = logica_vehiculo.buscarTipoVehiculo(tipo_vehiculo);
+            TbTipovehiculo tipovehiculo = logicaTipoVehiculo.buscarTipoVehiculo(tipo_vehiculo);
             Tb_MarcaVehiculo marca = logica_vehiculo.buscarMarcaPorTipo(marca_vehiculo, tipo_vehiculo);
             Tb_ModeloVehiculo modelo = logica_vehiculo.buscarModeloPorMarcaYTipo(modelo_vehiculo, marca_vehiculo, tipo_vehiculo);
 
@@ -226,7 +236,7 @@ public class SvVehiculoAprendiz extends HttpServlet {
             }
 
             // Verificar si el usuario/persona existe
-            Persona persona = logica_persona.buscarpersona(usuario);
+            Persona persona = logica_persona.buscarPersonaConDocumento(usuario);
 
             // Validar los datos recibidos
             if (tipovehiculo == null || marca == null || modelo == null || persona == null) {

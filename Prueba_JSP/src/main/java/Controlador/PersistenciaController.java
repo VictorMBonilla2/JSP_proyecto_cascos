@@ -52,6 +52,10 @@ public class PersistenciaController {
         return persoJpa.findPersonaEntities();
     }
 
+    public Persona buscarPersonaDocumento(int documento) {
+        return persoJpa.buscarPersonaDocumento(documento);
+    }
+
     public void eliminarUsuario(int documneto) throws Exception {
 
         persoJpa.destroy(documneto);
@@ -142,8 +146,8 @@ public class PersistenciaController {
     public TbVehiculo buscarvehiculo(int id_vehiculo) {
         return vehiculoJPA.findTbVehiculo(id_vehiculo);
     }
-    public List<TbVehiculo> obtenerVehiculos(int documentoInt) {
-        return vehiculoJPA.findVehiculosByPersona(documentoInt);
+    public List<TbVehiculo> obtenerVehiculos(int idPersona) {
+        return vehiculoJPA.findVehiculosByPersona(idPersona);
     }
     public void CrearVehiculo(TbVehiculo vehiculo)  throws Exception{
         vehiculoJPA.create(vehiculo);
@@ -222,6 +226,17 @@ public class PersistenciaController {
 
        return TpVehiculo.findtipovehiculo(tipoVehiculo);
     }
+    public void crearTipoVehiculo(TbTipovehiculo tipoVehiculo) throws Exception {
+         TpVehiculo.create(tipoVehiculo);
+    }
+
+    public void actualizarTipoVehiculo(TbTipovehiculo tipoVehiculo) throws Exception {
+        TpVehiculo.edit(tipoVehiculo);
+    }
+
+    public void eliminarTipoVehiculo(int idTipo) throws Exception {
+        TpVehiculo.destroy(idTipo);
+    }
 
 
     //JPA ROLES
@@ -265,6 +280,21 @@ public class PersistenciaController {
     }
 
     //MARCA VEHICULO.
+
+    public void CrearMarca(Tb_MarcaVehiculo marca)  {
+        marcaVehiculoJPA.create(marca);
+    }
+    public void ActualizarMarca(Tb_MarcaVehiculo marca) throws Exception {
+        marcaVehiculoJPA.edit(marca);
+    }
+    public void eliminarMarca(int idMarca) throws Exception {
+        marcaVehiculoJPA.destroy(idMarca);
+    }
+
+    public Tb_MarcaVehiculo buscarMarcasPorId(int idMarcaVehiculo) {
+        return marcaVehiculoJPA.findMarcaVehiculo(idMarcaVehiculo);
+    }
+
     public Tb_MarcaVehiculo obtenerMarcaPorTipo(int marcaVehiculo, int tipoVehiculo) {
         try{
             return marcaVehiculoJPA.findMarcaEntitiesForType(marcaVehiculo,tipoVehiculo);
@@ -285,6 +315,23 @@ public class PersistenciaController {
 
 
     //MODELO VEHICULO
+
+    public void CrearModelo(Tb_ModeloVehiculo modelo) {
+        modeloVehiculoJPA.create(modelo);
+    }
+
+    public void ActualizarModelo(Tb_ModeloVehiculo modelo) throws Exception {
+        modeloVehiculoJPA.edit(modelo);
+    }
+
+    public void eliminarModelo(int idModelo) throws Exception {
+        modeloVehiculoJPA.destroy(idModelo);
+    }
+
+    public Tb_ModeloVehiculo buscarModeloPorId(int idModelo) {
+        return modeloVehiculoJPA.findModeloVehiculo(idModelo);
+    }
+
     public Tb_ModeloVehiculo obtenerModeloPorMarcaYTipo(int modeloVehiculo, int marcaVehiculo, int tipoVehiculo) {
         try{
             return modeloVehiculoJPA.findModeloEntitiesForTypeAndBrand(modeloVehiculo,marcaVehiculo,tipoVehiculo);
@@ -294,7 +341,6 @@ public class PersistenciaController {
         }
 
     }
-
 
     public List<Tb_ModeloVehiculo> ObtenerModelosPorMarcaYTipo(int idMarcaVehiculo, int idTipoVehiculo) {
         try {
@@ -323,5 +369,20 @@ public class PersistenciaController {
             throw e;
         }
     }
+
+
+    public void CrearCiudad(Tb_CiudadVehiculo ciudad) {
+        ciudadVehiculo.create(ciudad);
+    }
+
+    public void ActualizarCiudad(Tb_CiudadVehiculo ciudad) throws Exception {
+        ciudadVehiculo.edit(ciudad);
+    }
+
+    public void EliminarCiudad(int idCiudad) throws Exception {
+        ciudadVehiculo.destroy(idCiudad);
+    }
+
+
 
 }

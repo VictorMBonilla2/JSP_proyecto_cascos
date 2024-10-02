@@ -6,7 +6,6 @@
         response.sendRedirect("index.jsp");
         return;
     }
-
     Roles roles= user.getRol();
     boolean isGestor = roles.getId()==1;
     boolean isAprendiz= roles.getId()==2;

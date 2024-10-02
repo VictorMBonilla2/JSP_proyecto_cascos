@@ -71,7 +71,9 @@ public class SvCasilleros {
             try {
                 Integer idEspacio = jsonObject.getInt("espacio");
                 String formType = jsonObject.getString("formType");
+                System.out.println("Traendo espacio");
                 TbEspacio espacio = logica_espacios.buscarEspacio(idEspacio);
+                System.out.println("Espacio traido");
                 if (espacio == null) {
                     sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_NOT_FOUND, "error", "Espacio no encontrado");
                     return;
@@ -104,8 +106,9 @@ public class SvCasilleros {
                 int documento = Integer.parseInt(jsonObject.getString("documento"));
                 int idVehiculo = Integer.parseInt(jsonObject.getString("idVehiculo"));
                 String cantcascos = jsonObject.getString("cantcascos");
-
-                Persona persona = logica_persona.buscarpersona(documento);
+                System.out.println("intentando Buscar persona:");
+                Persona persona = logica_persona.buscarPersonaConDocumento(documento);
+                System.out.println(persona.getId());
                 if (persona == null || persona.getVehiculos() == null) {
                     sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_NOT_FOUND, "error", "Persona no encontrada o sin vehículos asociados");
                     return;

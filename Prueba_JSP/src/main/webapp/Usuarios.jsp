@@ -53,32 +53,32 @@
     <div class="user_list__form">
         <form class="formulario ">
             <div class="form_persona">
-                <div class="formulario__inputs">
+                <div class="input_container">
                     <label for="Nombre">Nombre</label>
                     <input type="text" id="Nombre">
                 </div>
-                <div class="formulario__inputs">
+                <div class="input_container">
                     <label for="Apellido"> Apellido</label>
                     <input type="text" id="Apellido">
                 </div>
-                <div class="formulario__inputs">
+                <div class="input_container">
                     <label for="Correo">Correo Electronico</label>
                     <input type="text" id="Correo">
                 </div>
-                <div class="formulario__inputs">
+                <div class="input_container">
                     <label for="Tipo_documento"> Tipo de documento</label>
                     <select name="tipoDocumento" id="Tipo_documento">
                     </select>
                 </div>
-                <div class="formulario__inputs">
+                <div class="input_container">
                     <label for="numero_documento">Numero de documento</label>
                     <input type="text" id="numero_documento">
                 </div>
-                <div class="formulario__inputs">
+                <div class="input_container">
                     <label for="Fecha_nacimiento">Fecha de nacimiento</label>
                     <input type="date" id="Fecha_nacimiento">
                 </div>
-                <div class="formulario__inputs">
+                <div class="input_container">
                     <label for="Rol">Rol del usuario</label>
                     <select name="rol" id="Rol">
                     </select>

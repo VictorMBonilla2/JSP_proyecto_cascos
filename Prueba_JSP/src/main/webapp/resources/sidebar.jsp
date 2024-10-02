@@ -2,7 +2,7 @@
 
 <%
     HttpSession sesion = request.getSession();
-    Persona user = (Persona) session.getAttribute("user");
+    Persona user = (Persona) sesion.getAttribute("user");
     boolean sesionStatus = user != null;
     boolean isGestor = user.getRol().getId()==1;
     boolean isAprendiz= user.getRol().getId()==2;

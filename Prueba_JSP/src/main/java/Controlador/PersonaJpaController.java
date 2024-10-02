@@ -4,6 +4,10 @@ import DTO.LoginDTO;
 import Modelo.Persona;
 import Utilidades.JPAUtils;
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Root;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -55,7 +59,7 @@ public class PersonaJpaController implements Serializable {
         }catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                int id = persona.getDocumento();
+                int id = persona.getId();
                 if(findPersona(id)==null){
                     throw new Exception("The persona with id "+"no longer exists.");
                 }
@@ -76,7 +80,7 @@ public class PersonaJpaController implements Serializable {
             Persona persona;
             try {
                 persona = em.getReference(Persona.class, id);
-                persona.getDocumento();
+                persona.getId();
             } catch (EntityNotFoundException enfe) {
                 throw new Exception("The persona with id "+id+" no longer exists.", enfe);
             }
@@ -127,7 +131,7 @@ public class PersonaJpaController implements Serializable {
         EntityManager em = getEntityManager();
         try {
             TypedQuery<LoginDTO> query = em.createQuery(
-                    "SELECT new DTO.LoginDTO(p.documento, p.tipoDocumento.id, p.clave, p.rol.id) " +
+                    "SELECT new DTO.LoginDTO(p.id, p.documento, p.tipoDocumento.id, p.clave, p.rol.id) " +
                             "FROM tb_persona p WHERE p.documento = :NumeroDoc", LoginDTO.class);
             query.setParameter("NumeroDoc", documento);
             List<LoginDTO> resultados = query.getResultList();
@@ -150,6 +154,37 @@ public class PersonaJpaController implements Serializable {
             }
         }
     }
+
+
+    public Persona buscarPersonaDocumento(int documento) {
+        EntityManager em = getEntityManager();
+        try {
+            // Crear el constructor de la consulta
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Persona> cq = cb.createQuery(Persona.class);
+
+            // Definir la raíz de la consulta (tabla principal)
+            Root<Persona> personaRoot = cq.from(Persona.class);
+
+            // Realizar los LEFT JOINs para permitir la existencia de registros nulos en las relaciones
+            personaRoot.fetch("vehiculos", JoinType.LEFT);
+            personaRoot.fetch("rol", JoinType.LEFT);
+            personaRoot.fetch("tipoDocumento", JoinType.LEFT);
+
+            // Definir la condición de la consulta (WHERE)
+            cq.where(cb.equal(personaRoot.get("documento"), documento));
+
+            // Ejecutar la consulta y devolver el resultado
+            return em.createQuery(cq).getSingleResult();
+        } catch (NoResultException e) {
+            System.out.println("No se encontró la persona con documento: " + documento);
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
+
 
 
 }

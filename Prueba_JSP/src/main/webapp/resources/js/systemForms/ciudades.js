@@ -6,33 +6,33 @@ import {showErrorDialog} from "../alerts/error.js";
 
 document.addEventListener("DOMContentLoaded",  async ()=>{
 
-    const selectRol = document.querySelector("#item_selector");
-    const inputNombreRol = document.querySelector("#nameRol_input");
+    const selectCiudad = document.querySelector("#item_selector");
+    const inputNombreRol = document.querySelector("#nameCiudad_input");
     const deleteButton= document.querySelector("#delete_button");
 
 
-    const data = await obtenerTipoDocumentos();
+    const data = await obtenerCiudades();
 
     if (data.length === 0) {
-        console.log('No se encontraron roles.');
+        console.log('No se encontraron ciudades.');
     } else {
         console.log(data)
-        data.forEach(rol => {
+        data.forEach(ciudad => {
             const option = document.createElement('option');
-            option.value = rol.id_rol;
-            option.textContent = rol.nombre_rol;
-            selectRol.appendChild(option);
+            option.value = ciudad.id_ciudad;
+            option.textContent = ciudad.nombre_ciudad;
+            selectCiudad.appendChild(option);
         });
         //introducir espacios del primer sector de la lista
-        inputNombreRol.value=data[0].nombre_rol;
+        inputNombreRol.value=data[0].nombre_ciudad;
 
     }
 
     //escuchar cambios en el selector de sectores
-    selectRol.addEventListener("change",(e)=>{
-        const id_rol = e.target.value;
-        const dato_rol = data.find(rol => rol.id_rol === parseInt(id_rol) );
-        inputNombreRol.value=dato_rol.nombre_rol;
+    selectCiudad.addEventListener("change",(e)=>{
+        const id_ciudad = e.target.value;
+        const dato_ciudad = data.find(rol => rol.id_ciudad === parseInt(id_ciudad) );
+        inputNombreRol.value=dato_ciudad.nombre_ciudad;
 
     })
 
@@ -40,9 +40,9 @@ document.addEventListener("DOMContentLoaded",  async ()=>{
         const form = document.querySelector(".formulario");
         const formData = new FormData(form);
         showConfirmationDialog(
-            "Eliminar rol?",
-            "El sistema no permitira la eliminación de roles en uso. Esta Acción es irreversible.",
-            ()=>eliminarRol(formData),
+            "Eliminar Ciudad?",
+            "El sistema no permitira la eliminación de ciudades en uso. Esta Acción es irreversible.",
+            ()=>eliminarCiudad(formData),
             () => console.log('Acción cancelada')
         )
     })
@@ -55,25 +55,25 @@ document.addEventListener("DOMContentLoaded",  async ()=>{
         const tipo=form.get("formType");
 
         if(tipo ==="add"){
-            addRol(form)
+            addCiudad(form)
         }
         if(tipo ==="edit"){
-            editRol(form)
+            editCiudad(form)
         }
     })
 
 
 })
 
-async function addRol (form) {
-    const nombreRol= form.get("nombreRol")
+async function addCiudad (form) {
+    const nombreCiudad= form.get("nombreCiudad")
 
     const data = {
         action : "add",
-        nombreRol: nombreRol,
+        nombreCiudad: nombreCiudad,
     };
 
-    const response= await sendRequest( `${host}/tipoRol`,data)
+    const response= await sendRequest( `${host}/listaCiudades`,data)
     console.log(response)
     if(response.status === "success"){
         console.log("Se ha Actualizado el rol correctamente")
@@ -82,35 +82,35 @@ async function addRol (form) {
         showErrorDialog(response.message)
     }
 }
-async function editRol (form) {
-    const id_rol= form.get("rolSelect")
-    const nombreRol= form.get("nombreRol")
+async function editCiudad (form) {
+    const id_ciudad= form.get("ciudadSelect")
+    const nombreCiudad= form.get("nombreCiudad")
     const data = {
         action : "edit",
-        idRol: id_rol,
-        nombreRol: nombreRol,
+        idCiudad: id_ciudad,
+        nombreCiudad: nombreCiudad,
     };
-    const response= await sendRequest( `${host}/tipoRol`,data)
+    const response= await sendRequest( `${host}/listaCiudades`,data)
     console.log(response)
     if(response.status === "success"){
-        console.log("Se ha Actualizado el rol correctamente")
+        console.log("Se ha Actualizado la ciudad correctamente")
         showSuccessAlert(response.message)
     }else{
         showErrorDialog(response.message)
     }
 }
 
-async function eliminarRol (form){
-    const id_rol= form.get("rolSelect")
+async function eliminarCiudad (form){
+    const id_ciudad= form.get("ciudadSelect")
 
     const data = {
         action : "delete",
-        idRol: id_rol,
+        idRol: id_ciudad,
     };
-    const response= await sendRequest( `${host}/tipoRol`,data)
+    const response= await sendRequest( `${host}/listaCiudades`,data)
 
     if(response.status === "success"){
-        console.log("Se ha Eliminado el rol correctamente")
+        console.log("Se ha Eliminado la ciudad correctamente")
         showSuccessAlert(response.message)
     }else {
         showErrorDialog(response.message)
@@ -118,8 +118,8 @@ async function eliminarRol (form){
 }
 
 
-async function obtenerTipoDocumentos() {
-    const response = await fetch(`${host}/tipoRol`);
+async function obtenerCiudades() {
+    const response = await fetch(`${host}/listaCiudades`);
     if (response.status === 204) {
         return [];
     }

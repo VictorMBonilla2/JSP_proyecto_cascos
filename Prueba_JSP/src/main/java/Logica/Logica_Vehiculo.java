@@ -2,10 +2,7 @@ package Logica;
 
 import Controlador.PersistenciaController;
 import DTO.VehiculoDTO;
-import Modelo.TbTipovehiculo;
-import Modelo.TbVehiculo;
-import Modelo.Tb_MarcaVehiculo;
-import Modelo.Tb_ModeloVehiculo;
+import Modelo.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +10,7 @@ import java.util.stream.Collectors;
 
 public class Logica_Vehiculo {
     PersistenciaController controladora = new PersistenciaController();
+    Logica_Persona logicaPersona = new Logica_Persona();
     public boolean crearVehiculo(TbVehiculo vehiculo) {
 
         try{
@@ -26,12 +24,6 @@ public class Logica_Vehiculo {
 
     }
 
-    public List<TbTipovehiculo> ObtenerTiposVehiculo() {
-        return controladora.BuscarTiposVehiculo();
-    }
-    public TbTipovehiculo buscarTipoVehiculo(int tipoVehiculo) {
-        return controladora.obtenerTipoVehiculoPorId(tipoVehiculo);
-    }
 
     public boolean actualizarVehiculo(TbVehiculo vehiculo) {
 
@@ -71,14 +63,16 @@ public class Logica_Vehiculo {
         return ListaNueva;
     }
 
-    public List<TbVehiculo> buscarVehiculoDePersona(String id) {
+    public List<TbVehiculo> buscarVehiculoDePersona(String documento) {
         List<TbVehiculo>  ListaVehiculos = new ArrayList<>();
         try {
-            int documentoInt = Integer.parseInt(id);
-            List<TbVehiculo> Lista = controladora.obtenerVehiculos(documentoInt);
+
+            int documentoInt = Integer.parseInt(documento);
+            Persona aprendiz=  logicaPersona.buscarPersonaConDocumento(documentoInt);
+            List<TbVehiculo> Lista = controladora.obtenerVehiculos(aprendiz.getId());
 
             if (Lista == null || Lista.isEmpty()) {
-                throw new Exception("No hay vehículos registrados para el documento: " + id);
+                throw new Exception("No hay vehículos registrados para el documento: " + documento);
             }
             ListaVehiculos = Lista;
 

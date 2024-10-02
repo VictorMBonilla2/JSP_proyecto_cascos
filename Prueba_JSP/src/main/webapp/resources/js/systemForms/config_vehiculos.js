@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Llenar los datos del vehículo en el template
             template.querySelector('.vehiculo-tipo').textContent = vehiculo.tipo_vehiculo;
-            template.querySelector('.vehiculo-marca').textContent = vehiculo.marca;
+            template.querySelector('.vehiculo-marca').textContent = vehiculo.marca.nombre;
             template.querySelector('.vehiculo-placa').textContent = vehiculo.placa;
             template.querySelector('.vehiculo-documento').textContent = vehiculo.id_aprendiz;
 
@@ -168,7 +168,6 @@ document.addEventListener("DOMContentLoaded", () => {
     async function seleccionarVehiculo(vehiculoId) {
         // Buscar el vehículo en vehiculosData por ID
         const vehiculoSeleccionado = vehiculosData.find(vehiculo => vehiculo.id_vehiculo === vehiculoId);
-
         if (vehiculoSeleccionado) {
             try {
                 document.getElementById('idAprendiz').value = vehiculoSeleccionado.id_aprendiz;
@@ -181,10 +180,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 await cargarMarcas(vehiculoSeleccionado.tipo_vehiculo);
 
                 // Seleccionar la marca una vez que las marcas se hayan cargado
-                document.getElementById('marcaSelect').value = vehiculoSeleccionado.marca;
+                document.getElementById('marcaSelect').value = vehiculoSeleccionado.marca.id_marca;
 
                 // Disparar el evento `change` para cargar los modelos y esperar a que se carguen
-                await cargarModelos(vehiculoSeleccionado.marca, vehiculoSeleccionado.tipo_vehiculo);
+                await cargarModelos(vehiculoSeleccionado.marca.id_marca, vehiculoSeleccionado.tipo_vehiculo);
 
                 // Seleccionar el modelo una vez que los modelos se hayan cargado
                 document.getElementById('modeloSelect').value = vehiculoSeleccionado.modelo;
