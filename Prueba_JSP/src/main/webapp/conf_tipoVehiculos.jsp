@@ -20,6 +20,7 @@
             </div>
             <div class="form__side">
                 <form class="formulario">
+                    <input type="hidden" name="formType" value="edit">
                     <div class="formulario__inputs_config">
                         <div class="input_container">
                             <label for="item_selector">Selecciona el Tipo de Vehículo:</label>
@@ -47,6 +48,7 @@
             </div>
             <div class="form__side">
                 <form class="formulario">
+                    <input type="hidden" name="formType" value="add">
                     <div class="formulario__inputs">
                         <div class="input_container">
                             <label for="tipoVehiculo_name">Nombre del Tipo de Vehículo:</label>

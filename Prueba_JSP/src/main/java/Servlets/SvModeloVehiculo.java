@@ -56,13 +56,14 @@ public class SvModeloVehiculo extends HttpServlet {
                 jsonArray.put(jsonObject);
             }
 
-            // Enviar respuesta JSON
-            sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", jsonArray.toString());
+            // Escribir la respuesta JSON
+            PrintWriter out = response.getWriter();
+            out.println(jsonArray.toString());
+            out.flush();
 
-        } catch (NumberFormatException e) {
-            sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Parámetros inválidos");
+
         } catch (Exception e) {
-            sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error al procesar la solicitud: " + e.getMessage());
+            System.out.println("Error al parsear el JSON: " + e);
         }
     }
 

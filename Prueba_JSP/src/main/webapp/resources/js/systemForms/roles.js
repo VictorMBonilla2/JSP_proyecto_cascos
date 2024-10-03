@@ -73,7 +73,7 @@ async function addRol (form) {
         nombreRol: nombreRol,
     };
 
-    const response= await sendRequest( `${host}/tipoRol`,data)
+    const response= await sendRequest( `${host}/listaRoles`,data)
     console.log(response)
     if(response.status === "success"){
         console.log("Se ha Actualizado el rol correctamente")
@@ -90,7 +90,7 @@ async function editRol (form) {
         idRol: id_rol,
         nombreRol: nombreRol,
     };
-    const response= await sendRequest( `${host}/tipoRol`,data)
+    const response= await sendRequest( `${host}/listaRoles`,data)
     console.log(response)
     if(response.status === "success"){
         console.log("Se ha Actualizado el rol correctamente")
@@ -107,7 +107,7 @@ async function eliminarRol (form){
         action : "delete",
         idRol: id_rol,
     };
-    const response= await sendRequest( `${host}/tipoRol`,data)
+    const response= await sendRequest( `${host}/listaRoles`,data)
 
     if(response.status === "success"){
         console.log("Se ha Eliminado el rol correctamente")
@@ -119,7 +119,7 @@ async function eliminarRol (form){
 
 
 async function obtenerTipoDocumentos() {
-    const response = await fetch(`${host}/tipoRol`);
+    const response = await fetch(`${host}/listaRoles`);
     if (response.status === 204) {
         return [];
     }

@@ -3,6 +3,7 @@ package Logica;
 import Controlador.PersistenciaController;
 import DTO.VehiculoDTO;
 import Modelo.*;
+import Utilidades.ResultadoOperacion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,5 +108,15 @@ public class Logica_Vehiculo {
             return null;
         }
 
+    }
+
+    public ResultadoOperacion borrarVehiculo(int idVehiculo) {
+        try{
+            controladora.eliminarVehiculo(idVehiculo);
+            return new ResultadoOperacion(true, "El vehiculo ha sido eliminado exitosamente");
+        } catch (Exception e){
+            System.err.println("Hubo un error al eliminar el vehiculo: " + e.getMessage());
+            return new ResultadoOperacion(false,"Hubo un error al eliminar el vehiculo");
+        }
     }
 }

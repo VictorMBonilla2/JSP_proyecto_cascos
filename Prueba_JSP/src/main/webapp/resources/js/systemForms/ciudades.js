@@ -19,20 +19,20 @@ document.addEventListener("DOMContentLoaded",  async ()=>{
         console.log(data)
         data.forEach(ciudad => {
             const option = document.createElement('option');
-            option.value = ciudad.id_ciudad;
-            option.textContent = ciudad.nombre_ciudad;
+            option.value = ciudad.id_Ciudad;
+            option.textContent = ciudad.nombre_Ciudad;
             selectCiudad.appendChild(option);
         });
         //introducir espacios del primer sector de la lista
-        inputNombreRol.value=data[0].nombre_ciudad;
+        inputNombreRol.value=data[0].nombre_Ciudad;
 
     }
 
     //escuchar cambios en el selector de sectores
     selectCiudad.addEventListener("change",(e)=>{
-        const id_ciudad = e.target.value;
-        const dato_ciudad = data.find(rol => rol.id_ciudad === parseInt(id_ciudad) );
-        inputNombreRol.value=dato_ciudad.nombre_ciudad;
+        const id_Ciudad = e.target.value;
+        const dato_ciudad = data.find(rol => rol.id_Ciudad === parseInt(id_Ciudad) );
+        inputNombreRol.value=dato_ciudad.nombre_Ciudad;
 
     })
 
@@ -105,7 +105,7 @@ async function eliminarCiudad (form){
 
     const data = {
         action : "delete",
-        idRol: id_ciudad,
+        idCiudad: id_ciudad,
     };
     const response= await sendRequest( `${host}/listaCiudades`,data)
 

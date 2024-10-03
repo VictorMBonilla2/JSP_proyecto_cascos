@@ -8,12 +8,15 @@ import Modelo.Persona;
 import Modelo.Roles;
 import Modelo.TbTipoDocumento;
 import Utilidades.JsonReader;
+import Utilidades.ResultadoOperacion;
+import Utilidades.sendResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -40,8 +43,8 @@ public class SvPersona extends HttpServlet {
         JSONObject jsonObject;
         try {
             jsonObject = JsonReader.parsearJson(req);
-        } catch (Exception e) {
-            sendErrorResponse(resp, "Error al parsear el JSON de la solicitud.");
+        } catch (JSONException e) {
+            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "error al parsear el json");
             return;
         }
 
@@ -65,7 +68,7 @@ public class SvPersona extends HttpServlet {
                     resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no reconocida");
             }
         } catch (Exception e) {
-            sendErrorResponse(resp, "Error interno del servidor: " + e.getMessage());
+            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error interno del servidor");
         }
     }
 
@@ -76,7 +79,7 @@ public class SvPersona extends HttpServlet {
         // Recupera el usuario de la base de datos utilizando el ID
         Persona user = logica_persona.buscarpersonaPorId(usuarioId);
         if (user == null) {
-            sendErrorResponse(resp, "Usuario no encontrado.");
+            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Usuario no encontrado");
             return;
         }
 
@@ -93,7 +96,7 @@ public class SvPersona extends HttpServlet {
             // Convierte el String a Date
             fechaNacimiento = formatter.parse(fechaNacimientoStr);
         } catch (ParseException e) {
-            sendErrorResponse(resp, "Formato de fecha inválido. Utiliza el formato dd/MM/yyyy.");
+            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Formato de fecha inválido. Utiliza el formato dd/MM/yyyy.");
             return;
         }
 
@@ -109,9 +112,9 @@ public class SvPersona extends HttpServlet {
             // Actualiza el usuario en la sesión para reflejar los cambios
             session.setAttribute("user", user);
 
-            sendSuccessResponse(resp, "Datos actualizados con éxito");
+            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", "Datos actualizados");
         } else {
-            sendErrorResponse(resp, "Error al actualizar los datos");
+            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "error al actualizar datos");
         }
     }
 
@@ -138,12 +141,12 @@ public class SvPersona extends HttpServlet {
                 session.setAttribute("documento", loginDTO.getDocumento());
                 session.setAttribute("user", user);
 
-                sendSuccessResponse(resp, "Login successful");
+                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", "Logeado");
             } catch (Exception e) {
-                sendErrorResponse(resp, "Error interno del servidor: " + e.getMessage());
+                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "error interno del servidor");
             }
         } else {
-            sendErrorResponse(resp, "Invalid credentials");
+            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos incorrectos.");
         }
 
     }
@@ -152,60 +155,51 @@ public class SvPersona extends HttpServlet {
         if (session != null) {
             session.invalidate();
         }
-        sendSuccessResponse(resp, "Logout successful");
+        sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", "Desautenticado.");
     }
 
-    private void Registro(JSONObject jsonObject, HttpServletResponse resp) throws IOException {
-        String nombre = jsonObject.getString("nombre");
-        String apellido = jsonObject.getString("apellido");
-        int idDocumento = jsonObject.getInt("TipoDocumento");
-        int documento = jsonObject.getInt("documento");
-        String correo = jsonObject.getString("correo");
-        String clave = jsonObject.getString("password");
-        int rol = Integer.parseInt(jsonObject.getString("rol"));
-        TbTipoDocumento tipoDocumento = documentos.obtenerDocumentoID(idDocumento);
-        Roles roll = logica_rol.ObtenerRol(rol);
+    private void Registro(JSONObject jsonObject, HttpServletResponse resp) throws IOException, ParseException {
+        try{
+            String nombre = jsonObject.getString("nombre");
+            String apellido = jsonObject.getString("apellido");
+            int idDocumento = jsonObject.getInt("TipoDocumento");
+            int documento = jsonObject.getInt("documento");
+            String correo = jsonObject.getString("correo");
+            String clave = jsonObject.getString("password");
+            String fecha = jsonObject.getString("fechaNacimiento");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            Date fechaNacimiento = formatter.parse(fecha);
+            TbTipoDocumento tipoDocumento = documentos.obtenerDocumentoID(idDocumento);
+            Roles rol = logica_rol.ObtenerRol(2);/*Debe ser el id de rol de aprendiz*/
+            System.out.printf("rol obtenido: "+ rol.getNombre());
+            Persona persona = new Persona();
+            persona.setNombre(nombre);
+            persona.setApellido(apellido);
+            persona.setTipoDocumento(tipoDocumento);
+            persona.setDocumento(documento);
+            persona.setCorreo(correo);
+            persona.setClave(clave);
+            persona.setRol(rol);
+            persona.setFechaNacimiento(fechaNacimiento);
+            ResultadoOperacion resultado = logica_persona.crearPersona(persona);
 
-        Persona persona = new Persona();
-        persona.setNombre(nombre);
-        persona.setApellido(apellido);
-        persona.setTipoDocumento(tipoDocumento);
-        persona.setId(documento);
-        persona.setCorreo(correo);
-        persona.setClave(clave);
-        persona.setRol(roll);
-
-        boolean validacion = logica_persona.crearPersona(persona);
-
-        if (validacion) {
-            sendSuccessResponse(resp, "Registro successful");
-        } else {
-            sendErrorResponse(resp, "Error al registrar la persona");
+            if (resultado.isExito()) {
+                System.out.println("Aprendiz creada exitosamente.");
+                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
+            } else {
+                System.out.println("Error al crear al Aprendiz.");
+                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
+            }
+        } catch (ParseException e) {
+            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Formato de fecha incorrectos.");
+        } catch (Exception e) {
+            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Error al actualizar usuario.");
         }
+
+
+
     }
 
-    private void sendSuccessResponse(HttpServletResponse resp, String message) throws IOException {
-        JSONObject jsonResponse = new JSONObject();
-        jsonResponse.put("status", "success");
-        jsonResponse.put("message", message);
 
-        sendJsonResponse(resp, jsonResponse);
-    }
-
-    private void sendErrorResponse(HttpServletResponse resp, String message) throws IOException {
-        JSONObject jsonResponse = new JSONObject();
-        jsonResponse.put("status", "error");
-        jsonResponse.put("message", message);
-
-        sendJsonResponse(resp, jsonResponse);
-    }
-
-    private void sendJsonResponse(HttpServletResponse resp, JSONObject jsonResponse) throws IOException {
-        resp.setContentType("application/json");
-        try (PrintWriter out = resp.getWriter()) {
-            out.print(jsonResponse.toString());
-            out.flush();
-        }
-    }
 
 }

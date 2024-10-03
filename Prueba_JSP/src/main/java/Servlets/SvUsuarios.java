@@ -135,8 +135,6 @@ public class SvUsuarios extends HttpServlet {
             persona.setClave(jsonObject.getString("password"));
             System.out.println(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             String fechaNacimientoStr = jsonObject.optString("fechaNacimiento");
-            System.out.println("fechaNacimientoStr = " + fechaNacimientoStr);
-
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             Date fechaNacimiento = formatter.parse(fechaNacimientoStr);
             persona.setFechaNacimiento(fechaNacimiento);
