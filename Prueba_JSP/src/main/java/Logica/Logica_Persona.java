@@ -4,7 +4,9 @@ import Controlador.PersistenciaController;
 import DTO.LoginDTO;
 import Modelo.Persona;
 import Modelo.TbVehiculo;
+import Utilidades.ResultadoOperacion;
 
+import javax.xml.transform.Result;
 import java.util.List;
 
 
@@ -40,15 +42,15 @@ public class Logica_Persona {
         return null;
     }
     //Proceso Registro.
-    public boolean crearPersona(Persona perso){
+    public ResultadoOperacion crearPersona(Persona perso){
         try {
             controladora.CrearPersona(perso);
-            return true; // La creación fue exitosa
+            return new ResultadoOperacion(true, "El Aprendiz se ha registrado");
         } catch (Exception e) {
             // Maneja la excepción, por ejemplo, registrando el error
             System.err.println("Error al crear la persona: " + e.getMessage());
             e.printStackTrace();
-            return false; // Se produjo un error
+            return new ResultadoOperacion(false,"Hubo un error al crear al aprendiz");
         }
     }
 

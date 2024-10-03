@@ -1,10 +1,15 @@
-document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("registro").onsubmit = async function (event) {
-        event.preventDefault();
-        document.getElementById("Error").style.display = "none";
-        document.getElementById("ErrorOnlydigitos").style.display = "none";
+import {host} from "./config.js";
+import {showConfirmationDialog} from "./alerts/confirm.js";
+import {showSuccessAlert} from "./alerts/success.js";
+import {showErrorDialog} from "./alerts/error.js";
+import {sendRequest} from "./ajax.js";
 
-        // Obtener valores de los campos del formulario
+document.addEventListener("DOMContentLoaded", async function () {
+await selectDocumento();
+
+    const formulario = document.getElementById("registro");
+    formulario.addEventListener("submit",(e)=>{
+        e.preventDefault();
         const nombre = document.getElementById("Nombre").value;
         const apellido = document.getElementById("Apellido").value;
         const tipoDocumento = document.getElementById("TipoDocumento").value;
@@ -13,55 +18,50 @@ document.addEventListener("DOMContentLoaded", function () {
         const password = document.getElementById("passWord").value;
         const rol = document.getElementById("rol").value;
 
-
-
-        // Validar si el documento es un número
-        if (isNaN(documento)) {
-            // Mostrar mensaje de error si el valor no es un número
-            document.getElementById("ErrorOnlydigitos").style.display = "block";
-            return; // Detener el proceso de envío del formulario
+        const response = enviarRegistro(new FormData(formulario));
+        if(response.status === "success"){
+            console.log("Se ha Actualizado el sector correctamente")
+            showSuccessAlert(response.message)
+        }else{
+            showErrorDialog(response.message)
         }
+    })
 
-        try {
-            // Enviar la solicitud fetch al servidor
-            const response = await fetch("SvPersona", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    action: "registro",
-                    nombre: nombre,
-                    apellido: apellido,
-                    documento: documento,
-                    TipoDocumento: tipoDocumento,
-                    correo: correo,
-                    password: password,
-                    rol:rol
-                })
-            });
 
-            // Verificar si la respuesta es exitosa
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            // Obtener el resultado de la respuesta
-            const result = await response.json();
-
-            // Verificar el resultado del inicio de sesión
-            if (result.status === "success") {
-                // Redireccionar al usuario a la página de inicio
-                window.location.href = "HomeHome.jsp";
-            } else {
-                // Mostrar mensaje de error en caso de credenciales inválidas
-                document.getElementById("Error").style.display = "block";
-            }
-        } catch (error) {
-            // Manejar cualquier error que ocurra durante la solicitud
-            console.error("Hubo un error al realizar el registro:", error);
-            // Mostrar un mensaje de error genérico al usuario
-            document.getElementById("Error").style.display = "block";
-        }
-    };
 });
+async function selectDocumento(){
+    console.log("se ejecuta la busca de doc")
+    const documentoSelect = document.getElementById("TipoDocumento");
+    const response = await  fetch(`${host}/tipoDoc`);
+    const data = await response.json();
+    console.log(data)
+    data.forEach(tipoDocumento =>{
+        const option = document.createElement("option");
+        option.value=tipoDocumento.id_documento;
+        option.textContent=tipoDocumento.nombre_documento;
+        documentoSelect.appendChild(option)
+    })
+}
+
+
+async function enviarRegistro(form){
+
+    const data= {
+        action: "registro",
+        nombre: form.get("Nombres"),
+        apellido: form.get("Apellidos"),
+        TipoDocumento: form.get("TipoDocumento"),
+        documento: form.get("documento"),
+        correo: form.get("correo"),
+        password: form.get("password"),
+        fechaNacimiento: form.get("fecha")
+    }
+
+    const response = await sendRequest(`${host}/SvPersona`,data)
+    if(response.status === "success"){
+        console.log("Se ha Actualizado el sector correctamente")
+        showSuccessAlert(response.message)
+    }else{
+        showErrorDialog(response.message)
+    }
+}

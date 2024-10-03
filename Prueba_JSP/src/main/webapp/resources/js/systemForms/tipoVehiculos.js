@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Función para obtener los tipos de vehículos
 async function obtenerTiposVehiculos() {
-    const response = await fetch(`${host}/listaTiposVehiculos`);
+    const response = await fetch(`${host}/tiposVehiculos`);
     if (response.status === 204) {
         return [];
     }
@@ -79,7 +79,7 @@ async function addTipoVehiculo(form) {
         nombreVehiculo: nombreVehiculo,
     };
 
-    const response = await sendRequest(`${host}/tipoVehiculo`, data);
+    const response = await sendRequest(`${host}/tiposVehiculos`, data);
     console.log(response);
     if (response.status === "success") {
         console.log("Tipo de vehículo creado correctamente");
@@ -100,7 +100,7 @@ async function editTipoVehiculo(form) {
         nombreVehiculo: nombreVehiculo,
     };
 
-    const response = await sendRequest(`${host}/tipoVehiculo`, data);
+    const response = await sendRequest(`${host}/tiposVehiculos`, data);
     console.log(response);
     if (response.status === "success") {
         console.log("Tipo de vehículo actualizado correctamente");
@@ -119,7 +119,7 @@ async function eliminarTipoVehiculo(form) {
         idTipo: id_Tipo,
     };
 
-    const response = await sendRequest(`${host}/tipoVehiculo`, data);
+    const response = await sendRequest(`${host}/tiposVehiculos`, data);
     if (response.status === "success") {
         console.log("Tipo de vehículo eliminado correctamente");
         showSuccessAlert(response.message);

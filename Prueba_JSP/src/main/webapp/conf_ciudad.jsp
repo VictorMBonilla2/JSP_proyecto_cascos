@@ -20,6 +20,7 @@
             </div>
             <div class="form__side">
                 <form class="formulario">
+                    <input type="hidden" name="formType" value="edit">
                     <div class="formulario__inputs_config">
                         <div class="input_container">
                             <label for="item_selector"> Selecciona el Ciudad:</label>
@@ -49,6 +50,7 @@
             </div>
             <div class="form__side">
                 <form class="formulario">
+                    <input type="hidden" name="formType" value="add">
                     <div class="formulario__inputs ">
                         <div class="input_container">
                             <label for="ciudad_name"> Nombre del Ciudad:</label>

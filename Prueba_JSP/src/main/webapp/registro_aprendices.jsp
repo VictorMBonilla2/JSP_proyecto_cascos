@@ -23,23 +23,21 @@
     </div>
 
     <div class="Inputs_Container">
-      <form action="SvPersona" method="POST" class="formulario" id="registro">
+      <form action="SvPersona" class="formulario" id="registro">
         <div class="formulario__inputs">
           <input type="hidden" id="rol" value="Aprendiz">
           <input type="text"  placeholder="Nombres" name="Nombres" id="Nombre" required>
           <input type="text"  placeholder="Apellidos" name="Apellidos" id="Apellido" required>
 
           <select id="TipoDocumento" name="TipoDocumento">
-            <option value="Cedula de Ciudadania" class="CdC">Cedula de Ciudadania</option>
-            <option value="Tarjeta de identidad" class="TdI">Tarjeta de identidad</option>
-            <option value="Pasaporte" class="Psp">Pasaporte</option>
           </select>
 
           <input type="text"  placeholder="Numero de Documento" name="documento" id="documento" required>
+          <input type="date" id="fecha" placeholder="fechaNacimineto" name="fecha" required>
           <input type="email" id="email" placeholder="Correo Electronico" name="correo" required>
           <input type="password" id="passWord" placeholder="contraseña" name="password" required>
         </div>
-        <button  type="submit" class="formulario__button">Iniciar Sesión</button>
+        <button  type="submit" class="formulario__button">Registrarse</button>
       </form>
 
 
@@ -47,7 +45,10 @@
     </div>
   </section>
 </main>
-<script src="resources/js/Registro.js"></script>
+<jsp:include page="resources/confirm.jsp"/>
+<jsp:include page="resources/success.jsp"/>
+<jsp:include page="resources/error.jsp"/>
+<script type="module" src="resources/js/Registro.js"></script>
 
 </body>
 </html>

@@ -157,6 +157,9 @@ public class PersistenciaController {
         vehiculoJPA.edit(vehiculo);
     }
 
+    public void eliminarVehiculo(int idVehiculo) throws Exception {
+        vehiculoJPA.destroy(idVehiculo);
+    }
 
     //JPA REGISTRO
 

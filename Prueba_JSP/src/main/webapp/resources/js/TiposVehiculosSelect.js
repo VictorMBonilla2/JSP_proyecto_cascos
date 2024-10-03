@@ -1,9 +1,10 @@
+import {host} from "./config.js"
 document.addEventListener("DOMContentLoaded", async () => {
     const selectVehiculos = document.querySelector("#tipoVehiculo");
 
     try {
         // Realizar la solicitud fetch al servlet
-        const respuestaLista = await fetch("/Prueba_JSP_war_exploded/listaTiposVehiculos"); // Asegúrate de que esta URL es la correcta
+        const respuestaLista = await fetch(`${host}/tiposVehiculos`); // Asegúrate de que esta URL es la correcta
         const lista = await respuestaLista.json();
 
         // Verificar si el JSON es un array

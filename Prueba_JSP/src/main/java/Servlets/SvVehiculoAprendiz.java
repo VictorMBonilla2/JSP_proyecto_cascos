@@ -6,6 +6,8 @@ import Logica.Logica_TipoVehiculo;
 import Logica.Logica_Vehiculo;
 import Modelo.*;
 import Modelo.enums.ColorVehiculo;
+import Utilidades.ResultadoOperacion;
+import Utilidades.sendResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -101,6 +103,9 @@ public class SvVehiculoAprendiz extends HttpServlet {
                 case "edit":
                     actualizarVehiculo(req, resp, jsonObject);
                     break;
+                case "delete":
+                    borrarVehiculo(req,resp,jsonObject);
+                    break;
                 default:
                     enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Invalid action");
             }
@@ -113,6 +118,8 @@ public class SvVehiculoAprendiz extends HttpServlet {
             enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Server error");
         }
     }
+
+
 
     private void actualizarVehiculo(HttpServletRequest req, HttpServletResponse resp, JSONObject jsonObject) throws IOException {
         try {
@@ -165,7 +172,7 @@ public class SvVehiculoAprendiz extends HttpServlet {
             }
 
             // Validar que el usuario/persona exista
-            Persona persona = logica_persona.buscarpersonaPorId(usuario);
+            Persona persona = logica_persona.buscarPersonaConDocumento(usuario);
             if (persona == null) {
                 enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Usuario no válido.");
                 return;
@@ -203,25 +210,25 @@ public class SvVehiculoAprendiz extends HttpServlet {
     private void crearVehiculo(HttpServletRequest req, HttpServletResponse resp, JSONObject jsonObject) throws IOException {
         try {
             // Obtener y validar los datos del JSON
-            int usuario = Integer.parseInt(jsonObject.optString("user"));
-            String placa = jsonObject.optString("placa_vehiculo");
-            Integer cantidad_cascos = Integer.parseInt(jsonObject.optString("cantidad_cascos"));
-            int ciudadId = Integer.parseInt(jsonObject.optString("ciudad")); // Suponemos que se envía un ID de ciudad
-            String color = jsonObject.optString("color_vehiculo");
+            int usuario = jsonObject.getInt("idAprendiz");
+            String placa = jsonObject.getString("placaVehiculo");
+            Integer cantidad_cascos = jsonObject.getInt("cantCascoVehiculo");
+            int ciudadId = jsonObject.getInt("ciudadVehiculo"); // Suponemos que se envía un ID de ciudad
+            String color = jsonObject.getString("colorVehiculo");
 
             // Validar el enum del color del vehículo
             ColorVehiculo colorVehiculo;
             try {
-                colorVehiculo = ColorVehiculo.valueOf(color.toUpperCase()); // Convertir a mayúsculas para evitar errores
+                colorVehiculo = ColorVehiculo.valueOf(color); // Convertir a mayúsculas para evitar errores
             } catch (IllegalArgumentException e) {
                 enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Color inválido proporcionado.");
                 return;
             }
 
             // Obtener el tipo, marca y modelo desde el JSON
-            int tipo_vehiculo = Integer.parseInt(jsonObject.optString("tipo_vehiculo"));
-            int marca_vehiculo = Integer.parseInt(jsonObject.optString("marca_vehiculo"));
-            int modelo_vehiculo = Integer.parseInt(jsonObject.optString("modelo_vehiculo"));
+            int tipo_vehiculo = jsonObject.getInt("tipoVehiculo");
+            int marca_vehiculo = jsonObject.getInt("marcaVehiculo");
+            int modelo_vehiculo = jsonObject.getInt("modeloVehiculo");
 
             // Verificar que el tipo, la marca y el modelo son consistentes
             TbTipovehiculo tipovehiculo = logicaTipoVehiculo.buscarTipoVehiculo(tipo_vehiculo);
@@ -270,7 +277,33 @@ public class SvVehiculoAprendiz extends HttpServlet {
         }
     }
 
+    private void borrarVehiculo(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
 
+        int idVehiculo = jsonObject.getInt("idVehiculo");
+
+        try{
+            if(idVehiculo>0){
+                 ResultadoOperacion resultado=  logica_vehiculo.borrarVehiculo(idVehiculo);
+                if (resultado.isExito()) {
+                    System.out.println("Rol creado exitosamente.");
+                    sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
+                } else {
+                    System.out.println("Error al crear el rol.");
+                    sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
+                }
+            }else{
+                sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos inválidos para eliminar el vehiculo.");
+            }
+        }catch (JSONException e) {
+            // Manejar el error si los datos JSON son incorrectos
+            System.err.println("Error en los datos JSON: " + e.getMessage());
+            sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos JSON inválidos.");
+        } catch (Exception e) {
+            // Manejar cualquier otro tipo de error
+            System.err.println("Error inesperado: " + e.getMessage());
+            sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al eliminar el vehiculo.");
+        }
+    }
 
 
 

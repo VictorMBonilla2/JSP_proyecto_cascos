@@ -20,10 +20,20 @@
             </div>
             <div class="form__side">
                 <form class="formulario">
+                    <input type="hidden" name="formType" value="edit">
                     <div class="formulario__inputs_config">
                         <div class="input_container">
-                            <label for="item_selector"> Selecciona el Modelo:</label>
-                            <select id="item_selector" name="modeloSelect"></select>
+                            <label for="tipo_selector"> Selecciona el tipo de vehiculo:</label>
+                            <select id="tipo_selector" name="tipoSelect"></select>
+                        </div>
+
+                        <div class="input_container">
+                            <label for="marca_selector"> Selecciona la marca:</label>
+                            <select id="marca_selector" name="marcaSelect"></select>
+                        </div>
+                        <div class="input_container">
+                            <label for="modelo_selector"> Selecciona el Modelo:</label>
+                            <select id="modelo_selector" name="modeloSelect"></select>
                         </div>
                         <div class="input_container">
                             <label for="nameModelo_input">Nombre del Modelo:</label>
@@ -49,7 +59,16 @@
             </div>
             <div class="form__side">
                 <form class="formulario">
+                    <input type="hidden" name="formType" value="add">
                     <div class="formulario__inputs ">
+                        <div class="input_container">
+                            <label for="tipoNew_selector">Selecciona El tipo de vehiculo:</label>
+                            <select id="tipoNew_selector" name="tipoSelect"></select>
+                        </div>
+                        <div class="input_container">
+                            <label for="marcaNew_selector">Selecciona la marca:</label>
+                            <select id="marcaNew_selector" name="marcaSelect"></select>
+                        </div>
                         <div class="input_container">
                             <label for="modelo_name"> Nombre del Modelo:</label>
                             <input id="modelo_name" name="nombreModelo">

@@ -19,10 +19,15 @@
             </div>
             <div class="form__side">
                 <form class="formulario">
+                    <input type="hidden" name="formType" value="edit">
                     <div class="formulario__inputs_config">
                         <div class="input_container">
-                            <label for="item_selector">Selecciona la Marca:</label>
-                            <select id="item_selector" name="marcaSelect"></select>
+                            <label for="tipo_selector">Selecciona El tipo de vehiculo:</label>
+                            <select id="tipo_selector" name="tipoSelect"></select>
+                        </div>
+                        <div class="input_container">
+                            <label for="marca_selector">Selecciona la Marca:</label>
+                            <select id="marca_selector" name="marcaSelect"></select>
                         </div>
                         <div class="input_container">
                             <label for="nameMarca_input">Nombre de la Marca:</label>
@@ -46,7 +51,12 @@
             </div>
             <div class="form__side">
                 <form class="formulario">
+                    <input type="hidden" name="formType" value="add">
                     <div class="formulario__inputs ">
+                        <div class="input_container">
+                            <label for="tipoNew_selector">Selecciona El tipo de vehiculo:</label>
+                            <select id="tipoNew_selector" name="tipoSelect"></select>
+                        </div>
                         <div class="input_container">
                             <label for="marca_name">Nombre de la Marca:</label>
                             <input id="marca_name" name="nombreMarca">
