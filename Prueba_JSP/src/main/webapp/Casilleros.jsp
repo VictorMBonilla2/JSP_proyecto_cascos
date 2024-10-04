@@ -1,147 +1,74 @@
-<%@ page import="Modelo.TbEspacio" %>
-<%@ page import="java.util.List" %>
-<%@ page import="Modelo.TbVehiculo" %>
-<%@ page import="java.util.Date" %>
+<%@ page import="Modelo.Persona" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <jsp:include page="resources/header.jsp" />
 <link rel="stylesheet" href="resources/css/casilleros.css">
 <jsp:include page="resources/sidebar.jsp" />
+<%
+    HttpSession sesion = request.getSession(false);
+    Persona user = null;
+    if (sesion != null) {
+        user = (Persona) sesion.getAttribute("user");
+    }
+    if (user == null) {
+        response.sendRedirect("index.jsp");
+        return;
+    }
+%>
 
-            <section class="main_container__casillero" id="casillerosContainer">
-            <%
-            Integer cantidadCasilleros = (Integer) request.getAttribute("Casilleros");
-            List<TbEspacio> DatosEspacio = (List<TbEspacio>) request.getAttribute("Espacios");
-            if (DatosEspacio != null) {
-                for (TbEspacio espacio : DatosEspacio) {
-                    int espacioId = espacio.getId_espacio();
+        <section class="main_container__casillero" id="casillerosContainer">
 
-                    TbVehiculo vehiculo = espacio.getVehiculo();
+        <div class="tabs">
+            <ul id="tab-list">
+                <!-- Aquí se generarán las pestañas (tabs) dinámicamente -->
+            </ul>
+        </div>
 
-                    if (vehiculo != null) {
-                        Integer documento = espacio.getPersona().getId();
-                        String placa = vehiculo.getPlacaVehiculo();
-                        String nombre = espacio.getNombre();
-                        Integer cantCascos= espacio.getCantidad_cascos();
-                        Date tiempoEntrada = espacio.getHora_entrada();
-                    %>
+        <div class="tab-content" id="tab-content">
+            <!-- Aquí se generarán los contenidos dinámicos de cada sector -->
+        </div>
 
-                <div class="casillero" data-entrada="<%= tiempoEntrada.getTime() %>" data-tarifa="10.0">
-                    <div class="casillero__title estilo__casillero">
-                        <h1>Espacio <%=espacioId%></h1>
-                        <p><%=nombre%></p>
-                        <img src="resources/imagenes/DashiconsWarning.png" class="report__img" data-report="reportmodal<%=espacioId%>">
-                    </div>
+        <script type="module" src="resources/js/Casilleros.js"></script>
+        <script type="module" src="resources/js/renderCasilleros.js"></script>
+        <script src="resources/js/buttonListener.js"></script>
 
-                    <div class="casillero__contenido estilo__contenido">
-                        <div class="contenido__info">
-                            <div class="info__casillero">
-                                <h3>Documento</h3>
-                                <p><%=documento%></p>
-                            </div>
-                            <div class="info__tiempo">
-                                <h3>Placa</h3>
-                                <p> <%=placa%></p>
-                            </div>
-                            <div class="info__costo">
-                                <h3>Cascos</h3>
-                                <p> <%=cantCascos%> </p>
-                            </div>
-                        </div>
-                        <div class="button-container">
-                            <button class="button_primary botones__pago " data-pay="paymodal<%=espacioId%>">
-                                Liberar
-                            </button>
-                            <button class="button_secundary button--edit botones__ajustar" data-edit="editmodal<%=espacioId%>">
-                                Ajustar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <!-- ventana liberar Espacio-->
-                <div id="paymodal<%=espacioId%>" class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>Espacio <%=espacioId%></h2>
-                            <span class="close" data-modal-id="paymodal<%=espacioId%>">&times;</span>
-                        </div>
-                        <div class="modal-body">
-                            <h2>Liberar Espacio</h2>
-                            <form id="payCasco<%= espacioId %>" onsubmit="payCasco(event, <%= espacioId %>)" class="formulario">
-                                <div class="input_container input_container--vertical">
-                                    <p>Documento: <%=documento%></p>
-                                    <p>Nombre: <%=nombre%></p>
-                                    <p>Placa: <%=vehiculo.getPlacaVehiculo()%></p>
-
-                                    <button type="submit" class="button_primary">Liberar</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <!-- ventana Editar Espacio-->
-
-                <div id="editmodal<%=espacioId%>" class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>Espacio <%=espacioId%></h2>
-                            <span class="close" data-modal-id="editmodal<%=espacioId%>">&times;</span>
-                        </div>
-                        <div class="modal-body">
-                            <h2>Editar Espacio</h2>
-                            <form id="editCasco<%= espacioId %>" onsubmit="editCasco(event, <%= espacioId %>)" class="">
-                                <div class="input_container input_container--vertical">
-                                    <label for="editdocumento<%=espacioId%>">Documento Aprendiz</label>
-                                    <input type="text" id="editdocumento<%=espacioId%>" placeholder="Documento del aprendiz" name="documento" value="<%=documento%>" required disabled>
-                                    <input type="hidden" id="editvehiculolist<%=espacioId%>"  name="documento" value="<%=espacio.getVehiculo().getId_vehiculo()%>" required disabled>
-                                    <label for="editcant_cascos<%=espacioId%>"> Cantidad de Cascos</label>
-                                    <input type="number" id="editcant_cascos<%=espacioId%>" placeholder="Cantidad de cascos" name="cant_cascos" value="<%=cantCascos%>" required>
-                                    <button type="submit" class="button_primary">Añadir</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+        <template id="template-espacio-ocupado">
+            <div class="casillero" data-entrada="{tiempoEntrada}" data-tarifa="10.0">
+                <div class="casillero__title estilo__casillero">
+                    <h1>Espacio {nombreEspacio}</h1>
+                    <p>{nombre}</p>
+                    <img src="resources/imagenes/DashiconsWarning.png" class="report__img" data-report="reportmodal{espacioId}">
                 </div>
 
-                <!-- ventana Reportar Espacio-->
-
-                <div id="reportmodal<%=espacioId%>" class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>Espacio <%=espacioId%></h2>
-                            <span class="close" data-modal-id="reportmodal<%=espacioId%>">&times;</span>
+                <div class="casillero__contenido estilo__contenido">
+                    <div class="contenido__info">
+                        <div class="info__casillero">
+                            <h3>Documento</h3>
+                            <p>{documento}</p>
                         </div>
-                        <div class="modal-body">
-                            <h2>Editar Espacio</h2>
-                            <form id="reportCasco<%= espacioId %>" onsubmit="reportCasco(event, <%= espacioId %>)" class="formulario">
-                                <div class="input_container input_container--vertical">
-                                    <input type="hidden" id="">
-                                    <div class="input_container">
-                                    <label for="reportTipo<%=espacioId%>">Tipo de Reporte:</label>
-                                    <select id="reportTipo<%=espacioId%>" name="options">
-                                        <option value="option1">Opción 1</option>
-                                        <option value="option2">Opción 2</option>
-                                        <option value="option3">Opción 3</option>
-                                    </select>
-                                    </div>
-                                    <div class="input_container">
-                                    <label for="reportNombre<%=espacioId%>">Nombre Reporte:</label>
-                                    <input type="text" id="reportNombre<%=espacioId%>" name="textBox" placeholder="Describe lo que paso">
-                                    </div>
-                                    <label for="reportDescripcion<%=espacioId%>">Descripción</label>
-                                    <textarea id="reportDescripcion<%=espacioId%>" name="description" rows="4" cols="50" placeholder="Escribe aquí tu descripción..."></textarea>
-
-                                    <button type="submit" class="button_primary">Añadir</button>
-                                </div>
-                            </form>
+                        <div class="info__tiempo">
+                            <h3>Placa</h3>
+                            <p>{placa}</p>
+                        </div>
+                        <div class="info__costo">
+                            <h3>Cascos</h3>
+                            <p>{cantCascos}</p>
                         </div>
                     </div>
+                    <div class="button-container">
+                        <button class="button_primary botones__pago" data-pay="paymodal{espacioId}">
+                            Liberar
+                        </button>
+                        <button class="button_secundary button--edit botones__ajustar" data-edit="editmodal{espacioId}">
+                            Ajustar
+                        </button>
+                    </div>
                 </div>
-
-                <%
-                        }else {%>
+            </div>
+        </template>
+        <template id="template-espacio-libre">
                 <div class="casillero">
                     <div class="casillero__title estilo__casillero">
-                        <h1>Espacio <%=espacioId%></h1>
+                        <h1>{nombreEspacio}</h1>
                     </div>
 
                     <div class="casillero__contenido estilo__contenido">
@@ -151,73 +78,121 @@
                             </div>
                         </div>
                         <div class="button-container">
-                            <button class="button_primary addCasilleroBtn" data-add="addmodal<%=espacioId%>">
+                            <button class="button_primary addCasilleroBtn" data-add="addmodal{espacioId}">
                                 Añadir
                             </button>
                         </div>
                     </div>
-
                 </div>
-                <!-- ventana Crear Espacio-->
-                <div id="addmodal<%=espacioId%>" class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-
-                            <h2>Espacio <%=espacioId%></h2>
-                            <span class="close" data-modal-id="addmodal<%=espacioId%>">&times;</span>
-                        </div>
-                        <div class="modal-body">
-                            <h2>Nuevo Espacio</h2>
-                            <form id="addCasco<%= espacioId %>" onsubmit="addCasco(event, <%= espacioId %>)" class="formulario">
-                                <div class="input_container input_container--vertical">
-                                    <input type="text" id="adddocumento<%=espacioId%>" placeholder="Documento del aprendiz" name="documento" required>
-                                    <select id="addvehiculolist<%=espacioId%>" name="options">
-
-                                    </select>
-                                    <input type="number" id="addcant_cascos<%=espacioId%>" placeholder="Cantidad de Cascos" name="cant_cascos">
-                                    <button type="submit" class="button_primary">Añadir</button>
-                                </div>
-                            </form>
-                        </div>
+            </template>
+        <template id="modal-liberar-template">
+            <div class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="nameEspacio"></h2>
+                        <span class="close">&times;</span>
                     </div>
-                </div>
-                <% }
-                }
-            } else {
-                %>
-                <div class="casillero">
-                    <div class="casillero__title">
-                        <h1><%="vacio"%></h1>
-                    </div>
-
-                    <div class="casillero__contenido">
-                        <div class="contenido__info">
-                            <div class="info__casillero">
-                                <h1>Libre</h1>
+                    <div class="modal-body">
+                        <h2>Liberar Espacio</h2>
+                        <form class="formulario">
+                            <input type="hidden" name="typeForm" id="typeForm" value="liberar">
+                            <input type="hidden" name="idEspacio" id="idEspacio" value="">
+                            <div class="input_container input_container--vertical">
+                                <p class="document"></p>
+                                <p class="nameAprendiz"></p>
+                                <p class="Placa"></p>
+                                <button type="submit" class="button_primary">Liberar</button>
                             </div>
-                        </div>
-                        <div class="contenido__botones">
-                            <button class="botones botones--largo botones__pago">
-                                Liberar
-                            </button>
-                        </div>
+                        </form>
                     </div>
                 </div>
+            </div>
+        </template>
+        <template id="modal-editar-template">
+            <div class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="nameEspacio"></h2>
+                        <span class="close">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <h2>Editar Espacio</h2>
+                        <form class="">
+                            <input type="hidden" name="typeForm" id="typeForm" value="edit">
+                            <input type="hidden" name="idEspacio" id="idEspacio" value="">
+                            <div class="input_container input_container--vertical">
+                                <label for="editdocumento">Documento Aprendiz</label>
+                                <input type="text" id="editdocumento" placeholder="Documento del aprendiz" name="documento" value="" required disabled>
+                                <label for="editcant_cascos">Cantidad de Cascos</label>
+                                <input type="number" id="editcant_cascos" placeholder="Cantidad de cascos" name="cant_cascos" value="}" required>
+                                <button type="submit" class="button_primary">Añadir</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <template id="modal-reporte-template">
+            <div class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="nameEspacio"></h2>
+                        <span class="close">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <h2>Reportar Espacio</h2>
+                        <form class="formulario">
+                            <input type="hidden" name="typeForm" id="typeForm" value="report">
+                            <input type="hidden" name="idEspacio" id="idEspacio" value="">
+                            <div class="input_container input_container--vertical">
+                                <label for="reportTipo">Tipo de Reporte:</label>
+                                <select id="reportTipo" name="options">
+                                </select>
+                                <label for="reportNombre">Nombre Reporte:</label>
+                                <input type="text" id="reportNombre" name="reportNombre" placeholder="Describe lo que pasó">
+                                <label for="reportDescripcion">Descripción</label>
+                                <textarea id="reportDescripcion" name="description" rows="4" cols="50" placeholder="Escribe aquí tu descripción..."></textarea>
+                                <button type="submit" class="button_primary">Añadir</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <template id="modal-ocupar-template">
+            <div class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="nameEspacio"></h2>
+                        <span class="close">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <h2>Nuevo Espacio</h2>
+                        <form class="formulario">
+                            <input type="hidden" name="typeForm" id="typeForm" value="add">
+                            <input type="hidden" name="idEspacio" id="idEspacio" value="">
+                            <div class="input_container input_container--vertical">
+                                <input type="text" placeholder="Documento del aprendiz" id="idAprendiz" name="documento" required>
+                                <select id="addvehiculolist" name="options">
+                                    <!-- Lista de vehículos -->
+                                </select>
+                                <input type="number" id="addcant_cascos" placeholder="Cantidad de Cascos" name="cant_cascos">
+                                <button type="submit" class="button_primary">Añadir</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </template>
 
 
-                <%} %>
 
-
-
-                    <script type="module" src="resources/js/Casilleros.js"></script>
-                    <script src="resources/js/buttonListener.js"></script>
-                    <script src="resources/js/vehiculoSelect.js"></script>
-
-
-            </section>
         </section>
-    </main>
-    <jsp:include page="resources/footer.jsp" />
+</section>
+</main>
+<jsp:include page="resources/success.jsp"/>
+<jsp:include page="resources/error.jsp"/>
+<jsp:include page="resources/footer.jsp" />
 </body>
 
 </html>

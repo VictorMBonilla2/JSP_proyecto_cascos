@@ -9,13 +9,21 @@
 <jsp:include page="resources/sidebar.jsp" />
 
 <%
-    HttpSession sesion = request.getSession();
-    Persona user = (Persona) session.getAttribute("user");
+    HttpSession sesion = request.getSession(false);
+    Persona user = null;
+    if (sesion != null) {
+        user = (Persona) sesion.getAttribute("user");
+    }
+    if (user == null) {
+        response.sendRedirect("index.jsp");
+        return;
+    }
 
     boolean isGestor = user.getRol().getId()==1;
     boolean isAprendiz= user.getRol().getId()==2;
     boolean isAdmin = user.getRol().getId()==3;
 %>
+
 
 <section class="main_container__home">
     <div class="info_user">
@@ -93,15 +101,15 @@
                 </div>
                 <div class="info2-user__text">
                     <h1>Tipo Doc</h1>
-                    <p><%= user.getTipoDocumento() %></p>
+                    <p><%= user.getTipoDocumento().getNombreDocumento() %></p>
                 </div>
                 <div class="info2-user__text">
                     <h1>num Doc</h1>
-                    <p><%= user.getId() %></p>
+                    <p><%= user.getDocumento() %></p>
                 </div>
                 <div class="info2-user__text">
                     <h1>fecha nac</h1>
-                    <p> 17/35/1995</p>
+                    <p> <%= user.getFechaNacimiento() %></p>
                 </div>
             </div>
         </div>
@@ -111,7 +119,7 @@
 
 <jsp:include page="resources/footer.jsp" />
 
-<% if (isGestor) { %>
+<% if (isGestor || isAdmin) { %>
 <script src="resources/js/graficos.js"></script>
 <% } else { %>
 <script src="resources/js/VehiculoINFO.js"></script>

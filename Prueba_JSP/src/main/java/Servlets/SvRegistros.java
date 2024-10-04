@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "SvRegistros", urlPatterns = {"/SvRegistros"})
@@ -19,14 +20,21 @@ public class SvRegistros extends HttpServlet {
     Logica_Registro logica_registro = new Logica_Registro();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<TbRegistro> registros = logica_registro.ObtenerRegistros();
+
+
+        int idUsuario = Integer.parseInt(request.getParameter("iduser"));
+
+        List<TbRegistro> registros = logica_registro.ObtenerRegistros(idUsuario);
+        if (registros == null) {
+            registros = new ArrayList<>();  // Inicializar como lista vacía
+        }
+        // Crear el JSONArray
+        JSONArray jsonArray = new JSONArray();
 
     try{
         // Configurar la respuesta para JSON
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        // Convertir la lista de registros a JSON
-        JSONArray jsonArray = new JSONArray();
         for (TbRegistro registro : registros) {
             JSONObject jsonObject = new JSONObject();
             System.out.println(registro.getFecha_registro());

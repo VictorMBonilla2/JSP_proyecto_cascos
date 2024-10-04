@@ -1,6 +1,5 @@
 package Modelo;
 
-import Utilidades.Anotaciones;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -12,22 +11,13 @@ public class TbRegistro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_registro", nullable = false)
 
-    @Anotaciones.PropertyName("ID del Registro")
     private Integer id_registro;
 
-    @Anotaciones.PropertyName("Fecha del Registro")
     private LocalDateTime fecha_registro;
-
-    @Anotaciones.PropertyName("Espacio")
     private int id_espacio;
 
-    @Anotaciones.PropertyName("Placa del Vehiculo")
     private String placaVehiculo;
-
-    @Anotaciones.PropertyName("Documento del Aprendiz")
     private int documentoAprendiz;
-
-    @Anotaciones.PropertyName("Documento del Gestor")
     private int documentoGestor;
 
 

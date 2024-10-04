@@ -112,8 +112,9 @@ ul.list__buttons a {
 
 
 }
-.ui-menu__option>img{
+.ui-menu__option > svg{
     width: 45px;
+    height: 45px;
 }
 
 .ui-menu__option:hover{

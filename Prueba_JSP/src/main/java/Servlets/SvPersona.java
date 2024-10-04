@@ -7,6 +7,7 @@ import Logica.Logica_Rol;
 import Modelo.Persona;
 import Modelo.Roles;
 import Modelo.TbTipoDocumento;
+import Modelo.Tb_MarcaVehiculo;
 import Utilidades.JsonReader;
 import Utilidades.ResultadoOperacion;
 import Utilidades.sendResponse;
@@ -16,6 +17,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,6 +37,40 @@ public class SvPersona extends HttpServlet {
     Logica_Documentos documentos = new Logica_Documentos();
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        int id_usuario = Integer.parseInt(request.getParameter("id_usuario"));
+
+        Persona persona = logica_persona.buscarpersonaPorId(id_usuario);
+
+        try {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("idUsuario", persona.getId());
+            jsonObject.put("nombreUsuario", persona.getNombre());
+            jsonObject.put("ApellidoUsuario", persona.getApellido());
+            jsonObject.put("fechaNacimiento", persona.getFechaNacimiento());
+            JSONObject jsonObjectrol = new JSONObject();
+
+            jsonObjectrol.put("idrolUsuario", persona.getRol().getId());
+            jsonObjectrol.put("namerolUsuario", persona.getRol().getNombre());
+            jsonObject.put("rol",jsonObjectrol);
+
+            jsonObject.put("correoUsuario", persona.getCorreo());
+            jsonObject.put("tipoDocumento", persona.getTipoDocumento().getId());
+            JSONObject jsonObjectdoc = new JSONObject();
+
+            jsonObjectdoc.put("idtipodocUsuario", persona.getRol().getId());
+            jsonObjectdoc.put("nametipodocUsuario", persona.getRol().getNombre());
+            jsonObject.put("tipodoc",jsonObjectdoc);
+            jsonObject.put("documento", persona.getDocumento());
+
+            // Escribir la respuesta JSON
+            PrintWriter out = response.getWriter();
+            out.println(jsonObject.toString());
+            out.flush();
+        } catch (Exception e) {
+            System.out.println("Error al parsear el JSON: " + e);
+        }
 
     }
     @Override
@@ -84,9 +120,10 @@ public class SvPersona extends HttpServlet {
         }
 
         // Obtiene los datos del JSON
-        String nombre = jsonObject.optString("nombre");
-        String apellido = jsonObject.optString("apellido");
-        String fechaNacimientoStr = jsonObject.optString("fecha");
+        String nombre = jsonObject.getString("nombre");
+        String apellido = jsonObject.getString("apellido");
+        String fechaNacimientoStr = jsonObject.getString("fecha");
+        String correo = jsonObject.getString("correo");
 
         // Define el formato de la fecha esperado
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -104,6 +141,7 @@ public class SvPersona extends HttpServlet {
         user.setNombre(nombre);
         user.setApellido(apellido);
         user.setFechaNacimiento(fechaNacimiento); // Asigna la fecha convertida
+        user.setCorreo(correo);
 
         // Guarda los cambios en la base de datos
         boolean updateSuccess = logica_persona.actualizarPersona(user);

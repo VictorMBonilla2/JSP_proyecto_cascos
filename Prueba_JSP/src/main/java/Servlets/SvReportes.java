@@ -20,7 +20,8 @@ public class SvReportes extends HttpServlet {
     Logica_Reportes logica_reportes = new Logica_Reportes();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<TbReportes> reportes = logica_reportes.ObtenerReportes();
+        int idUsuario = Integer.parseInt(request.getParameter("iduser"));
+        List<TbReportes> reportes = logica_reportes.ObtenerReportes(idUsuario);;
         try {
         // Configurar la respuesta para JSON
         response.setContentType("application/json");

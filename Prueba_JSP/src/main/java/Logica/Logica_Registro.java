@@ -1,6 +1,7 @@
 package Logica;
 
 import Controlador.PersistenciaController;
+import Modelo.Persona;
 import Modelo.TbRegistro;
 
 import java.time.DayOfWeek;
@@ -12,13 +13,36 @@ import java.util.stream.Collectors;
 
 public class Logica_Registro {
     PersistenciaController controladora = new PersistenciaController();
-    public List<TbRegistro> ObtenerRegistros() {
+    Logica_Persona logicaPersona = new Logica_Persona();
 
-        return controladora.ObtenerRegistros();
+    public List<TbRegistro> ObtenerRegistros(int idUsuario) {
+        List<TbRegistro> lista=null;
+        try{
+            Persona persona = logicaPersona.buscarpersonaPorId(idUsuario);
+            if(persona == null){
+                return null;
+            }
+            int rol = persona.getRol().getId();
+
+            if(rol == 1){ //Gestor
+                lista= controladora.ObtenerRegistrosGestor(persona.getDocumento());
+            }
+            if(rol== 2){ //Aprendiz
+                lista= controladora.ObtenerRegistrosAprendiz(persona.getDocumento());
+            }
+
+            if(rol == 3 ){
+                lista= controladora.ObtenerRegistros();
+            }
+        }catch (Exception e){
+            System.err.println("Hubo un error al obtener la lista de registro correspondiente a este usuario: " + e.getMessage());
+            return null;
+        }
+        return lista;
     }
 
     public Map<String, Integer> obtenerRegistrosPorSemana() {
-        List<TbRegistro> registros = ObtenerRegistros();
+        List<TbRegistro> registros = controladora.ObtenerRegistros();
         System.out.println("Total registros: " + registros.size()); // Verifica la cantidad de registros obtenidos
 
         // Obtener la fecha de hoy

@@ -23,9 +23,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             clone.querySelector(".user_item_rol > p").textContent = persona.rol.nombre;
 
-            clone.querySelector(".user_button_edit").setAttribute('data-edit', persona.documento);
+            clone.querySelector(".user_button_edit").setAttribute('data-edit', persona.idUser);
 
-            clone.querySelector(".user_button_delete").setAttribute('data-delete', persona.documento);
+            clone.querySelector(".user_button_delete").setAttribute('data-delete', persona.idUser);
 
             // Insertar el clon modificado en la lista
             lista.appendChild(clone);
@@ -50,6 +50,28 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             const clone = document.importNode(formNewTemplate, true);
+
+
+            const tipodoc= clone.querySelector("#Tipo_documento_new");
+            const rol= clone.querySelector("#Rol_new");
+            const response = await  fetch('/Prueba_JSP_war_exploded/tipoDoc');
+            const data = await response.json();
+            console.log(data)
+            data.forEach(tipoDocumento =>{
+                const option = document.createElement("option");
+                option.value=tipoDocumento.id_documento;
+                option.textContent=tipoDocumento.nombre_documento;
+                tipodoc.appendChild(option)
+            })
+            const response1 = await  fetch('/Prueba_JSP_war_exploded/listaRoles');
+            const data1 = await response1.json();
+            console.log(data1)
+            data1.forEach(tipoDocumento =>{
+                const option = document.createElement("option");
+                option.value=tipoDocumento.id_rol;
+                option.textContent=tipoDocumento.nombre_rol;
+                rol.appendChild(option)
+            })
 
             // Retirar el formulario existente antes de agregar otro
             retirarFormsActivos();
@@ -133,9 +155,31 @@ document.addEventListener("DOMContentLoaded", async () => {
             clone.querySelector("#Nombre").value = dato_usuario.nombre;
             clone.querySelector("#Apellido").value = dato_usuario.apellido;
             clone.querySelector("#Correo").value = dato_usuario.correo;
-            clone.querySelector("#Tipo_documento").value = dato_usuario.tipo_documento;
-            clone.querySelector("#numero_documento").value = dato_usuario.numero_documento;
+            clone.querySelector("#numero_documento").value = dato_usuario.documento;
             clone.querySelector("#Fecha_nacimiento").value = dato_usuario.fecha_nacimineto;
+            clone.querySelector("#idUser").value = dato_usuario.idUser;
+            const tipodoc= clone.querySelector("#Tipo_documento");
+            const rol= clone.querySelector("#Rol");
+            const response = await  fetch('/Prueba_JSP_war_exploded/tipoDoc');
+            const data = await response.json();
+            console.log(data)
+            data.forEach(tipoDocumento =>{
+                const option = document.createElement("option");
+                option.value=tipoDocumento.id_documento;
+                option.textContent=tipoDocumento.nombre_documento;
+                tipodoc.appendChild(option)
+            })
+            const response1 = await  fetch('/Prueba_JSP_war_exploded/listaRoles');
+            const data1 = await response1.json();
+            console.log(data1)
+            data1.forEach(tipoDocumento =>{
+                const option = document.createElement("option");
+                option.value=tipoDocumento.id_rol;
+                option.textContent=tipoDocumento.nombre_rol;
+                rol.appendChild(option)
+            })
+
+            clone.querySelector("#Tipo_documento").value = dato_usuario.doc.idDocumento;
             clone.querySelector("#Rol").value = dato_usuario.rol.idRol;
 
             // Agregar el botón de cancelar
@@ -159,13 +203,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (e.target.matches("#delete_button")) {
 
             let data_delete = e.target.getAttribute("data-delete");
-            let advertencia = confirm(`Estas seguro de eliminar al usuario  ${personas[data_delete].nombre} ${personas[data_delete].apellido}`);
-            if (advertencia) {
-                let response = borrarUsuario(personas[data_delete]);
-                if (response) {
-                    const user_item = document.querySelector(`[data-user="${data_delete}"]`);
-                    user_item.innerHTML = "";
+
+            // Filtrar la lista de personas por idUser
+            const personaSeleccionada = personas.filter(persona => persona.idUser == data_delete);
+
+            if (personaSeleccionada.length > 0) {
+                let advertencia = confirm(`Estas seguro de eliminar al usuario ${personaSeleccionada[0].nombre} ${personaSeleccionada[0].apellido}`);
+                if (advertencia) {
+                    let response = borrarUsuario(personaSeleccionada[0]);
+                    if (response) {
+                        const user_item = document.querySelector(`[data-user="${data_delete}"]`);
+                        user_item.innerHTML = "";
+                    }
                 }
+            } else {
+                console.log("Usuario no encontrado.");
             }
         }
     });
@@ -216,6 +268,7 @@ async function editUser(evento, documento_user) {
     const fechaNacimientoInput = document.querySelector("#Fecha_nacimiento").value;
     const fechaFormateada = formatFecha(fechaNacimientoInput);
     const rol = Form.querySelector("#Rol").value
+    const idUser = Form.querySelector("#idUser").value
     const data = {
         "action": "edit",
         "documento": documento_user,
@@ -225,7 +278,8 @@ async function editUser(evento, documento_user) {
         "tipoDocumneto": tipoDocumneto,
         "numeroDocumento": numeroDocumento,
         "fechaNacimiento": fechaFormateada,
-        "rol": rol
+        "rol": rol,
+        "idUser":idUser
     }
     try {
         await sendRequest("/Prueba_JSP_war_exploded/usuarios", data);
@@ -236,7 +290,7 @@ async function editUser(evento, documento_user) {
 }
 
 async function borrarUsuario(persona) {
-    const id_persona = persona.documento;
+    const id_persona = persona.idUser;
     console.log(id_persona)
     const data = {
         "action": "delete",
