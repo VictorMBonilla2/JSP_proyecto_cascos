@@ -2,10 +2,7 @@ package Controlador;
 
 import Modelo.TbRegistro;
 import Utilidades.JPAUtils;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.Query;
+import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 
 import java.util.List;
@@ -114,4 +111,34 @@ public class RegistroJPAController {
             }
         }
     }
+
+    public List<TbRegistro> findRegistrosGestor(int documentoGestor) {
+        EntityManager em = getEntityManager();  // Obtén una instancia de EntityManager
+        try {
+            TypedQuery<TbRegistro> query = em.createQuery(
+                    "SELECT r FROM TbRegistro r WHERE r.documentoGestor = :documentoGestor",
+                    TbRegistro.class
+            );
+            query.setParameter("documentoGestor", documentoGestor);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+
+    public List<TbRegistro> findRegistrosAprendiz(int documentoAprendiz) {
+        EntityManager em = getEntityManager();  // Obtén una instancia de EntityManager
+        try {
+            TypedQuery<TbRegistro> query = em.createQuery(
+                    "SELECT r FROM TbRegistro r WHERE r.documentoAprendiz = :documentoAprendiz",
+                    TbRegistro.class
+            );
+            query.setParameter("documentoAprendiz", documentoAprendiz);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
 }

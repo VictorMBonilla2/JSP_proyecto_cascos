@@ -1,11 +1,16 @@
+import {host} from "./config.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
     const tabla = document.querySelector(".reportes__content");
     const reporteTemplate = document.getElementById('reporte-template').content;
     const modalTemplate = document.getElementById('modal-template').content;
+    const documentoUser = document.querySelector("#idUsuario").value;
+    let modalCounter = 0;  // Añade un contador global
 
     try {
-        const responseDocument = await fetch("SvReportes");
+        const responseDocument = await fetch(`${host}/SvReportes?iduser=${documentoUser}`);
         const reportes = await responseDocument.json();
+        console.log(reportes);
 
         if (!Array.isArray(reportes)) {
             throw new Error("El JSON recibido no es un array.");
@@ -26,10 +31,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             fechaDiv.innerHTML = `<p>${fecha}</p>`;
             tabla.appendChild(fechaDiv);
 
-            reportes.forEach((reporte, index) => {
+            reportes.forEach((reporte) => {
                 const reporteItem = document.importNode(reporteTemplate, true);
-                const modalId = `report${index}`;
+                const modalId = `report${modalCounter++}`;  // Usa un contador único para el ID
 
+                // Actualiza el contenido del reporte
                 reporteItem.querySelector('.item__casillero').textContent = reporte.documento_aprendiz;
                 reporteItem.querySelector('.item__type').textContent = reporte.tipo_reporte;
                 reporteItem.querySelector('.item__placa').textContent = reporte.placa_vehiculo;
@@ -37,9 +43,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 tabla.appendChild(reporteItem);
 
+                // Clona y actualiza el contenido del modal
                 const modalDiv = document.importNode(modalTemplate, true);
                 modalDiv.querySelector('.modal').id = modalId;
                 modalDiv.querySelector('.close').setAttribute('data-modal-id', modalId);
+                modalDiv.querySelector('.modal-body h3').textContent = reporte.descripcion_reporte;
                 modalDiv.querySelector('.modal-body h3').textContent = reporte.descripcion_reporte;
 
                 document.body.appendChild(modalDiv);

@@ -5,8 +5,15 @@
 <jsp:include page="resources/header.jsp" />
 <link rel="stylesheet" href="resources/css/vehiculo.css">
 <%
-    HttpSession sesion = request.getSession();
-    Persona user = (Persona) session.getAttribute("user");
+    HttpSession sesion = request.getSession(false);
+    Persona user = null;
+    if (sesion != null) {
+        user = (Persona) sesion.getAttribute("user");
+    }
+    if (user == null) {
+        response.sendRedirect("index.jsp");
+        return;
+    }
     Set<TbVehiculo> vehiculoUser = user.getVehiculos();
     int index = 0;
 %>

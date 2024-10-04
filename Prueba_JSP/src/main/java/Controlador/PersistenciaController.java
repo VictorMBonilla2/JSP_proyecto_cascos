@@ -172,6 +172,13 @@ public class PersistenciaController {
 
         return registroJPA.findTbRegistroEntities();
     }
+    public List<TbRegistro> ObtenerRegistrosGestor(int documento) {
+        return registroJPA.findRegistrosGestor(documento);
+    }
+    public List<TbRegistro> ObtenerRegistrosAprendiz(int documento) {
+        return registroJPA.findRegistrosAprendiz(documento);
+    }
+
 
     //JPA REPORTE
 
@@ -182,6 +189,14 @@ public class PersistenciaController {
     public void CrearReporte(TbReportes nuevoReporte) {
         reportesJPA.create(nuevoReporte);
     }
+
+    public List<TbReportes> ObtenerReportesGestor(int documento) {
+        return reportesJPA.findReportesGestor(documento);
+    }
+    public List<TbReportes> ObtenerReportesAprendiz(int documento) {
+        return reportesJPA.findReportesAprendiz(documento);
+    }
+
 
 
     //JPA TIPO DOCUMENTO
@@ -385,7 +400,5 @@ public class PersistenciaController {
     public void EliminarCiudad(int idCiudad) throws Exception {
         ciudadVehiculo.destroy(idCiudad);
     }
-
-
-
 }
+

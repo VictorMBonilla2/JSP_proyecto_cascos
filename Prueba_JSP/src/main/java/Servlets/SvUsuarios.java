@@ -45,7 +45,8 @@ public class SvUsuarios extends HttpServlet {
 
         for (Persona usuario : Lista){
             JSONObject jsonObject= new JSONObject();
-            jsonObject.put("documento", usuario.getId());
+            jsonObject.put("idUser", usuario.getId());
+            jsonObject.put("documento", usuario.getDocumento());
             jsonObject.put("nombre", usuario.getNombre());
             jsonObject.put("apellido", usuario.getApellido());
             jsonObject.put("correo", usuario.getCorreo());
@@ -56,10 +57,12 @@ public class SvUsuarios extends HttpServlet {
                 rolObject.put("idRol", usuario.getRol().getId());
                 rolObject.put("nombre", usuario.getRol().getNombre());
             }
+            JSONObject docObject = new JSONObject();
             if (usuario.getTipoDocumento() != null) {
-                rolObject.put("idDocumento", usuario.getTipoDocumento().getId());
-                rolObject.put("nombreDocumento", usuario.getTipoDocumento().getNombreDocumento());
+                docObject.put("idDocumento", usuario.getTipoDocumento().getId());
+                docObject.put("nombreDocumento", usuario.getTipoDocumento().getNombreDocumento());
             }
+            jsonObject.put("doc", docObject);
             jsonObject.put("rol", rolObject); // Añadir el objeto rol desglosado
             jsonArray.put(jsonObject);
        }
@@ -94,10 +97,11 @@ public class SvUsuarios extends HttpServlet {
     private void editarUsuario(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         Persona persona = new Persona();
         try {
+            persona.setId(jsonObject.getInt("idUser"));
             persona.setNombre(jsonObject.getString("nombre"));
             persona.setApellido(jsonObject.getString("apellido"));
             persona.setCorreo(jsonObject.getString("correo"));
-            persona.setId(Integer.parseInt(jsonObject.getString("numeroDocumento")));
+            persona.setDocumento(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             System.out.println(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             String fechaNacimientoStr = jsonObject.optString("fechaNacimiento");
             System.out.println("fechaNacimientoStr = " + fechaNacimientoStr);
@@ -131,7 +135,7 @@ public class SvUsuarios extends HttpServlet {
             persona.setNombre(jsonObject.getString("nombre"));
             persona.setApellido(jsonObject.getString("apellido"));
             persona.setCorreo(jsonObject.getString("correo"));
-            persona.setId(Integer.parseInt(jsonObject.getString("numeroDocumento")));
+            persona.setDocumento(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             persona.setClave(jsonObject.getString("password"));
             System.out.println(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             String fechaNacimientoStr = jsonObject.optString("fechaNacimiento");

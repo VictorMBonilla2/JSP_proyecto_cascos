@@ -1,12 +1,10 @@
 package Controlador;
 
 
+import Modelo.TbRegistro;
 import Modelo.TbReportes;
 import Utilidades.JPAUtils;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.Query;
+import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 
 import java.util.List;
@@ -114,6 +112,33 @@ public class ReportesJPAController {
             if (em != null && em.isOpen()) {
                 em.close();
             }
+        }
+    }
+
+    public List<TbReportes> findReportesGestor(int documento) {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<TbReportes> query = em.createQuery(
+                    "SELECT r FROM tb_reportes r WHERE r.documentoColaborador = :documentoColaborador",
+                    TbReportes.class
+            );
+            query.setParameter("documentoColaborador", documento);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+
+
+    public List<TbReportes> findReportesAprendiz(int documento) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT r FROM tb_reportes r WHERE r.documentoAprendiz = :documento", TbReportes.class)
+                    .setParameter("documento", documento)
+                    .getResultList();
+        } finally {
+            em.close();
         }
     }
 }

@@ -8,8 +8,15 @@
 <jsp:include page="resources/sidebar.jsp"/>
 
 <%
-    HttpSession sesion = request.getSession();
-    Persona user = (Persona) session.getAttribute("user");
+    HttpSession sesion = request.getSession(false);
+    Persona user = null;
+    if (sesion != null) {
+        user = (Persona) sesion.getAttribute("user");
+    }
+    if (user == null) {
+        response.sendRedirect("index.jsp");
+        return;
+    }
 %>
 <section class="main_container__conf_Sistema">
     <div class="users_list__container">
@@ -52,6 +59,7 @@
 <template id="template_form">
     <div class="user_list__form">
         <form class="formulario ">
+            <input type="hidden" id="idUser" name="idUser" value="">
             <div class="form_persona">
                 <div class="input_container">
                     <label for="Nombre">Nombre</label>
@@ -99,38 +107,38 @@
     <div class="user_list__form">
         <form class="formulario newUser">
             <div class="form_persona">
-                <div class="formulario__inputs">
+                <div class="input_container">
                     <label for="Nombre_new">Nombre</label>
                     <input type="text" id="Nombre_new">
                 </div>
-                <div class="formulario__inputs">
+                <div class="input_container">
                     <label for="Apellido_new"> Apellido</label>
                     <input type="text" id="Apellido_new">
                 </div>
-                <div class="formulario__inputs">
+                <div class="input_container">
                     <label for="Correo_new">Correo Electronico</label>
                     <input type="text" id="Correo_new">
                 </div>
-                <div class="formulario__inputs">
+                <div class="input_container">
                     <label for="Tipo_documento_new"> Tipo de documento</label>
-                    <input type="text" id="Tipo_documento_new">
+                    <select type="text" id="Tipo_documento_new"> </select>
                 </div>
 
-                <div class="formulario__inputs">
+                <div class="input_container">
                     <label for="numero_documento_new">Numero de documento</label>
                     <input type="text" id="numero_documento_new">
                 </div>
-                <div class="formulario__inputs">
-                    <label for="password_new">Numero de documento</label>
+                <div class="input_container">
+                    <label for="password_new">Contraseña</label>
                     <input type="password" id="password_new">
                 </div>
-                <div class="formulario__inputs">
+                <div class="input_container">
                     <label for="Fecha_nacimiento_new">Fecha de nacimiento</label>
                     <input type="date" id="Fecha_nacimiento_new">
                 </div>
-                <div class="formulario__inputs">
+                <div class="input_container">
                     <label for="Rol_new">Rol del usuario</label>
-                    <input type="text" id="Rol_new">
+                    <select type="text" id="Rol_new"></select>
                 </div>
 
             </div>

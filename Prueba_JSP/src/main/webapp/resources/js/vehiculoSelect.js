@@ -1,33 +1,21 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Selecciona todos los inputs cuyo ID comienza con 'adddocumento'
-    const documentoInputs = document.querySelectorAll('input[id^="adddocumento"]');
+export async function fetchVehiculos(documento) {
+    const selectVehiculo = document.getElementById(`addvehiculolist`);
+    const cantidadCascosInput = document.getElementById(`addcant_cascos`);
 
-    // Itera sobre cada input y añade el evento 'blur'
-    documentoInputs.forEach(input => {
-        // Extrae el espacioId del ID del input
-        const espacioId = input.id.replace('adddocumento', '');
-
-        // Añade el evento 'blur'
-        input.addEventListener('blur', function() {
-            fetchVehiculos(espacioId);
-        });
-    });
-});
-
-async function fetchVehiculos(espacioId) {
-    const documento = document.getElementById(`adddocumento${espacioId}`).value;
-    const selectVehiculo = document.getElementById(`addvehiculolist${espacioId}`);
-    const cantidadCascosInput = document.getElementById(`addcant_cascos${espacioId}`);
+    selectVehiculo.innerHTML = '';
+    cantidadCascosInput.value = '';
     // Verifica que el documento no esté vacío
-    if (documento.trim() === '') {
+    if (!documento > 0) {
         return;
     }
+
 
     // Realiza una solicitud AJAX (fetch) al servidor
     const response= await fetch(`VehiculoAprendiz?documento=${documento}`);
     if (response.status === 204) {
         console.log('No se encontraron vehículos.');
         return []; // o alguna otra acción
+
     }
     const data = await response.json();
     if (data.length === 0) {
@@ -46,18 +34,16 @@ async function fetchVehiculos(espacioId) {
             contador++;
     });
 
-        // Escuchar cambios en la selección del vehículo
-        selectVehiculo.addEventListener('change', function() {
-            const selectedOption = selectVehiculo.options[selectVehiculo.selectedIndex]; // Corregir acceso al objeto de opción
-            cantidadCascosInput.value = selectedOption.dataset.cantidadCascos || 0; // Actualizar el valor del input
-        });
+    // Escuchar cambios en la selección del vehículo
+    selectVehiculo.addEventListener('change', function() {
+        const selectedOption = selectVehiculo.options[selectVehiculo.selectedIndex]; // Corregir acceso al objeto de opción
+        cantidadCascosInput.value = selectedOption.dataset.cantidadCascos || 0; // Actualizar el valor del input
+    });
 
-        // Actualizar el input de cantidad de cascos al cargar la página con el primer vehículo
-        if (selectVehiculo.options.length > 0) {
-            const firstOption = selectVehiculo.options[0];
-            cantidadCascosInput.value = firstOption.dataset.cantidadCascos || 0;
-        }
+    // Actualizar el input de cantidad de cascos al cargar la página con el primer vehículo
+    if (selectVehiculo.options.length > 0) {
+        const firstOption = selectVehiculo.options[0];
+        cantidadCascosInput.value = firstOption.dataset.cantidadCascos || 0;
     }
-
-
+    }
 }

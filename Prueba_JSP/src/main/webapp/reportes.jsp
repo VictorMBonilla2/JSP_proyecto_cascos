@@ -1,8 +1,21 @@
+<%@ page import="Modelo.Persona" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <jsp:include page="resources/header.jsp" />
 <link rel="stylesheet" href="resources/css/reports.css">
 <jsp:include page="resources/sidebar.jsp" />
+<%
+    HttpSession sesion = request.getSession(false);
+    Persona user = null;
+    if (sesion != null) {
+        user = (Persona) sesion.getAttribute("user");
+    }
+    if (user == null) {
+        response.sendRedirect("index.jsp");
+        return;
+    }
+%>
+<input type="hidden" id="idUsuario" value="<%=user.getId()%>">
 
             <section class="main_container__reportes">
 
@@ -16,14 +29,14 @@
 
                 <!-- MODAL-->
 
-                <script src="resources/js/reportesCOntent.js"></script>
+                <script type="module" src="resources/js/reportesCOntent.js"></script>
 
             </section>
 
             <!-- Plantilla para los ítems de reporte -->
             <template id="reporte-template">
                 <div class="report__item">
-                    <p>Casillero</p>
+                    <p>Documento</p>
                     <p class="item__casillero"></p>
                     <p>Tipo</p>
                     <p class="item__type"></p>
@@ -43,7 +56,9 @@
                             <span class="close" data-modal-id="">×</span>
                         </div>
                         <div class="modal-body">
+                            <h2></h2>
                             <h3></h3>
+
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Obtén todos los botones con la clase addCasilleroBtn
-    let buttonsadd = document.getElementsByClassName("addCasilleroBtn");
+    let buttonsAdd = document.getElementsByClassName("addCasilleroBtn");
     let buttonedit =document.getElementsByClassName("botones__ajustar");
     let buttonpay =document.getElementsByClassName("botones__pago");
     let buttonreport=document.querySelectorAll(".report__img");
@@ -9,18 +9,27 @@ document.addEventListener('DOMContentLoaded', function () {
     // Añade un event listener a cada botón pagar
     for (let i = 0; i < buttonpay.length; i++) {
         buttonpay[i].onclick = function () {
+            console.log("Se ejecuta el botno de pay de")
             let modalId = this.getAttribute("data-pay");
+
+            console.log("Se ejecuta el botno de pay de",modalId )
             let modal = document.getElementById(modalId);
             modal.style.display = "flex";
         };
     }
     // Añade un event listener a cada botón añadir
-    for (let i = 0; i < buttonsadd.length; i++) {
-        buttonsadd[i].onclick = function () {
+    // Añade un event listener a cada botón añadir
+    for (let i = 0; i < buttonsAdd.length; i++) {
+        buttonsAdd[i].addEventListener('click', function () {
             let modalId = this.getAttribute("data-add");
             let modal = document.getElementById(modalId);
-            modal.style.display = "flex";
-        };
+            modal.style.display = "flex";  // Mostrar el modal
+
+            // Cerrar el modal cuando se hace clic en la "x" o fuera del modal
+            modal.querySelector('.close').addEventListener('click', function () {
+                modal.style.display = "none";
+            });
+        });
     }
     // Añade un event listener a cada botón editar
     for (let i = 0; i < buttonedit.length; i++) {

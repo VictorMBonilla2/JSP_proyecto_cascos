@@ -6,8 +6,15 @@
 <jsp:include page="resources/sidebar.jsp" />
 
 <%
-    HttpSession sesion = request.getSession();
-    Persona user = (Persona) session.getAttribute("user");
+    HttpSession sesion = request.getSession(false);
+    Persona user = null;
+    if (sesion != null) {
+        user = (Persona) sesion.getAttribute("user");
+    }
+    if (user == null) {
+        response.sendRedirect("index.jsp");
+        return;
+    }
 %>
 <section class="main_container__conf_Sistema">
     <div class="container-Editvehiculo">
