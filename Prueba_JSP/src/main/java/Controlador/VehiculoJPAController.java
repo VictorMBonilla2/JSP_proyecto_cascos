@@ -3,7 +3,9 @@ package Controlador;
 import Modelo.TbVehiculo;
 import Utilidades.JPAUtils;
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import java.io.Serializable;
 import java.util.List;
@@ -121,6 +123,30 @@ public class VehiculoJPAController implements Serializable {
                 q.setFirstResult(firstResult);
             }
             return q.getResultList();
+        } finally {
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+    }
+
+    public TbVehiculo findVehiculoByPlaca(String placa) {
+        EntityManager em = getEntityManager();
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<TbVehiculo> cq = cb.createQuery(TbVehiculo.class);
+
+            Root<TbVehiculo> vehiculo = cq.from(TbVehiculo.class);
+            cq.select(vehiculo).where(cb.equal(vehiculo.get("placaVehiculo"), placa));
+
+            Query q = em.createQuery(cq);
+
+            // Obtener el resultado único
+            return (TbVehiculo) q.getSingleResult();
+        } catch (NoResultException e) {
+            // Si no se encuentra ningún resultado, devolver null o manejar el caso de otra manera
+            System.err.println("No se encontró un vehículo con la placa: " + placa);
+            return null;
         } finally {
             if (em != null && em.isOpen()) {
                 em.close();

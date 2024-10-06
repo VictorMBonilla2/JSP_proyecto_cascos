@@ -20,7 +20,6 @@ public class TbRegistro {
     private int documentoAprendiz;
     private int documentoGestor;
 
-
     public TbRegistro() {
     }
 

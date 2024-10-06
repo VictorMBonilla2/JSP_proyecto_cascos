@@ -7,6 +7,7 @@ import Utilidades.JPAUtils;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.servlet.annotation.WebServlet;
+import org.hibernate.exception.ConstraintViolationException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -69,26 +70,40 @@ public class TiposVehiculosJPAController  implements Serializable {
         }
     }
 
-    public void destroy(int id) throws Exception {
+    public void destroy(int id) throws PersistenceException, Exception {
         EntityManager em = null;
-        try{
+        try {
             em = getEntityManager();
             em.getTransaction().begin();
             TbTipovehiculo tipovehiculo;
             try {
                 tipovehiculo = em.getReference(TbTipovehiculo.class, id);
-                tipovehiculo.getId();
+                tipovehiculo.getId();  // Verificar que el tipo de vehículo existe
             } catch (EntityNotFoundException enfe) {
-                throw new Exception("The persona with id "+id+" no longer exists.", enfe);
+                throw new Exception("El tipo de vehículo con id " + id + " ya no existe.", enfe);
             }
+
             em.remove(tipovehiculo);
             em.getTransaction().commit();
+        } catch (PersistenceException e) {
+            // Verificar si la excepción es de tipo ConstraintViolationException
+            if (e.getCause() instanceof ConstraintViolationException) {
+                throw new PersistenceException("No se puede eliminar el tipo de vehículo porque está en uso.", e);
+            }
+            throw e;  // Propagar cualquier otra PersistenceException
+        } catch (Exception e) {
+            // Capturar cualquier otra excepción inesperada
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();  // Hacer rollback si ocurre un error
+            }
+            throw e;  // Propagar la excepción hacia la capa superior
         } finally {
             if (em != null) {
-                em.close();
+                em.close();  // Cerrar el EntityManager
             }
         }
     }
+
 
     public List<TbTipovehiculo> findtipovehiculoEntities() {
         return findtipovehiculoEntities(true, -1,-1);

@@ -2,11 +2,9 @@ package Controlador;
 
 import Modelo.TbTipoDocumento;
 import Utilidades.JPAUtils;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.Query;
+import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
+import org.hibernate.exception.ConstraintViolationException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -58,7 +56,7 @@ public class TipoDocumentoJPAController implements Serializable {
         }
     }
 
-    public void destroy(int id) throws Exception {
+    public void destroy(int id) throws PersistenceException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -66,18 +64,31 @@ public class TipoDocumentoJPAController implements Serializable {
             TbTipoDocumento tipoDocumento;
             try {
                 tipoDocumento = em.getReference(TbTipoDocumento.class, id);
-                tipoDocumento.getId();
+                tipoDocumento.getId(); // Verificar que el documento exista
             } catch (EntityNotFoundException enfe) {
-                throw new Exception("The espacio with id " + id + " no longer exists.", enfe);
+                throw new Exception("El tipo de documento con id " + id + " no existe.", enfe);
             }
             em.remove(tipoDocumento);
             em.getTransaction().commit();
+        } catch (PersistenceException e) {
+            // Verificar si es una violación de clave foránea
+            if (e.getCause() instanceof ConstraintViolationException) {
+                throw new PersistenceException("No se puede eliminar el tipo de documento porque está en uso.", e);
+            }
+            throw e; // Propagar otras excepciones de persistencia
+        } catch (Exception e) {
+            // Capturar cualquier otra excepción inesperada
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback(); // Hacer rollback si ocurre un error
+            }
+            throw e; // Propagar la excepción hacia la capa superior
         } finally {
             if (em != null) {
                 em.close();
             }
         }
     }
+
 
 
     public TbTipoDocumento findTbTipoDocumento(int id) {

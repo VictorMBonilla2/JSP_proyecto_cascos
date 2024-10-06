@@ -13,8 +13,6 @@ const buttonsInfoContainer = document.querySelector(".button_miranose");
 const cancelButtonInfoContainer = document.querySelector("#cancelEdit");
 const id_usuario = document.querySelector('#idUsuario').value
 
-
-
 document.addEventListener('DOMContentLoaded',  async ()=>{
     const data = await ObtenerUsuario(id_usuario)
     console.log(data)
@@ -23,7 +21,7 @@ document.addEventListener('DOMContentLoaded',  async ()=>{
     document.querySelector('.correoUser').textContent=data.correoUsuario
     document.querySelector('.fechaNacUser').textContent=data.fechaNacimiento
 
-    document.querySelector('.tipoDoc').textContent= `Tipo de documento: ${data.tipodoc.nametipodocUsuario} `
+    document.querySelector('.tipoDoc').textContent= `Tipo de documento: ${data.tipoDoc.nombreTipoDoc} `
     document.querySelector('.numDoc').textContent=`Numero de documento: ${data.documento} `
 
 async function selectDocumento(){
@@ -40,7 +38,7 @@ async function selectDocumento(){
 }
     document.addEventListener("click", (ev) => {
         if (ev.target.matches(".info_user_container__button")) {
-            mostrarFormulario();
+            mostrarFormulario(data);
         } else if (ev.target === cancelButtonInfoContainer) {
             mostrarInformacion();
         } else {
@@ -49,7 +47,7 @@ async function selectDocumento(){
 
     });
 
-function mostrarFormulario() {
+function mostrarFormulario(data) {
     divPerfil.classList.add("modificado");
     divDetalles.classList.add("oculto");
     setTimeout(() => {
@@ -58,7 +56,8 @@ function mostrarFormulario() {
 
         // Clonar el contenido del template
         const clone = document.importNode(formTemplate, true); // Necesitas pasar 'true' para hacer una clonación profunda
-
+        clone.querySelector('.info_user_container__header h1').textContent=data.nombreUsuario
+        clone.querySelector('.info_user_container__header h3').textContent=data.rol.nombreRol
         clone.querySelector('#nombre').value=data.nombreUsuario
         clone.querySelector('#apellido').value=data.ApellidoUsuario
         clone.querySelector('#fecha_nacimiento').value=data.fechaNacimiento
@@ -73,7 +72,7 @@ function mostrarFormulario() {
 
 
         saveButton.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Prevenir cualquier comportamiento por defecto
+            event.preventDefault();
             const form = new FormData(event.target)
             enviar_formulario(form);
         });
@@ -85,36 +84,18 @@ function mostrarFormulario() {
     }, 2100);
 }
 
-async function enviar_formulario(form){
+function formatearFecha(fechaOriginal) {
+    // Convertir el string a un objeto Date
+    const fecha = new Date(fechaOriginal);
 
-    const usuarioId = document.querySelector("#idUsuario").value;
-    const nombre = form.get("nombre");
-    const apellido = form.get("apellido");
-    const fecha = form.get("fecha_nacimiento");
-    const correo = form.get("correo");
-    const data = {
-        action: "editPrimaryDAta",
-        usuarioId: usuarioId,
-        nombre: nombre,
-        apellido: apellido,
-        fecha: formatearFecha(fecha),
-        correo: correo,
-    };
-    console.log(data)
-    try {
-        const response = await sendRequest(`${host}/SvPersona`, data);
-        // Manejar la respuesta si es necesario
-        if (response.status === "success") {
-            console.log("Modelo creado correctamente");
-            showSuccessAlert(response.message);
-        } else {
-            showErrorDialog(response.message);
-        }
-    } catch (error) {
-        console.error("Error en la solicitud:", error);
-    }
+    // Obtener día, mes y año
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0'); // Los meses van de 0 a 11
+    const anio = fecha.getFullYear();
+
+    // Formatear la fecha como dd/MM/yyyy
+    return `${dia}/${mes}/${anio}`;
 }
-
 function mostrarInformacion() {
     divPerfil.classList.remove("modificado");
     divDetalles.classList.remove("oculto");
@@ -148,17 +129,33 @@ async function ObtenerUsuario(id_usuario) {
         return data;
     }
 }
-    function formatearFecha(fechaOriginal) {
-        // Convertir el string a un objeto Date
-        const fecha = new Date(fechaOriginal);
-
-        // Obtener día, mes y año
-        const dia = String(fecha.getDate()).padStart(2, '0');
-        const mes = String(fecha.getMonth() + 1).padStart(2, '0'); // Los meses van de 0 a 11
-        const anio = fecha.getFullYear();
-
-        // Formatear la fecha como dd/MM/yyyy
-        return `${dia}/${mes}/${anio}`;
+async function enviar_formulario(form){
+        const usuarioId = document.querySelector("#idUsuario").value;
+        const nombre = form.get("nombre");
+        const apellido = form.get("apellido");
+        const fecha = form.get("fecha_nacimiento");
+        const correo = form.get("correo");
+        const data = {
+            action: "editPrimaryDAta",
+            usuarioId: usuarioId,
+            nombre: nombre,
+            apellido: apellido,
+            fecha: formatearFecha(fecha),
+            correo: correo,
+        };
+        console.log(data)
+        try {
+            const response = await sendRequest(`${host}/SvPersona`, data);
+            // Manejar la respuesta si es necesario
+            if (response.status === "success") {
+                console.log("Modelo creado correctamente");
+                showSuccessAlert(response.message);
+            } else {
+                showErrorDialog(response.message);
+            }
+        } catch (error) {
+            console.error("Error en la solicitud:", error);
+        }
     }
 
 })

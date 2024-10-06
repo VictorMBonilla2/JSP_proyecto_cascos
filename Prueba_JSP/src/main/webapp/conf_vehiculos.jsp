@@ -21,7 +21,7 @@
         <div class="vehiculos_container">
             <div class="search">
                 <form id="searhForm">
-                    <input type="hidden" id="typeSearch" name="typeSearch" value="document">
+                    <input type="hidden" id="typeSearch" name="typeSearch" value="documento">
                     <div class="selectTypeSearch">
                         <h3>Buscar Vehículo por:</h3>
                         <div class="button-container">

@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static Utilidades.JsonReader.parsearJson;
@@ -30,17 +31,58 @@ public class SvVehiculoAprendiz extends HttpServlet {
     Logica_Ciudad logica_ciudadVehiculo = new Logica_Ciudad();
     Logica_TipoVehiculo logicaTipoVehiculo = new Logica_TipoVehiculo();
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        // Obtener parámetros de la solicitud
         String documento = request.getParameter("documento");
+        String placa = request.getParameter("placa");
+        String typeSearch = request.getParameter("typesearch");
 
-        // Verificar si el parámetro 'documento' no es nulo ni vacío
-        if (documento == null || documento.trim().isEmpty()) {
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("{\"error\":\"Documento inválido\"}");
-            return;
+        // Verificar el tipo de búsqueda
+        if (typeSearch == null || typeSearch.trim().isEmpty()) {
+            // Caso 1: Si no se especifica "typesearch", usar búsqueda por "documento"
+            if (documento == null || documento.trim().isEmpty()) {
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write("{\"error\":\"Documento inválido\"}");
+                return;
+            }
+
+            // Buscar vehículos por documento
+            buscarVehiculosPorDocumento(documento, response);
+        } else {
+            // Caso 2: Si "typesearch" es "documento" y hay parámetro "documento", buscar por documento
+            if (typeSearch.equalsIgnoreCase("documento")) {
+                if (documento == null || documento.trim().isEmpty()) {
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write("{\"error\":\"Documento inválido\"}");
+                    return;
+                }
+
+                // Buscar vehículos por documento
+                buscarVehiculosPorDocumento(documento, response);
+
+                // Caso 3: Si "typesearch" es "placa" y hay parámetro "placa", buscar por placa
+            } else if (typeSearch.equalsIgnoreCase("placa")) {
+                if (placa == null || placa.trim().isEmpty()) {
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write("{\"error\":\"Placa inválida\"}");
+                    return;
+                }
+
+                // Buscar vehículos por placa
+                buscarVehiculosPorPlaca(placa, response);
+            } else {
+                // Si el "typesearch" no es válido, devolver un error
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write("{\"error\":\"Tipo de búsqueda inválido\"}");
+            }
         }
+    }
 
+    // Método para buscar vehículos por documento
+    private void buscarVehiculosPorDocumento(String documento, HttpServletResponse response) throws IOException {
         List<TbVehiculo> vehiculos = logica_vehiculo.buscarVehiculoDePersona(documento);
 
         // Si la lista está vacía, devolvemos un JSON vacío
@@ -53,30 +95,7 @@ public class SvVehiculoAprendiz extends HttpServlet {
 
         JSONArray jsonArray = new JSONArray();
         for (TbVehiculo vehiculo : vehiculos) {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id_vehiculo", vehiculo.getId_vehiculo());
-            jsonObject.put("id_aprendiz", vehiculo.getPersona().getId());
-            // Obtener tipo, marca, y modelo de las relaciones
-            TbTipovehiculo tipoVehiculo = vehiculo.getTipovehiculo();
-            Tb_MarcaVehiculo marcaVehiculo = vehiculo.getMarcaVehiculo();
-            Tb_ModeloVehiculo modeloVehiculo = vehiculo.getModeloVehiculo();
-
-            jsonObject.put("tipo_vehiculo", tipoVehiculo != null ? tipoVehiculo.getId() : "N/A");
-
-            if (marcaVehiculo != null) {
-                JSONObject marcaObject = new JSONObject();
-                marcaObject.put("id_marca", marcaVehiculo.getId());
-                marcaObject.put("nombre", marcaVehiculo.getNombreMarca());
-                jsonObject.put("marca", marcaObject);
-            } else {
-                jsonObject.put("marca", JSONObject.NULL);
-            }
-            jsonObject.put("modelo", modeloVehiculo != null ? modeloVehiculo.getId() : "N/A");
-            jsonObject.put("placa", vehiculo.getPlacaVehiculo());
-            jsonObject.put("color_vehiculo", vehiculo.getColorVehiculo().name()); // Usamos el enum
-            jsonObject.put("cantidad_cascos", vehiculo.getCantCasco());
-            jsonObject.put("ciudad", vehiculo.getCiudadVehiculo().getId());
-
+            JSONObject jsonObject = convertirVehiculoAJson(vehiculo);
             jsonArray.put(jsonObject);
         }
 
@@ -85,6 +104,68 @@ public class SvVehiculoAprendiz extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(jsonArray.toString());
     }
+
+    // Método para buscar vehículos por placa
+    private void buscarVehiculosPorPlaca(String placa, HttpServletResponse response) throws IOException {
+        // Buscar el vehículo por placa (sabemos que es único, pero lo ponemos en una lista para consistencia)
+        List<TbVehiculo> vehiculos = new ArrayList<>();
+        TbVehiculo vehiculo = logica_vehiculo.buscarVehiculoPorPlaca(placa);
+
+        // Si el vehículo no se encuentra, devolver un JSON vacío
+        if (vehiculo == null) {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("[]");
+            return;
+        }
+
+        // Añadir el vehículo a la lista
+        vehiculos.add(vehiculo);
+
+        // Crear un array JSON para almacenar la lista de vehículos
+        JSONArray jsonArray = new JSONArray();
+        for (TbVehiculo v : vehiculos) {
+            JSONObject jsonObject = convertirVehiculoAJson(v);
+            jsonArray.put(jsonObject);
+        }
+
+        // Configurar la respuesta HTTP y enviar el JSON
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(jsonArray.toString());
+    }
+
+
+    // Método auxiliar para convertir un vehículo en un objeto JSON
+    private JSONObject convertirVehiculoAJson(TbVehiculo vehiculo) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id_vehiculo", vehiculo.getId_vehiculo());
+        jsonObject.put("id_aprendiz", vehiculo.getPersona().getId());
+
+        TbTipovehiculo tipoVehiculo = vehiculo.getTipovehiculo();
+        Tb_MarcaVehiculo marcaVehiculo = vehiculo.getMarcaVehiculo();
+        Tb_ModeloVehiculo modeloVehiculo = vehiculo.getModeloVehiculo();
+
+        jsonObject.put("tipo_vehiculo", tipoVehiculo != null ? tipoVehiculo.getId() : "N/A");
+
+        if (marcaVehiculo != null) {
+            JSONObject marcaObject = new JSONObject();
+            marcaObject.put("id_marca", marcaVehiculo.getId());
+            marcaObject.put("nombre", marcaVehiculo.getNombreMarca());
+            jsonObject.put("marca", marcaObject);
+        } else {
+            jsonObject.put("marca", JSONObject.NULL);
+        }
+
+        jsonObject.put("modelo", modeloVehiculo != null ? modeloVehiculo.getId() : "N/A");
+        jsonObject.put("placa", vehiculo.getPlacaVehiculo());
+        jsonObject.put("color_vehiculo", vehiculo.getColorVehiculo().name());
+        jsonObject.put("cantidad_cascos", vehiculo.getCantCasco());
+        jsonObject.put("ciudad", vehiculo.getCiudadVehiculo().getId());
+
+        return jsonObject;
+    }
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -278,32 +359,37 @@ public class SvVehiculoAprendiz extends HttpServlet {
     }
 
     private void borrarVehiculo(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
+        try {
+            // Obtener el idVehiculo desde el JSON
+            int idVehiculo = jsonObject.getInt("idVehiculo");
 
-        int idVehiculo = jsonObject.getInt("idVehiculo");
-
-        try{
-            if(idVehiculo>0){
-                 ResultadoOperacion resultado=  logica_vehiculo.borrarVehiculo(idVehiculo);
-                if (resultado.isExito()) {
-                    System.out.println("Rol creado exitosamente.");
-                    sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
-                } else {
-                    System.out.println("Error al crear el rol.");
-                    sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
-                }
-            }else{
-                sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos inválidos para eliminar el vehiculo.");
+            // Validar que el idVehiculo sea válido
+            if (idVehiculo <= 0) {
+                sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "ID de vehículo inválido.");
+                return;
             }
-        }catch (JSONException e) {
+
+            // Intentar borrar el vehículo
+            ResultadoOperacion resultado = logica_vehiculo.borrarVehiculo(idVehiculo);
+            if (resultado.isExito()) {
+                System.out.println("Vehículo eliminado exitosamente.");
+                sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
+            } else {
+                System.out.println("Error al eliminar el vehículo.");
+                sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
+            }
+
+        } catch (JSONException e) {
             // Manejar el error si los datos JSON son incorrectos
             System.err.println("Error en los datos JSON: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos JSON inválidos.");
         } catch (Exception e) {
             // Manejar cualquier otro tipo de error
-            System.err.println("Error inesperado: " + e.getMessage());
-            sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al eliminar el vehiculo.");
+            System.err.println("Error inesperado al eliminar el vehículo: " + e.getMessage());
+            sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al eliminar el vehículo.");
         }
     }
+
 
 
 

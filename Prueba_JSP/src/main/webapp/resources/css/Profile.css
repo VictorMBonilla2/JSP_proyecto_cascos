@@ -23,7 +23,10 @@
 }
 
 .info_user_container__header{
-   /* margin: 35px auto;*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
 }
 
 .info_user_container__header>img{

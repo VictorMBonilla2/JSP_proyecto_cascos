@@ -51,17 +51,17 @@ public class SvPersona extends HttpServlet {
             jsonObject.put("fechaNacimiento", persona.getFechaNacimiento());
             JSONObject jsonObjectrol = new JSONObject();
 
-            jsonObjectrol.put("idrolUsuario", persona.getRol().getId());
-            jsonObjectrol.put("namerolUsuario", persona.getRol().getNombre());
+            jsonObjectrol.put("idRol", persona.getRol().getId());
+            jsonObjectrol.put("nombreRol", persona.getRol().getNombre());
             jsonObject.put("rol",jsonObjectrol);
 
             jsonObject.put("correoUsuario", persona.getCorreo());
             jsonObject.put("tipoDocumento", persona.getTipoDocumento().getId());
             JSONObject jsonObjectdoc = new JSONObject();
 
-            jsonObjectdoc.put("idtipodocUsuario", persona.getRol().getId());
-            jsonObjectdoc.put("nametipodocUsuario", persona.getRol().getNombre());
-            jsonObject.put("tipodoc",jsonObjectdoc);
+            jsonObjectdoc.put("idTipoDoc", persona.getRol().getId());
+            jsonObjectdoc.put("nombreTipoDoc", persona.getRol().getNombre());
+            jsonObject.put("tipoDoc",jsonObjectdoc);
             jsonObject.put("documento", persona.getDocumento());
 
             // Escribir la respuesta JSON
@@ -100,6 +100,7 @@ public class SvPersona extends HttpServlet {
                     break;
                 case "editPrimaryDAta":
                     EditPrimaryData(jsonObject, resp , session);
+                    break;
                 default:
                     resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no reconocida");
             }
@@ -109,52 +110,81 @@ public class SvPersona extends HttpServlet {
     }
 
     private void EditPrimaryData(JSONObject jsonObject, HttpServletResponse resp, HttpSession session) throws IOException {
-        // Recupera el ID del usuario desde el JSON
-        int usuarioId = jsonObject.getInt("usuarioId");
-
-        // Recupera el usuario de la base de datos utilizando el ID
-        Persona user = logica_persona.buscarpersonaPorId(usuarioId);
-        if (user == null) {
-            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Usuario no encontrado");
-            return;
-        }
-
-        // Obtiene los datos del JSON
-        String nombre = jsonObject.getString("nombre");
-        String apellido = jsonObject.getString("apellido");
-        String fechaNacimientoStr = jsonObject.getString("fecha");
-        String correo = jsonObject.getString("correo");
-
-        // Define el formato de la fecha esperado
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date fechaNacimiento = null;
+        // Logs para ver los datos recibidos
+        System.out.println("EditPrimaryData llamado");
+        System.out.println("Datos recibidos: " + jsonObject.toString());
 
         try {
-            // Convierte el String a Date
-            fechaNacimiento = formatter.parse(fechaNacimientoStr);
-        } catch (ParseException e) {
-            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Formato de fecha inválido. Utiliza el formato dd/MM/yyyy.");
-            return;
-        }
+            // Recupera el ID del usuario desde el JSON
+            int usuarioId = jsonObject.getInt("usuarioId");
+            System.out.println("Usuario ID: " + usuarioId);
 
-        // Actualiza los datos del usuario
-        user.setNombre(nombre);
-        user.setApellido(apellido);
-        user.setFechaNacimiento(fechaNacimiento); // Asigna la fecha convertida
-        user.setCorreo(correo);
+            // Recupera el usuario de la base de datos utilizando el ID
+            Persona user = logica_persona.buscarpersonaPorId(usuarioId);
+            if (user == null) {
+                System.out.println("Usuario no encontrado con ID: " + usuarioId);
+                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Usuario no encontrado");
+                return;
+            }
 
-        // Guarda los cambios en la base de datos
-        boolean updateSuccess = logica_persona.actualizarPersona(user);
+            // Obtiene los datos del JSON
+            String nombre = jsonObject.getString("nombre");
+            String apellido = jsonObject.getString("apellido");
+            String fechaNacimientoStr = jsonObject.getString("fecha");
+            String correo = jsonObject.getString("correo");
 
-        if (updateSuccess) {
-            // Actualiza el usuario en la sesión para reflejar los cambios
-            session.setAttribute("user", user);
+            System.out.println("Datos recibidos: nombre=" + nombre + ", apellido=" + apellido + ", fecha=" + fechaNacimientoStr + ", correo=" + correo);
 
-            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", "Datos actualizados");
-        } else {
-            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "error al actualizar datos");
+            // Define el formato de la fecha esperado
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            Date fechaNacimiento = null;
+
+            try {
+                // Convierte el String a Date
+                fechaNacimiento = formatter.parse(fechaNacimientoStr);
+                System.out.println("Fecha convertida: " + fechaNacimiento);
+            } catch (ParseException e) {
+                System.out.println("Error al convertir la fecha: " + fechaNacimientoStr);
+                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Formato de fecha inválido. Utiliza el formato dd/MM/yyyy.");
+                return;
+            }
+
+            // Actualiza los datos del usuario
+            user.setNombre(nombre);
+            user.setApellido(apellido);
+            user.setFechaNacimiento(fechaNacimiento); // Asigna la fecha convertida
+            user.setCorreo(correo);
+
+            // Logs para confirmar antes de actualizar
+            System.out.println("Datos actualizados para usuario con ID: " + usuarioId);
+
+            // Guarda los cambios en la base de datos
+            boolean updateSuccess = logica_persona.actualizarPersona(user);
+            System.out.println("Actualización en la base de datos exitosa: " + updateSuccess);
+
+            if (updateSuccess) {
+                // Actualiza el usuario en la sesión para reflejar los cambios
+                session.setAttribute("user", user);
+                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", "Datos actualizados");
+            } else {
+                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error al actualizar datos");
+            }
+        } catch (JSONException e) {
+            // Capturar error al obtener datos del JSON
+            System.out.println("Error al procesar el JSON: " + e.getMessage());
+            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Error en los datos proporcionados.");
+        } catch (NullPointerException e) {
+            // Captura de posibles errores de objetos nulos
+            System.out.println("Error de NullPointerException: " + e.getMessage());
+            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error interno: Datos faltantes.");
+        } catch (Exception e) {
+            // Captura de cualquier otra excepción inesperada
+            System.out.println("Error inesperado: " + e.getMessage());
+            e.printStackTrace(); // Esto ayudará a tener más detalles del error en los logs
+            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error interno del servidor.");
         }
     }
+
 
 
 

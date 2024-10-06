@@ -2,6 +2,7 @@ package Controlador;
 
 import DTO.LoginDTO;
 import Modelo.*;
+import jakarta.persistence.PersistenceException;
 
 import java.util.List;
 
@@ -149,6 +150,9 @@ public class PersistenciaController {
     public List<TbVehiculo> obtenerVehiculos(int idPersona) {
         return vehiculoJPA.findVehiculosByPersona(idPersona);
     }
+    public TbVehiculo buscarVehiculoPorPlaca(String placa) {
+        return vehiculoJPA.findVehiculoByPlaca(placa);
+    }
     public void CrearVehiculo(TbVehiculo vehiculo)  throws Exception{
         vehiculoJPA.create(vehiculo);
     }
@@ -160,6 +164,7 @@ public class PersistenciaController {
     public void eliminarVehiculo(int idVehiculo) throws Exception {
         vehiculoJPA.destroy(idVehiculo);
     }
+
 
     //JPA REGISTRO
 
@@ -225,13 +230,18 @@ public class PersistenciaController {
             throw e; // Propagar la excepción
         }
     }
-    public boolean eliminarTipoDocumento(int idDocumento) throws Exception {
+    public boolean eliminarTipoDocumento(int idDocumento) throws PersistenceException, Exception {
         try {
             TpDocumento.destroy(idDocumento);
             return true;
-        }catch (Exception e){
-            System.err.println("Error al eliminar el tipo de documento: " + e.getMessage());
+        } catch (PersistenceException e) {
+            // Registrar y propagar las excepciones de persistencia, como ConstraintViolationException
+            System.err.println("Error de persistencia al eliminar el tipo de documento: " + e.getMessage());
             throw e;
+        } catch (Exception e) {
+            // Capturar cualquier otra excepción no relacionada con la persistencia
+            System.err.println("Error inesperado al eliminar el tipo de documento: " + e.getMessage());
+            throw e; // Propagar la excepción hacia la capa lógica
         }
     }
 
@@ -287,15 +297,21 @@ public class PersistenciaController {
         }
     }
 
-    public boolean eliminarRol(int idRol) throws Exception {
+    public boolean eliminarRol(int idRol) throws PersistenceException, Exception {
         try {
-            rolesJPA.destroy(idRol);
+            rolesJPA.destroy(idRol); // Llamada a la capa de persistencia
             return true;
-        }catch (Exception e){
-            System.err.println("Error al eliminar el rol: " + e.getMessage());
-            throw e;
+        } catch (PersistenceException e) {
+            // Registrar y propagar las excepciones de persistencia, como ConstraintViolationException
+            System.err.println("Error de persistencia al eliminar el rol: " + e.getMessage());
+            throw e; // Propagar la excepción hacia la capa lógica
+        } catch (Exception e) {
+            // Capturar cualquier otra excepción no relacionada con la persistencia
+            System.err.println("Error inesperado al eliminar el rol: " + e.getMessage());
+            throw e; // Propagar la excepción hacia la capa lógica
         }
     }
+
 
     //MARCA VEHICULO.
 
@@ -308,6 +324,7 @@ public class PersistenciaController {
     public void eliminarMarca(int idMarca) throws Exception {
         marcaVehiculoJPA.destroy(idMarca);
     }
+
 
     public Tb_MarcaVehiculo buscarMarcasPorId(int idMarcaVehiculo) {
         return marcaVehiculoJPA.findMarcaVehiculo(idMarcaVehiculo);
@@ -400,5 +417,7 @@ public class PersistenciaController {
     public void EliminarCiudad(int idCiudad) throws Exception {
         ciudadVehiculo.destroy(idCiudad);
     }
+
+
 }
 

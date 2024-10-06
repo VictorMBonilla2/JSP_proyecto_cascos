@@ -34,7 +34,7 @@
         <template id="template-espacio-ocupado">
             <div class="casillero" data-entrada="{tiempoEntrada}" data-tarifa="10.0">
                 <div class="casillero__title estilo__casillero">
-                    <h1>Espacio {nombreEspacio}</h1>
+                    <h1></h1>
                     <p>{nombre}</p>
                     <img src="resources/imagenes/DashiconsWarning.png" class="report__img" data-report="reportmodal{espacioId}">
                 </div>

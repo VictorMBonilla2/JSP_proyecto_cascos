@@ -77,8 +77,8 @@
     <template id="infoTemplate">
         <div class="info_user_container__header">
             <img src="resources/imagenes/IconPerfil.png" alt="">
-            <h1>gggg</h1>
-            <h3>Modelo.Roles@2f2aa57d</h3>
+            <h1></h1>
+            <h3></h3>
         </div>
 
         <div class="info_user_container__body">
@@ -118,7 +118,7 @@
                 </div>
                 <div class="input_container input_container--vertical">
                     <label for="fecha_nacimiento">Fecha de Nacimiento: </label>
-                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="17/03/1992" placeholder="">
+                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" placeholder="">
                 </div>
 
                 <div class="input_container input_container--vertical">

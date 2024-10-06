@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Root;
+import org.hibernate.exception.ConstraintViolationException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -62,7 +63,7 @@ public class ModeloVehiculoJPAController implements Serializable {
         }
     }
 
-    public void destroy(int id) throws Exception {
+    public void destroy(int id) throws PersistenceException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -70,18 +71,32 @@ public class ModeloVehiculoJPAController implements Serializable {
             Tb_ModeloVehiculo modeloVehiculo;
             try {
                 modeloVehiculo = em.getReference(Tb_ModeloVehiculo.class, id);
-                modeloVehiculo.getId();
+                modeloVehiculo.getId();  // Verificar que el modelo existe
             } catch (EntityNotFoundException enfe) {
-                throw new Exception("El modeloVehiculo con id " + id + " ya no existe.", enfe);
+                throw new Exception("El modelo de vehículo con id " + id + " ya no existe.", enfe);
             }
+
             em.remove(modeloVehiculo);
             em.getTransaction().commit();
+        } catch (PersistenceException e) {
+            // Verificamos si la excepción es de tipo ConstraintViolationException
+            if (e.getCause() instanceof ConstraintViolationException) {
+                throw new PersistenceException("No se puede eliminar el modelo porque está en uso.", e);
+            }
+            throw e;  // Propagar cualquier otra PersistenceException
+        } catch (Exception e) {
+            // Capturar cualquier otra excepción inesperada
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();  // Hacer rollback si ocurre un error
+            }
+            throw e;  // Propagar la excepción hacia la capa superior
         } finally {
             if (em != null) {
-                em.close();
+                em.close();  // Cerrar el EntityManager
             }
         }
     }
+
 
     public List<Tb_ModeloVehiculo> findModeloVehiculoEntities() {
         return findModeloVehiculoEntities(true, -1, -1);

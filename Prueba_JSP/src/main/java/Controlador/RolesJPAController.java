@@ -2,11 +2,9 @@ package Controlador;
 
 import Modelo.Roles;
 import Utilidades.JPAUtils;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.Query;
+import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
+import org.hibernate.exception.ConstraintViolationException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -60,7 +58,7 @@ public class RolesJPAController implements Serializable {
         }
     }
 
-    public void destroy(int id) throws Exception {
+    public void destroy(int id) throws PersistenceException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -68,18 +66,32 @@ public class RolesJPAController implements Serializable {
             Roles rol;
             try {
                 rol = em.getReference(Roles.class, id);
-                rol.getId();
+                rol.getId(); // Verificar que el rol exista
             } catch (EntityNotFoundException enfe) {
                 throw new Exception("El rol con id " + id + " ya no existe.", enfe);
             }
+
             em.remove(rol);
             em.getTransaction().commit();
+        } catch (PersistenceException e) {
+            // Verificamos si la excepción es de tipo ConstraintViolationException
+            if (e.getCause() instanceof ConstraintViolationException) {
+                throw new PersistenceException("No se puede eliminar el rol porque está en uso.", e);
+            }
+            throw e; // Propagar cualquier otra PersistenceException
+        } catch (Exception e) {
+            // Capturar cualquier otra excepción inesperada
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback(); // Hacer rollback si ocurre un error
+            }
+            throw e; // Propagar la excepción
         } finally {
             if (em != null) {
-                em.close();
+                em.close(); // Cerrar el EntityManager
             }
         }
     }
+
 
     public List<Roles> findRolesEntities() {
         return findRolesEntities(true, -1, -1);

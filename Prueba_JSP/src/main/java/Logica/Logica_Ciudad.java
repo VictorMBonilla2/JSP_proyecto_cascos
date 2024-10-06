@@ -3,6 +3,8 @@ package Logica;
 import Controlador.PersistenciaController;
 import Modelo.Tb_CiudadVehiculo;
 import Utilidades.ResultadoOperacion;
+import jakarta.persistence.PersistenceException;
+import org.hibernate.exception.ConstraintViolationException;
 
 import java.util.List;
 
@@ -32,13 +34,23 @@ public class Logica_Ciudad {
 
     public ResultadoOperacion eliminarCiudad(int idCiudad) {
         try {
-            controladora.EliminarCiudad(idCiudad);
-            return new ResultadoOperacion(true, "La ciudad ha sido eliminada correctamente");
+            controladora.EliminarCiudad(idCiudad);  // La excepción se propagará si ocurre un error en la persistencia
+            return new ResultadoOperacion(true, "La ciudad ha sido eliminada correctamente.");
+        } catch (PersistenceException e) {
+            // Verificamos si hay una excepción anidada de tipo ConstraintViolationException
+            Throwable cause = e.getCause();
+            while (cause != null) {
+                if (cause instanceof ConstraintViolationException) {
+                    return new ResultadoOperacion(false, "No se puede eliminar la ciudad porque está en uso.");
+                }
+                cause = cause.getCause(); // Navegar a través de la cadena de excepciones
+            }
+            return new ResultadoOperacion(false, "Error de persistencia al eliminar la ciudad: " + e.getMessage());
         } catch (Exception e) {
-            System.err.println("Error al eliminar la ciudad " + e.getMessage());
-            return new ResultadoOperacion(false, "Hubo un error al eliminar la ciudad en la base de datos");
+            return new ResultadoOperacion(false, "Error inesperado al eliminar la ciudad: " + e.getMessage());
         }
     }
+
 
     public ResultadoOperacion crearCiudad(Tb_CiudadVehiculo ciudad) {
         try {

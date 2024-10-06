@@ -22,9 +22,7 @@ public class TbEspacio {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "documento_aprendiz")
     private Persona persona;
-
     private Date hora_entrada;
-    private Date hora_salida;
     private Integer cantidad_cascos;
     @Enumerated(EnumType.STRING)
     @Column(name = "estado_espacio")
@@ -39,13 +37,12 @@ public class TbEspacio {
     public TbEspacio() {
     }
 
-    public TbEspacio(Integer id_espacio, String nombre, TbVehiculo vehiculo, Persona persona, Date hora_entrada, Date hora_salida, Integer cantidad_cascos, EstadoEspacio estado_espacio, TbSectores sector) {
+    public TbEspacio(Integer id_espacio, String nombre, TbVehiculo vehiculo, Persona persona, Date hora_entrada, Integer cantidad_cascos, EstadoEspacio estado_espacio, TbSectores sector) {
         this.id_espacio = id_espacio;
         this.nombre = nombre;
         this.vehiculo = vehiculo;
         this.persona = persona;
         this.hora_entrada = hora_entrada;
-        this.hora_salida = hora_salida;
         this.cantidad_cascos = cantidad_cascos;
         this.estado_espacio = estado_espacio;
         this.sector = sector;
@@ -89,14 +86,6 @@ public class TbEspacio {
 
     public void setHora_entrada(Date hora_entrada) {
         this.hora_entrada = hora_entrada;
-    }
-
-    public Date getHora_salida() {
-        return hora_salida;
-    }
-
-    public void setHora_salida(Date hora_salida) {
-        this.hora_salida = hora_salida;
     }
 
     public Integer getCantidad_cascos() {
