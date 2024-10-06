@@ -2,11 +2,9 @@ package Controlador;
 
 import Modelo.Tb_CiudadVehiculo;
 import Utilidades.JPAUtils;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.Query;
+import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
+import org.hibernate.exception.ConstraintViolationException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -60,7 +58,7 @@ public class CiudadVehiculosJPAController implements Serializable {
         }
     }
 
-    public void destroy(int id) throws Exception {
+    public void destroy(int id) throws PersistenceException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -68,18 +66,32 @@ public class CiudadVehiculosJPAController implements Serializable {
             Tb_CiudadVehiculo ciudadVehiculo;
             try {
                 ciudadVehiculo = em.getReference(Tb_CiudadVehiculo.class, id);
-                ciudadVehiculo.getId();
+                ciudadVehiculo.getId();  // Verificar que la ciudad existe
             } catch (EntityNotFoundException enfe) {
-                throw new Exception("El ciudadVehiculo con id " + id + " ya no existe.", enfe);
+                throw new Exception("La ciudad con id " + id + " ya no existe.", enfe);
             }
+
             em.remove(ciudadVehiculo);
             em.getTransaction().commit();
+        } catch (PersistenceException e) {
+            // Verificar si la excepción es de tipo ConstraintViolationException
+            if (e.getCause() instanceof ConstraintViolationException) {
+                throw new PersistenceException("No se puede eliminar la ciudad porque está en uso.", e);
+            }
+            throw e;  // Propagar cualquier otra PersistenceException
+        } catch (Exception e) {
+            // Capturar cualquier otra excepción inesperada
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();  // Hacer rollback si ocurre un error
+            }
+            throw e;  // Propagar la excepción hacia la capa superior
         } finally {
             if (em != null) {
-                em.close();
+                em.close();  // Cerrar el EntityManager
             }
         }
     }
+
 
     public List<Tb_CiudadVehiculo> findCiudadVehiculoEntities() {
         return findCiudadVehiculoEntities(true, -1, -1);

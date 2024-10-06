@@ -3,6 +3,8 @@ package Logica;
 import Controlador.PersistenciaController;
 import Modelo.TbTipoDocumento;
 import Utilidades.ResultadoOperacion;
+import jakarta.persistence.PersistenceException;
+import org.hibernate.exception.ConstraintViolationException;
 
 import java.util.List;
 
@@ -60,16 +62,26 @@ public class Logica_Documentos {
     }
 
     public ResultadoOperacion eliminarTipoDocumento(int idDocumento) {
-        try{
+        try {
             boolean result = persistenciaController.eliminarTipoDocumento(idDocumento);
             if (result) {
-                return new ResultadoOperacion(true, "Tipo de documento eliminado exitosamente."); // Retornar true si se eliminó con éxito
+                return new ResultadoOperacion(true, "Tipo de documento eliminado exitosamente.");
             } else {
-                return new ResultadoOperacion(false, "No se pudo eliminar el tipo de documento ."); // Retornar false si no se pudo eliminar
+                return new ResultadoOperacion(false, "No se pudo eliminar el tipo de documento.");
             }
-
-        }catch (Exception e){
-            return new ResultadoOperacion(false, "Error al eliminar el tipo de documento: " + e.getMessage());
+        } catch (PersistenceException e) {
+            // Verificamos si hay una excepción anidada de tipo ConstraintViolationException
+            Throwable cause = e.getCause();
+            while (cause != null) {
+                if (cause instanceof ConstraintViolationException) {
+                    return new ResultadoOperacion(false, "No se puede eliminar el tipo de documento porque está en uso.");
+                }
+                cause = cause.getCause(); // Navegar a través de la cadena de excepciones
+            }
+            return new ResultadoOperacion(false, "Error de persistencia al eliminar el tipo de documento: " + e.getMessage());
+        } catch (Exception e) {
+            return new ResultadoOperacion(false, "Error inesperado al eliminar el tipo de documento: " + e.getMessage());
         }
     }
+
 }

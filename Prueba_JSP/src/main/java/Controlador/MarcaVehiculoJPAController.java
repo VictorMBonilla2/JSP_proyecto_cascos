@@ -8,6 +8,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Root;
+import org.hibernate.exception.ConstraintViolationException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -61,26 +62,41 @@ public class MarcaVehiculoJPAController implements Serializable {
         }
     }
 
-    public void destroy(int id) throws Exception {
+    public void destroy(int id) throws PersistenceException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+
             Tb_MarcaVehiculo marcaVehiculo;
             try {
                 marcaVehiculo = em.getReference(Tb_MarcaVehiculo.class, id);
-                marcaVehiculo.getId();
+                marcaVehiculo.getId();  // Verificar que la marca existe
             } catch (EntityNotFoundException enfe) {
-                throw new Exception("La marcaVehiculo con id " + id + " ya no existe.", enfe);
+                throw new Exception("La marca con id " + id + " ya no existe.", enfe);
             }
+
             em.remove(marcaVehiculo);
             em.getTransaction().commit();
+        } catch (PersistenceException e) {
+            // Verificamos si la excepción es de tipo ConstraintViolationException
+            if (e.getCause() instanceof ConstraintViolationException) {
+                throw new PersistenceException("No se puede eliminar la marca porque está en uso.", e);
+            }
+            throw e;  // Propagar cualquier otra PersistenceException
+        } catch (Exception e) {
+            // Capturar cualquier otra excepción inesperada
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();  // Hacer rollback si ocurre un error
+            }
+            throw e;  // Propagar la excepción hacia la capa superior
         } finally {
             if (em != null) {
-                em.close();
+                em.close();  // Cerrar el EntityManager
             }
         }
     }
+
 
     public List<Tb_MarcaVehiculo> findMarcaVehiculoEntities() {
         return findMarcaVehiculoEntities(true, -1, -1);

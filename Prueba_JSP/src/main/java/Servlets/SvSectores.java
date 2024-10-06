@@ -20,9 +20,7 @@ import java.util.List;
 
 @WebServlet(name = "SvSectores", urlPatterns = {"/SvSector"})
 public class SvSectores extends HttpServlet {
-    // Obtener la instancia de Logica_Sectores desde EspacioServiceManager
     Logica_Sectores logica_sectores = EspacioServiceManager.getInstance().getLogicaSectores();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<TbSectores> sectores = logica_sectores.ObtenerSectores();

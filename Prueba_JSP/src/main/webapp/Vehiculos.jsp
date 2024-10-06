@@ -23,7 +23,6 @@
 
     <div class="container__vehiculo">
         <div class="container__vehiculo__form">
-
             <form class="vehiculo__form" id="vehiculoForm">
                 <input type="hidden" id="documentoUser" value="<%=user.getDocumento()%>">
                 <input type="hidden" id="idVehiculo" name="idVehiculo" value="">

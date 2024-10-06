@@ -79,13 +79,20 @@ public class Logica_Vehiculo {
 
         } catch (NumberFormatException e) {
             System.err.println("El documento proporcionado no es un número válido: " + e.getMessage());
-            // Manejo adicional si es necesario, como lanzar una excepción personalizada o devolver una lista vacía.
         } catch (Exception e) {
             System.err.println("Error al obtener vehículos: " + e.getMessage());
-            // Puedes manejar esto devolviendo una lista vacía, lanzando una excepción, o lo que consideres adecuado.
         }
 
         return ListaVehiculos;
+    }
+    public TbVehiculo buscarVehiculoPorPlaca(String placa) {
+        TbVehiculo vehiculo = new TbVehiculo();
+        try{
+            vehiculo= controladora.buscarVehiculoPorPlaca(placa);
+        } catch (Exception e){
+            System.err.println("Error al obtener vehículos: " + e.getMessage());
+        }
+        return vehiculo;
     }
 
     public Tb_MarcaVehiculo buscarMarcaPorTipo(int marcaVehiculo, int tipoVehiculo) {
@@ -119,4 +126,6 @@ public class Logica_Vehiculo {
             return new ResultadoOperacion(false,"Hubo un error al eliminar el vehiculo");
         }
     }
+
+
 }

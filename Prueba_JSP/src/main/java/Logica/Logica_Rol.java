@@ -3,6 +3,8 @@ package Logica;
 import Controlador.PersistenciaController;
 import Modelo.Roles;
 import Utilidades.ResultadoOperacion;
+import jakarta.persistence.PersistenceException;
+import org.hibernate.exception.ConstraintViolationException;
 
 import java.util.List;
 
@@ -65,12 +67,23 @@ public class Logica_Rol {
         try {
             boolean result = controladora.eliminarRol(idRol);
             if (result) {
-                return new ResultadoOperacion(true, "Rol eliminado exitosamente."); // Retornar true si se eliminó con éxito
+                return new ResultadoOperacion(true, "Rol eliminado exitosamente.");
             } else {
-                return new ResultadoOperacion(false, "No se pudo eliminar el rol ."); // Retornar false si no se pudo eliminar
+                return new ResultadoOperacion(false, "No se pudo eliminar el rol.");
             }
-        }catch (Exception e){
-            return new ResultadoOperacion(false, "Error al eliminar el rol: " + e.getMessage());
+        } catch (PersistenceException e) {
+            // Verificamos si hay una excepción anidada de tipo ConstraintViolationException
+            Throwable cause = e.getCause();
+            while (cause != null) {
+                if (cause instanceof ConstraintViolationException) {
+                    return new ResultadoOperacion(false, "No se puede eliminar el rol porque está en uso.");
+                }
+                cause = cause.getCause(); // Navegar a través de la cadena de excepciones
+            }
+            return new ResultadoOperacion(false, "Error de persistencia al eliminar el rol: " + e.getMessage());
+        } catch (Exception e) {
+            return new ResultadoOperacion(false, "Error inesperado al eliminar el rol: " + e.getMessage());
         }
     }
+
 }

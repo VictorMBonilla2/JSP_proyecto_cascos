@@ -1,7 +1,8 @@
 import {sendRequest} from "./ajax.js";
 import {host} from "./config.js";
 import {showErrorDialog} from "./alerts/error.js"; // Mostrar mensajes de error
-import {showSuccessAlert} from "./alerts/success.js"; // Mostrar mensajes de éxito
+import {showSuccessAlert} from "./alerts/success.js";
+import {showConfirmationDialog} from "./alerts/confirm.js"; // Mostrar mensajes de éxito
 
 document.addEventListener('DOMContentLoaded', async function () {
     const DocumentoAprendiz = document.querySelector("#documentoUser").value;
@@ -33,23 +34,18 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     if (vehiculos.length > 0) {
         vehiculoList.innerHTML = '';
-
         vehiculos.forEach((vehiculo, index) => {
             const div = document.createElement("div");
             div.classList.add("vehiculo__list__item");
             div.setAttribute('data-vehiculo', index);
-
             const placaP = document.createElement('p');
             placaP.textContent = vehiculo.placa;
             div.appendChild(placaP);
 
             const marcaP = document.createElement('p');
-            marcaP.textContent = vehiculo.marca;
+            marcaP.textContent = vehiculo.marca.nombre;
             div.appendChild(marcaP);
 
-            const tipoP = document.createElement('p');
-            tipoP.textContent = vehiculo.tipo;
-            div.appendChild(tipoP);
             console.log(vehiculo)
             vehiculoList.appendChild(div);
 
@@ -86,12 +82,14 @@ document.addEventListener('DOMContentLoaded', async function () {
             await editarVehiculo(formData, DocumentoAprendiz);
         }
         if(event.target.id ==="delete"){
-            await eliminarVehiculo(formData)
+            showConfirmationDialog("¿Eliminar Vehiculo)",
+                "El sistema no permitira eliminar vehiculos en uso, Esta acción es irreversible",
+                ()=>eliminarVehiculo(formData),
+                () => console.log('Acción cancelada')
+            );
         }
     });
 });
-
-
 
 // Función para crear un vehículo
 async function crearVehiculo(formData, DocumentoAprendiz) {
@@ -210,6 +208,20 @@ function vaciarFormulario() {
     form.reset();
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Función para cargar tipos de vehículos
 async function cargarTiposVehiculo() {
     try {
@@ -235,7 +247,6 @@ async function cargarTiposVehiculo() {
         console.error('Error al cargar los tipos de vehículos:', error);
     }
 }
-
 // Función para cargar marcas según el tipo de vehículo
 async function cargarMarcas(tipoVehiculoId) {
     try {
@@ -261,7 +272,6 @@ async function cargarMarcas(tipoVehiculoId) {
         console.error('Error al cargar las marcas:', error);
     }
 }
-
 // Función para cargar modelos según la marca y el tipo de vehículo
 async function cargarModelos(marcaVehiculoId, tipoVehiculoId) {
     try {

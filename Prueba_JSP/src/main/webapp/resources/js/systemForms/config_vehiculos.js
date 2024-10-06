@@ -1,6 +1,7 @@
 import {sendRequest} from "../ajax.js";
 import {showErrorDialog} from "../alerts/error.js";
 import {showSuccessAlert} from "../alerts/success.js";
+import {showConfirmationDialog} from "../alerts/confirm.js";
 import {host} from "../config.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -16,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const tipoVehiculoSelect= document.getElementById("tipoSelect");
     const marcaVehiculoSelect= document.getElementById("marcaSelect");
     const modeloVehiculoSelect = document.getElementById("modeloSelect")
-
     let vehiculosData = []; // Almacenará los datos de vehículos
 
     cargarTiposVehiculo()
@@ -98,10 +98,9 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         const form = new FormData(e.target);
         const data = await buscarVehiculo(form); // Llamada a fetch para obtener vehículos
-
         // Vaciar el contenedor de tarjetas antes de mostrar los resultados
         cardVehiculosContainer.innerHTML = '';
-
+        if(data.length>0){
         vehiculosData = data;
         data.forEach(vehiculo => {
             const template = document.getElementById('vehiculoTemplate').content.cloneNode(true);
@@ -125,6 +124,9 @@ document.addEventListener("DOMContentLoaded", () => {
             // Añadir la tarjeta al contenedor
             cardVehiculosContainer.appendChild(template);
         });
+        } else{
+            showErrorDialog('No se ha conseguido vehiculos vinculados a este documento ó placa.')
+        }
     });
 
     vehiculoForm.addEventListener("submit",(e)=>{
@@ -144,26 +146,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Función para realizar la búsqueda con fetch
     async function buscarVehiculo(form) {
-        const documento = form.get("documento"); // Obtener el valor del documento desde el formulario
-        try {
-            // Añadir el parámetro 'documento' a la URL
-            const response = await fetch(`${host}/VehiculoAprendiz?documento=${documento}`);
+        const typeSearch = form.get("typeSearch");
+        console.log(typeSearch)
+        if (typeSearch === "documento") {
+            try {
+                const documento = form.get("documento"); // Obtener el valor del documento desde el formulario
+                // Añadir el parámetro 'documento' a la URL
+                const response = await fetch(`${host}/VehiculoAprendiz?documento=${documento}&typesearch=${typeSearch}`);
 
-            if (!response.ok) {
-                throw new Error('Error en la búsqueda del vehículo');
+                if (!response.ok) {
+                    throw new Error('Error en la búsqueda del vehículo');
+                }
+
+                const data = await response.json();  // Parsear la respuesta JSON
+                console.log(data);
+                return data;
+            } catch (error) {
+                console.error(error);
+                return [];
             }
+        } else if (typeSearch === "placa") {
+            try {
+                const placa = form.get("placa"); // Obtener el valor de la placa desde el formulario
+                // Añadir el parámetro 'placa' a la URL
+                const response = await fetch(`${host}/VehiculoAprendiz?placa=${placa}&typesearch=${typeSearch}`);
+                if (!response.ok) {
+                    throw new Error('Error en la búsqueda del vehículo');
+                }
 
-            const data = await response.json();  // Parsear la respuesta JSON
-            console.log(data);
-            return data;
-        } catch (error) {
-            console.error(error);
-            return [];
+                const data = await response.json();  // Parsear la respuesta JSON
+                console.log(data);
+                return data;
+            } catch (error) {
+                console.error(error);
+                return [];
+            }
         }
     }
 
-
-// Función para seleccionar un vehículo y rellenar el formulario
     // Función para seleccionar un vehículo y rellenar el formulario
     async function seleccionarVehiculo(vehiculoId) {
         // Buscar el vehículo en vehiculosData por ID
@@ -241,13 +261,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     deleteButton.addEventListener("click",(e)=>{
-        const form = document.querySelector(".vehiculoForm");
+        const form = document.querySelector("#vehiculoForm");
         const formData = new FormData(form);
         const idVehiculo= formData.get("idVehiculo")
-        if(idVehiculo != null){
+        if(idVehiculo && idVehiculo.trim() !== ""){
             showConfirmationDialog(
-                "Eliminar Tipo de Documento?",
-                "El sistema no permitira la eliminación de tipos de documentos en uso. Esta Acción es irreversible.",
+                "Eliminar Vehiculo?",
+                "El sistema no permitira la eliminacion de vehiculos en uso. Esta acción es irreversible",
                 ()=>eliminarVehiculo(formData),
                 () => console.log('Acción cancelada')
             )
@@ -362,9 +382,9 @@ async function eliminarVehiculo(form) {
 
     const data = {
         action : "delete",
-        id_vehiculo: id_vehiculo,
+        idVehiculo: id_vehiculo,
     };
-    const response= await sendRequest( `${host}/tipoDoc`,data)
+    const response= await sendRequest( `${host}/VehiculoAprendiz`,data)
 
     if(response.status === "success"){
         console.log("Se ha Eliminado el vehiculo correctamente")
