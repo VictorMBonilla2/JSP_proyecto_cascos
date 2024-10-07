@@ -112,33 +112,35 @@ public class RegistroJPAController {
         }
     }
 
-    public List<TbRegistro> findRegistrosGestor(int documentoGestor) {
-        EntityManager em = getEntityManager();  // Obtén una instancia de EntityManager
+    // Para buscar registros por el ID del Gestor
+    public List<TbRegistro> findRegistrosGestor(int idGestor) {
+        EntityManager em = getEntityManager();
         try {
             TypedQuery<TbRegistro> query = em.createQuery(
-                    "SELECT r FROM TbRegistro r WHERE r.documentoGestor = :documentoGestor",
+                    "SELECT r FROM TbRegistro r WHERE r.gestor.id = :idGestor",
                     TbRegistro.class
             );
-            query.setParameter("documentoGestor", documentoGestor);
+            query.setParameter("idGestor", idGestor);
             return query.getResultList();
         } finally {
             em.close();
         }
     }
 
-
-    public List<TbRegistro> findRegistrosAprendiz(int documentoAprendiz) {
-        EntityManager em = getEntityManager();  // Obtén una instancia de EntityManager
+    // Para buscar registros por el ID del Aprendiz
+    public List<TbRegistro> findRegistrosAprendiz(int idAprendiz) {
+        EntityManager em = getEntityManager();
         try {
             TypedQuery<TbRegistro> query = em.createQuery(
-                    "SELECT r FROM TbRegistro r WHERE r.documentoAprendiz = :documentoAprendiz",
+                    "SELECT r FROM TbRegistro r WHERE r.aprendiz.id = :idAprendiz",
                     TbRegistro.class
             );
-            query.setParameter("documentoAprendiz", documentoAprendiz);
+            query.setParameter("idAprendiz", idAprendiz);
             return query.getResultList();
         } finally {
             em.close();
         }
     }
+
 
 }

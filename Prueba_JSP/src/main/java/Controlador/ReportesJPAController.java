@@ -115,14 +115,14 @@ public class ReportesJPAController {
         }
     }
 
-    public List<TbReportes> findReportesGestor(int documento) {
+    public List<TbReportes> findReportesGestor(int idGestor) {
         EntityManager em = getEntityManager();
         try {
             TypedQuery<TbReportes> query = em.createQuery(
-                    "SELECT r FROM tb_reportes r WHERE r.documentoColaborador = :documentoColaborador",
+                    "SELECT r FROM tb_reportes r WHERE r.gestor.id = :idGestor",
                     TbReportes.class
             );
-            query.setParameter("documentoColaborador", documento);
+            query.setParameter("idGestor", idGestor);
             return query.getResultList();
         } finally {
             em.close();
@@ -131,16 +131,21 @@ public class ReportesJPAController {
 
 
 
-    public List<TbReportes> findReportesAprendiz(int documento) {
+
+    public List<TbReportes> findReportesAprendiz(int idAprendiz) {
         EntityManager em = getEntityManager();
         try {
-            return em.createQuery("SELECT r FROM tb_reportes r WHERE r.documentoAprendiz = :documento", TbReportes.class)
-                    .setParameter("documento", documento)
-                    .getResultList();
+            TypedQuery<TbReportes> query = em.createQuery(
+                    "SELECT r FROM tb_reportes r WHERE r.aprendiz.id = :idAprendiz",
+                    TbReportes.class
+            );
+            query.setParameter("idAprendiz", idAprendiz);
+            return query.getResultList();
         } finally {
             em.close();
         }
     }
+
 }
 
 
