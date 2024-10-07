@@ -56,7 +56,7 @@ async function enviarRegistro(form){
         password: form.get("password"),
         fechaNacimiento: form.get("fecha")
     }
-
+    console.log(data)
     const response = await sendRequest(`${host}/SvPersona`,data)
     if(response.status === "success"){
         console.log("Se ha Actualizado el sector correctamente")

@@ -6,6 +6,7 @@ import Logica.Logica_Registro;
 import Logica.Logica_Reportes;
 import Modelo.*;
 import Modelo.enums.EstadoEspacio;
+import Modelo.enums.TipoReporte;
 import Utilidades.EspacioServiceManager;
 import Utilidades.JsonReader;
 import Utilidades.sendResponse;
@@ -24,6 +25,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+
+import static Utilidades.sendResponse.enviarRespuesta;
 
 public class SvCasilleros {
     @WebServlet(name = "SvCasillero", urlPatterns = {"/SvCasillero"})
@@ -106,7 +109,7 @@ public class SvCasilleros {
                 TbEspacio espacio = logica_espacios.buscarEspacio(idEspacio);
                 System.out.println("Espacio traido");
                 if (espacio == null) {
-                    sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_NOT_FOUND, "error", "Espacio no encontrado");
+                    enviarRespuesta(resp, HttpServletResponse.SC_NOT_FOUND, "error", "Espacio no encontrado");
                     return;
                 }
                 switch (formType) {
@@ -123,13 +126,13 @@ public class SvCasilleros {
                         manejarReport(req, resp, espacio, jsonObject);
                         break;
                     default:
-                        sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Tipo de formulario no válido");
+                        enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Tipo de formulario no válido");
                         break;
                 }
             } catch (JSONException e) {
-                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Invalid JSON format");
+                enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Invalid JSON format");
             } catch (Exception e) {
-                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error en el servidor: " + e.getMessage());
+                enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error en el servidor: " + e.getMessage());
             }
         }
         private void manejarAdd(HttpServletRequest req, HttpServletResponse resp, TbEspacio espacio, JSONObject jsonObject) throws IOException {
@@ -141,13 +144,13 @@ public class SvCasilleros {
                 Persona persona = logica_persona.buscarPersonaConDocumento(documento);
                 System.out.println(persona.getId());
                 if (persona == null || persona.getVehiculos() == null) {
-                    sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_NOT_FOUND, "error", "Persona no encontrada o sin vehículos asociados");
+                    enviarRespuesta(resp, HttpServletResponse.SC_NOT_FOUND, "error", "Persona no encontrada o sin vehículos asociados");
                     return;
                 }
 
                 TbVehiculo vehiculoExistente = logica_persona.buscarVehiculoPorId(persona, idVehiculo);
                 if (vehiculoExistente == null) {
-                    sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_NOT_FOUND, "error", "Vehículo no encontrado para el documento dado");
+                    enviarRespuesta(resp, HttpServletResponse.SC_NOT_FOUND, "error", "Vehículo no encontrado para el documento dado");
                     return;
                 }
                 espacio.setVehiculo(vehiculoExistente);
@@ -158,12 +161,12 @@ public class SvCasilleros {
 
                 boolean result =  actualizarEspacioYEnviarRespuesta(resp, espacio);
                 if (result){
-                    sendResponse.enviarRespuesta(resp,HttpServletResponse.SC_OK,"success","El vehiculo ha sido estacionado correctamente");
+                    enviarRespuesta(resp,HttpServletResponse.SC_OK,"success","El vehiculo ha sido estacionado correctamente");
                 } else{
-                    sendResponse.enviarRespuesta(resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error","Error inesperado al vincular el vehiculo al espacio");
+                    enviarRespuesta(resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error","Error inesperado al vincular el vehiculo al espacio");
                 }
             } catch (NumberFormatException e) {
-                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Formato de número incorrecto");
+                enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Formato de número incorrecto");
             }
         }
 
@@ -175,9 +178,9 @@ public class SvCasilleros {
 
             boolean result =  actualizarEspacioYEnviarRespuesta(resp, espacio);
             if (result){
-                sendResponse.enviarRespuesta(resp,HttpServletResponse.SC_OK,"success","El vehiculo ha sido editado correctamente");
+                enviarRespuesta(resp,HttpServletResponse.SC_OK,"success","El vehiculo ha sido editado correctamente");
             } else{
-                sendResponse.enviarRespuesta(resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error","Error inesperado al editar el vehiculo ");
+                enviarRespuesta(resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error","Error inesperado al editar el vehiculo ");
             }
         }
 
@@ -186,22 +189,22 @@ public class SvCasilleros {
 
             // Crear un nuevo registro para la tabla TbRegistro
             TbRegistro nuevoRegistro = new TbRegistro();
-            nuevoRegistro.setFecha_reporte(LocalDateTime.now());
+            nuevoRegistro.setFecha_registro(LocalDateTime.now());
             nuevoRegistro.setId_espacio(espacio.getId_espacio());
             nuevoRegistro.setPlacaVehiculo(espacio.getVehiculo().getPlacaVehiculo());
-            nuevoRegistro.setDocumentoAprendiz(espacio.getPersona().getDocumento());
+            nuevoRegistro.setAprendiz(espacio.getPersona());
 
             // Verificar si la sesión es válida y tiene el atributo documento
             Persona colaborador = obtenerColaboradorDesdeSesion(req, resp);
             if (colaborador != null) {
-                nuevoRegistro.setDocumentoGestor(colaborador.getDocumento());
+                nuevoRegistro.setGestor(colaborador);
                 logica_registro.CrearRegistro(nuevoRegistro);
                 limpiarYActualizarEspacio(resp, espacio);
                 boolean result =  actualizarEspacioYEnviarRespuesta(resp, espacio);
                 if (result){
-                    sendResponse.enviarRespuesta(resp,HttpServletResponse.SC_OK,"success","El vehiculo ha sido liberado correctamente");
+                    enviarRespuesta(resp,HttpServletResponse.SC_OK,"success","El vehiculo ha sido liberado correctamente");
                 } else{
-                    sendResponse.enviarRespuesta(resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error","Error inesperado al liberar el vehiculo del espacio");
+                    enviarRespuesta(resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error","Error inesperado al liberar el vehiculo del espacio");
                 }
             }else{
                 System.out.println("No se puede crear el registro");
@@ -217,8 +220,19 @@ public class SvCasilleros {
             nuevoReporte.setFecha_reporte(new Date());
             nuevoReporte.setNombre_reporte(jsonObject.getString("nombreReporte"));
             nuevoReporte.setDescripcion_reporte(jsonObject.getString("DescReporte"));
-            nuevoReporte.setDocumentoAprendiz(espacio.getPersona().getDocumento());
+            nuevoReporte.setAprendiz(espacio.getPersona());
             nuevoReporte.setPlacaVehiculo(espacio.getVehiculo().getPlacaVehiculo());
+            String tipoReporteStr = jsonObject.getString("tipoReporte");
+
+            TipoReporte tipoReporte;
+            try {
+                tipoReporte = TipoReporte.valueOf(tipoReporteStr);
+            } catch (IllegalArgumentException e) {
+                enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Tipo de reporte inválido proporcionado.");
+                return;
+            }
+
+            nuevoReporte.setTipoReporte(tipoReporte);
             System.out.println("Tipo del reporte "+ jsonObject.getString("tipoReporte"));
             System.out.println("Nombre del reporte "+ jsonObject.getString("nombreReporte"));
             System.out.println("Desc del reporte "+ jsonObject.getString("DescReporte"));
@@ -227,14 +241,14 @@ public class SvCasilleros {
             Persona colaborador = obtenerColaboradorDesdeSesion(req, resp);
             System.out.println(colaborador);
             if (colaborador != null) {
-                nuevoReporte.setDocumentoColaborador(colaborador.getDocumento());
+                nuevoReporte.setGestor(colaborador);
                 logica_reportes.CrearReporte(nuevoReporte);
                 limpiarYActualizarEspacio(resp, espacio);
                 boolean result =  actualizarEspacioYEnviarRespuesta(resp, espacio);
                 if (result){
-                    sendResponse.enviarRespuesta(resp,HttpServletResponse.SC_OK,"success","El vehiculo ha sido reportado correctamente");
+                    enviarRespuesta(resp,HttpServletResponse.SC_OK,"success","El vehiculo ha sido reportado correctamente");
                 } else{
-                    sendResponse.enviarRespuesta(resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error","Error inesperado al reportar el vehiculo");
+                    enviarRespuesta(resp,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error","Error inesperado al reportar el vehiculo");
                 }
             }
         }
@@ -257,7 +271,7 @@ public class SvCasilleros {
             } else {
                 // Manejar el caso donde no hay sesión o el atributo documento no está presente
                 System.err.println("No se pudo obtener el número de documento de la sesión actual.");
-                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_UNAUTHORIZED, "error", "Sesión no válida o documento no encontrado");
+                enviarRespuesta(resp, HttpServletResponse.SC_UNAUTHORIZED, "error", "Sesión no válida o documento no encontrado");
                 return null;
             }
         }
@@ -273,7 +287,7 @@ public class SvCasilleros {
                 boolean updated = logica_espacios.actualizarEspacio(espacio);
                 return updated;
             } catch (Exception e) {
-                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error al actualizar el espacio: " + e.getMessage());
+                enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error al actualizar el espacio: " + e.getMessage());
                 return false;
             }
         }

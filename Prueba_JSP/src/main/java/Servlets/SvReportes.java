@@ -36,14 +36,14 @@ public class SvReportes extends HttpServlet {
             System.out.println(reporte.getNombre_reporte());
             System.out.println(reporte.getDescripcion_reporte());
             System.out.println(reporte.getTipoReporte());
-            System.out.println(reporte.getDocumentoAprendiz());
+            System.out.println(reporte.getAprendiz().getDocumento());
             jsonObject.put("fecha_reporte", reporte.getFecha_reporte());
             jsonObject.put("nombre_reporte", reporte.getNombre_reporte());
             jsonObject.put("descripcion_reporte", reporte.getDescripcion_reporte());
             jsonObject.put("tipo_reporte", reporte.getTipoReporte());
-            jsonObject.put("documento_aprendiz", reporte.getDocumentoAprendiz());
+            jsonObject.put("documento_aprendiz", reporte.getAprendiz().getDocumento());
             jsonObject.put("placa_vehiculo", reporte.getPlacaVehiculo());
-            jsonObject.put("documento_colaborador", reporte.getDocumentoColaborador());
+            jsonObject.put("documento_colaborador", reporte.getGestor().getDocumento());
             jsonArray.put(jsonObject);
         }
 

@@ -16,30 +16,28 @@ public class Logica_Registro {
     Logica_Persona logicaPersona = new Logica_Persona();
 
     public List<TbRegistro> ObtenerRegistros(int idUsuario) {
-        List<TbRegistro> lista=null;
-        try{
+        List<TbRegistro> lista = null;
+        try {
             Persona persona = logicaPersona.buscarpersonaPorId(idUsuario);
-            if(persona == null){
+            if (persona == null) {
                 return null;
             }
             int rol = persona.getRol().getId();
 
-            if(rol == 1){ //Gestor
-                lista= controladora.ObtenerRegistrosGestor(persona.getDocumento());
+            if (rol == 1) { // Gestor
+                lista = controladora.ObtenerRegistrosGestor(persona.getId());  // Búsqueda por ID
+            } else if (rol == 2) { // Aprendiz
+                lista = controladora.ObtenerRegistrosAprendiz(persona.getId());  // Búsqueda por ID
+            } else if (rol == 3) { // Otro rol (ej. Admin)
+                lista = controladora.ObtenerRegistros();  // Obtener todos los registros
             }
-            if(rol== 2){ //Aprendiz
-                lista= controladora.ObtenerRegistrosAprendiz(persona.getDocumento());
-            }
-
-            if(rol == 3 ){
-                lista= controladora.ObtenerRegistros();
-            }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.err.println("Hubo un error al obtener la lista de registro correspondiente a este usuario: " + e.getMessage());
             return null;
         }
         return lista;
     }
+
 
     public Map<String, Integer> obtenerRegistrosPorSemana() {
         List<TbRegistro> registros = controladora.ObtenerRegistros();

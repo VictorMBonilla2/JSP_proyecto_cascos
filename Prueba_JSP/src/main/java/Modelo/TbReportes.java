@@ -10,7 +10,6 @@ public class TbReportes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_reporte", nullable = false)
-
     private Integer id_reporte;
 
     private Date fecha_reporte;
@@ -21,22 +20,29 @@ public class TbReportes {
     @Column(name = "tipo_reporte")
     private TipoReporte tipoReporte;
 
-    private int documentoAprendiz;
-    private int documentoColaborador;
+    // Relación ManyToOne con el Aprendiz
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_aprendiz", referencedColumnName = "id")
+    private Persona aprendiz;
 
+    // Relación ManyToOne con el Gestor (Colaborador)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_gestor", referencedColumnName = "id")
+    private Persona gestor;
+    // Campo relacionado con la placa del vehículo (puede ser string si no hay relación directa)
     private String placaVehiculo; // Relación con el vehículo específico
 
     public TbReportes() {
     }
 
-    public TbReportes(Integer id_reporte, Date fecha_reporte, String nombre_reporte, String descripcion_reporte, TipoReporte tipoReporte, int documentoAprendiz, int documentoColaborador, String placaVehiculo) {
+    public TbReportes(Integer id_reporte, Date fecha_reporte, String nombre_reporte, String descripcion_reporte, TipoReporte tipoReporte, Persona aprendiz, Persona gestor, String placaVehiculo) {
         this.id_reporte = id_reporte;
         this.fecha_reporte = fecha_reporte;
         this.nombre_reporte = nombre_reporte;
         this.descripcion_reporte = descripcion_reporte;
         this.tipoReporte = tipoReporte;
-        this.documentoAprendiz = documentoAprendiz;
-        this.documentoColaborador = documentoColaborador;
+        this.aprendiz = aprendiz;
+        this.gestor = gestor;
         this.placaVehiculo = placaVehiculo;
     }
 
@@ -80,20 +86,20 @@ public class TbReportes {
         this.tipoReporte = tipoReporte;
     }
 
-    public int getDocumentoAprendiz() {
-        return documentoAprendiz;
+    public Persona getAprendiz() {
+        return aprendiz;
     }
 
-    public void setDocumentoAprendiz(int documentoAprendiz) {
-        this.documentoAprendiz = documentoAprendiz;
+    public void setAprendiz(Persona aprendiz) {
+        this.aprendiz = aprendiz;
     }
 
-    public int getDocumentoColaborador() {
-        return documentoColaborador;
+    public Persona getGestor() {
+        return gestor;
     }
 
-    public void setDocumentoColaborador(int documentoColaborador) {
-        this.documentoColaborador = documentoColaborador;
+    public void setGestor(Persona gestor) {
+        this.gestor = gestor;
     }
 
     public String getPlacaVehiculo() {

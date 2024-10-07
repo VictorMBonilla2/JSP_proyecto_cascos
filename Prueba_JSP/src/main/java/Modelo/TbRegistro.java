@@ -10,26 +10,31 @@ public class TbRegistro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_registro", nullable = false)
-
     private Integer id_registro;
 
     private LocalDateTime fecha_registro;
-    private int id_espacio;
 
+    @ManyToOne(fetch = FetchType.EAGER) // Relación con Persona
+    @JoinColumn(name = "id_aprendiz", referencedColumnName = "id", nullable = false)
+    private Persona aprendiz;
+
+    @ManyToOne(fetch = FetchType.EAGER) // Relación con Gestor, si aplica
+    @JoinColumn(name = "id_gestor", referencedColumnName = "id", nullable = true)
+    private Persona gestor;
+
+    private int id_espacio;
     private String placaVehiculo;
-    private int documentoAprendiz;
-    private int documentoGestor;
 
     public TbRegistro() {
     }
 
-    public TbRegistro(Integer id_registro, LocalDateTime fecha_registro, int id_espacio, String placaVehiculo, int documentoAprendiz, int documentoGestor) {
+    public TbRegistro(Integer id_registro, LocalDateTime fecha_registro, Persona aprendiz, Persona gestor, int id_espacio, String placaVehiculo) {
         this.id_registro = id_registro;
         this.fecha_registro = fecha_registro;
+        this.aprendiz = aprendiz;
+        this.gestor = gestor;
         this.id_espacio = id_espacio;
         this.placaVehiculo = placaVehiculo;
-        this.documentoAprendiz = documentoAprendiz;
-        this.documentoGestor = documentoGestor;
     }
 
     public Integer getId_registro() {
@@ -44,8 +49,24 @@ public class TbRegistro {
         return fecha_registro;
     }
 
-    public void setFecha_reporte(LocalDateTime fecha_registro) {
+    public void setFecha_registro(LocalDateTime fecha_registro) {
         this.fecha_registro = fecha_registro;
+    }
+
+    public Persona getAprendiz() {
+        return aprendiz;
+    }
+
+    public void setAprendiz(Persona aprendiz) {
+        this.aprendiz = aprendiz;
+    }
+
+    public Persona getGestor() {
+        return gestor;
+    }
+
+    public void setGestor(Persona gestor) {
+        this.gestor = gestor;
     }
 
     public int getId_espacio() {
@@ -56,32 +77,12 @@ public class TbRegistro {
         this.id_espacio = id_espacio;
     }
 
-    public void setFecha_registro(LocalDateTime fecha_registro) {
-        this.fecha_registro = fecha_registro;
-    }
-
     public String getPlacaVehiculo() {
         return placaVehiculo;
     }
 
     public void setPlacaVehiculo(String placaVehiculo) {
         this.placaVehiculo = placaVehiculo;
-    }
-
-    public int getDocumentoAprendiz() {
-        return documentoAprendiz;
-    }
-
-    public void setDocumentoAprendiz(int documentoAprendiz) {
-        this.documentoAprendiz = documentoAprendiz;
-    }
-
-    public int getDocumentoGestor() {
-        return documentoGestor;
-    }
-
-    public void setDocumentoGestor(int documentoGestor) {
-        this.documentoGestor = documentoGestor;
     }
 }
 

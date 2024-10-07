@@ -177,11 +177,11 @@ public class PersistenciaController {
 
         return registroJPA.findTbRegistroEntities();
     }
-    public List<TbRegistro> ObtenerRegistrosGestor(int documento) {
-        return registroJPA.findRegistrosGestor(documento);
+    public List<TbRegistro> ObtenerRegistrosGestor(int id) {
+        return registroJPA.findRegistrosGestor(id);
     }
-    public List<TbRegistro> ObtenerRegistrosAprendiz(int documento) {
-        return registroJPA.findRegistrosAprendiz(documento);
+    public List<TbRegistro> ObtenerRegistrosAprendiz(int id) {
+        return registroJPA.findRegistrosAprendiz(id);
     }
 
 
@@ -195,11 +195,12 @@ public class PersistenciaController {
         reportesJPA.create(nuevoReporte);
     }
 
-    public List<TbReportes> ObtenerReportesGestor(int documento) {
-        return reportesJPA.findReportesGestor(documento);
+    public List<TbReportes> ObtenerReportesGestor(int idGestor) {
+        return reportesJPA.findReportesGestor(idGestor);
     }
-    public List<TbReportes> ObtenerReportesAprendiz(int documento) {
-        return reportesJPA.findReportesAprendiz(documento);
+    public List<TbReportes> ObtenerReportesAprendiz(int idAprendiz) {
+        return reportesJPA.findReportesAprendiz(idAprendiz);
+
     }
 
 

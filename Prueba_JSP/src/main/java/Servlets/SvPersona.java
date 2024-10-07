@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -234,12 +235,12 @@ public class SvPersona extends HttpServlet {
             int documento = jsonObject.getInt("documento");
             String correo = jsonObject.getString("correo");
             String clave = jsonObject.getString("password");
+            // Extraer el valor de fecha desde el JSON
             String fecha = jsonObject.getString("fechaNacimiento");
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             Date fechaNacimiento = formatter.parse(fecha);
             TbTipoDocumento tipoDocumento = documentos.obtenerDocumentoID(idDocumento);
             Roles rol = logica_rol.ObtenerRol(2);/*Debe ser el id de rol de aprendiz*/
-            System.out.printf("rol obtenido: "+ rol.getNombre());
             Persona persona = new Persona();
             persona.setNombre(nombre);
             persona.setApellido(apellido);
