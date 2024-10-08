@@ -15,4 +15,10 @@ export function showErrorDialog(message) {
     });
 
     document.body.appendChild(clone);
+    const contenedor= document.querySelector('#error-container')
+    setTimeout(() => {
+        if (document.body.contains(contenedor)) {
+            document.body.removeChild(contenedor);
+        }
+    }, 2500);  // Ocultar la alerta después de 3 segundos
 }

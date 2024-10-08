@@ -28,5 +28,5 @@ export function showSuccessAlert(title) {
         if (document.body.contains(successDialog)) {
             document.body.removeChild(successDialog);
         }
-    }, 3000);  // Ocultar la alerta después de 3 segundos
+    }, 2500);  // Ocultar la alerta después de 3 segundos
 }

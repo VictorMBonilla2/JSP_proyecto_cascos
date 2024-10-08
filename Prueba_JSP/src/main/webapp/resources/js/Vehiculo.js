@@ -2,7 +2,8 @@ import {sendRequest} from "./ajax.js";
 import {host} from "./config.js";
 import {showErrorDialog} from "./alerts/error.js"; // Mostrar mensajes de error
 import {showSuccessAlert} from "./alerts/success.js";
-import {showConfirmationDialog} from "./alerts/confirm.js"; // Mostrar mensajes de éxito
+import {showConfirmationDialog} from "./alerts/confirm.js";
+import {validarCantidadCascos, validarPlaca, validarTexto} from "./utils/validations.js"; // Mostrar mensajes de éxito
 
 document.addEventListener('DOMContentLoaded', async function () {
     const DocumentoAprendiz = document.querySelector("#documentoUser").value;
@@ -76,10 +77,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         const formData = new FormData(vehiculoForm);
 
         if (event.target.id === "sendCreate") {
-            await crearVehiculo(formData, DocumentoAprendiz);
+            if(validarFormulario(formData)){
+                await crearVehiculo(formData, DocumentoAprendiz);
+            }
         }
         if (event.target.id === "sendEdit") {
-            await editarVehiculo(formData, DocumentoAprendiz);
+            if(validarFormulario(formData)){
+                await editarVehiculo(formData, DocumentoAprendiz);
+            }
         }
         if(event.target.id ==="delete"){
             showConfirmationDialog("¿Eliminar Vehiculo)",
@@ -119,7 +124,7 @@ async function crearVehiculo(formData, DocumentoAprendiz) {
 // Función para editar un vehículo
 async function editarVehiculo(formData, DocumentoAprendiz) {
     const data ={
-        "idAprendiz": DocumentoAprendiz,
+        "idAprendiz": formData.get("idUser"),
         "action": "edit",
         "idVehiculo":formData.get("idVehiculo"),
         "placaVehiculo": formData.get("placaVehiculo"),
@@ -210,7 +215,42 @@ function vaciarFormulario() {
 
 
 
+function validarFormulario(formData){
+    const idVehiculo        =formData.get("idVehiculo")
+    const placaVehiculo     =formData.get("placaVehiculo")
+    const marcaVehiculo     =formData.get("marcaVehiculo")
+    const modeloVehiculo    =formData.get("modeloVehiculo")
+    const tipoVehiculo      =formData.get("tipoVehiculo")
+    const cascosVehiculo    =formData.get("cascosVehiculo")
+    const colorVehiculo     =formData.get("colorVehiculo")
+    const ciudadVehiculo    =formData.get("ciudadVehiculo")
+    console.log(placaVehiculo)
+    console.log(marcaVehiculo)
+    console.log(modeloVehiculo)
+    console.log(tipoVehiculo)
+    console.log(cascosVehiculo)
+    console.log(colorVehiculo)
+    console.log(ciudadVehiculo)
 
+    if (!validarPlaca(placaVehiculo)){
+        showErrorDialog("La placa del vehículo debe contener solo letras y números.");
+        return false;
+    }
+    if (isNaN(tipoVehiculo) || isNaN(marcaVehiculo) || isNaN(modeloVehiculo) ||isNaN(ciudadVehiculo) ) {
+        showErrorDialog("El tipo, marca, modelo y ciudad del vehículo deben ser números válidos.");
+        return false;
+    }
+    if (!validarCantidadCascos(cascosVehiculo)) {
+        showErrorDialog("La cantidad de cascos debe ser un número entre 0 y 2.");
+        return false;
+    }
+    if (!validarTexto(colorVehiculo, 1)) {
+        showErrorDialog("El color del vehículo debe ser un texto válido.");
+        return false;
+    }
+
+    return  true
+}
 
 
 

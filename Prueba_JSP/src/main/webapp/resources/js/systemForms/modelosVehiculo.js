@@ -3,7 +3,7 @@ import {host} from "../config.js";
 import {showConfirmationDialog} from "../alerts/confirm.js";
 import {showSuccessAlert} from "../alerts/success.js";
 import {showErrorDialog} from "../alerts/error.js";
-import {validarTexto} from "../utils/validations.js";
+import {validarTexto, validarTextoNumeros} from "../utils/validations.js";
 import {cargarMarcas, cargarModelos} from "../utils/renderSelects.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -178,9 +178,9 @@ function validarFormulario(form) {
     const tipoVehiculo = form.get("tipoSelect");
     const marcaVehiculo = form.get("marcaSelect");
     const idModelo = form.get("modeloSelect"); // Solo para la edición
-
+    console.log(nombreModelo)
     // Validar que el nombre del modelo solo contenga letras y no esté vacío
-    if (!validarTexto(nombreModelo, 2)) {
+    if (!validarTextoNumeros(nombreModelo, 2)) {
         showErrorDialog("El nombre del modelo debe contener solo letras y tener al menos 2 caracteres.");
         return false;
     }
