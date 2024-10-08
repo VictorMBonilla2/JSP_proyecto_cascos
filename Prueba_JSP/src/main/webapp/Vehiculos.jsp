@@ -20,11 +20,11 @@
 
 <jsp:include page="resources/sidebar.jsp" />
 <section class="main_container__vehiculo">
-
+    <input type="hidden" id="documentoUser" value="<%=user.getDocumento()%>">
     <div class="container__vehiculo">
         <div class="container__vehiculo__form">
             <form class="vehiculo__form" id="vehiculoForm">
-                <input type="hidden" id="documentoUser" value="<%=user.getDocumento()%>">
+                <input type="hidden" id="idUser" name="idUser" value="<%=user.getId()%>">
                 <input type="hidden" id="idVehiculo" name="idVehiculo" value="">
                 <div class="vehiculo__form__header">
 

@@ -253,7 +253,7 @@ public class SvVehiculoAprendiz extends HttpServlet {
             }
 
             // Validar que el usuario/persona exista
-            Persona persona = logica_persona.buscarPersonaConDocumento(usuario);
+            Persona persona = logica_persona.buscarpersonaPorId(usuario);
             if (persona == null) {
                 enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Usuario no válido.");
                 return;

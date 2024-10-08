@@ -4,7 +4,7 @@ import {showConfirmationDialog} from "../alerts/confirm.js";
 import {showSuccessAlert} from "../alerts/success.js";
 import {showErrorDialog} from "../alerts/error.js";
 import {cargarMarcas} from "../utils/renderSelects.js";
-import {validarTexto} from "../utils/validations";
+import {validarTexto} from "../utils/validations.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const tipoVehiculoSelect = document.querySelector("#tipo_selector");

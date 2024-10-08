@@ -56,6 +56,9 @@ public class Logica_Persona {
 
     public boolean actualizarPersona(Persona user)  {
         try {
+
+            String password = buscarpersonaPorId(user.getId()).getClave();
+            user.setClave(password);
             controladora.EditarPersona(user);
             return true; // La actualización fue exitosa
         } catch (Exception e) {
