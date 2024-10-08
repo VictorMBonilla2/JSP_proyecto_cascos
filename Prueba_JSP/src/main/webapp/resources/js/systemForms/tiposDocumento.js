@@ -3,6 +3,7 @@ import {host} from "../config.js";
 import {showConfirmationDialog} from "../alerts/confirm.js";
 import {showSuccessAlert} from "../alerts/success.js";
 import {showErrorDialog} from "../alerts/error.js";
+import {validarTexto} from "../utils/validations.js";
 
 document.addEventListener("DOMContentLoaded",  async ()=>{
 
@@ -54,11 +55,13 @@ document.addEventListener("DOMContentLoaded",  async ()=>{
         const form = new FormData(targerForm);
         const tipo=form.get("formType");
 
-        if(tipo ==="add"){
-            addTipoDocumento(form)
-        }
-        if(tipo ==="edit"){
-            editTipoDocumento(form)
+        if (validarFormulario(form)) {
+            if (tipo === "add") {
+                addTipoDocumento(form);
+            }
+            if (tipo === "edit") {
+                editTipoDocumento(form);
+            }
         }
     })
 
@@ -125,5 +128,13 @@ async function obtenerTipoDocumentos() {
     }
     return await response.json();
 }
-
+function validarFormulario(form) {
+    const nombreDocumento = form.get("nombreDocumento");
+    // Validar que el nombre del documento solo contenga letras y no esté vacío
+    if (!validarTexto(nombreDocumento, 2)) {
+        showErrorDialog("El nombre del documento debe contener solo letras y tener al menos 2 caracteres.");
+        return false;
+    }
+    return true; // Si todo es correcto
+}
 

@@ -3,8 +3,10 @@ import {showErrorDialog} from "../alerts/error.js";
 import {showSuccessAlert} from "../alerts/success.js";
 import {showConfirmationDialog} from "../alerts/confirm.js";
 import {host} from "../config.js";
+import {validarCantidadCascos, validarPlaca, validarTexto} from "../utils/validations.js";
+import {cargarCiudades, cargarColores, cargarTiposDocumento, cargarTiposVehiculo} from "../utils/renderSelects";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const searchForm = document.getElementById('searhForm');
     const btnPlaca = document.getElementById('btn-placa');
     const btnDocumento = document.getElementById('btn-documento');
@@ -19,58 +21,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const modeloVehiculoSelect = document.getElementById("modeloSelect")
     let vehiculosData = []; // Almacenará los datos de vehículos
 
-    cargarTiposVehiculo()
-    cargarColores()
-    cargarCiudades()
+    await cargarTiposVehiculo('tipoSelect')
+    await cargarColores('colorSelect')
+    await cargarCiudades('ciudadSelect')
 
     tipoVehiculoSelect.addEventListener('change', async function() {
         console.log("Tipo de vehiculo selecciondado. Buscando modelos...")
         const tipoVehiculoId = tipoVehiculoSelect.value;
-        try {
-            const response = await fetch(`${host}/listaMarcas?id_Tipo=${tipoVehiculoId}`);
-            const data = await response.json();
-
-            // Limpiar el select
-            marcaVehiculoSelect.innerHTML = '';
-
-            // Rellenar el select con las marcas recibidas
-            data.forEach(marca => {
-                const option = document.createElement('option');
-                option.value = marca.id_Marca;
-                option.textContent = marca.nombre_Marca;
-                marcaVehiculoSelect.appendChild(option);
-            });
-        } catch (error) {
-            console.error('Error al obtener las marcas:', error);
-        }
+        await cargarMarcas(tipoVehiculoId, 'marcaSelect');
     });
 
     marcaVehiculoSelect.addEventListener('change', async function() {
         console.log("Modelo seleccionado. Buscando modelos...");
         const marcaVehiculoId = marcaVehiculoSelect.value;
         const tipoVehiculoId = tipoVehiculoSelect.value;
-
-        try {
-            const response = await fetch(`${host}/listaModelo?id_Marca=${marcaVehiculoId}&id_Tipo=${tipoVehiculoId}`);
-
-            if (!response.ok) {
-                throw new Error('Error al obtener los modelos de vehículos');
-            }
-
-            const data = await response.json();
-
-            modeloVehiculoSelect.innerHTML = ''; // Limpiar el select
-
-            data.forEach(modelo => {
-                const option = document.createElement('option');
-                option.value = modelo.id_Modelo;
-                option.textContent = modelo.nombre_Modelo;
-                modeloVehiculoSelect.appendChild(option);
-            });
-
-        } catch (error) {
-            console.error("Error al cargar los modelos:", error);
-        }
+        await cargarModelos(marcaVehiculoId, tipoVehiculoId, 'modeloSelect')
     });
 
 
@@ -135,12 +100,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const form = new FormData(targerForm);
         const tipo=form.get("formType");
-
-        if(tipo ==="add"){
-            addSector(form)
-        }
-        if(tipo ==="edit"){
-            editVehiculo(form)
+        if(validarFormulario(form)){
+            if(tipo ==="add"){
+                addSector(form)
+            }
+            if(tipo ==="edit"){
+                editVehiculo(form)
+            }
         }
     })
 
@@ -224,7 +190,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     }
-
 // Función para cargar marcas según el tipo de vehículo
     async function cargarMarcas(tipoVehiculoId) {
         const response = await fetch(`${host}/listaMarcas?id_Tipo=${tipoVehiculoId}`);
@@ -241,7 +206,6 @@ document.addEventListener("DOMContentLoaded", () => {
             marcaVehiculoSelect.appendChild(option);
         });
     }
-
 // Función para cargar modelos según la marca y el tipo de vehículo
     async function cargarModelos(marcaVehiculoId, tipoVehiculoId) {
         const response = await fetch(`${host}/listaModelo?id_Marca=${marcaVehiculoId}&id_Tipo=${tipoVehiculoId}`);
@@ -258,8 +222,6 @@ document.addEventListener("DOMContentLoaded", () => {
             modeloVehiculoSelect.appendChild(option);
         });
     }
-
-
     deleteButton.addEventListener("click",(e)=>{
         const form = document.querySelector("#vehiculoForm");
         const formData = new FormData(form);
@@ -278,69 +240,6 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
 });
-async function cargarCiudades() {
-    try {
-        const response = await fetch(`${host}/listaCiudades`);
-        if (!response.ok) {
-            throw new Error('Error al cargar las ciudades');
-        }
-
-        const ciudades = await response.json();
-
-        // Obtener el select donde se cargarán las ciudades
-        const ciudadVehiculoSelect = document.getElementById('ciudadSelect');
-        ciudadVehiculoSelect.innerHTML = ''; // Limpiar el select
-
-        // Rellenar el select con las ciudades recibidas
-        ciudades.forEach(ciudad => {
-            const option = document.createElement('option');
-            option.value = ciudad.id_Ciudad;
-            option.textContent = ciudad.nombre_Ciudad;
-            ciudadVehiculoSelect.appendChild(option);
-        });
-    } catch (error) {
-        console.error('Error al cargar las ciudades:', error);
-    }
-}
-
-async function cargarTiposVehiculo() {
-    try {
-        const response = await fetch(`${host}/tiposVehiculos`);
-        if (!response.ok) {
-            throw new Error('Error al cargar los tipos de vehículos');
-        }
-
-        const tiposVehiculo = await response.json();
-
-        const tipoVehiculoSelect = document.getElementById('tipoSelect');
-        tipoVehiculoSelect.innerHTML = ''; // Limpiar el select
-
-        // Rellenar el select con los tipos de vehículos recibidos
-        tiposVehiculo.forEach(tipo => {
-            const option = document.createElement('option');
-            option.value = tipo.id_Tipo;
-            option.textContent = tipo.nombre_Tipo;
-            tipoVehiculoSelect.appendChild(option);
-        });
-    } catch (error) {
-        console.error('Error al cargar los tipos de vehículos:', error);
-    }
-}
-async function cargarColores() {
-    const response = await fetch(`${host}/listaColores`);
-    const colores = await response.json();
-
-    const colorVehiculoSelect = document.getElementById('colorSelect');
-    colorVehiculoSelect.innerHTML = ''; // Limpiar el select
-
-    colores.forEach(color => {
-        const option = document.createElement('option');
-        option.value = color;
-        option.textContent = color.charAt(0) + color.slice(1).toLowerCase(); // Formato legible
-        colorVehiculoSelect.appendChild(option);
-    });
-}
-
 async function editVehiculo(form) {
     const idVehiculo=       form.get("idVehiculo")
     const idAprendiz=       form.get("idAprendiz")
@@ -392,6 +291,40 @@ async function eliminarVehiculo(form) {
     }else {
         showErrorDialog(response.message)
     }
+}
+function validarFormulario(form) {
+    const tipoVehiculo = form.get("tipoVehiculo");
+    const marcaVehiculo = form.get("marcaVehiculo");
+    const modeloVehiculo = form.get("modeloVehiculo");
+    const placaVehiculo = form.get("placaVehiculo");
+    const colorVehiculo = form.get("colorVehiculo");
+    const cantCascoVehiculo = form.get("cantCasco");
+
+    // Validar que tipo, marca y modelo sean números válidos
+    if (isNaN(tipoVehiculo) || isNaN(marcaVehiculo) || isNaN(modeloVehiculo)) {
+        showErrorDialog("El tipo, marca y modelo del vehículo deben ser números válidos.");
+        return false;
+    }
+
+    // Validar que la placa del vehículo solo contenga letras, números y sea válida
+    if (!validarPlaca(placaVehiculo)) {
+        showErrorDialog("La placa del vehículo debe contener solo letras y números.");
+        return false;
+    }
+
+    // Validar que el color del vehículo sea solo texto
+    if (!validarTexto(colorVehiculo, 1)) {
+        showErrorDialog("El color del vehículo debe ser un texto válido.");
+        return false;
+    }
+
+    // Validar que la cantidad de cascos sea un número entre 0 y 2
+    if (!validarCantidadCascos(cantCascoVehiculo)) {
+        showErrorDialog("La cantidad de cascos debe ser un número entre 0 y 2.");
+        return false;
+    }
+
+    return true; // Si todo es válido
 }
 
 

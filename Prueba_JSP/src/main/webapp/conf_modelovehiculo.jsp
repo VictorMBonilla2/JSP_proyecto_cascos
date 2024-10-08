@@ -85,9 +85,7 @@
                         <button class="sector_button_cancel button_secundary" type="reset">Cancelar</button>
                     </div>
                 </form>
-
             </div>
-
         </div>
     </div>
 

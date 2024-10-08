@@ -3,6 +3,7 @@ import {host} from "../config.js";
 import {showConfirmationDialog} from "../alerts/confirm.js";
 import {showSuccessAlert} from "../alerts/success.js";
 import {showErrorDialog} from "../alerts/error.js";
+import {validarTextoNumeros, validarCantidadEspacios} from "../utils/validations.js";
 
 document.addEventListener("DOMContentLoaded",  async ()=>{
 
@@ -60,15 +61,16 @@ document.addEventListener("DOMContentLoaded",  async ()=>{
     document.addEventListener("submit",(e)=>{
         e.preventDefault();
         const targerForm= e.target;
-
         const form = new FormData(targerForm);
         const tipo=form.get("formType");
 
-        if(tipo ==="add"){
-            addSector(form)
-        }
-        if(tipo ==="edit"){
-            editSector(form)
+        if (validarFormulario(form)) {
+            if (tipo === "add") {
+                addSector(form);
+            }
+            if (tipo === "edit") {
+                editSector(form);
+            }
         }
     })
 
@@ -133,7 +135,6 @@ async function eliminarSector (form){
     }
 }
 
-
 async function obtenerSectores() {
     const response = await fetch(`${host}/SvSector`);
     if (response.status === 204) {
@@ -141,5 +142,20 @@ async function obtenerSectores() {
     }
     return await response.json();
 }
+function validarFormulario(form) {
+    const nombreSector = form.get("nombre_sector");
+    const cantidadEspacio = form.get("cantidad_espacio");
 
+    if (!validarTextoNumeros(nombreSector, 4 )) {
+        showErrorDialog("El nombre del sector debe ser un texto válido.");
+        return false;
+    }
+
+    if (!validarCantidadEspacios(cantidadEspacio)) {
+        showErrorDialog("La cantidad de espacios debe ser un número positivo.");
+        return false;
+    }
+
+    return true; // Si todo es correcto
+}
 

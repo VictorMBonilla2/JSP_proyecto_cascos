@@ -3,6 +3,7 @@ import {host} from "../config.js";
 import {showConfirmationDialog} from "../alerts/confirm.js";
 import {showSuccessAlert} from "../alerts/success.js";
 import {showErrorDialog} from "../alerts/error.js";
+import {validarTexto} from "../utils/validations.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const selectTipoVehiculo = document.querySelector("#item_selector");
@@ -50,13 +51,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         e.preventDefault();
         const targetForm = e.target;
         const form = new FormData(targetForm);
-        const tipoAccion = form.get("formType");
-
-        if (tipoAccion === "add") {
-            addTipoVehiculo(form);
-        }
-        if (tipoAccion === "edit") {
-            editTipoVehiculo(form);
+        const tipo = form.get("formType");
+        if (validarFormulario(form)) {
+            if (tipo === "add") {
+                addTipoVehiculo(form);
+            }
+            if (tipo === "edit") {
+                editTipoVehiculo(form);
+            }
         }
     });
 });
@@ -126,4 +128,23 @@ async function eliminarTipoVehiculo(form) {
     } else {
         showErrorDialog(response.message);
     }
+}
+
+function validarFormulario(form) {
+    const nombreVehiculo = form.get("nombreVehiculo");
+    const idTipoVehiculo = form.get("tipoVehiculoSelect"); // Solo para el caso de editar
+
+    // Validar que el nombre del vehículo solo contenga letras y no esté vacío
+    if (!validarTexto(nombreVehiculo, 2)) {
+        showErrorDialog("El nombre del vehículo debe contener solo letras y tener al menos 2 caracteres.");
+        return false;
+    }
+
+    // Validar que el ID del tipo de vehículo (en caso de editar) sea un número válido
+    if (idTipoVehiculo && isNaN(idTipoVehiculo)) {
+        showErrorDialog("El ID del tipo de vehículo no es válido.");
+        return false;
+    }
+
+    return true; // Si todo es correcto
 }

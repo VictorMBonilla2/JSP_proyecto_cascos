@@ -3,6 +3,8 @@ import {host} from "../config.js";
 import {showConfirmationDialog} from "../alerts/confirm.js";
 import {showSuccessAlert} from "../alerts/success.js";
 import {showErrorDialog} from "../alerts/error.js";
+import {cargarMarcas} from "../utils/renderSelects.js";
+import {validarTexto} from "../utils/validations";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const tipoVehiculoSelect = document.querySelector("#tipo_selector");
@@ -16,33 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Tipo de vehiculo selecciondado. Buscando modelos...");
         const tipoVehiculoId = tipoVehiculoSelect.value;
         inputNombreMarca.value='';
-        try {
-            const response = await fetch(`${host}/listaMarcas?id_Tipo=${tipoVehiculoId}`);
-            const data = await response.json();
-
-            // Limpiar el select de marcas
-            marcaVehiculoSelect.innerHTML = '';
-
-            // Rellenar el select con las marcas recibidas
-            data.forEach(marca => {
-                const option = document.createElement('option');
-                option.value = marca.id_Marca; // Asegúrate de que los nombres coinciden con la respuesta del servidor
-                option.textContent = marca.nombre_Marca; // Ajustar también aquí
-                marcaVehiculoSelect.appendChild(option);
-            });
-
-            // Guardar la data en el elemento select usando dataset (esto es clave)
-            marcaVehiculoSelect.dataset.marcaData = JSON.stringify(data);
-
-            // Seleccionar automáticamente la primera opción y disparar el evento `change`
-            if (marcaVehiculoSelect.length > 0) {
-                marcaVehiculoSelect.selectedIndex = 0;
-                marcaVehiculoSelect.dispatchEvent(new Event('change')); // Disparar el evento change programáticamente
-            }
-
-        } catch (error) {
-            console.error('Error al obtener las marcas:', error);
-        }
+        await cargarMarcas(tipoVehiculoId,'marca_selector')
     });
 
     // Registrar el evento change para marcaVehiculoSelect una sola vez
@@ -75,12 +51,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         const form = new FormData(targetForm);
         const tipo = form.get("formType");
 
-        if (tipo === "add") {
-            addMarca(form);
+        if(validarFormulario(form)){
+            if (tipo === "add") {
+                addMarca(form);
+            }
+            if (tipo === "edit") {
+                editMarca(form);
+            }
         }
-        if (tipo === "edit") {
-            editMarca(form);
-        }
+
     });
 });
 
@@ -175,4 +154,29 @@ async function cargarTiposVehiculo() {
     } catch (error) {
         console.error('Error al cargar los tipos de vehículos:', error);
     }
+}
+function validarFormulario(form) {
+    const nombreMarca = form.get("nombreMarca");
+    const tipoSelect = form.get("tipoSelect");
+    const idMarca = form.get("marcaSelect");
+
+    // Validar que el nombre de la marca solo contenga letras y no esté vacío
+    if (!validarTexto(nombreMarca, 2)) {
+        showErrorDialog("El nombre de la marca debe contener solo letras y tener al menos 2 caracteres.");
+        return false;
+    }
+
+    // Validar que el tipo de vehículo sea un número válido
+    if (tipoSelect && isNaN(tipoSelect)) {
+        showErrorDialog("El tipo de vehículo seleccionado no es válido.");
+        return false;
+    }
+
+    // Validar que el ID de la marca (en caso de editar) sea un número válido
+    if (idMarca && isNaN(idMarca)) {
+        showErrorDialog("El ID de la marca no es válido.");
+        return false;
+    }
+
+    return true; // Si todo es correcto
 }
