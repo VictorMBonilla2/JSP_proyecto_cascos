@@ -77,22 +77,18 @@
     <template id="infoTemplate">
         <div class="info_user_container__header">
             <img src="resources/imagenes/IconPerfil.png" alt="">
-            <h1></h1>
-            <h3></h3>
+            <h1 class="nameUser"></h1>
+            <h3 class="rolUser"></h3>
         </div>
 
         <div class="info_user_container__body">
             <div>
                 <h1>Correo</h1>
-                <h3>asd</h3>
-            </div>
-            <div>
-                <h1>&gt;Celular</h1>
-                <h3>hola</h3>
+                <h3 class="correoUser"></h3>
             </div>
             <div>
                 <h1>Fecha de Nacimiento</h1>
-                <h3>hola</h3>
+                <h3 class="fechaNacUser"></h3>
             </div>
         </div>
 

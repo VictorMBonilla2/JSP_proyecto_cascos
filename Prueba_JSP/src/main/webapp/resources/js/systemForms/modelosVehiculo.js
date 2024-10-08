@@ -3,6 +3,8 @@ import {host} from "../config.js";
 import {showConfirmationDialog} from "../alerts/confirm.js";
 import {showSuccessAlert} from "../alerts/success.js";
 import {showErrorDialog} from "../alerts/error.js";
+import {validarTexto} from "../utils/validations.js";
+import {cargarMarcas, cargarModelos} from "../utils/renderSelects.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const tipoVehiculoSelect = document.querySelector("#tipo_selector");
@@ -17,93 +19,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     tipoVehiculoSelectnew.addEventListener('change', async function() {
         console.log("Tipo de vehiculo selecciondado. Buscando modelos...");
         const tipoVehiculoId = tipoVehiculoSelectnew.value;
-        try {
-            const response = await fetch(`${host}/listaMarcas?id_Tipo=${tipoVehiculoId}`);
-            const data = await response.json();
+        await cargarMarcas(tipoVehiculoId, 'marcaNew_selector')
 
-            // Limpiar el select de marcas
-            marcaVehiculoSelectnew.innerHTML = '';
-
-            // Rellenar el select con las marcas recibidas
-            data.forEach(marca => {
-                const option = document.createElement('option');
-                option.value = marca.id_Marca; // Asegúrate de que los nombres coinciden con la respuesta del servidor
-                option.textContent = marca.nombre_Marca; // Ajustar también aquí
-                marcaVehiculoSelectnew.appendChild(option);
-            });
-
-        } catch (error) {
-            console.error('Error al obtener las marcas:', error);
-        }
     });
-
 
     tipoVehiculoSelect.addEventListener('change', async function() {
         console.log("Tipo de vehiculo seleccionado. Buscando marcas...");
         const tipoVehiculoId = tipoVehiculoSelect.value;
         inputNombreModelo.value=''
-        try {
-            const response = await fetch(`${host}/listaMarcas?id_Tipo=${tipoVehiculoId}`);
-            const data = await response.json();
-
-            // Limpiar el select de marcas
-            marcaVehiculoSelect.innerHTML = '';
-
-            // Rellenar el select con las marcas recibidas y añadir datos a dataset
-            data.forEach(marca => {
-                const option = document.createElement('option');
-                option.value = marca.id_Marca;
-                option.textContent = marca.nombre_Marca;
-                option.dataset.nombreMarca = marca.nombre_Marca;  // Guardar el nombre de la marca en el dataset
-                marcaVehiculoSelect.appendChild(option);
-            });
-
-            // Si existen marcas, selecciona la primera y dispara el evento 'change'
-            if (marcaVehiculoSelect.options.length > 0) {
-                marcaVehiculoSelect.selectedIndex = 0;
-                marcaVehiculoSelect.dispatchEvent(new Event('change')); // Disparar el evento 'change' en marcas
-            }
-        } catch (error) {
-            console.error('Error al obtener las marcas:', error);
-        }
+        await cargarMarcas(tipoVehiculoId,'marca_selector' )
     });
 
     marcaVehiculoSelect.addEventListener('change', async function() {
         console.log("Marca seleccionada. Buscando modelos...");
         const marcaVehiculoId = marcaVehiculoSelect.value;
         const tipoVehiculoId = tipoVehiculoSelect.value;
-
-        try {
-            const response = await fetch(`${host}/listaModelo?id_Marca=${marcaVehiculoId}&id_Tipo=${tipoVehiculoId}`);
-
-            if (!response.ok) {
-                throw new Error('Error al obtener los modelos de vehículos');
-            }
-
-            const data = await response.json();
-            console.log(data);
-            selectModelo.innerHTML = ''; // Limpiar el select de modelos
-
-            // Rellenar el select con los modelos recibidos y añadir datos a dataset
-            data.forEach(modelo => {
-                const option = document.createElement('option');
-                option.value = modelo.id_Modelo;
-                option.textContent = modelo.nombre_Modelo;
-                option.dataset.nombreModelo = modelo.nombre_Modelo; // Guardar el nombre del modelo en el dataset
-                selectModelo.appendChild(option);
-            });
-
-            // Si existen modelos, selecciona el primero y dispara el evento 'change'
-            if (selectModelo.options.length > 0) {
-                selectModelo.selectedIndex = 0;
-                selectModelo.dispatchEvent(new Event('change')); // Disparar el evento 'change' en modelos
-            }
-
-        } catch (error) {
-            console.error("Error al cargar los modelos:", error);
-        }
+        await cargarModelos(marcaVehiculoId, tipoVehiculoId,'modelo_selector' )
     });
-
     // Escuchar cambios en el selector de modelos
     selectModelo.addEventListener("change", (e) => {
         const id_modelo = e.target.value;
@@ -129,11 +61,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         const form = new FormData(targetForm);
         const tipo = form.get("formType");
 
-        if (tipo === "add") {
-            addModelo(form);
-        }
-        if (tipo === "edit") {
-            editModelo(form);
+        if (validarFormulario(form)) {
+            if (tipo === "add") {
+                addModelo(form);
+            }
+            if (tipo === "edit") {
+                editModelo(form);
+            }
         }
     });
 });
@@ -238,4 +172,30 @@ async function cargarTiposVehiculo() {
     } catch (error) {
         console.error('Error al cargar los tipos de vehículos:', error);
     }
+}
+function validarFormulario(form) {
+    const nombreModelo = form.get("nombreModelo");
+    const tipoVehiculo = form.get("tipoSelect");
+    const marcaVehiculo = form.get("marcaSelect");
+    const idModelo = form.get("modeloSelect"); // Solo para la edición
+
+    // Validar que el nombre del modelo solo contenga letras y no esté vacío
+    if (!validarTexto(nombreModelo, 2)) {
+        showErrorDialog("El nombre del modelo debe contener solo letras y tener al menos 2 caracteres.");
+        return false;
+    }
+
+    // Validar que el tipo y la marca sean números válidos
+    if (isNaN(tipoVehiculo) || isNaN(marcaVehiculo)) {
+        showErrorDialog("El tipo y la marca del vehículo deben ser números válidos.");
+        return false;
+    }
+
+    // Validar que el ID del modelo (en caso de editar) sea un número válido
+    if (idModelo && isNaN(idModelo)) {
+        showErrorDialog("El ID del modelo no es válido.");
+        return false;
+    }
+
+    return true; // Si todo es correcto
 }

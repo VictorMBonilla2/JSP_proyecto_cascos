@@ -3,6 +3,7 @@ import {host} from "../config.js";
 import {showConfirmationDialog} from "../alerts/confirm.js";
 import {showSuccessAlert} from "../alerts/success.js";
 import {showErrorDialog} from "../alerts/error.js";
+import {validarTexto} from "../utils/validations.js";
 
 document.addEventListener("DOMContentLoaded",  async ()=>{
 
@@ -54,11 +55,13 @@ document.addEventListener("DOMContentLoaded",  async ()=>{
         const form = new FormData(targerForm);
         const tipo=form.get("formType");
 
-        if(tipo ==="add"){
-            addCiudad(form)
-        }
-        if(tipo ==="edit"){
-            editCiudad(form)
+        if (validarFormulario(form)) {
+            if (tipo === "add") {
+                addCiudad(form);
+            }
+            if (tipo === "edit") {
+                editCiudad(form);
+            }
         }
     })
 
@@ -124,4 +127,22 @@ async function obtenerCiudades() {
         return [];
     }
     return await response.json();
+}
+function validarFormulario(form) {
+    const nombreCiudad = form.get("nombreCiudad");
+    const idCiudad = form.get("ciudadSelect"); // Solo para el caso de editar
+
+    // Validar que el nombre de la ciudad solo contenga letras y no esté vacío
+    if (!validarTexto(nombreCiudad, 2)) {
+        showErrorDialog("El nombre de la ciudad debe contener solo letras y tener al menos 2 caracteres.");
+        return false;
+    }
+
+    // Validar que el ID de la ciudad (en caso de editar) sea un número válido
+    if (idCiudad && isNaN(idCiudad)) {
+        showErrorDialog("El ID de la ciudad no es válido.");
+        return false;
+    }
+
+    return true; // Si todo es correcto
 }

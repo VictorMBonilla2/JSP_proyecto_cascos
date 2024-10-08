@@ -3,6 +3,7 @@ import {host} from "../config.js";
 import {showConfirmationDialog} from "../alerts/confirm.js";
 import {showSuccessAlert} from "../alerts/success.js";
 import {showErrorDialog} from "../alerts/error.js";
+import {validarTexto} from "../utils/validations.js";
 
 document.addEventListener("DOMContentLoaded",  async ()=>{
 
@@ -54,11 +55,13 @@ document.addEventListener("DOMContentLoaded",  async ()=>{
         const form = new FormData(targerForm);
         const tipo=form.get("formType");
 
-        if(tipo ==="add"){
-            addRol(form)
-        }
-        if(tipo ==="edit"){
-            editRol(form)
+        if (validarFormulario(form)) {
+            if(tipo ==="add"){
+                addRol(form)
+            }
+            if(tipo ==="edit"){
+                editRol(form)
+            }
         }
     })
 
@@ -116,12 +119,18 @@ async function eliminarRol (form){
         showErrorDialog(response.message)
     }
 }
-
-
 async function obtenerTipoDocumentos() {
     const response = await fetch(`${host}/listaRoles`);
     if (response.status === 204) {
         return [];
     }
     return await response.json();
+}
+function validarFormulario(form){
+    const nombreRol= form.get("nombreRol")
+    if(!validarTexto(nombreRol, 2)){
+        showErrorDialog("El nombre del rol debe contener solo letras y tener al menos 2 caracteres.");
+        return false;
+    }
+    return true
 }

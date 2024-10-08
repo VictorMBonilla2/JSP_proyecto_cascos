@@ -51,7 +51,7 @@
         <div class="conf_sectores__sideTwo modific_item__container">
             <div class="title__side">
                 <div class="title__container">
-                    <h2>Crear Nuevo Sector</h2>
+                    <h2>Crear Nuevo Rol</h2>
                 </div>
 
             </div>
