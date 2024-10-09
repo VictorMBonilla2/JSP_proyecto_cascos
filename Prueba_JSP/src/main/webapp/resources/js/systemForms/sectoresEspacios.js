@@ -3,7 +3,7 @@ import {host} from "../config.js";
 import {showConfirmationDialog} from "../alerts/confirm.js";
 import {showSuccessAlert} from "../alerts/success.js";
 import {showErrorDialog} from "../alerts/error.js";
-import {validarTextoNumeros, validarCantidadEspacios} from "../utils/validations.js";
+import {validarCantidadEspacios, validarTextoNumeros} from "../utils/validations.js";
 
 document.addEventListener("DOMContentLoaded",  async ()=>{
 

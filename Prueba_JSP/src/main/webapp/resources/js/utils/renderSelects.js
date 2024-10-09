@@ -30,11 +30,14 @@ export async function cargarMarcas(tipoVehiculoId, selectElementId) {
         selectElement.innerHTML = ''; // Limpiar el select
 
         // Rellenar el select con las marcas recibidas
-        marcas.forEach(marca => {
+        marcas.forEach((marca, index)=> {
             const option = document.createElement('option');
             option.value = marca.id_Marca;
             option.textContent = marca.nombre_Marca;
             selectElement.appendChild(option);
+            if (index === 0) {
+                option.selected = true;
+            }
         });
 
     } catch (error) {

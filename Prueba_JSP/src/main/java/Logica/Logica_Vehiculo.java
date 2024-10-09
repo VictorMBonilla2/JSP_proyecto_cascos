@@ -2,7 +2,10 @@ package Logica;
 
 import Controlador.PersistenciaController;
 import DTO.VehiculoDTO;
-import Modelo.*;
+import Modelo.Persona;
+import Modelo.TbVehiculo;
+import Modelo.Tb_MarcaVehiculo;
+import Modelo.Tb_ModeloVehiculo;
 import Utilidades.ResultadoOperacion;
 
 import java.util.ArrayList;
@@ -12,29 +15,27 @@ import java.util.stream.Collectors;
 public class Logica_Vehiculo {
     PersistenciaController controladora = new PersistenciaController();
     Logica_Persona logicaPersona = new Logica_Persona();
-    public boolean crearVehiculo(TbVehiculo vehiculo) {
+    public ResultadoOperacion crearVehiculo(TbVehiculo vehiculo) {
 
         try{
             controladora.CrearVehiculo(vehiculo);
-            return true;
+            return new ResultadoOperacion(true,"Vehiculo creado correctamente.");
         }catch (Exception e) {
             System.err.println("Error al crear al vehiculo " + e.getMessage());
-            e.printStackTrace();
-            return false;
+            return new ResultadoOperacion(false,"Error al crear el vehiculo.");
         }
 
     }
 
 
-    public boolean actualizarVehiculo(TbVehiculo vehiculo) {
+    public ResultadoOperacion actualizarVehiculo(TbVehiculo vehiculo) {
 
         try{
             controladora.ActualizarVehiculo(vehiculo);
-            return  true;
+            return  new ResultadoOperacion(true, "Vehiculo actualizado correctamente");
         }catch ( Exception e){
-            System.err.println("Error al actualizar al vehiculo " + e.getMessage());
-            e.printStackTrace();
-            return false;
+            System.err.println("Error al actualizar al vehiculo " + e.getMessage());;
+            return new ResultadoOperacion(false, "Error al actualizar el vehiculo");
         }
     }
 

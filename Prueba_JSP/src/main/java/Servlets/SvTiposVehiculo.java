@@ -2,7 +2,6 @@ package Servlets;
 
 
 import Logica.Logica_TipoVehiculo;
-import Logica.Logica_Vehiculo;
 import Modelo.TbTipovehiculo;
 import Utilidades.JsonReader;
 import Utilidades.ResultadoOperacion;

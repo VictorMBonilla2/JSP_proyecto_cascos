@@ -1,7 +1,6 @@
 package Logica;
 
 import Controlador.PersistenciaController;
-import Modelo.TbTipovehiculo;
 import Modelo.Tb_MarcaVehiculo;
 import Utilidades.ResultadoOperacion;
 import jakarta.persistence.PersistenceException;

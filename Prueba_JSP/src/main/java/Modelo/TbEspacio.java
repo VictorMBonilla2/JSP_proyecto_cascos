@@ -13,12 +13,10 @@ public class TbEspacio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_espacio", nullable = false)
     private Integer id_espacio;
-
     private String nombre;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_vehiculo_fk")
     private TbVehiculo vehiculo;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "documento_aprendiz")
     private Persona persona;

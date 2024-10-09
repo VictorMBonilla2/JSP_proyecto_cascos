@@ -9,8 +9,6 @@ import Modelo.enums.EstadoEspacio;
 import Modelo.enums.TipoReporte;
 import Utilidades.EspacioServiceManager;
 import Utilidades.JsonReader;
-import Utilidades.sendResponse;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -48,7 +46,6 @@ public class SvCasilleros {
                     JSONObject jsonEspacio = new JSONObject();
                     jsonEspacio.put("id_espacio", espacio.getId_espacio());
                     jsonEspacio.put("nombre", espacio.getNombre());
-
                     // Vehículo
                     if (espacio.getVehiculo() != null) {
                         JSONObject vehiculo = new JSONObject();
@@ -58,7 +55,6 @@ public class SvCasilleros {
                     } else {
                         jsonEspacio.put("vehiculo", JSONObject.NULL);
                     }
-
                     // Aprendiz (Persona)
                     if (espacio.getPersona() != null) {
                         JSONObject persona = new JSONObject();
@@ -216,7 +212,6 @@ public class SvCasilleros {
             // Crear un nuevo registro para la tabla TbReportes
             TbReportes nuevoReporte = new TbReportes();
             nuevoReporte.setNombre_reporte(jsonObject.getString("tipoReporte"));
-
             nuevoReporte.setFecha_reporte(new Date());
             nuevoReporte.setNombre_reporte(jsonObject.getString("nombreReporte"));
             nuevoReporte.setDescripcion_reporte(jsonObject.getString("DescReporte"));
@@ -231,12 +226,7 @@ public class SvCasilleros {
                 enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Tipo de reporte inválido proporcionado.");
                 return;
             }
-
             nuevoReporte.setTipoReporte(tipoReporte);
-            System.out.println("Tipo del reporte "+ jsonObject.getString("tipoReporte"));
-            System.out.println("Nombre del reporte "+ jsonObject.getString("nombreReporte"));
-            System.out.println("Desc del reporte "+ jsonObject.getString("DescReporte"));
-            System.out.println("Persona del reporte "+ espacio.getPersona());
             // Verificar si la sesión es válida y tiene el atributo documento
             Persona colaborador = obtenerColaboradorDesdeSesion(req, resp);
             System.out.println(colaborador);
@@ -256,9 +246,7 @@ public class SvCasilleros {
         private Persona obtenerColaboradorDesdeSesion(HttpServletRequest req, HttpServletResponse resp) throws IOException {
             HttpSession session = req.getSession(false); // false para no crear una nueva sesión si no existe
             if (session != null && session.getAttribute("documento") != null) {
-                System.out.println("Documento conseguido" + session.getAttribute("documento"));
                 Integer documentosesionactual = (Integer) session.getAttribute("documento");
-                System.out.println("Documento " + documentosesionactual);
                 Persona colaborador=null;
                 try{
                     return logica_persona.obtenerColaborador(documentosesionactual);

@@ -7,7 +7,7 @@ import Logica.Logica_Rol;
 import Modelo.Persona;
 import Modelo.Roles;
 import Modelo.TbTipoDocumento;
-import Modelo.Tb_MarcaVehiculo;
+import Modelo.enums.EstadoUsuario;
 import Utilidades.JsonReader;
 import Utilidades.ResultadoOperacion;
 import Utilidades.sendResponse;
@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,7 +24,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -102,6 +100,9 @@ public class SvPersona extends HttpServlet {
                 case "editPrimaryDAta":
                     EditPrimaryData(jsonObject, resp , session);
                     break;
+                case "disable":
+                    DeshabilarCuenta(jsonObject, resp , session);
+                    break;
                 default:
                     resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no reconocida");
             }
@@ -109,6 +110,7 @@ public class SvPersona extends HttpServlet {
             sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error interno del servidor");
         }
     }
+
 
     private void EditPrimaryData(JSONObject jsonObject, HttpServletResponse resp, HttpSession session) throws IOException {
         // Logs para ver los datos recibidos
@@ -160,15 +162,13 @@ public class SvPersona extends HttpServlet {
             System.out.println("Datos actualizados para usuario con ID: " + usuarioId);
 
             // Guarda los cambios en la base de datos
-            boolean updateSuccess = logica_persona.actualizarPersona(user);
-            System.out.println("Actualización en la base de datos exitosa: " + updateSuccess);
-
-            if (updateSuccess) {
+            ResultadoOperacion resultado = logica_persona.actualizarPersona(user);
+            if (resultado.isExito()) {
                 // Actualiza el usuario en la sesión para reflejar los cambios
                 session.setAttribute("user", user);
-                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", "Datos actualizados");
+                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
             } else {
-                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error al actualizar datos");
+                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
             }
         } catch (JSONException e) {
             // Capturar error al obtener datos del JSON
@@ -186,37 +186,33 @@ public class SvPersona extends HttpServlet {
         }
     }
 
-
-
-
-
     private void Login(JSONObject jsonObject, HttpServletRequest req, HttpServletResponse resp, HttpSession session) throws IOException {
         int documento = jsonObject.getInt("documento");
         int tipoDocumento = jsonObject.getInt("tipoDocumento");
         String password = jsonObject.getString("password");
         String rol = jsonObject.getString("rol");
 
-        List<LoginDTO> validacion = logica_persona.validarIngreso(documento, tipoDocumento, password, rol);
-        if (validacion != null && !validacion.isEmpty()) {
+        ResultadoOperacion validacion = logica_persona.validarIngreso(documento, tipoDocumento, password, rol);
+        if (validacion.isExito()) {
             try {
-                // Obtener el primer elemento de la lista validacion
-                LoginDTO loginDTO = validacion.get(0);
-
-                // Buscar el usuario con el ID obtenido desde LoginDTO
-                Persona user = logica_persona.buscarpersonaPorId(loginDTO.getId());
+                // Buscar el usuario por su documento
+                Persona user = logica_persona.buscarPersonaConDocumento(documento);
 
                 // Configurar la sesión con los atributos necesarios
                 session = req.getSession(true);
-                session.setAttribute("documento", loginDTO.getDocumento());
+                session.setAttribute("documento", user.getDocumento());
                 session.setAttribute("user", user);
 
-                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", "Logeado");
+                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", validacion.getMensaje());
             } catch (Exception e) {
-                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "error interno del servidor");
+                // Enviar una respuesta de error interno del servidor en caso de excepciones
+                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error interno del servidor.");
             }
         } else {
-            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos incorrectos.");
+            // Enviar una respuesta con error de datos incorrectos si la validación falla
+            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", validacion.getMensaje());
         }
+
 
     }
 
@@ -264,8 +260,19 @@ public class SvPersona extends HttpServlet {
         } catch (Exception e) {
             sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Error al actualizar usuario.");
         }
+    }
 
+    private void DeshabilarCuenta(JSONObject jsonObject, HttpServletResponse resp, HttpSession session) throws IOException {
 
+        int idUsuario= jsonObject.getInt("idUsuario");
+
+        ResultadoOperacion resultado=  logica_persona.cambiarEstadoUsuario(idUsuario);
+
+        if (resultado.isExito()){
+            Logout(resp, session);
+        } else {
+            sendResponse.enviarRespuesta(resp,HttpServletResponse.SC_BAD_REQUEST,"error", resultado.getMensaje());
+        }
 
     }
 

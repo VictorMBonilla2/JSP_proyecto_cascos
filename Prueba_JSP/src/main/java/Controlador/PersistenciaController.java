@@ -2,6 +2,7 @@ package Controlador;
 
 import DTO.LoginDTO;
 import Modelo.*;
+import Modelo.enums.EstadoUsuario;
 import jakarta.persistence.PersistenceException;
 
 import java.util.List;
@@ -33,9 +34,6 @@ public class PersistenciaController {
         return persoJpa.findPersonaEntities();
     }
 
-    public List<LoginDTO> login(int documento){
-        return  persoJpa.login(documento);
-    }
 
     public Persona buscarpersona(int documento) {
         return persoJpa.findPersona(documento);
@@ -57,13 +55,19 @@ public class PersistenciaController {
         return persoJpa.buscarPersonaDocumento(documento);
     }
 
-    public void eliminarUsuario(int documneto) throws Exception {
+    public void eliminarUsuario(int id) throws Exception {
 
-        persoJpa.destroy(documneto);
+        persoJpa.destroy(id);
+    }
+    public void actualizarestadoUsuario(Persona usuario, EstadoUsuario estadoUsuario) throws Exception {
+        persoJpa.actualizarEstado(usuario, estadoUsuario);
+    }
+    public Persona buscarUsuarioEnEspacios(int iduser) {
+        return persoJpa.buscarPersonaEnEspacio(iduser);
     }
 
-    //JPA SECTORES
 
+    //JPA SECTORES
     public List<TbSectores> ObtenerSectores() {
         return sectoresJPA.findTbCasilleroEntities();
     }
@@ -418,6 +422,7 @@ public class PersistenciaController {
     public void EliminarCiudad(int idCiudad) throws Exception {
         ciudadVehiculo.destroy(idCiudad);
     }
+
 
 
 }
