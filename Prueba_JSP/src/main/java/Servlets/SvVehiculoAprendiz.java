@@ -40,9 +40,7 @@ public class SvVehiculoAprendiz extends HttpServlet {
         if (typeSearch == null || typeSearch.trim().isEmpty()) {
             // Caso 1: Si no se especifica "typesearch", usar búsqueda por "documento"
             if (documento == null || documento.trim().isEmpty()) {
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().write("{\"error\":\"Documento inválido\"}");
+                enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Documento inválido proporcionado.");
                 return;
             }
 
@@ -52,9 +50,7 @@ public class SvVehiculoAprendiz extends HttpServlet {
             // Caso 2: Si "typesearch" es "documento" y hay parámetro "documento", buscar por documento
             if (typeSearch.equalsIgnoreCase("documento")) {
                 if (documento == null || documento.trim().isEmpty()) {
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
-                    response.getWriter().write("{\"error\":\"Documento inválido\"}");
+                    enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Documento inválido proporcionado.");
                     return;
                 }
 
@@ -64,9 +60,7 @@ public class SvVehiculoAprendiz extends HttpServlet {
                 // Caso 3: Si "typesearch" es "placa" y hay parámetro "placa", buscar por placa
             } else if (typeSearch.equalsIgnoreCase("placa")) {
                 if (placa == null || placa.trim().isEmpty()) {
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
-                    response.getWriter().write("{\"error\":\"Placa inválida\"}");
+                    enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Placa inválido proporcionado.");
                     return;
                 }
 
@@ -74,9 +68,7 @@ public class SvVehiculoAprendiz extends HttpServlet {
                 buscarVehiculosPorPlaca(placa, response);
             } else {
                 // Si el "typesearch" no es válido, devolver un error
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().write("{\"error\":\"Tipo de búsqueda inválido\"}");
+                enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Tipo de busqueda invalida.");
             }
         }
     }
@@ -188,15 +180,15 @@ public class SvVehiculoAprendiz extends HttpServlet {
                     borrarVehiculo(req,resp,jsonObject);
                     break;
                 default:
-                    enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Invalid action");
+                    enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Acción invalida");
             }
 
         } catch (JSONException e) {
             // Manejar errores de JSON
-            enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Invalid JSON format");
+            enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Formato json invalido");
         } catch (IOException e) {
             // Manejar errores de IO
-            enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Server error");
+            enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado en el servidor");
         }
     }
 
@@ -272,11 +264,11 @@ public class SvVehiculoAprendiz extends HttpServlet {
             vehiculo.setModeloVehiculo(modelo);
 
             // Actualizar el vehículo
-            boolean updated = logica_vehiculo.actualizarVehiculo(vehiculo);
-            if (updated) {
-                enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", "Vehículo actualizado correctamente.");
+            ResultadoOperacion result = logica_vehiculo.actualizarVehiculo(vehiculo);
+            if (result.isExito()) {
+                enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", result.getMensaje());
             } else {
-                enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error al actualizar el vehículo.");
+                enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", result.getMensaje());
             }
 
         } catch (NumberFormatException e) {
@@ -344,12 +336,12 @@ public class SvVehiculoAprendiz extends HttpServlet {
             vehiculo.setModeloVehiculo(modelo);
 
             // Guardar el vehículo en la base de datos
-            boolean created = logica_vehiculo.crearVehiculo(vehiculo);
+            ResultadoOperacion result = logica_vehiculo.crearVehiculo(vehiculo);
 
-            if (created) {
-                enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", "Vehículo creado correctamente.");
+            if (result.isExito()) {
+                enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", result.getMensaje());
             } else {
-                enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error al crear el vehículo.");
+                enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", result.getMensaje());
             }
         } catch (NumberFormatException e) {
             enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Error en los datos numéricos: " + e.getMessage());
@@ -389,9 +381,6 @@ public class SvVehiculoAprendiz extends HttpServlet {
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al eliminar el vehículo.");
         }
     }
-
-
-
 
 }
 

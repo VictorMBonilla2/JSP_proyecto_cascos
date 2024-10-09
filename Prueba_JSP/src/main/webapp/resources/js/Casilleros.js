@@ -1,8 +1,13 @@
-import { sendRequest } from "./ajax.js";
-import { showSuccessAlert } from "./alerts/success.js";
-import { showErrorDialog } from "./alerts/error.js";
+import {sendRequest} from "./ajax.js";
+import {showSuccessAlert} from "./alerts/success.js";
+import {showErrorDialog} from "./alerts/error.js";
 import {renderEspacios} from "./renderCasilleros.js";
-import {validarDocumento, validarCantidadCascos, validarNombreReporte,validarDescripcionReporte} from "./utils/validations.js";
+import {
+    validarCantidadCascos,
+    validarDescripcionReporte,
+    validarDocumento,
+    validarNombreReporte
+} from "./utils/validations.js";
 
 document.addEventListener('submit', function (e) {
     e.preventDefault();

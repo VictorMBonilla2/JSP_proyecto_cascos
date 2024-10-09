@@ -1,5 +1,6 @@
 package Modelo;
 
+import Modelo.enums.EstadoUsuario;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -30,13 +31,17 @@ public class Persona {
     @JoinColumn(name = "id_rol", nullable = false)
     private Roles rol;
 
-    @OneToMany(mappedBy = "persona", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EstadoUsuario estadoUsuario;
+
+    @OneToMany(mappedBy = "persona", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<TbVehiculo> vehiculos = new LinkedHashSet<>();
 
     public Persona() {
     }
 
-    public Persona(int id, int documento, String nombre, String apellido, TbTipoDocumento tipoDocumento, String correo, Date fechaNacimiento, String clave, Roles rol, Set<TbVehiculo> vehiculos) {
+    public Persona(int id, int documento, String nombre, String apellido, TbTipoDocumento tipoDocumento, String correo, Date fechaNacimiento, String clave, Roles rol, EstadoUsuario estadoUsuario, Set<TbVehiculo> vehiculos) {
         this.id = id;
         this.documento = documento;
         this.nombre = nombre;
@@ -46,9 +51,9 @@ public class Persona {
         this.fechaNacimiento = fechaNacimiento;
         this.clave = clave;
         this.rol = rol;
+        this.estadoUsuario = estadoUsuario;
         this.vehiculos = vehiculos;
     }
-
 
     public int getId() {
         return id;
@@ -120,6 +125,14 @@ public class Persona {
 
     public void setRol(Roles rol) {
         this.rol = rol;
+    }
+
+    public EstadoUsuario getEstadoUsuario() {
+        return estadoUsuario;
+    }
+
+    public void setEstadoUsuario(EstadoUsuario estadoUsuario) {
+        this.estadoUsuario = estadoUsuario;
     }
 
     public Set<TbVehiculo> getVehiculos() {

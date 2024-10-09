@@ -1,5 +1,6 @@
 import {host} from "./config.js";
 import {fetchVehiculos} from "./vehiculoSelect.js";
+
 export async function renderEspacios() {
     const response = await fetch(`${host}/SvCasillero`);
     const espacios = await response.json();

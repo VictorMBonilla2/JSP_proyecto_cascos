@@ -6,7 +6,9 @@ import Logica.Logica_Rol;
 import Modelo.Persona;
 import Modelo.Roles;
 import Modelo.TbTipoDocumento;
+import Modelo.enums.EstadoUsuario;
 import Utilidades.JsonReader;
+import Utilidades.ResultadoOperacion;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -20,6 +22,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import static Utilidades.sendResponse.enviarRespuesta;
 
 @WebServlet(urlPatterns = "/usuarios")
 public class SvUsuarios extends HttpServlet {
@@ -52,6 +56,7 @@ public class SvUsuarios extends HttpServlet {
             jsonObject.put("correo", usuario.getCorreo());
             jsonObject.put("numero_documento", usuario.getId());
             jsonObject.put("fecha_nacimineto", usuario.getFechaNacimiento());
+            jsonObject.put("estado_usuario",usuario.getEstadoUsuario());
             JSONObject rolObject = new JSONObject();
             if (usuario.getRol() != null) {
                 rolObject.put("idRol", usuario.getRol().getId());
@@ -89,11 +94,15 @@ public class SvUsuarios extends HttpServlet {
             case "delete":
                 eliminarUsuario(request, response, jsonObject);
                 break;
+            case "change":
+                cambiarEstadoUsuario(request, response, jsonObject);
+                break;
             default:
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no reconocida");
                 break;
         }
     }
+
     private void editarUsuario(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         Persona persona = new Persona();
         try {
@@ -102,6 +111,7 @@ public class SvUsuarios extends HttpServlet {
             persona.setApellido(jsonObject.getString("apellido"));
             persona.setCorreo(jsonObject.getString("correo"));
             persona.setDocumento(Integer.parseInt(jsonObject.getString("numeroDocumento")));
+            persona.setEstadoUsuario(EstadoUsuario.ACTIVO);
             System.out.println(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             String fechaNacimientoStr = jsonObject.optString("fechaNacimiento");
             System.out.println("fechaNacimientoStr = " + fechaNacimientoStr);
@@ -118,15 +128,17 @@ public class SvUsuarios extends HttpServlet {
             TbTipoDocumento documento = logicaDocumentos.obtenerDocumentoID(idDocumento);
             persona.setTipoDocumento(documento);
 
-            logica_persona.actualizarPersona(persona);
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write("{\"status\":\"success\", \"message\":\"Usuario actualizado correctamente\"}");
+            ResultadoOperacion resultado = logica_persona.actualizarPersona(persona);
+            if (resultado.isExito()){
+                enviarRespuesta(response,HttpServletResponse.SC_OK,"success", resultado.getMensaje() );
+            }else{
+                enviarRespuesta(response,HttpServletResponse.SC_BAD_REQUEST,"error", resultado.getMensaje());
+            }
+
         } catch (ParseException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"status\":\"error\", \"message\":\"Formato de fecha incorrecto.\"}");
+            enviarRespuesta(response,HttpServletResponse.SC_BAD_REQUEST,"error","Formato de fecha incorrecto.");
         } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"status\":\"error\", \"message\":\"Error al actualizar usuario.\"}");
+            enviarRespuesta(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error","Error al actualizar usuario.");
         }
     }
     private void crearUsuario(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
@@ -137,6 +149,7 @@ public class SvUsuarios extends HttpServlet {
             persona.setCorreo(jsonObject.getString("correo"));
             persona.setDocumento(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             persona.setClave(jsonObject.getString("password"));
+            persona.setEstadoUsuario(EstadoUsuario.ACTIVO);
             System.out.println(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             String fechaNacimientoStr = jsonObject.optString("fechaNacimiento");
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -151,31 +164,43 @@ public class SvUsuarios extends HttpServlet {
             TbTipoDocumento documento = logicaDocumentos.obtenerDocumentoID(idDocumento);
             persona.setTipoDocumento(documento);
 
-            logica_persona.crearPersona(persona);
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write("{\"status\":\"success\", \"message\":\"Usuario actualizado correctamente\"}");
+            ResultadoOperacion resultado= logica_persona.crearPersona(persona);
+            if (resultado.isExito()){
+                enviarRespuesta(response,HttpServletResponse.SC_OK,"success", resultado.getMensaje() );
+            }else {
+                enviarRespuesta(response,HttpServletResponse.SC_BAD_REQUEST,"error", resultado.getMensaje() );
+            }
         } catch (ParseException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"status\":\"error\", \"message\":\"Formato de fecha incorrecto.\"}");
+            enviarRespuesta(response,HttpServletResponse.SC_BAD_REQUEST,"error","Formato de fecha incorrecto.");
         } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"status\":\"error\", \"message\":\"Error al actualizar usuario.\"}");
+            enviarRespuesta(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error","Error al actualizar usuario.");
         }
     }
     private void eliminarUsuario(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject)  throws IOException {
-
-        int documneto= jsonObject.getInt("id");
-
         try{
-            logica_persona.borrarUsuario(documneto);
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write("{\"status\":\"success\", \"message\":\"Usuario eliminado correctamente\"}");
+            int id= jsonObject.getInt("id");
+            ResultadoOperacion resultado= logica_persona.borrarUsuario(id);
+            if(resultado.isExito()){
+                enviarRespuesta(response,HttpServletResponse.SC_OK,"success", resultado.getMensaje());
+            }else {
+                enviarRespuesta(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error", resultado.getMensaje());
+            }
         } catch (Exception e){
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"status\":\"error\", \"message\":\"Error al actualizar usuario.\"}");
+            enviarRespuesta(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error","Error al actualizar usuario.");
         }
-
-
-
     }
+    private void cambiarEstadoUsuario(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
+        try{
+            int id= jsonObject.getInt("id");
+            ResultadoOperacion resultado= logica_persona.cambiarEstadoUsuario(id);
+            if(resultado.isExito()){
+                enviarRespuesta(response,HttpServletResponse.SC_OK,"success", resultado.getMensaje());
+            }else {
+                enviarRespuesta(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error", resultado.getMensaje());
+            }
+        } catch (Exception e){
+            enviarRespuesta(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error","Error al actualizar usuario.");
+        }
+    }
+
 }

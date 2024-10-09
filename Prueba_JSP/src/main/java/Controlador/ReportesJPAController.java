@@ -1,7 +1,6 @@
 package Controlador;
 
 
-import Modelo.TbRegistro;
 import Modelo.TbReportes;
 import Utilidades.JPAUtils;
 import jakarta.persistence.*;

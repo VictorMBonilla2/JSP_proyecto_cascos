@@ -4,43 +4,62 @@ import Controlador.PersistenciaController;
 import DTO.LoginDTO;
 import Modelo.Persona;
 import Modelo.TbVehiculo;
+import Modelo.enums.EstadoUsuario;
 import Utilidades.ResultadoOperacion;
 
-import javax.xml.transform.Result;
 import java.util.List;
 
 
 public class Logica_Persona {
     PersistenciaController controladora = new PersistenciaController();
-    public List<LoginDTO> validarIngreso(int documento, int tipoDocumento, String clave, String rol) {
+    public ResultadoOperacion validarIngreso(int documento, int tipoDocumento, String clave, String rol) {
+        System.out.println("Iniciando validación de ingreso para documento: " + documento);
 
-        List<LoginDTO> logeo = controladora.login(documento);
-        int rolInt = Integer.parseInt(rol);
+        // Obtener el LoginDTO correspondiente al documento
+        Persona persona = controladora.buscarPersonaDocumento(documento);
 
-        // Verifica si la lista está vacía antes de iterar
-        if (logeo.isEmpty()) {
-            System.out.println("No se encontraron registros para el documento.");
-            return null;
+        // Verificar si se encontró el documento
+        if (persona == null) {
+            System.err.println("Error: No se encontraron registros para el documento: " + documento);
+            return new ResultadoOperacion(false, "No se encontraron registros para el documento.");
         }
 
-        for (LoginDTO login : logeo) {
-            // Solo verificar si la clave es nula, el tipoDocumento no lo será.
-            if (login.getClave() != null) {
-                boolean tipoDocCoincide = login.getTipoDocumento() == tipoDocumento;
-                boolean claveCoincide = login.getClave().equals(clave);
-                boolean rolCoincide = login.getRolId() == rolInt;
+        System.out.println("Documento encontrado, continuando validación...");
 
-                System.out.println("La coincidencia con el Tipo de documento es: " + tipoDocCoincide);
-                System.out.println("La coincidencia con la clave es: " + claveCoincide);
-                System.out.println("La coincidencia con el rol es : " + rolCoincide);
-                if (tipoDocCoincide && claveCoincide && rolCoincide) {
-                    return logeo;
+        int rolInt = Integer.parseInt(rol);
+
+        // Validar las credenciales: tipo de documento, clave y rol
+        if (persona.getClave() != null) {
+            boolean tipoDocCoincide = persona.getTipoDocumento().getId() == tipoDocumento;
+            boolean claveCoincide = persona.getClave().equals(clave);
+            boolean rolCoincide = persona.getRol().getId() == rolInt;
+
+            System.out.println("Resultado de validaciones:");
+            System.out.println("Tipo de documento coincide: " + tipoDocCoincide);
+            System.out.println("Clave coincide: " + claveCoincide);
+            System.out.println("Rol coincide: " + rolCoincide);
+
+            if (tipoDocCoincide && claveCoincide && rolCoincide) {
+                // Verificar si el usuario está activo
+                if (persona.getEstadoUsuario() == EstadoUsuario.ACTIVO) {
+                    System.out.println("Usuario activo. Acceso permitido.");
+                    return new ResultadoOperacion(true, "Acceso permitido.");
+                } else {
+                    System.err.println("Error: El usuario está deshabilitado.");
+                    return new ResultadoOperacion(false, "El usuario está deshabilitado.");
                 }
+            } else {
+                System.err.println("Error: Las credenciales proporcionadas no coinciden.");
+                return new ResultadoOperacion(false, "Las credenciales proporcionadas no coinciden.");
             }
         }
 
-        return null;
+        // Retornar error si la clave no existe
+        System.err.println("Error: Clave no válida.");
+        return new ResultadoOperacion(false, "Clave no válida.");
     }
+
+
     //Proceso Registro.
     public ResultadoOperacion crearPersona(Persona perso){
         try {
@@ -54,18 +73,18 @@ public class Logica_Persona {
         }
     }
 
-    public boolean actualizarPersona(Persona user)  {
+    public ResultadoOperacion actualizarPersona(Persona user)  {
         try {
 
             String password = buscarpersonaPorId(user.getId()).getClave();
             user.setClave(password);
             controladora.EditarPersona(user);
-            return true; // La actualización fue exitosa
+            return new ResultadoOperacion(true,"Usuario actualizado correctamente"); // La actualización fue exitosa
         } catch (Exception e) {
             // Manejo del error
             System.err.println("Error al actualizar la persona: " + e.getMessage());
             e.printStackTrace(); // O puedes optar por loggear la excepción en lugar de imprimirla
-            return false; // La actualización falló
+            return new ResultadoOperacion(false,"Error al actualizar el usuario"); // La actualización falló
         }
     }
 
@@ -85,9 +104,14 @@ public class Logica_Persona {
         }
     }
 
-    public void borrarUsuario(int documneto) throws Exception {
-        controladora.eliminarUsuario(documneto);
-
+    public ResultadoOperacion borrarUsuario(int id) throws Exception {
+        try{
+            controladora.eliminarUsuario(id);
+            return new ResultadoOperacion(true, "Usuario eliminado correctamente");
+        }catch (Exception e){
+            System.err.println("Error al eliminar la persona: " + e.getMessage());
+            return new ResultadoOperacion(false, "Error al eliminar al usuario");
+        }
     }
 
     public List<Persona> ObtenerUsuariosPorPagina(int numeroPagina) {
@@ -119,5 +143,32 @@ public class Logica_Persona {
                 .findFirst()
                 .orElse(null);
     }
+
+    public ResultadoOperacion cambiarEstadoUsuario(int id) {
+        Persona usuario = buscarpersonaPorId(id);
+        if (usuario != null) {
+            EstadoUsuario nuevoEstado = usuario.getEstadoUsuario() == EstadoUsuario.ACTIVO ? EstadoUsuario.INACTIVO : EstadoUsuario.ACTIVO;
+            String accion = nuevoEstado == EstadoUsuario.ACTIVO ? "activado" : "deshabilitado";
+            try {
+                if(UsuarioEnEstacionamiento(id)){
+                    return new ResultadoOperacion(false, "El usuario esta ocupando un espacio actualmente");
+                }else{
+                    controladora.actualizarestadoUsuario(usuario, nuevoEstado);
+                    return new ResultadoOperacion(true, "El usuario ha sido " + accion + " exitosamente.");
+                }
+            } catch (Exception e) {
+                System.err.println("Hubo un error al " + accion + " el usuario: " + e.getMessage());
+                return new ResultadoOperacion(false, "Hubo un error al " + accion + " el usuario.");
+            }
+        } else {
+            return new ResultadoOperacion(false, "Usuario no encontrado.");
+        }
+    }
+    public boolean UsuarioEnEstacionamiento(int iduser) {
+        Persona usuarioEnEspacios = controladora.buscarUsuarioEnEspacios(iduser);
+
+        return usuarioEnEspacios != null;
+    }
+
 
 }

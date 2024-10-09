@@ -1,21 +1,25 @@
 package DTO;
 
+import Modelo.enums.EstadoUsuario;
+
 public class LoginDTO {
     private int id;
     private int documento;
     private int tipoDocumento;
     private String clave;
     private int rolId; // Cambiado a int para almacenar el ID del rol
-
+    private EstadoUsuario estadoUsuario;
+    //intentar pasarlo a string ave q tal
     public LoginDTO() {
     }
 
-    public LoginDTO(int id, int documento, int tipoDocumento, String clave, int rolId) {
+    public LoginDTO(int id, int documento, int tipoDocumento, String clave, int rolId, EstadoUsuario estadoUsuario) {
         this.id = id;
         this.documento = documento;
         this.tipoDocumento = tipoDocumento;
         this.clave = clave;
         this.rolId = rolId;
+        this.estadoUsuario = estadoUsuario;
     }
 
     public int getId() {
@@ -56,5 +60,13 @@ public class LoginDTO {
 
     public void setRolId(int rolId) {
         this.rolId = rolId;
+    }
+
+    public EstadoUsuario getEstadoUsuario() {
+        return estadoUsuario;
+    }
+
+    public void setEstadoUsuario(EstadoUsuario estadoUsuario) {
+        this.estadoUsuario = estadoUsuario;
     }
 }

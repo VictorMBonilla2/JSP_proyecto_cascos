@@ -2,7 +2,6 @@ package Logica;
 
 import Controlador.PersistenciaController;
 import Modelo.Persona;
-import Modelo.TbRegistro;
 import Modelo.TbReportes;
 
 import java.util.List;

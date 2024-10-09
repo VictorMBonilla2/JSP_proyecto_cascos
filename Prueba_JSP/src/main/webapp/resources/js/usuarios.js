@@ -1,5 +1,4 @@
 import {sendRequest} from "./ajax.js";
-import {host} from "./config.js";
 import {cargarRoles, cargarTiposDocumento} from "./utils/renderSelects.js";
 import {validarDocumento, validarEmail, validarFecha, validarTexto} from "./utils/validations.js";
 import {showErrorDialog} from "./alerts/error.js";

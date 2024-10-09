@@ -2,6 +2,7 @@ package Controlador;
 
 import DTO.LoginDTO;
 import Modelo.Persona;
+import Modelo.enums.EstadoUsuario;
 import Utilidades.JPAUtils;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -127,22 +128,7 @@ public class PersonaJpaController implements Serializable {
             }
         }
     }
-    public List<LoginDTO> login(int documento) {
-        EntityManager em = getEntityManager();
-        try {
-            TypedQuery<LoginDTO> query = em.createQuery(
-                    "SELECT new DTO.LoginDTO(p.id, p.documento, p.tipoDocumento.id, p.clave, p.rol.id) " +
-                            "FROM tb_persona p WHERE p.documento = :NumeroDoc", LoginDTO.class);
-            query.setParameter("NumeroDoc", documento);
-            List<LoginDTO> resultados = query.getResultList();
-            return resultados; // Devolver la lista de LoginDTOs
-        } catch (NoResultException e) {
-            System.out.println("No se encontraron resultados para el documento: " + documento);
-            return new ArrayList<>(); // Devolver una lista vacía en este caso
-        } finally {
-            em.close();
-        }
-    }
+
 
     public Persona findPersona(int id) {
         EntityManager em = getEntityManager();
@@ -184,6 +170,46 @@ public class PersonaJpaController implements Serializable {
         }
     }
 
+    public void actualizarEstado(Persona persona, EstadoUsuario nuevoEstado) throws Exception {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+
+            // Actualizar el estado del usuario directamente
+            persona.setEstadoUsuario(nuevoEstado);
+
+            // Guardar los cambios en la base de datos
+            em.merge(persona);
+
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+
+    public Persona buscarPersonaEnEspacio(int iduser) {
+        EntityManager em = getEntityManager();
+        try {
+            // Crear la consulta con TypedQuery para buscar el usuario en la tabla de espacios
+            TypedQuery<Persona> query = em.createQuery(
+                    "SELECT e.persona FROM TbEspacio e WHERE e.persona.id = :iduser",
+                    Persona.class
+            );
+            query.setParameter("iduser", iduser);
+
+            // Retornar el resultado de la consulta
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            System.out.println("No se encontró un usuario en el espacio con el ID: " + iduser);
+            return null; // Si no se encuentra la persona, retorna null
+        } finally {
+            em.close();
+        }
+    }
 
 
 

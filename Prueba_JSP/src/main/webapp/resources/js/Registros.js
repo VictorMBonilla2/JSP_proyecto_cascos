@@ -1,4 +1,5 @@
 import {host} from "./config.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
 
 

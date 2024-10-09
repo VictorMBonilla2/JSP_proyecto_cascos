@@ -4,7 +4,7 @@ import {showSuccessAlert} from "../alerts/success.js";
 import {showConfirmationDialog} from "../alerts/confirm.js";
 import {host} from "../config.js";
 import {validarCantidadCascos, validarPlaca, validarTexto} from "../utils/validations.js";
-import {cargarCiudades, cargarColores, cargarTiposDocumento, cargarTiposVehiculo} from "../utils/renderSelects.js";
+import {cargarCiudades, cargarColores, cargarTiposVehiculo} from "../utils/renderSelects.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const searchForm = document.getElementById('searhForm');
