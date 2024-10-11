@@ -224,7 +224,7 @@ function renderEspacioOcupado(espacio,tiporeportes) {
     const clone = template.content.cloneNode(true);
 
     // Seleccionar los elementos del template y asignar los valores
-    clone.querySelector('.casillero__title h1').textContent = `Espacio ${espacio.nombre}`;
+    clone.querySelector('.casillero__title h1').textContent = `${espacio.nombre}`;
     clone.querySelector('.casillero__title p').textContent = espacio.persona ? espacio.persona.documento : 'N/A';
     clone.querySelector('.info__casillero p').textContent = espacio.persona ? espacio.persona.documento : 'N/A';
     clone.querySelector('.info__tiempo p').textContent = espacio.vehiculo ? espacio.vehiculo.placa : 'N/A';

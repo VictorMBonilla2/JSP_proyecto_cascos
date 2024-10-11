@@ -177,14 +177,13 @@ public class SvUsuarios extends HttpServlet {
             persona.setCorreo(jsonObject.getString("correo"));
             persona.setDocumento(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             persona.setCelular(jsonObject.getString("numeroCelular"));
-            persona.setClave(jsonObject.getString("password"));
             persona.setEstadoUsuario(EstadoUsuario.ACTIVO);
             System.out.println(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             String fechaNacimientoStr = jsonObject.optString("fechaNacimiento");
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             Date fechaNacimiento = formatter.parse(fechaNacimientoStr);
             persona.setFechaNacimiento(fechaNacimiento);
-
+            String password = jsonObject.getString("password");
             int rol = Integer.parseInt(jsonObject.getString("rol"));
             Roles roles = logica_rol.ObtenerRol(rol);
             persona.setRol(roles);
@@ -193,7 +192,7 @@ public class SvUsuarios extends HttpServlet {
             TbTipoDocumento documento = logicaDocumentos.obtenerDocumentoID(idDocumento);
             persona.setTipoDocumento(documento);
 
-            ResultadoOperacion resultado= logica_persona.crearPersona(persona);
+            ResultadoOperacion resultado= logica_persona.crearPersona(persona, password);
             if (resultado.isExito()){
                 enviarRespuesta(response,HttpServletResponse.SC_OK,"success", resultado.getMensaje() );
             }else {

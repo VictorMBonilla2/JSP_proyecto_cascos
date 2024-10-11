@@ -46,7 +46,7 @@ public class Persona {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaExpiracionToken;
 
-    @OneToMany(mappedBy = "persona", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "persona", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<TbVehiculo> vehiculos = new LinkedHashSet<>();
 
 

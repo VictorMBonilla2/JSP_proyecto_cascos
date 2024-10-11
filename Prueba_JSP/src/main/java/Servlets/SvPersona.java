@@ -232,18 +232,31 @@ public class SvPersona extends HttpServlet {
     private void Registro(JSONObject jsonObject, HttpServletResponse resp) throws IOException, ParseException {
         try{
             String nombre = jsonObject.getString("nombre");
+            System.out.println(nombre);
             String apellido = jsonObject.getString("apellido");
+            System.out.println(apellido);
             int idDocumento = jsonObject.getInt("TipoDocumento");
+            System.out.println(idDocumento);
             int documento = jsonObject.getInt("documento");
+            System.out.println(documento);
             String correo = jsonObject.getString("correo");
+            System.out.println(documento);
             String clave = jsonObject.getString("password");
+            System.out.println(clave);
             String celular = jsonObject.getString("numeroCelular");
-            // Extraer el valor de fecha desde el JSON
+            System.out.println(celular);
             String fecha = jsonObject.getString("fechaNacimiento");
+            System.out.println(fecha);
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             Date fechaNacimiento = formatter.parse(fecha);
+            System.out.println(fechaNacimiento);
+
+            System.out.println("Antes de buscar tipo de documento");
             TbTipoDocumento tipoDocumento = documentos.obtenerDocumentoID(idDocumento);
+            System.out.println("despues de buscar tipo de documento");
+            System.out.println("Antes de buscar rol ");
             Roles rol = logica_rol.ObtenerRol(2);/*Debe ser el id de rol de aprendiz*/
+            System.out.println("despues de buscar rol ");
             Persona persona = new Persona();
             persona.setNombre(nombre);
             persona.setApellido(apellido);
@@ -253,8 +266,9 @@ public class SvPersona extends HttpServlet {
             persona.setCorreo(correo);
             persona.setClave(clave);
             persona.setRol(rol);
+            persona.setEstadoUsuario(EstadoUsuario.ACTIVO);
             persona.setFechaNacimiento(fechaNacimiento);
-            ResultadoOperacion resultado = logica_persona.crearPersona(persona);
+            ResultadoOperacion resultado = logica_persona.crearPersona(persona,clave);
 
             if (resultado.isExito()) {
                 System.out.println("Aprendiz creada exitosamente.");
@@ -266,7 +280,7 @@ public class SvPersona extends HttpServlet {
         } catch (ParseException e) {
             sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Formato de fecha incorrectos.");
         } catch (Exception e) {
-            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Error al actualizar usuario.");
+            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Error al crear usuario.");
         }
     }
 

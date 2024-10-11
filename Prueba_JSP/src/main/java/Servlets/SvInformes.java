@@ -27,9 +27,7 @@ public class SvInformes extends HttpServlet {
         String informeIdParam = request.getParameter("idInforme");
 
         if (informeIdParam == null || informeIdParam.isEmpty()) {
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("{\"error\": \"El parámetro idInforme es requerido\"}");
+            sendResponse.enviarRespuesta(response,HttpServletResponse.SC_BAD_REQUEST,"error", "El codigo es requerido");
             return;
         }
 

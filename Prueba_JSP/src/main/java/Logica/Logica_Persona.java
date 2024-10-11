@@ -65,10 +65,12 @@ public class Logica_Persona {
 
 
     //Proceso Registro.
-    public ResultadoOperacion crearPersona(Persona perso){
+    public ResultadoOperacion crearPersona(Persona perso , String password){
         try {
+            PasswordService passwordService = new PasswordService();
+            perso.setClave(passwordService.encriptarContrasena(password) );
             controladora.CrearPersona(perso);
-            return new ResultadoOperacion(true, "El Aprendiz se ha registrado");
+            return new ResultadoOperacion(true, "El Usuario se ha registrado");
         } catch (Exception e) {
             // Maneja la excepción, por ejemplo, registrando el error
             System.err.println("Error al crear la persona: " + e.getMessage());
