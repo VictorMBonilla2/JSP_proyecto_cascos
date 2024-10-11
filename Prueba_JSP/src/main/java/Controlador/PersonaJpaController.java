@@ -279,32 +279,55 @@ public class PersonaJpaController implements Serializable {
     public Persona buscarPersonaEmail(String email) {
         EntityManager em = getEntityManager();
         try {
-            // Crear la consulta para buscar por email
-            TypedQuery<Persona> query = em.createQuery("SELECT p FROM tb_persona p WHERE p.correo = :email", Persona.class);
-            query.setParameter("email", email);
+            // Crear el constructor de la consulta
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Persona> cq = cb.createQuery(Persona.class);
 
-            // Obtener una lista de resultados, y retornar el primero si existe
-            List<Persona> resultados = query.getResultList();
-            if (resultados.isEmpty()) {
-                return null;  // Retorna null si no se encuentra ningún resultado
-            } else {
-                return resultados.get(0);  // Retorna el primer resultado encontrado
-            }
+            // Definir la raíz de la consulta (tabla principal)
+            Root<Persona> personaRoot = cq.from(Persona.class);
+
+            // Realizar los LEFT JOINs para permitir la existencia de registros nulos en las relaciones
+            personaRoot.fetch("vehiculos", JoinType.LEFT);
+            personaRoot.fetch("rol", JoinType.LEFT);
+            personaRoot.fetch("tipoDocumento", JoinType.LEFT);
+
+            // Definir la condición de la consulta (WHERE) para buscar por email
+            cq.where(cb.equal(personaRoot.get("correo"), email));
+
+            // Ejecutar la consulta y devolver el resultado
+            return em.createQuery(cq).getSingleResult();
+        } catch (NoResultException e) {
+            System.out.println("No se encontró la persona con email: " + email);
+            return null;
         } finally {
             em.close();
         }
     }
 
 
+
     public Persona buscarPersonaToken(String token) {
         EntityManager em = getEntityManager();
         try {
-            // Crear la consulta para buscar por token
-            TypedQuery<Persona> query = em.createQuery("SELECT p FROM tb_persona p WHERE p.tokenRecuperacion = :token", Persona.class);
-            query.setParameter("token", token);
-            return query.getSingleResult(); // Asume que siempre se encontrará un resultado
+            // Crear el constructor de la consulta
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Persona> cq = cb.createQuery(Persona.class);
+
+            // Definir la raíz de la consulta (tabla principal)
+            Root<Persona> personaRoot = cq.from(Persona.class);
+
+            // Realizar los LEFT JOINs para permitir la existencia de registros nulos en las relaciones
+            personaRoot.fetch("vehiculos", JoinType.LEFT);
+            personaRoot.fetch("rol", JoinType.LEFT);
+            personaRoot.fetch("tipoDocumento", JoinType.LEFT);
+
+            // Definir la condición de la consulta (WHERE) para buscar por token
+            cq.where(cb.equal(personaRoot.get("tokenRecuperacion"), token));
+
+            // Ejecutar la consulta y devolver el resultado
+            return em.createQuery(cq).getSingleResult();
         } catch (NoResultException e) {
-            // Retorna null si no se encuentra ningún resultado
+            System.out.println("No se encontró la persona con token: " + token);
             return null;
         } finally {
             em.close();

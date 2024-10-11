@@ -2,6 +2,7 @@ package Servlets;
 
 import Logica.Logica_Persona;
 import Utilidades.JsonReader;
+import Utilidades.sendResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -32,16 +33,14 @@ public class SvRecuperarContrasena extends HttpServlet {
                 // Llamar al método que envía el correo electrónico
                 logicaPersona.enviarCorreoRecuperacion(email, enlaceRecuperacion);
 
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().write("{\"message\": \"Se ha enviado un correo con el enlace de recuperación.\"}");
+
+                sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", "Se ha enviado un correo de recuperación");
             } else {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().write("{\"error\": \"No se encontró el correo en el sistema.\"}");
+                sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "No se encontro el correo en el sistema");
             }
         } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"error\": \"Ocurrió un error al procesar la solicitud.\"}");
+
+            sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error interno en el sistema");
         }
     }
 }

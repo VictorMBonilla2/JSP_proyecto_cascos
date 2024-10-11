@@ -23,7 +23,7 @@
     </div>
 
     <div class="Inputs_Container">
-      <form action="SvPersona" class="formulario" id="registro">
+      <form  class="formulario" id="registro">
         <div class="formulario__inputs">
           <input type="hidden" id="rol" value="Aprendiz">
           <input type="text"  placeholder="Nombres" name="Nombres" id="Nombre" required>
@@ -34,6 +34,7 @@
 
           <input type="text"  placeholder="Numero de Documento" name="documento" id="documento" required>
           <input type="date" id="fecha" placeholder="fechaNacimineto" name="fecha" required>
+          <input type="text" id="numeroCelular" placeholder="numeroCelular" name="numeroCelular" required>
           <input type="email" id="email" placeholder="Correo Electronico" name="correo" required>
           <input type="password" id="passWord" placeholder="contraseña" name="password" required>
         </div>

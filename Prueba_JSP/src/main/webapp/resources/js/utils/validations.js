@@ -25,7 +25,7 @@ export function validarDescripcionReporte(descripcion) {
 
 // Valida que un campo no esté vacío y tenga un mínimo de caracteres
 export function validarTexto(valor, longitudMinima = 1) {
-    const soloLetras = /^[A-Za-z\s]+$/; // Expresión regular para permitir solo letras y espacios
+    const soloLetras = /^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/; // Expresión regular para permitir letras, acentos, y espacios
     return valor && valor.length >= longitudMinima && soloLetras.test(valor);
 }
 

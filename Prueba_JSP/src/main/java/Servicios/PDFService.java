@@ -40,8 +40,10 @@ public class PDFService {
         String sourceFile = URLDecoder.decode(
                 PDFService.class.getClassLoader().getResource("prueba.pdf").getPath(), "UTF-8");
         String temporalId = UUID.randomUUID().toString();
+        System.out.println(temporalId);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  // Puedes ajustar el formato según tus necesidades
-        String fechaFormateada = sdf.format(new Date());
+        Date hora = new Date();
+        String fechaFormateada = sdf.format(hora);
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(byteArrayOutputStream));  // Cambiado a ByteArrayOutputStream
@@ -99,7 +101,7 @@ public class PDFService {
 
             TbInformesUsuarios informe = new TbInformesUsuarios();
             informe.setPersona(persona);
-            informe.setUploadDate(new Date());
+            informe.setUploadDate(hora);
             informe.setFileData(pdfBytes);
             informe.setFileName("informe_usuario_" + persona.getDocumento() + ".pdf");
             informe.setFileType("application/pdf");
@@ -122,6 +124,7 @@ public class PDFService {
         PdfFormField field = form.getField(fieldName);
         if (field != null) {
             field.setValue(value);
+            System.out.println("Valor aplicado a " + fieldName + ": " + value);
         } else {
             System.out.println("El campo '" + fieldName + "' no fue encontrado.");
         }

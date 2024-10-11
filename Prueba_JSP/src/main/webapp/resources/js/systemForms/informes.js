@@ -24,9 +24,7 @@ document.addEventListener("submit",async (e)=>{
 })
 async function buscarYDescargar(form){
     const idInforme= form.get("codeinforme");
-
     const response = await fetch(`${host}/descargarInforme?idInforme=${idInforme}`)
-
     if (response.ok) {
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
@@ -38,6 +36,7 @@ async function buscarYDescargar(form){
         a.remove(); // Remover el elemento de anclaje después de la descarga
     } else {
         const result = await response.json();
-        showErrorDialog(result.error);  // Mostrar mensaje de error si ocurre
+        console.log(result)
+        showErrorDialog(result.message);  // Mostrar mensaje de error si ocurre
     }
 }
