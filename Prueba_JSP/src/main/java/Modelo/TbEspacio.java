@@ -13,6 +13,7 @@ public class TbEspacio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_espacio", nullable = false)
     private Integer id_espacio;
+    @Column( nullable = false)
     private String nombre;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_vehiculo_fk")
@@ -23,7 +24,7 @@ public class TbEspacio {
     private Date hora_entrada;
     private Integer cantidad_cascos;
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado_espacio")
+    @Column(name = "estado_espacio", nullable = false)
     private EstadoEspacio estado_espacio;
     // Foránea de la clase Casillero
     @ManyToOne(fetch = FetchType.EAGER)

@@ -23,11 +23,8 @@
     </div>
     <h1 class="Container__title">Iniciar Sesión</h1>
 
-    <div id="Error" class="Container__error">
-      <p>Credenciales incorrectas. Intente nuevamente.</p>
-    </div>
-    <div id="ErrorOnlydigitos" class="Container__error">
-      <p>Ingrese solo números en Documento. Intente nuevamente.</p>
+    <div id="Error" class="Container__error" style="display:none;">
+      <p id="errorMessage"></p>
     </div>
 
     <div class="Inputs_Container">
@@ -44,14 +41,15 @@
         <button  type="submit" class="formulario_login__button">Iniciar Sesión</button>
       </form>
     </div>
-    <p class="Container__forget">¿Has olvidado tu contraseña?</p>
+    <a href="forgetPassword.jsp"> <p class="Container__forget">¿Has olvidado tu contraseña?</p></a>
+
 
     <a href="registro_aprendices.jsp" class="Container__register">Nuevo Aprendiz</a>
 
   </section>
 
 </main>
-<script src="resources/js/Login.js"></script>
+<script type="module" src="resources/js/Login.js"></script>
 </body>
 
 </html>

@@ -19,15 +19,21 @@
     }
 %>
 <section class="main_container__conf_Sistema">
-    <div class="users_list__container">
+    <a href="UsuariosDesabilitados.jsp"> Ver desabilitados</a>
+    <div class="users_list__container" id="listaHabilitados">
         <div class="user_list__item new_user__item">
             Crear Nuevo Usuario
         </div>
-
     </div>
-
+    <div id="paginadorHabilitados"></div> <!-- Paginador dinámico -->
     <script type="module" src="resources/js/usuarios.js"></script>
 </section>
+
+<template id="new-item__list">
+    <div class="user_list__item new_user__item">
+        Crear Nuevo Usuario
+    </div>
+</template>
 
 <template id="item__list">
     <div class="user_list__item">
@@ -49,7 +55,31 @@
                         id="edit_button">Editar</button>
                 <button
                         class="user_button_delete button_secundary button--delete"
-                        id="delete_button">Eliminar</button>
+                        id="disable_button">Deshabilitar</button>
+            </div>
+        </div>
+
+    </div>
+</template>
+<template id="item__list--disable">
+    <div class="user_list__item">
+        <div class="users_list__data">
+            <div class="user_item user_item_document">
+                <h2>Documento</h2>
+                <p></p>
+            </div>
+            <div class="user_item user_item_name">
+                <h2>Nombre</h2>
+                <p></p>
+            </div>
+            <div class="user_item user_item_rol">
+                <h2>Rol</h2>
+                <p></p>
+            </div>
+            <div class="user_item user_item__buttons">
+                <button
+                        class="user_button_delete button_secundary button--delete"
+                        id="enable_button">Habilitar</button>
             </div>
         </div>
 
@@ -72,6 +102,10 @@
                 <div class="input_container">
                     <label for="Correo">Correo Electronico</label>
                     <input type="text" id="Correo">
+                </div>
+                <div class="input_container">
+                    <label for="numero_celular">Numero Celular</label>
+                    <input type="text" id="numero_celular">
                 </div>
                 <div class="input_container">
                     <label for="Tipo_documento"> Tipo de documento</label>
@@ -118,6 +152,10 @@
                 <div class="input_container">
                     <label for="Correo_new">Correo Electronico</label>
                     <input type="text" id="Correo_new">
+                </div>
+                <div class="input_container">
+                    <label for="numero_celular_new">Numero Celular</label>
+                    <input type="text" id="numero_celular_new">
                 </div>
                 <div class="input_container">
                     <label for="Tipo_documento_new"> Tipo de documento</label>

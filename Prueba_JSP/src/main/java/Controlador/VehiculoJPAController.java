@@ -1,6 +1,8 @@
 package Controlador;
 
+import Modelo.Persona;
 import Modelo.TbVehiculo;
+import Modelo.enums.EstadoVehiculo;
 import Utilidades.JPAUtils;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -154,4 +156,43 @@ public class VehiculoJPAController implements Serializable {
         }
     }
 
+    public void actualizarEstado(TbVehiculo vehiculo, EstadoVehiculo nuevoEstado) {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+
+            // Actualizar el estado del usuario directamente
+            vehiculo.setEstadoVehiculo(nuevoEstado);
+
+            // Guardar los cambios en la base de datos
+            em.merge(vehiculo);
+
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+    public TbVehiculo buscarVehiculoEnEspacio(int idVehiculo) {
+        EntityManager em = getEntityManager();
+        try {
+            // Crear la consulta con TypedQuery para buscar el vehiuclo en la tabla de espacios
+            TypedQuery<TbVehiculo> query = em.createQuery(
+                    "SELECT e.vehiculo FROM TbEspacio e WHERE e.vehiculo.id_vehiculo = :idvehiculo",
+                    TbVehiculo.class
+            );
+            query.setParameter("idvehiculo", idVehiculo);
+
+            // Retornar el resultado de la consulta
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            System.out.println("No se encontró un usuario en el espacio con el ID: " + idVehiculo);
+            return null; // Si no se encuentra la persona, retorna null
+        } finally {
+            em.close();
+        }
+    }
 }

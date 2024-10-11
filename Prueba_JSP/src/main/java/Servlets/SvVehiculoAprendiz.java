@@ -6,6 +6,7 @@ import Logica.Logica_TipoVehiculo;
 import Logica.Logica_Vehiculo;
 import Modelo.*;
 import Modelo.enums.ColorVehiculo;
+import Modelo.enums.EstadoVehiculo;
 import Utilidades.ResultadoOperacion;
 import Utilidades.sendResponse;
 import jakarta.servlet.ServletException;
@@ -13,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -154,6 +156,7 @@ public class SvVehiculoAprendiz extends HttpServlet {
         jsonObject.put("color_vehiculo", vehiculo.getColorVehiculo().name());
         jsonObject.put("cantidad_cascos", vehiculo.getCantCasco());
         jsonObject.put("ciudad", vehiculo.getCiudadVehiculo().getId());
+        jsonObject.put("estadoVehiculo", vehiculo.getEstadoVehiculo());
 
         return jsonObject;
     }
@@ -164,7 +167,6 @@ public class SvVehiculoAprendiz extends HttpServlet {
         try {
             // Obtener el JSON del cuerpo de la solicitud
             JSONObject jsonObject = parsearJson(req);
-
             // Procesar el JSON
             String action = jsonObject.optString("action");
             System.out.println(action);
@@ -203,6 +205,15 @@ public class SvVehiculoAprendiz extends HttpServlet {
             Integer cantidad_cascos = jsonObject.getInt("cantCascoVehiculo");
             int ciudadId = jsonObject.getInt("ciudadVehiculo"); // Usamos el ID de la ciudad
             String color = jsonObject.getString("colorVehiculo");
+            String estado = jsonObject.getString("estadoVehiculo");
+
+            EstadoVehiculo estadoVehiculo;
+            try {
+                estadoVehiculo = EstadoVehiculo.valueOf(estado);
+            } catch (IllegalArgumentException e) {
+                enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Estado inválido proporcionado.");
+                return;
+            }
 
             // Validar el color con el Enum antes de continuar
             ColorVehiculo colorVehiculo;
@@ -262,6 +273,7 @@ public class SvVehiculoAprendiz extends HttpServlet {
             vehiculo.setTipovehiculo(tipovehiculo);
             vehiculo.setMarcaVehiculo(marca);
             vehiculo.setModeloVehiculo(modelo);
+            vehiculo.setEstadoVehiculo(estadoVehiculo);
 
             // Actualizar el vehículo
             ResultadoOperacion result = logica_vehiculo.actualizarVehiculo(vehiculo);
@@ -288,6 +300,15 @@ public class SvVehiculoAprendiz extends HttpServlet {
             Integer cantidad_cascos = jsonObject.getInt("cantCascoVehiculo");
             int ciudadId = jsonObject.getInt("ciudadVehiculo"); // Suponemos que se envía un ID de ciudad
             String color = jsonObject.getString("colorVehiculo");
+            String estado = jsonObject.getString("estadoVehiculo");
+
+            EstadoVehiculo estadoVehiculo;
+            try {
+                estadoVehiculo = EstadoVehiculo.valueOf(estado);
+            } catch (IllegalArgumentException e) {
+                enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Estado inválido proporcionado.");
+                return;
+            }
 
             // Validar el enum del color del vehículo
             ColorVehiculo colorVehiculo;
@@ -334,6 +355,7 @@ public class SvVehiculoAprendiz extends HttpServlet {
             vehiculo.setTipovehiculo(tipovehiculo);
             vehiculo.setMarcaVehiculo(marca);
             vehiculo.setModeloVehiculo(modelo);
+            vehiculo.setEstadoVehiculo(estadoVehiculo);
 
             // Guardar el vehículo en la base de datos
             ResultadoOperacion result = logica_vehiculo.crearVehiculo(vehiculo);
@@ -380,6 +402,22 @@ public class SvVehiculoAprendiz extends HttpServlet {
             System.err.println("Error inesperado al eliminar el vehículo: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al eliminar el vehículo.");
         }
+    }
+    private void DeshabilarVehiculo(JSONObject jsonObject, HttpServletResponse response, HttpSession session) throws IOException {
+
+        int idVehiculo = jsonObject.getInt("idVehiculo");
+        if (idVehiculo <= 0) {
+            sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "ID de vehículo inválido.");
+            return;
+        }
+        ResultadoOperacion resultado=  logica_vehiculo.cambiarEstadoVehiculo(idVehiculo);
+
+        if (resultado.isExito()){
+            sendResponse.enviarRespuesta(response,HttpServletResponse.SC_BAD_REQUEST,"success", resultado.getMensaje());
+        } else {
+            sendResponse.enviarRespuesta(response,HttpServletResponse.SC_BAD_REQUEST,"error", resultado.getMensaje());
+        }
+
     }
 
 }

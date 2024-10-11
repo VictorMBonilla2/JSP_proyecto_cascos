@@ -61,6 +61,8 @@ public class SvCasilleros {
                         persona.put("id_persona", espacio.getPersona().getId());
                         persona.put("nombreAprendiz", espacio.getPersona().getNombre());
                         persona.put("documento", espacio.getPersona().getDocumento());
+                        persona.put("correo",espacio.getPersona().getCorreo());
+                        persona.put("celular",espacio.getPersona().getCelular());
                         jsonEspacio.put("persona", persona);
                     } else {
                         jsonEspacio.put("persona", JSONObject.NULL);

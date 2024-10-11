@@ -3,42 +3,29 @@ import {cargarRoles, cargarTiposDocumento} from "./utils/renderSelects.js";
 import {validarDocumento, validarEmail, validarFecha, validarTexto} from "./utils/validations.js";
 import {showErrorDialog} from "./alerts/error.js";
 import {showSuccessAlert} from "./alerts/success.js";
-
+import {showConfirmationDialog} from "./alerts/confirm.js";
+const formTemplate = document.querySelector("#template_form").content;
+const formNewTemplate = document.querySelector("#template_form_newUser").content;
+const itemTemplate = document.querySelector("#item__list").content;
+const newitemTemplate= document.querySelector("#new-item__list").content;
 document.addEventListener("DOMContentLoaded", async () => {
-    const editButtons = document.querySelectorAll(".user_button_edit");
-    const deleteButtons = document.querySelectorAll(".user_button_delete");
-    const lista = document.querySelector(".users_list__container");
-    const formTemplate = document.querySelector("#template_form").content;
-    const formNewTemplate = document.querySelector("#template_form_newUser").content;
-    const itemTemplate = document.querySelector("#item__list").content;
 
-    let personas = await ObtenerUsuarios("1");
-    console.log(personas)
-    if (personas.length > 0) {
-        personas.forEach((persona, index) => {
-            const clone = document.importNode(itemTemplate, true);
-
-            // Modificar el contenido del clon
-            clone.querySelector(".user_list__item").setAttribute('data-user', persona.idUser);
-
-            clone.querySelector(".user_item_document > p").textContent = persona.documento;
-
-            clone.querySelector(".user_item_name > p").textContent = persona.nombre;
-
-            clone.querySelector(".user_item_rol > p").textContent = persona.rol.nombre;
-
-            clone.querySelector(".user_button_edit").setAttribute('data-edit', persona.idUser);
-
-            clone.querySelector(".user_button_delete").setAttribute('data-delete', persona.idUser);
-
-            // Insertar el clon modificado en la lista
-            lista.appendChild(clone);
-        })
-    } else {
-        console.log("no hay personas")
+    let personasActivas = await ObtenerUsuariosActivos("1");
+    let personas = personasActivas.usuarios;
+    if (personasActivas.usuarios.length > 0) {
+        actualizarListaUsuarios(personasActivas.usuarios, "listaHabilitados");
+        crearPaginador(personasActivas.totalPaginas, 1);
     }
+
     document.addEventListener("click", async (e) => {
         console.log(e.target)
+
+        if(e.target.matches("#button-habilitados")){
+            openTab(e.target, 'habilitados')
+        }
+        if(e.target.matches("#button-deshabilitados")){
+            openTab(e.target, 'deshabilitados')
+        }
 
         if (e.target.matches(".new_user__item")) {
             const user_item = e.target;
@@ -99,7 +86,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             await cargarRoles('Rol_new');
             await cargarTiposDocumento('Tipo_documento_new')
         }
-
         if (e.target.matches("#edit_button")) {
 
             let data_edit = e.target.getAttribute("data-edit");
@@ -145,10 +131,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             clone.querySelector("#Apellido").value = dato_usuario.apellido;
             clone.querySelector("#Correo").value = dato_usuario.correo;
             clone.querySelector("#numero_documento").value = dato_usuario.documento;
-            clone.querySelector("#Fecha_nacimiento").value = dato_usuario.fecha_nacimineto;
+            clone.querySelector("#Fecha_nacimiento").value = dato_usuario.fecha_nacimiento;
             clone.querySelector("#idUser").value = dato_usuario.idUser;
-            clone.querySelector("#Tipo_documento").value = dato_usuario.doc.idDocumento;
-            clone.querySelector("#Rol").value = dato_usuario.rol.idRol;
+            clone.querySelector("#numero_celular").value= dato_usuario.numeroCelular;
+
             // Agregar el botón de cancelar
             const cancelButton = clone.querySelector(".cancel-button");
             if (cancelButton) {
@@ -167,29 +153,94 @@ document.addEventListener("DOMContentLoaded", async () => {
             }, 2100);
             await cargarRoles('Rol');
             await cargarTiposDocumento('Tipo_documento')
+
+            document.querySelector("#Tipo_documento").value = dato_usuario.doc.idDocumento;
+            document.querySelector("#Rol").value = dato_usuario.rol.idRol;
         }
-        if (e.target.matches("#delete_button")) {
+        if (e.target.matches("#disable_button")) {
 
-            let data_delete = e.target.getAttribute("data-delete");
-
+            let data_disable = parseInt(e.target.getAttribute("data-disable"));
+            console.log(data_disable)
             // Filtrar la lista de personas por idUser
-            const personaSeleccionada = personas.filter(persona => persona.idUser == data_delete);
-
+            const personaSeleccionada = personas.filter(persona => persona.idUser == data_disable);
+            console.log(personaSeleccionada)
             if (personaSeleccionada.length > 0) {
-                let advertencia = confirm(`Estas seguro de eliminar al usuario ${personaSeleccionada[0].nombre} ${personaSeleccionada[0].apellido}`);
-                if (advertencia) {
-                    let response = borrarUsuario(personaSeleccionada[0]);
-                    if (response) {
-                        const user_item = document.querySelector(`[data-user="${data_delete}"]`);
-                        user_item.innerHTML = "";
-                    }
-                }
+                showConfirmationDialog("¿Deshabilitar Usuario?",
+                    "Al deshabilitar al usuario impediras el acceso a este usuario. El sistema no permite " +
+                    "deshabilitar usuario los cuales esten usando espacios",
+                    ()=>deshabilitarUsuario(personaSeleccionada[0]),
+                    ()=>console.log("Acción cancelada"))
             } else {
                 console.log("Usuario no encontrado.");
             }
         }
     });
 });
+
+function crearPaginador(totalPaginas, paginaActual) {
+    const paginadorContainer =  document.getElementById('paginadorHabilitados');
+
+    paginadorContainer.innerHTML = ''; // Limpiar el paginador antes de crear nuevos botones
+    for (let i = 1; i <= totalPaginas; i++) {
+        const boton = document.createElement('button');
+        boton.textContent = i;
+        boton.className = i === paginaActual ? 'active' : '';
+        boton.addEventListener('click', () => cambiarPagina(i));
+        paginadorContainer.appendChild(boton);
+    }
+}
+async function cambiarPagina(pagina, tipo) {
+    let personas;
+    if (tipo === 'habilitados') {
+        personas = await ObtenerUsuariosActivos(pagina);
+    }
+    if (personas && personas.usuarios.length > 0) {
+        if (tipo === 'habilitados') {
+            actualizarListaUsuarios(personas.usuarios, 'listaHabilitados');
+        }
+        crearPaginador(personas.totalPaginas, pagina);
+    }
+}
+function actualizarListaUsuarios(usuarios, contenedorId) {
+    const lista = document.getElementById(contenedorId);
+    lista.innerHTML = '';// Limpiar la lista antes de agregar nuevos usuarios
+    lista.appendChild(document.importNode(newitemTemplate, true));
+    usuarios.forEach(persona => {
+        // Seleccionar el template correcto según el estado del usuario
+        const clone = document.importNode(itemTemplate, true);
+        clone.querySelector(".user_list__item").setAttribute('data-user', persona.idUser);
+        clone.querySelector(".user_item_document > p").textContent = persona.documento;
+        clone.querySelector(".user_item_name > p").textContent = persona.nombre;
+        clone.querySelector(".user_item_rol > p").textContent = persona.rol.nombre;
+        clone.querySelector(".user_button_edit").setAttribute('data-edit', persona.idUser);
+        clone.querySelector(".user_button_delete").setAttribute('data-disable', persona.idUser);
+        lista.appendChild(clone);
+    });
+}
+
+async function ObtenerUsuariosActivos(Pagina_Actual) {
+    const response = await fetch(`http://localhost:8080/Prueba_JSP_war_exploded/usuarios?Pagination=${Pagina_Actual}&estado=activo`);
+
+    if (response.ok) {
+        const data = await response.json();
+
+        if (data.usuarios.length === 0) {
+            console.log('No se encontraron personas activas.');
+            return { usuarios: [], totalPaginas: 0, paginaActual: 0, totalRegistros: 0 }; // Respuesta vacía con estructura adecuada
+        } else {
+            // Retorna los datos obtenidos
+            return {
+                usuarios: data.usuarios,
+                totalPaginas: data.totalPaginas,
+                paginaActual: data.paginaActual,
+                totalRegistros: data.totalRegistros
+            };
+        }
+    } else {
+        console.log('Error al obtener usuarios activos.');
+        return { usuarios: [], totalPaginas: 0, paginaActual: 0, totalRegistros: 0 }; // Respuesta vacía con estructura adecuada
+    }
+}
 
 function retirarFormsActivos() {
     const formActive = document.querySelector('.user_list__item.form_active .user_list__form');
@@ -202,23 +253,6 @@ function retirarFormsActivos() {
 
     });
 }
-
-
-async function ObtenerUsuarios(Pagina_Actual) {
-
-    const response = await fetch(`http://localhost:8080/Prueba_JSP_war_exploded/usuarios?Pagination=${Pagina_Actual}`);
-    if (response.status === 204) {
-        console.log('No se encontraron personas.');
-        return [];
-    }
-    const data = await response.json();
-    if (data.length === 0) {
-        console.log('No se encontraron Personas.');
-    } else {
-        return data;
-    }
-}
-
 async function editUser(form) {
     console.log(form)
     const nombre = form.querySelector("#Nombre").value
@@ -230,6 +264,7 @@ async function editUser(form) {
     const fechaFormateada = formatFecha(fechaNacimientoInput);
     const rol = form.querySelector("#Rol").value
     const idUser = form.querySelector("#idUser").value
+    const numeroCelular= form.querySelector("#numero_celular").value
     const data = {
         "action": "edit",
         "nombre": nombre,
@@ -239,7 +274,8 @@ async function editUser(form) {
         "numeroDocumento": numeroDocumento,
         "fechaNacimiento": fechaFormateada,
         "rol": rol,
-        "idUser":idUser
+        "idUser":idUser,
+        "numeroCelular": numeroCelular
     }
 
         const response = await sendRequest("/Prueba_JSP_war_exploded/usuarios", data);
@@ -251,24 +287,28 @@ async function editUser(form) {
             showErrorDialog(response.message)
         }
 }
-
-async function borrarUsuario(persona) {
+async function deshabilitarUsuario(persona) {
+    console.log(persona)
     const id_persona = persona.idUser;
     console.log(id_persona)
     const data = {
-        "action": "delete",
+        "action": "change",
         "id": id_persona
     }
-
     try {
-        await sendRequest("/Prueba_JSP_war_exploded/usuarios", data);
-        console.log("Solicitud enviada con éxito");
-        return true
+        const response = await sendRequest("/Prueba_JSP_war_exploded/usuarios", data);
+        if (response.status === "success") {
+            const user_item = document.querySelector(`[data-user="${persona.idUser}"]`);
+            user_item.innerHTML = "";
+            console.log("Modelo creado correctamente");
+            showSuccessAlert(response.message);
+        } else {
+            showErrorDialog(response.message);
+        }
     } catch (error) {
         console.error("Error al enviar la solicitud:", error);
         return false
     }
-
 }
 async function crearUsuario(form) {
 
@@ -283,6 +323,7 @@ async function crearUsuario(form) {
     const password = form.querySelector("#password_new").value;
     const fechaFormateada = formatFecha(fechaNacimientoInput);
     const rol = form.querySelector("#Rol_new").value
+    const numeroCelular= form.querySelector("#numero_celular_new").value
     const data = {
         "action": "add",
         "nombre": nombre,
@@ -292,7 +333,8 @@ async function crearUsuario(form) {
         "numeroDocumento": numeroDocumento,
         "fechaNacimiento": fechaFormateada,
         "password": password,
-        "rol": rol
+        "rol": rol,
+        "numeroCelular":numeroCelular
     }
 
     const response =  await sendRequest("/Prueba_JSP_war_exploded/usuarios", data);
@@ -304,8 +346,6 @@ async function crearUsuario(form) {
     }
 
 }
-
-
 function formatFecha(inputDate) {
     const date = new Date(inputDate);
     const day = String(date.getDate()).padStart(2, '0');
@@ -372,7 +412,6 @@ function validarFormularioNew(form) {
 
     return true; // Si todo es válido
 }
-
 function verificarFormularioEdit(form) {
     const nombre = form.querySelector("#Nombre").value;
     const apellido = form.querySelector("#Apellido").value;

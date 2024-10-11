@@ -42,6 +42,10 @@ ul.list__buttons a {
 .logo__img {
     width: 50%;
 }
+.perfil-button > img{
+    width: 45px;
+    height: 45px;
+}
 
 #right-sidebar {
     display: none; /* Oculto por defecto */

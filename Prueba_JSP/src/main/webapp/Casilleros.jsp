@@ -49,6 +49,7 @@
                 <div class="info__casillero">
                     <h3>Documento</h3>
                     <p>{documento}</p>
+                    <span class="tooltip-text">Este es el cuadro de texto que aparece al hacer hover</span>
                 </div>
                 <div class="info__tiempo">
                     <h3>Placa</h3>
@@ -65,6 +66,9 @@
                 </button>
                 <button class="button_secundary button--edit botones__ajustar" data-edit="editmodal{espacioId}">
                     Ajustar
+                </button>
+                <button class="button_secundary button--edit botones__info" data-edit="infomodal{espacioId}">
+                    info
                 </button>
             </div>
         </div>
@@ -185,6 +189,27 @@
                         <button type="submit" class="button_primary">Añadir</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</template>
+<template id="modal-info-template">
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="nameEspacio"></h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h2>Informacion de contacto</h2>
+                <div>
+                    <h3>Correo electronico</h3>
+                    <p class="correo-info"></p>
+                </div>
+                <div>
+                    <h3>Numero celular</h3>
+                    <p class="celular-info"></p>
+                </div>
             </div>
         </div>
     </div>

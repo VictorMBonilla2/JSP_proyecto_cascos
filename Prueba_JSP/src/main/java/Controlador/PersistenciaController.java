@@ -1,8 +1,8 @@
 package Controlador;
 
-import DTO.LoginDTO;
 import Modelo.*;
 import Modelo.enums.EstadoUsuario;
+import Modelo.enums.EstadoVehiculo;
 import jakarta.persistence.PersistenceException;
 
 import java.util.List;
@@ -22,6 +22,8 @@ public class PersistenciaController {
     CiudadVehiculosJPAController ciudadVehiculo= new CiudadVehiculosJPAController();
     MarcaVehiculoJPAController marcaVehiculoJPA = new MarcaVehiculoJPAController();
     ModeloVehiculoJPAController modeloVehiculoJPA = new ModeloVehiculoJPAController();
+    InformeJPAController informaJPA =  new InformeJPAController();
+
 
 
 
@@ -34,6 +36,17 @@ public class PersistenciaController {
         return persoJpa.findPersonaEntities();
     }
 
+    public long contarPersonas() {
+        return persoJpa.contarUsuarios();
+    }
+
+    public int ContarUsuariosActivos(){
+        return persoJpa.contarUsuariosActivos();
+    }
+
+    public int ContarUsuariosInacvitos(){
+        return persoJpa.contarUsuariosInactivos();
+    }
 
     public Persona buscarpersona(int documento) {
         return persoJpa.findPersona(documento);
@@ -42,9 +55,24 @@ public class PersistenciaController {
     public void EditarPersona(Persona user) throws Exception {
         persoJpa.edit(user);
     }
+    public Persona buscarPersonaPorToken(String token) {
+        return persoJpa.buscarPersonaToken(token);
+    }
+    public Persona buscarPersonaPorCorreo(String email) {
+        return persoJpa.buscarPersonaEmail(email);
+    }
+
     public List<Persona> TraerPersonasPorPagina(int data_inicio, int data_fin) {
 
         return  persoJpa.findPersonaEntities(data_fin,data_inicio);
+    }
+    public List<Persona> TraerPersonasActivas(int data_inicio, int data_fin) {
+
+        return  persoJpa.findUsuariosActivos(data_fin,data_inicio);
+    }
+    public List<Persona> TraerPersonasInactivas(int data_inicio, int data_fin) {
+
+        return  persoJpa.findUsuariosInactivos(data_fin,data_inicio);
     }
 
     public List<Persona> ObtenerPersonas() {
@@ -165,8 +193,16 @@ public class PersistenciaController {
         vehiculoJPA.edit(vehiculo);
     }
 
+    public void actualizarestadoVehiculo(TbVehiculo vehiculo, EstadoVehiculo nuevoEstado) {
+        vehiculoJPA.actualizarEstado(vehiculo, nuevoEstado);
+    }
+
     public void eliminarVehiculo(int idVehiculo) throws Exception {
         vehiculoJPA.destroy(idVehiculo);
+    }
+
+    public TbVehiculo buscarVehiculoEnEspacios(int idVehiculo) {
+        return vehiculoJPA.buscarVehiculoEnEspacio(idVehiculo);
     }
 
 
@@ -423,6 +459,17 @@ public class PersistenciaController {
         ciudadVehiculo.destroy(idCiudad);
     }
 
+    // JPA INFORMES
+    public void subirInforme(TbInformesUsuarios informe) {
+        informaJPA.create(informe);
+    }
+
+    public TbInformesUsuarios buscarInformePorId(Long informeId) {
+        return informaJPA.findInforme(informeId);
+    }
+    public TbInformesUsuarios buscarInformePorCodigo(String informeCode) {
+        return informaJPA.findInformeByCodigo(informeCode);
+    }
 
 
 }

@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     await cargarTiposVehiculo('tipoVehiculo')
     tipoVehiculoSelect.dispatchEvent(new Event('change'));
 });
+
+
+
 // Lógica para cargar las marcas cuando se selecciona un tipo de vehículo
 tipoVehiculoSelect.addEventListener('change', async function () {
     const tipoVehiculoId = tipoVehiculoSelect.value;
@@ -106,7 +109,8 @@ async function crearVehiculo(formData, DocumentoAprendiz) {
         "tipoVehiculo":formData.get("tipoVehiculo"),
         "cantCascoVehiculo":formData.get("cascosVehiculo"),
         "colorVehiculo":formData.get("colorVehiculo"),
-        "ciudadVehiculo":formData.get("ciudadVehiculo")
+        "ciudadVehiculo":formData.get("ciudadVehiculo"),
+        "estadoVehiculo": formData.get("estadoVehiculo")
     }
     console.log(data)
     const response = await sendRequest(`${host}/VehiculoAprendiz`, data);
@@ -132,7 +136,8 @@ async function editarVehiculo(formData, DocumentoAprendiz) {
         "tipoVehiculo":formData.get("tipoVehiculo"),
         "cantCascoVehiculo":formData.get("cascosVehiculo"),
         "colorVehiculo":formData.get("colorVehiculo"),
-        "ciudadVehiculo":formData.get("ciudadVehiculo")
+        "ciudadVehiculo":formData.get("ciudadVehiculo"),
+        "estadoVehiculo": formData.get("estadoVehiculo")
     }
     const response = await sendRequest(`${host}/VehiculoAprendiz`, data);
 
@@ -191,7 +196,7 @@ async function llenarFormulario(vehiculo) {
     form.querySelector("#placaVehiculo").value = vehiculo.placa;
     form.querySelector("#ciudadVehiculo").value = vehiculo.ciudad;
     form.querySelector("#colorVehiculo").value = vehiculo.color_vehiculo;
-
+    form.querySelector("#estadoVehiculo").value = vehiculo.estadoVehiculo;
     form.querySelector("#cantCasco").value = vehiculo.cantidad_cascos;
 
     const cascoCantidad = vehiculo.cantidad_cascos;

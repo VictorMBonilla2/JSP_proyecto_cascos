@@ -13,7 +13,9 @@ public class TbReportes {
     private Integer id_reporte;
 
     private Date fecha_reporte;
+    @Column(nullable = false)
     private String nombre_reporte;
+    @Column(nullable = false)
     private String descripcion_reporte;
 
     @Enumerated(EnumType.STRING)
@@ -29,8 +31,8 @@ public class TbReportes {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_gestor", referencedColumnName = "id")
     private Persona gestor;
-    // Campo relacionado con la placa del vehículo (puede ser string si no hay relación directa)
-    private String placaVehiculo; // Relación con el vehículo específico
+
+    private String placaVehiculo;
 
     public TbReportes() {
     }

@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static Utilidades.sendResponse.enviarRespuesta;
 
@@ -30,8 +31,9 @@ public class SvUsuarios extends HttpServlet {
     Logica_Persona logica_persona = new Logica_Persona();
     Logica_Rol logica_rol = new Logica_Rol();
     Logica_Documentos logicaDocumentos= new Logica_Documentos();
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)  throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String paginaParam = request.getParameter("Pagination");
+        String estadoParam = request.getParameter("estado"); // Estado para filtrar activos o inactivos
 
         int numeroPagina;
         try {
@@ -43,43 +45,67 @@ public class SvUsuarios extends HttpServlet {
             numeroPagina = 1;
         }
 
-//        List<Persona> Lista= controladora_logica.ObtenerUsuariosPorPagina(numeroPagina);
-        List<Persona> Lista= logica_persona.ObtenerUsuariosPorPagina(numeroPagina);
+        // Crear un mapa para obtener los resultados
+        Map<String, Object> resultado;
+
+        if (estadoParam != null && estadoParam.equalsIgnoreCase("activo")) {
+            resultado = logica_persona.findUsuariosActivos(numeroPagina); // Obtener usuarios activos
+        } else if (estadoParam != null && estadoParam.equalsIgnoreCase("inactivo")) {
+            resultado = logica_persona.findUsuariosInactivos(numeroPagina); // Obtener usuarios inactivos
+        } else {
+            resultado = logica_persona.ObtenerUsuariosPorPagina(numeroPagina); // Obtener todos los usuarios si no se especifica el estado
+        }
+
+        // Convertir los resultados a JSON
+        JSONObject respuestaJson = new JSONObject();
+
+        List<Persona> usuarios = (List<Persona>) resultado.get("usuarios");
         JSONArray jsonArray = new JSONArray();
 
-        for (Persona usuario : Lista){
-            JSONObject jsonObject= new JSONObject();
-            jsonObject.put("idUser", usuario.getId());
-            jsonObject.put("documento", usuario.getDocumento());
-            jsonObject.put("nombre", usuario.getNombre());
-            jsonObject.put("apellido", usuario.getApellido());
-            jsonObject.put("correo", usuario.getCorreo());
-            jsonObject.put("numero_documento", usuario.getId());
-            jsonObject.put("fecha_nacimineto", usuario.getFechaNacimiento());
-            jsonObject.put("estado_usuario",usuario.getEstadoUsuario());
-            JSONObject rolObject = new JSONObject();
-            if (usuario.getRol() != null) {
-                rolObject.put("idRol", usuario.getRol().getId());
-                rolObject.put("nombre", usuario.getRol().getNombre());
-            }
-            JSONObject docObject = new JSONObject();
-            if (usuario.getTipoDocumento() != null) {
-                docObject.put("idDocumento", usuario.getTipoDocumento().getId());
-                docObject.put("nombreDocumento", usuario.getTipoDocumento().getNombreDocumento());
-            }
-            jsonObject.put("doc", docObject);
-            jsonObject.put("rol", rolObject); // Añadir el objeto rol desglosado
-            jsonArray.put(jsonObject);
-       }
+        if (usuarios != null && !usuarios.isEmpty()) {
+            for (Persona usuario : usuarios) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("idUser", usuario.getId());
+                jsonObject.put("documento", usuario.getDocumento());
+                jsonObject.put("nombre", usuario.getNombre());
+                jsonObject.put("apellido", usuario.getApellido());
+                jsonObject.put("correo", usuario.getCorreo());
+                jsonObject.put("numero_documento", usuario.getId());
+                jsonObject.put("fecha_nacimiento", usuario.getFechaNacimiento());
+                jsonObject.put("numeroCelular",usuario.getCelular());
+                JSONObject rolObject = new JSONObject();
+                if (usuario.getRol() != null) {
+                    rolObject.put("idRol", usuario.getRol().getId());
+                    rolObject.put("nombre", usuario.getRol().getNombre());
+                }
 
+                JSONObject docObject = new JSONObject();
+                if (usuario.getTipoDocumento() != null) {
+                    docObject.put("idDocumento", usuario.getTipoDocumento().getId());
+                    docObject.put("nombreDocumento", usuario.getTipoDocumento().getNombreDocumento());
+                }
+
+                jsonObject.put("doc", docObject);  // Añadir el objeto documento desglosado
+                jsonObject.put("rol", rolObject);  // Añadir el objeto rol desglosado
+
+                jsonArray.put(jsonObject);  // Añadir el objeto completo al array JSON
+            }
+        } else {
+            // Devolver una lista vacía si no hay usuarios
+            jsonArray = new JSONArray();
+        }
+
+// Añadir la lista de usuarios y otros datos a la respuesta JSON
+        respuestaJson.put("usuarios", jsonArray);
+        respuestaJson.put("totalPaginas", resultado.get("totalPaginas"));
+        respuestaJson.put("paginaActual", resultado.get("paginaActual"));
+        respuestaJson.put("totalRegistros", resultado.get("totalRegistros"));
+
+        // Configurar la respuesta
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(jsonArray.toString());
-
+        response.getWriter().write(respuestaJson.toString());
     }
-
-
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         JSONObject jsonObject = JsonReader.parsearJson(request);
         String action = jsonObject.getString("action");
@@ -110,10 +136,12 @@ public class SvUsuarios extends HttpServlet {
             persona.setNombre(jsonObject.getString("nombre"));
             persona.setApellido(jsonObject.getString("apellido"));
             persona.setCorreo(jsonObject.getString("correo"));
+            persona.setCelular(jsonObject.getString("numeroCelular"));
             persona.setDocumento(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             persona.setEstadoUsuario(EstadoUsuario.ACTIVO);
             System.out.println(Integer.parseInt(jsonObject.getString("numeroDocumento")));
             String fechaNacimientoStr = jsonObject.optString("fechaNacimiento");
+
             System.out.println("fechaNacimientoStr = " + fechaNacimientoStr);
             
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -148,6 +176,7 @@ public class SvUsuarios extends HttpServlet {
             persona.setApellido(jsonObject.getString("apellido"));
             persona.setCorreo(jsonObject.getString("correo"));
             persona.setDocumento(Integer.parseInt(jsonObject.getString("numeroDocumento")));
+            persona.setCelular(jsonObject.getString("numeroCelular"));
             persona.setClave(jsonObject.getString("password"));
             persona.setEstadoUsuario(EstadoUsuario.ACTIVO);
             System.out.println(Integer.parseInt(jsonObject.getString("numeroDocumento")));

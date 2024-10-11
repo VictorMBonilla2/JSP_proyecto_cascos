@@ -2,7 +2,8 @@ import {sendRequest} from "./ajax.js";
 import {host} from "./config.js";
 import {showSuccessAlert} from "./alerts/success.js";
 import {showErrorDialog} from "./alerts/error.js";
-import {validarEmail, validarFecha, validarTexto} from "./utils/validations.js";
+import {validarCelular, validarDocumento, validarEmail, validarFecha, validarTexto} from "./utils/validations.js";
+import {showConfirmationDialog} from "./alerts/confirm.js";
 
 const divPerfil = document.querySelector(".main_container__profile");
 const divDetalles = document.querySelector(".detalles_user_container");
@@ -18,11 +19,29 @@ document.addEventListener('DOMContentLoaded',  async ()=>{
     document.querySelector('.rolUser').textContent=data.rol.namerolUsuario
     document.querySelector('.correoUser').textContent=data.correoUsuario
     document.querySelector('.fechaNacUser').textContent=data.fechaNacimiento
+    document.querySelector('.celularUser').textContent=data.numeroCelular
     document.querySelector('.tipoDoc').textContent= `Tipo de documento: ${data.tipoDoc.nombreTipoDoc} `
     document.querySelector('.numDoc').textContent=`Numero de documento: ${data.documento} `
     document.addEventListener("click", (ev) => {
         if (ev.target.matches(".info_user_container__button")) {
             mostrarFormulario(data);
+        }
+        if(ev.target.matches("#data-button")){
+
+        }
+        if(ev.target.matches("#disable-button")){
+            showConfirmationDialog(
+                "¿Deshabilitar Cuenta?",
+                "Si decides deshabilitar tu cuenta, no podras tener" +
+                "acceso a ella. El sistema no permitira la deshabilitación de la " +
+                "cuenta si tiene vehiculos estacionados.",
+                ()=>deshabilitarCuenta(id_usuario),
+                ()=> console.log("Acción cancelada")
+
+            )
+        }
+        if (ev.target.matches("#info-button")){
+            generarInforme(data)
         }
     });
 
@@ -42,6 +61,7 @@ function mostrarFormulario(data) {
         clone.querySelector('#apellido').value=data.ApellidoUsuario
         clone.querySelector('#fecha_nacimiento').value=data.fechaNacimiento
         clone.querySelector('#coreo').value=data.correoUsuario
+        clone.querySelector('#celular').value=data.numeroCelular
         // Insertar el formulario clonado en el contenedor
         infoContainer.appendChild(clone);
 
@@ -94,11 +114,8 @@ function mostrarInformacion(data) {
     clone.querySelector('.correoUser').textContent=data.correoUsuario
     clone.querySelector('.fechaNacUser').textContent=data.fechaNacimiento
 
-    // Insertar el template clonado en el contenedor
     infoContainer.appendChild(clone);
 
-    // Si tienes botones en el template de información que requieren eventos,
-    // puedes seleccionarlos aquí y asignarles los event listeners necesarios.
 }
 async function ObtenerUsuario(id_usuario) {
     const response = await fetch(`${host}/SvPersona?id_usuario=${id_usuario}`);
@@ -119,6 +136,7 @@ async function enviar_formulario(form){
     const apellido = form.get("apellido");
     const fecha = form.get("fecha_nacimiento");
     const correo = form.get("correo");
+    const celular = form.get("celular")
     const data = {
         action: "editPrimaryDAta",
         usuarioId: usuarioId,
@@ -126,6 +144,7 @@ async function enviar_formulario(form){
         apellido: apellido,
         fecha: formatearFecha(fecha),
         correo: correo,
+        numeroCelular:celular
     };
     console.log(data)
     try {
@@ -146,6 +165,7 @@ function validarFormulario(form) {
     const apellido = form.get("apellido");
     const fecha = form.get("fecha_nacimiento");
     const correo = form.get("correo");
+    const celular = form.get("celular");
     console.log(fecha);
     // Usar las funciones de validación importadas
     if (!validarTexto(nombre, 2)) {
@@ -162,6 +182,10 @@ function validarFormulario(form) {
         showErrorDialog("Correo electrónico no válido.");
         return false;
     }
+    if (!validarCelular(celular)) {
+        showErrorDialog("Numero celular no válido.");
+        return false;
+    }
 
     if (!validarFecha(fecha)) {
         showErrorDialog("Formato de fecha no válido. Debe ser dd/MM/yyyy.");
@@ -170,4 +194,50 @@ function validarFormulario(form) {
 
     // Si todo está bien
     return true;
+}
+async function deshabilitarCuenta(idUsuario){
+    const data ={
+        action: "disable",
+        idUsuario: idUsuario
+    }
+    try{
+        const response = await sendRequest(`${host}/SvPersona`,data);
+        if (response.status === "success") {
+            console.log("Modelo creado correctamente");
+            showSuccessAlert(response.message);
+        } else {
+            showErrorDialog(response.message);
+        }
+    } catch (error){
+        console.log("Error  en la solicitud")
+    }
+}
+async function generarInforme(usuario){
+    const data ={
+        action: "infoAccount",
+        idUsuario: usuario.idUsuario
+    }
+    try{
+        const result = await sendRequest(`${host}/SvPersona`,data);
+        console.log(result)
+
+            console.log("Modelo creado correctamente");
+            showSuccessAlert(result.message);
+            const response = await fetch(`${host}/descargarInforme?idInforme=${result.codigoInforme}`)
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = "informe_usuario.pdf"; // Nombre del archivo descargado
+                document.body.appendChild(a); // Necesario para que funcione en Firefox
+                a.click();
+                a.remove(); // Remover el elemento de anclaje después de la descarga
+            } else {
+                const result = await response.json();
+                showErrorDialog(result.error);  // Mostrar mensaje de error si ocurre
+            }
+    } catch (error){
+        console.log("Error en la solicitud", error )
+    }
 }

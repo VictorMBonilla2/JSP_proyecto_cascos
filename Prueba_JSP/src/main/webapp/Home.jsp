@@ -51,11 +51,11 @@
                     </div>
                     <div class="vehiculo_data__text">
                         <h1>Marca</h1>
-                        <p><%= vehiculo.getMarcaVehiculo() %></p>
+                        <p><%= vehiculo.getMarcaVehiculo().getNombreMarca() %></p>
                     </div>
                     <div class="vehiculo_data__text">
                         <h1>Modelo</h1>
-                        <p><%= vehiculo.getModeloVehiculo() %></p>
+                        <p><%= vehiculo.getModeloVehiculo().getNombreModelo() %></p>
                     </div>
                     <div class="adicional_vehiculo_data">
                         <h1>Datos Adicionales</h1>
@@ -87,7 +87,7 @@
     <div class="Graph1">
         <div class="bloque__user">
             <div class="info2-user__img">
-                <img src="resources/imagenes/IconPerfil.png" alt="icono">
+                <img src="resources/imagenes/iconProfile.png" alt="icono">
             </div>
 
             <div class="info2-user__container">
