@@ -63,6 +63,13 @@
                         <label for="colorVehiculo">Color:</label>
                         <select type="text" id="colorVehiculo" name="colorVehiculo"></select>
                     </div>
+                    <div class="input_container">
+                        <label for="estadoVehiculo">Estado:</label>
+                        <select type="text" id="estadoVehiculo" name="estadoVehiculo">
+                            <option value="ACTIVO">ACTIVO</option>
+                            <option value="INACTIVO">INACTIVO</option>
+                        </select>
+                    </div>
                 </div>
                 <hr>
                 <div class="input_container input_container--vertical">

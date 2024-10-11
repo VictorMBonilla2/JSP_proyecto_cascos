@@ -11,9 +11,9 @@ public class TbSectores {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cod_sector", nullable = false)
     private Integer id;
-    @Column
+    @Column ( nullable = false)
     private Integer cant_espacio;
-    @Column
+    @Column ( nullable = false)
     private String nombreSector;
 
     @OneToMany(mappedBy = "sector", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

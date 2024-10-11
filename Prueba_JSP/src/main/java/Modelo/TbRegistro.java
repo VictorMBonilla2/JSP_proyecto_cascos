@@ -23,6 +23,7 @@ public class TbRegistro {
     private Persona gestor;
 
     private int id_espacio;
+    @Column ( nullable = false)
     private String placaVehiculo;
 
     public TbRegistro() {

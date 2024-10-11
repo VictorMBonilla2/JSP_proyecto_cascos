@@ -10,7 +10,7 @@ public class TbTipoDocumento {
     @Column(name = "id_tipodocumento", nullable = false)
     private int id;
 
-    @Column(name="nombre_documento")
+    @Column(name="nombre_documento", nullable = false)
     private String nombreDocumento;
 
     public TbTipoDocumento() {

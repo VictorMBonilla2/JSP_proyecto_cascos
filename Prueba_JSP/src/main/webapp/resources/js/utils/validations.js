@@ -3,6 +3,9 @@ export function validarDocumento(documento) {
     const numeroDocumento = Number(documento);
     return !isNaN(numeroDocumento) && numeroDocumento > 0;
 }
+export function validarCelular(celular) {
+    return /^[0-9]{10}$/.test(celular);
+}
 
 // Validar que la cantidad de cascos sea un número no mayor a 2 y positivo (0 es válido)
 export function validarCantidadCascos(cantidad) {

@@ -1,29 +1,33 @@
 package Logica;
 
 import Controlador.PersistenciaController;
-import DTO.LoginDTO;
 import Modelo.Persona;
+import Modelo.TbInformesUsuarios;
 import Modelo.TbVehiculo;
 import Modelo.enums.EstadoUsuario;
+import Servicios.EmailService;
+import Servicios.PDFService;
+import Servicios.PasswordService;
 import Utilidades.ResultadoOperacion;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Logica_Persona {
     PersistenciaController controladora = new PersistenciaController();
+    PDFService pdfService= new PDFService() ;
     public ResultadoOperacion validarIngreso(int documento, int tipoDocumento, String clave, String rol) {
+        PasswordService passwordService = new PasswordService();
         System.out.println("Iniciando validación de ingreso para documento: " + documento);
 
         // Obtener el LoginDTO correspondiente al documento
         Persona persona = controladora.buscarPersonaDocumento(documento);
-
         // Verificar si se encontró el documento
         if (persona == null) {
             System.err.println("Error: No se encontraron registros para el documento: " + documento);
             return new ResultadoOperacion(false, "No se encontraron registros para el documento.");
         }
-
         System.out.println("Documento encontrado, continuando validación...");
 
         int rolInt = Integer.parseInt(rol);
@@ -31,7 +35,7 @@ public class Logica_Persona {
         // Validar las credenciales: tipo de documento, clave y rol
         if (persona.getClave() != null) {
             boolean tipoDocCoincide = persona.getTipoDocumento().getId() == tipoDocumento;
-            boolean claveCoincide = persona.getClave().equals(clave);
+            boolean claveCoincide = passwordService.verificarContrasena(clave,persona.getClave());
             boolean rolCoincide = persona.getRol().getId() == rolInt;
 
             System.out.println("Resultado de validaciones:");
@@ -114,13 +118,7 @@ public class Logica_Persona {
         }
     }
 
-    public List<Persona> ObtenerUsuariosPorPagina(int numeroPagina) {
-        int tamanioPagina = 10; // Tamaño de página fijo, ajusta según tus necesidades
-        int data_inicio = (numeroPagina - 1) * tamanioPagina; // Índice inicial basado en la página solicitada
-        int data_fin = tamanioPagina; // Número de resultados por página
 
-        return controladora.TraerPersonasPorPagina(data_inicio, data_fin);
-    }
     public Persona obtenerColaborador(int documento) {
 
         Persona Colaborador = buscarPersonaConDocumento(documento);
@@ -170,5 +168,149 @@ public class Logica_Persona {
         return usuarioEnEspacios != null;
     }
 
+    public Map<String, Object> ObtenerUsuariosPorPagina(int numeroPagina) {
+        int tamanioPagina = 10; // Tamaño de página fijo, ajusta según tus necesidades
+        int data_inicio = (numeroPagina - 1) * tamanioPagina; // Índice inicial basado en la página solicitada
+        int data_fin = tamanioPagina; // Número de resultados por página
 
+        // Obtener el total de registros de personas
+        long totalRegistros = controladora.contarPersonas(); // Método que cuenta el total de personas
+        int totalPaginas = (int) Math.ceil((double) totalRegistros / tamanioPagina); // Calcular total de páginas
+
+        // Obtener la lista paginada de personas
+        List<Persona> usuarios = controladora.TraerPersonasPorPagina(data_inicio, data_fin);
+
+        // Crear el mapa de resultados
+        Map<String, Object> resultado = new HashMap<>();
+        resultado.put("usuarios", usuarios);
+        resultado.put("totalRegistros", totalRegistros);
+        resultado.put("totalPaginas", totalPaginas);
+        resultado.put("paginaActual", numeroPagina);
+
+        return resultado;
+    }
+
+    public Map<String, Object> findUsuariosActivos(int numeroPagina) {
+        int tamanioPagina = 10; // Tamaño de la página
+        int data_inicio = (numeroPagina - 1) * tamanioPagina;
+
+        // Obtener el total de registros de usuarios activos
+        long totalActivos = controladora.ContarUsuariosActivos();
+        int totalPaginas = (int) Math.ceil((double) totalActivos / tamanioPagina);
+
+        // Obtener la lista de usuarios activos paginada
+        List<Persona> usuariosActivos = controladora.TraerPersonasActivas(data_inicio, tamanioPagina);
+
+        // Crear un mapa para retornar los datos
+        Map<String, Object> resultado = new HashMap<>();
+        resultado.put("usuarios", usuariosActivos);
+        resultado.put("totalRegistros", totalActivos);
+        resultado.put("totalPaginas", totalPaginas);
+        resultado.put("paginaActual", numeroPagina);
+
+        return resultado;
+    }
+
+    public Map<String, Object> findUsuariosInactivos(int numeroPagina) {
+        int tamanioPagina = 10; // Tamaño de la página
+        int data_inicio = (numeroPagina - 1) * tamanioPagina;
+
+        // Obtener el total de registros de usuarios inactivos
+        long totalInactivos = controladora.ContarUsuariosInacvitos();
+        int totalPaginas = (int) Math.ceil((double) totalInactivos / tamanioPagina);
+
+        // Obtener la lista de usuarios inactivos paginada
+        List<Persona> usuariosInactivos = controladora.TraerPersonasInactivas(data_inicio, tamanioPagina);
+
+        // Crear un mapa para retornar los datos
+        Map<String, Object> resultado = new HashMap<>();
+        resultado.put("usuarios", usuariosInactivos);
+        resultado.put("totalRegistros", totalInactivos);
+        resultado.put("totalPaginas", totalPaginas);
+        resultado.put("paginaActual", numeroPagina);
+
+        return resultado;
+    }
+
+
+    public String generarInforme(int idUsuario) {
+        Persona usuario = buscarpersonaPorId(idUsuario);
+        Set<TbVehiculo> vehiculos = usuario.getVehiculos();
+        List<TbVehiculo> listaVehiculos = new ArrayList<>(vehiculos);
+        try{
+            TbInformesUsuarios informe = pdfService.generarPDF(usuario, listaVehiculos);
+
+            controladora.subirInforme(informe);
+
+            String codigo = informe.getCodigoInforme();
+            System.out.println(codigo);
+            return codigo;
+        }catch (Exception e){
+            System.err.println("Hubo un error al crear el pdf "+ e.getMessage());
+            return null;
+        }
+
+    }
+
+    public TbInformesUsuarios findInformeById(Long informeId) {
+
+        return controladora.buscarInformePorId(informeId);
+
+    }
+    public TbInformesUsuarios findInformeByCode(String informeCode) {
+
+        return controladora.buscarInformePorCodigo(informeCode);
+
+    }
+
+    public String generarTokenRecuperacion(String email) {
+        System.out.println("Intentando obtener usuario");
+        Persona usuario = buscarPersonaPorCorreo(email);
+        if (usuario != null) {
+            System.out.println("Usuario obtenido");
+            String token = UUID.randomUUID().toString();
+            // Guardar el token en la base de datos con un tiempo de expiración
+            usuario.setTokenRecuperacion(token);
+            usuario.setFechaExpiracionToken(new Date(System.currentTimeMillis() + 3600000)); // 1 hora
+            actualizarPersona(usuario);
+            return token;
+        }
+        return null;
+    }
+    public void enviarCorreoRecuperacion(String email, String token) {
+        System.out.println("Se inicia la creacion del correo");
+        EmailService emailService = new EmailService();
+        emailService.enviarCorreoRecuperacion(email, token);
+    }
+    public Persona buscarPorToken(String token) {
+        return controladora.buscarPersonaPorToken(token);
+    }
+
+    public boolean isTokenValid(Persona usuario) {
+        System.out.println("Se intenta validar el tocken.");
+        Date now = new Date();
+        return usuario.getFechaExpiracionToken().after(now); // Verifica si el token aún no ha expirado
+    }
+
+    public void actualizarPassword(Persona usuario, String nuevaPassword) {
+        System.out.println("Se inicia el cambio de contraseña");
+        PasswordService passwordService = new PasswordService();
+        String clave_encriptada= passwordService.encriptarContrasena(nuevaPassword);
+        System.out.println("Clave encriptada: "+clave_encriptada );
+        usuario.setClave(clave_encriptada); // Aplica una función hash a la contraseña antes de guardarla
+        usuario.setTokenRecuperacion(null); // Limpia el token después de usarlo
+        usuario.setFechaExpiracionToken(null);
+        try{
+            controladora.EditarPersona(usuario); // Limpia la fecha de expiración
+            System.out.println("Contraseña cambiada");
+        } catch (Exception e){
+            System.out.println("Error al cambiar contraseña");
+        }
+
+    }
+
+    private Persona buscarPersonaPorCorreo(String email) {
+
+        return controladora.buscarPersonaPorCorreo(email);
+    }
 }

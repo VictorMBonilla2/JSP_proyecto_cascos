@@ -6,6 +6,8 @@ import Modelo.Persona;
 import Modelo.TbVehiculo;
 import Modelo.Tb_MarcaVehiculo;
 import Modelo.Tb_ModeloVehiculo;
+import Modelo.enums.EstadoUsuario;
+import Modelo.enums.EstadoVehiculo;
 import Utilidades.ResultadoOperacion;
 
 import java.util.ArrayList;
@@ -126,6 +128,42 @@ public class Logica_Vehiculo {
             System.err.println("Hubo un error al eliminar el vehiculo: " + e.getMessage());
             return new ResultadoOperacion(false,"Hubo un error al eliminar el vehiculo");
         }
+    }
+
+
+    public ResultadoOperacion cambiarEstadoVehiculo(int idVehiculo) {
+        TbVehiculo vehiculo = buscarVehiculoPorId(idVehiculo);
+        if (vehiculo != null) {
+            EstadoVehiculo nuevoEstado = vehiculo.getEstadoVehiculo() == EstadoVehiculo.ACTIVO ? EstadoVehiculo.INACTIVO : EstadoVehiculo.ACTIVO;
+            String accion = nuevoEstado == EstadoVehiculo.ACTIVO ? "activado" : "deshabilitado";
+            try {
+                if(VehiculoEnEstacionamiento(idVehiculo)){
+                    return new ResultadoOperacion(false, "El usuario esta ocupando un espacio actualmente");
+                }else{
+                    controladora.actualizarestadoVehiculo(vehiculo, nuevoEstado);
+                    return new ResultadoOperacion(true, "El usuario ha sido " + accion + " exitosamente.");
+                }
+            } catch (Exception e) {
+                System.err.println("Hubo un error al " + accion + " el usuario: " + e.getMessage());
+                return new ResultadoOperacion(false, "Hubo un error al " + accion + " el usuario.");
+            }
+        } else {
+            return new ResultadoOperacion(false, "Usuario no encontrado.");
+        }
+    }
+
+    private TbVehiculo buscarVehiculoPorId(int idVehiculo) {
+        try{
+            return controladora.buscarvehiculo(idVehiculo);
+        }catch (Exception e){
+            System.err.println("Error al buscar el vehiculo: " + e.getMessage());
+        }
+        return  null;
+    }
+    private boolean VehiculoEnEstacionamiento(int idVehiculo){
+        TbVehiculo vehiculoEnEspacios = controladora.buscarVehiculoEnEspacios(idVehiculo);
+
+        return vehiculoEnEspacios != null;
     }
 
 

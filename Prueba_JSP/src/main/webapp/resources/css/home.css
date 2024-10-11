@@ -64,6 +64,10 @@ canvas{
 .info2-user__img{
   width: auto;
 }
+.info2-user__img >img{
+  width: 100px;
+  height: 100px;
+}
 .Graph2{
   grid-area: Grafico2;
   width: 101%;

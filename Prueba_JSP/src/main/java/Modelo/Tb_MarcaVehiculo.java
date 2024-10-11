@@ -13,7 +13,7 @@ public class Tb_MarcaVehiculo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "nombre_marca", nullable = false, unique = true)
+    @Column(name = "nombre_marca", nullable = false)
     private String nombreMarca;
 
     @ManyToOne

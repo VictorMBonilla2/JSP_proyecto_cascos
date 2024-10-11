@@ -32,6 +32,10 @@
                         <h3 class="correoUser"></h3>
                     </div>
                     <div>
+                        <h1>Celular</h1>
+                        <h3 class="celularUser"></h3>
+                    </div>
+                    <div>
                         <h1>Fecha de Nacimiento</h1>
                         <h3 class="fechaNacUser"></h3>
                     </div>
@@ -58,19 +62,19 @@
             <hr>
             <p>Puedes obtener una copia tus datos que nosotros manejamos</p>
 
-            <button
-                    class="button_primary button--width45 data_button info_user_container_side2__button">Pedir
-                datos</button>
+            <button class="button_primary button--width45 data_button info_user_container_side2__button" id="info-button">
+                Pedir datos
+            </button>
 
         </div>
         <div class="detalles_user">
-            <h1>Borrar cuenta</h1>
+            <h1>Deshabilitar Cuenta</h1>
             <hr>
-            <p>Si piensas borrar definitivamente tu cuenta, Se perderan todos tus datos.</p>
+            <p>Si decides deshabilitar tu cuenta no podras acceder de ella. Solo un administrador podra revertir esta acción.</p>
 
-            <button
-                    class="button_secundary button--width45 button--delete info_user_container_side2__button">Borrar
-                cuenta</button>
+            <button class="button_secundary button--width45 button--delete info_user_container_side2__button" id="disable-button">
+                Deshabilitar Cuenta
+            </button>
         </div>
     </div>
 
@@ -85,6 +89,10 @@
             <div>
                 <h1>Correo</h1>
                 <h3 class="correoUser"></h3>
+            </div>
+            <div>
+                <h1>Celular</h1>
+                <h3 class="celularUser"></h3>
             </div>
             <div>
                 <h1>Fecha de Nacimiento</h1>
@@ -116,7 +124,10 @@
                     <label for="fecha_nacimiento">Fecha de Nacimiento: </label>
                     <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" placeholder="">
                 </div>
-
+                <div class="input_container input_container--vertical">
+                    <label for="celular"> Numero Celular:</label>
+                    <input type="text" id="celular" name="celular" placeholder="">
+                </div>
                 <div class="input_container input_container--vertical">
                     <label for="coreo"> Correo Electronico:</label>
                     <input type="email" id="coreo" name="correo" placeholder="">
@@ -133,6 +144,7 @@
 
 <script type="module" src="resources/js/Profile.js"></script>
 
+<jsp:include page="resources/confirm.jsp"/>
 <jsp:include page="resources/success.jsp"/>
 <jsp:include page="resources/error.jsp"/>
 <jsp:include page="resources/footer.jsp" />

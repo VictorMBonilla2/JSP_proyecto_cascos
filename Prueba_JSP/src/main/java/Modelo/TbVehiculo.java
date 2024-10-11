@@ -1,6 +1,7 @@
 package Modelo;
 
 import Modelo.enums.ColorVehiculo;
+import Modelo.enums.EstadoVehiculo;
 import jakarta.persistence.*;
 
 @Entity
@@ -17,6 +18,9 @@ public class TbVehiculo {
 
     @Column(name = "cant_casco")
     private Integer cantCasco;
+
+    @Enumerated(EnumType.STRING)
+    private EstadoVehiculo estadoVehiculo;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "color_vehiculo")
@@ -48,10 +52,11 @@ public class TbVehiculo {
     public TbVehiculo() {
     }
 
-    public TbVehiculo(int id_vehiculo, String placaVehiculo, Integer cantCasco, ColorVehiculo colorVehiculo, Persona persona, Tb_CiudadVehiculo ciudadVehiculo, TbTipovehiculo tipovehiculo, Tb_MarcaVehiculo marcaVehiculo, Tb_ModeloVehiculo modeloVehiculo) {
+    public TbVehiculo(int id_vehiculo, String placaVehiculo, Integer cantCasco, EstadoVehiculo estadoVehiculo, ColorVehiculo colorVehiculo, Persona persona, Tb_CiudadVehiculo ciudadVehiculo, TbTipovehiculo tipovehiculo, Tb_MarcaVehiculo marcaVehiculo, Tb_ModeloVehiculo modeloVehiculo) {
         this.id_vehiculo = id_vehiculo;
         this.placaVehiculo = placaVehiculo;
         this.cantCasco = cantCasco;
+        this.estadoVehiculo = estadoVehiculo;
         this.colorVehiculo = colorVehiculo;
         this.persona = persona;
         this.ciudadVehiculo = ciudadVehiculo;
@@ -130,5 +135,13 @@ public class TbVehiculo {
 
     public void setModeloVehiculo(Tb_ModeloVehiculo modeloVehiculo) {
         this.modeloVehiculo = modeloVehiculo;
+    }
+
+    public EstadoVehiculo getEstadoVehiculo() {
+        return estadoVehiculo;
+    }
+
+    public void setEstadoVehiculo(EstadoVehiculo estadoVehiculo) {
+        this.estadoVehiculo = estadoVehiculo;
     }
 }

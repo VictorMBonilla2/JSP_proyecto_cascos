@@ -13,8 +13,7 @@ public class TbTipovehiculo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_tipovehiculo", nullable = false)
     private int id;
-
-    @Column(name = "nombre_tipovehiculo")
+    @Column(name = "nombre_tipovehiculo", nullable = false, unique = true)
     private String nombre;
 
     @OneToMany(mappedBy = "tipoVehiculo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

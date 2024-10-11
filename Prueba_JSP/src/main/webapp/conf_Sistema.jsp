@@ -97,6 +97,16 @@
                 <a href="conf_modelovehiculo.jsp" class="button_primary button--width45">Editar modelo</a>
             </div>
         </div>
+        <div class="info_box config_box">
+            <div class="info_data">
+                <h1>Verificar Informe</h1>
+                <hr>
+                <p>Podras buscar informes por su codigo, asi podras verificar su validez</p>
+            </div>
+            <div class="button-container">
+                <a href="conf_informe.jsp" class="button_primary button--width45">buscar informes</a>
+            </div>
+        </div>
     </div>
 </section>
 <jsp:include page="resources/footer.jsp" />

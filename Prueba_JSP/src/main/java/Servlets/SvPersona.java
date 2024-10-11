@@ -1,6 +1,4 @@
 package Servlets;
-
-import DTO.LoginDTO;
 import Logica.Logica_Documentos;
 import Logica.Logica_Persona;
 import Logica.Logica_Rol;
@@ -62,6 +60,7 @@ public class SvPersona extends HttpServlet {
             jsonObjectdoc.put("nombreTipoDoc", persona.getRol().getNombre());
             jsonObject.put("tipoDoc",jsonObjectdoc);
             jsonObject.put("documento", persona.getDocumento());
+            jsonObject.put("numeroCelular",persona.getCelular());
 
             // Escribir la respuesta JSON
             PrintWriter out = response.getWriter();
@@ -85,7 +84,7 @@ public class SvPersona extends HttpServlet {
 
         String action = jsonObject.optString("action");
         HttpSession session = req.getSession(false);
-
+        System.out.println("Accion encontrada: "+ action);
         try {
             switch (action) {
                 case "login":
@@ -103,6 +102,9 @@ public class SvPersona extends HttpServlet {
                 case "disable":
                     DeshabilarCuenta(jsonObject, resp , session);
                     break;
+                case "infoAccount":
+                    InfoDeUsuario(jsonObject, resp , session);
+                    break;
                 default:
                     resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no reconocida");
             }
@@ -110,6 +112,8 @@ public class SvPersona extends HttpServlet {
             sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error interno del servidor");
         }
     }
+
+
 
 
     private void EditPrimaryData(JSONObject jsonObject, HttpServletResponse resp, HttpSession session) throws IOException {
@@ -135,6 +139,7 @@ public class SvPersona extends HttpServlet {
             String apellido = jsonObject.getString("apellido");
             String fechaNacimientoStr = jsonObject.getString("fecha");
             String correo = jsonObject.getString("correo");
+            String numeroCelular = jsonObject.getString("numeroCelular");
 
             System.out.println("Datos recibidos: nombre=" + nombre + ", apellido=" + apellido + ", fecha=" + fechaNacimientoStr + ", correo=" + correo);
 
@@ -157,6 +162,7 @@ public class SvPersona extends HttpServlet {
             user.setApellido(apellido);
             user.setFechaNacimiento(fechaNacimiento); // Asigna la fecha convertida
             user.setCorreo(correo);
+            user.setCelular(numeroCelular);
 
             // Logs para confirmar antes de actualizar
             System.out.println("Datos actualizados para usuario con ID: " + usuarioId);
@@ -231,6 +237,7 @@ public class SvPersona extends HttpServlet {
             int documento = jsonObject.getInt("documento");
             String correo = jsonObject.getString("correo");
             String clave = jsonObject.getString("password");
+            String celular = jsonObject.getString("numeroCelular");
             // Extraer el valor de fecha desde el JSON
             String fecha = jsonObject.getString("fechaNacimiento");
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -242,6 +249,7 @@ public class SvPersona extends HttpServlet {
             persona.setApellido(apellido);
             persona.setTipoDocumento(tipoDocumento);
             persona.setDocumento(documento);
+            persona.setCelular(celular);
             persona.setCorreo(correo);
             persona.setClave(clave);
             persona.setRol(rol);
@@ -274,6 +282,39 @@ public class SvPersona extends HttpServlet {
             sendResponse.enviarRespuesta(resp,HttpServletResponse.SC_BAD_REQUEST,"error", resultado.getMensaje());
         }
 
+    }
+
+    private void InfoDeUsuario(JSONObject jsonObject, HttpServletResponse resp, HttpSession session) throws IOException {
+        try {
+            int idUsuario = jsonObject.getInt("idUsuario");
+            String resultado = logica_persona.generarInforme(idUsuario);
+
+            // Comprobar si el resultado es válido
+            if (resultado != null && !resultado.isEmpty()) {
+                JSONObject jsonResponse = new JSONObject();
+
+                jsonResponse.put("message", "El informe ha sido creado con éxito.");
+                jsonResponse.put("status", "success");
+                jsonResponse.put("codigoInforme", resultado);  // Retornar el código del informe
+                jsonResponse.put("ok", true);  // Indicar que fue exitoso
+
+                // Establecer el estado de la respuesta como exitosa
+                resp.setStatus(HttpServletResponse.SC_OK);
+                resp.setContentType("application/json");
+                resp.setCharacterEncoding("UTF-8");
+
+                // Escribir la respuesta JSON al cliente
+                resp.getWriter().write(jsonResponse.toString());
+            } else {
+                // Enviar una respuesta de error si no se pudo generar el informe
+                sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Error al crear el informe");
+            }
+        } catch (Exception e) {
+            System.err.println("Error al crear info del usuario: " + e.getMessage());
+
+            // Enviar respuesta de error en caso de excepción
+            sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error interno del servidor");
+        }
     }
 
 

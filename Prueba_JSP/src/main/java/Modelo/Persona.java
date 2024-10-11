@@ -20,13 +20,16 @@ public class Persona {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_tipodocumento")
     private TbTipoDocumento tipoDocumento;
+    @Column(unique = true, nullable = false)
     private String correo;
 
     @Temporal(TemporalType.DATE)
     private Date fechaNacimiento;
-
+    @Column(nullable = false)
     private String clave;
 
+    @Column(unique = true)
+    private String celular;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_rol", nullable = false)
     private Roles rol;
@@ -35,13 +38,22 @@ public class Persona {
     @Column(nullable = false)
     private EstadoUsuario estadoUsuario;
 
+    // Nuevos campos para recuperación de contraseña
+    @Column(name = "token_recuperacion", length = 255)
+    private String tokenRecuperacion;
+
+    @Column(name = "fecha_expiracion_token")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaExpiracionToken;
+
     @OneToMany(mappedBy = "persona", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<TbVehiculo> vehiculos = new LinkedHashSet<>();
+
 
     public Persona() {
     }
 
-    public Persona(int id, int documento, String nombre, String apellido, TbTipoDocumento tipoDocumento, String correo, Date fechaNacimiento, String clave, Roles rol, EstadoUsuario estadoUsuario, Set<TbVehiculo> vehiculos) {
+    public Persona(int id, int documento, String nombre, String apellido, TbTipoDocumento tipoDocumento, String correo, Date fechaNacimiento, String clave, String celular, Roles rol, EstadoUsuario estadoUsuario, String tokenRecuperacion, Date fechaExpiracionToken, Set<TbVehiculo> vehiculos) {
         this.id = id;
         this.documento = documento;
         this.nombre = nombre;
@@ -50,8 +62,11 @@ public class Persona {
         this.correo = correo;
         this.fechaNacimiento = fechaNacimiento;
         this.clave = clave;
+        this.celular = celular;
         this.rol = rol;
         this.estadoUsuario = estadoUsuario;
+        this.tokenRecuperacion = tokenRecuperacion;
+        this.fechaExpiracionToken = fechaExpiracionToken;
         this.vehiculos = vehiculos;
     }
 
@@ -141,5 +156,29 @@ public class Persona {
 
     public void setVehiculos(Set<TbVehiculo> vehiculos) {
         this.vehiculos = vehiculos;
+    }
+
+    public String getCelular() {
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
+    }
+
+    public String getTokenRecuperacion() {
+        return tokenRecuperacion;
+    }
+
+    public void setTokenRecuperacion(String tokenRecuperacion) {
+        this.tokenRecuperacion = tokenRecuperacion;
+    }
+
+    public Date getFechaExpiracionToken() {
+        return fechaExpiracionToken;
+    }
+
+    public void setFechaExpiracionToken(Date fechaExpiracionToken) {
+        this.fechaExpiracionToken = fechaExpiracionToken;
     }
 }

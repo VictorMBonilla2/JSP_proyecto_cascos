@@ -152,6 +152,27 @@ function modalFreeEspacio(Espacio){
 
     document.body.appendChild(clone);
 }
+
+function modalInfoEspacio(Espacio){
+    const template = document.getElementById('modal-info-template');
+    const clone = template.content.cloneNode(true);
+    const modal = clone.querySelector('.modal');
+    const closeBtn = clone.querySelector('.close');
+    clone.querySelector('.nameEspacio').textContent = Espacio.nombre;
+    modal.style.display='flex'
+    modal.onclick= (e)=>{
+        if(e.target.classList.contains('modal')){
+            modal.remove();
+        }
+    }
+    closeBtn.onclick = ()=>{
+        modal.remove(); // Eliminar el modal
+    }
+    clone.querySelector('.correo-info').textContent=Espacio.persona.correo
+    clone.querySelector('.celular-info').textContent=Espacio.persona.celular
+
+    document.body.appendChild(clone);
+}
 function modalEditEspacio(Espacio){
     const template = document.getElementById('modal-editar-template');
     const clone = template.content.cloneNode(true);
@@ -218,6 +239,11 @@ function renderEspacioOcupado(espacio,tiporeportes) {
     clone.querySelector('.botones__ajustar').addEventListener("click", () => {
         modalEditEspacio(espacio)
     })
+    clone.querySelector('.botones__info').setAttribute('data-info',`infomodal${espacio.id_espacio}`);
+    clone.querySelector('.botones__info').addEventListener("click", () => {
+        modalInfoEspacio(espacio)
+    })
+
     clone.querySelector('.report__img').setAttribute('data-report', `reportmodal${espacio.id_espacio}`);
     clone.querySelector('.report__img').addEventListener("click", () => {
         modalReportEspacio(espacio, tiporeportes)
