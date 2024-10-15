@@ -1,6 +1,7 @@
 package Servlets;
 
 import Logica.Logica_Persona;
+import Logica.Logica_Tocken;
 import Utilidades.JsonReader;
 import Utilidades.sendResponse;
 import jakarta.servlet.ServletException;
@@ -15,6 +16,7 @@ import java.io.IOException;
 @WebServlet("/SvRecuperarContrasena")
 public class SvRecuperarContrasena extends HttpServlet {
     Logica_Persona logicaPersona = new Logica_Persona();
+    Logica_Tocken logicaTocken = new Logica_Tocken();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -23,7 +25,7 @@ public class SvRecuperarContrasena extends HttpServlet {
         String email = jsonObject.getString("correo");
 
         try {
-            String token = logicaPersona.generarTokenRecuperacion(email); // Genera un token único
+            String token = logicaTocken.generarTokenRecuperacion(email); // Genera un token único
 
             System.out.println("TOken: " +token);
             if (token != null) {
@@ -31,12 +33,12 @@ public class SvRecuperarContrasena extends HttpServlet {
                 String enlaceRecuperacion = "http://localhost:8080/Prueba_JSP_war_exploded/resetPassword?token=" + token;
 
                 // Llamar al método que envía el correo electrónico
-                logicaPersona.enviarCorreoRecuperacion(email, enlaceRecuperacion);
+                logicaTocken.enviarCorreoRecuperacion(email, enlaceRecuperacion);
 
 
                 sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", "Se ha enviado un correo de recuperación");
             } else {
-                sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "No se encontro el correo en el sistema");
+                sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "La cuenta vinculada a este correo no existe o esta inactiva.");
             }
         } catch (Exception e) {
 

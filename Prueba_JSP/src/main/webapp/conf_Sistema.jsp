@@ -107,6 +107,16 @@
                 <a href="conf_informe.jsp" class="button_primary button--width45">buscar informes</a>
             </div>
         </div>
+        <div class="info_box config_box">
+            <div class="info_data">
+                <h1>Activar/Desactivar espacios indiduales</h1>
+                <hr>
+                <p>Podras desabilitar espacios especificos de lo sectores si la situacion lo amerita</p>
+            </div>
+            <div class="button-container">
+                <a href="conf_espacio.jsp" class="button_primary button--width45">buscar informes</a>
+            </div>
+        </div>
     </div>
 </section>
 <jsp:include page="resources/footer.jsp" />

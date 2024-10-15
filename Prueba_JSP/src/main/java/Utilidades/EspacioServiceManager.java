@@ -3,7 +3,7 @@ package Utilidades;
 import Controlador.PersistenciaController;
 import Logica.Logica_Espacios;
 import Logica.Logica_Sectores;
-import Modelo.CasilleroServices;
+import Servicios.CasilleroServices;
 
 public class EspacioServiceManager {
     private static EspacioServiceManager instance;

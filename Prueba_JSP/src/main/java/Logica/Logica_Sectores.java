@@ -1,7 +1,7 @@
 package Logica;
 
 import Controlador.PersistenciaController;
-import Modelo.CasilleroServices;
+import Servicios.CasilleroServices;
 import Modelo.TbSectores;
 import Modelo.enums.EstadoEspacio;
 import Utilidades.ResultadoOperacion;

@@ -1,4 +1,4 @@
-import {sendRequest} from "./ajax.js";
+import {hideLoadingSpinner, sendRequest, showLoadingSpinner} from "./ajax.js";
 import {showSuccessAlert} from "./alerts/success.js";
 import {showErrorDialog} from "./alerts/error.js";
 import {renderEspacios} from "./renderCasilleros.js";
@@ -8,32 +8,47 @@ import {
     validarDocumento,
     validarNombreReporte
 } from "./utils/validations.js";
+import {showConfirmationDialog} from "./alerts/confirm.js";
 
-document.addEventListener('submit', function (e) {
+document.addEventListener('submit', async function (e) {
     e.preventDefault();
     const form = new FormData(e.target);
-
+    const submitButton = e.target.querySelector("button[type='submit']");
+    submitButton.disabled = true;
+    showLoadingSpinner()
     const typeForm = form.get("typeForm");
-
-    switch (typeForm) {
-        case "add":
-        case "edit":
-            if (validarDatosCasilleros(form)) {
-                addDataCasilleros(form);
-            }
-            break;
-        case "liberar":
-            payCasillero(form);
-            break;
-        case "report":
-            if (validarDatosReporte(form)) {
-                reportEspacio(form);
-            }
-            break;
-        default:
-            console.error("Acción no identificada");
-            break;
+    try{
+        switch (typeForm) {
+            case "add":
+            case "edit":
+                if (validarDatosCasilleros(form)) {
+                    await addDataCasilleros(form);
+                }
+                break;
+            case "liberar":
+                await payCasillero(form);
+                break;
+            case "report":
+                if (validarDatosReporte(form)) {
+                    showConfirmationDialog(
+                        "¿Enviar Reporte?",
+                        "Al realizar un reporte, el espacio se desocupara automáticamente, se le vinculará a usted y al usuario que esté usando el espacio seleccionado en el reporte. El reporte es irreversible.",
+                        async () => {
+                            await reportEspacio(form);
+                        },
+                        () => console.log("Acción cancelada")
+                    )
+                }
+                break;
+            default:
+                console.error("Acción no identificada");
+                break;
+        }
+    } finally {
+        hideLoadingSpinner()
+        submitButton.disabled = false;
     }
+
 });
 
 // Función para validar datos del formulario de casilleros

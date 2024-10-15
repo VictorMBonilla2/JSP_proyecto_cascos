@@ -27,7 +27,7 @@
         <table>
         </table>
     </div>
-
+    <div id="paginadorHabilitados"></div>
 </section>
 
 

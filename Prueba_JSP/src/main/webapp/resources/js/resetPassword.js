@@ -1,8 +1,8 @@
-import {sendRequest} from "./ajax.js";
+import {hideLoadingSpinner, sendRequest, showLoadingSpinner} from "./ajax.js";
 import {host} from "./config.js";
 import {showSuccessAlert} from "./alerts/success.js";
 import {showErrorDialog} from "./alerts/error.js";
-import {validarTexto, validarTextoNumeros} from "./utils/validations.js";
+import {validarpassword, validarTextoNumeros} from "./utils/validations.js";
 
 document.addEventListener("DOMContentLoaded",   ()=>{
 
@@ -11,9 +11,18 @@ document.addEventListener("DOMContentLoaded",   ()=>{
     formulario.addEventListener("submit",async(e)=>{
         e.preventDefault()
         const form = new FormData(e.target)
-        if(validarFormulario(form)){
-            await enviarpassword(form)
+        const submitButton = e.target.querySelector("button[type='submit']");
+        submitButton.disabled = true;
+        showLoadingSpinner()
+        try{
+            if(validarFormulario(form)){
+                await enviarpassword(form)
+            }
+        }finally {
+            hideLoadingSpinner()
+            submitButton.disabled = false;
         }
+
 
     })
 
@@ -40,7 +49,7 @@ async function enviarpassword(form){
 function validarFormulario(form) {
     const password = form.get("password")
 
-    if (!validarTextoNumeros(password, 7)) {
+    if (!validarpassword(password, 7)) {
         showErrorDialog("La contraseña debe ser de al menos 8 caracteres.");
         return false;
     }

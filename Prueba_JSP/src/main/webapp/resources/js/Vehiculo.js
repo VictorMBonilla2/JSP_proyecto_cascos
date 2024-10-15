@@ -1,16 +1,22 @@
-import {sendRequest} from "./ajax.js";
+import {hideLoadingSpinner, sendRequest, showLoadingSpinner} from "./ajax.js";
 import {host} from "./config.js";
 import {showErrorDialog} from "./alerts/error.js"; // Mostrar mensajes de error
 import {showSuccessAlert} from "./alerts/success.js";
 import {showConfirmationDialog} from "./alerts/confirm.js";
 import {validarCantidadCascos, validarPlaca, validarTexto} from "./utils/validations.js";
-import {cargarCiudades, cargarColores, cargarMarcas, cargarModelos, cargarTiposVehiculo} from "./utils/renderSelects.js"; // Mostrar mensajes de éxito
+import {
+    cargarCiudades,
+    cargarColores,
+    cargarMarcas,
+    cargarModelos,
+    cargarTiposVehiculo
+} from "./utils/renderSelects.js"; // Mostrar mensajes de éxito
 
 
 const DocumentoAprendiz = document.querySelector("#documentoUser").value;
 const ejecutor = document.querySelector(".accionador");
 const vehiculoList = document.querySelector(".vehiculo__grid");
-
+const deleteButton = document.querySelector("#delete");
 const tipoVehiculoSelect = document.getElementById("tipoVehiculo");
 const marcaVehiculoSelect = document.getElementById("marcaVehiculo");
 const modeloVehiculoSelect = document.getElementById("modeloVehiculo");
@@ -37,28 +43,47 @@ marcaVehiculoSelect.addEventListener('change', async function () {
     await cargarModelos(marcaVehiculoId, tipoVehiculoId, 'modeloVehiculo');
 });
 
-document.addEventListener("click", async (event) => {
-    const vehiculoForm = document.querySelector("#vehiculoForm");
-    const formData = new FormData(vehiculoForm);
+document.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-    if (event.target.id === "sendCreate") {
-        if(validarFormulario(formData)){
-            await crearVehiculo(formData, DocumentoAprendiz);
+    const vehiculoForm = event.target;
+    const submitButton = vehiculoForm.querySelector("button[type='submit']");
+
+    submitButton.disabled = true;
+    showLoadingSpinner();
+
+    const formData = new FormData(vehiculoForm);
+    const typeForm = formData.get("typeForm");
+
+    try {
+        if (typeForm === "create") {
+            if (validarFormulario(formData)) {
+                await crearVehiculo(formData, DocumentoAprendiz);
+            }
+        } else if (typeForm === "edit") {
+            if (validarFormulario(formData)) {
+                await editarVehiculo(formData, DocumentoAprendiz);
+            }
         }
-    }
-    if (event.target.id === "sendEdit") {
-        if(validarFormulario(formData)){
-            await editarVehiculo(formData, DocumentoAprendiz);
-        }
-    }
-    if(event.target.id ==="delete"){
-        showConfirmationDialog("¿Eliminar Vehiculo)",
-            "El sistema no permitira eliminar vehiculos en uso, Esta acción es irreversible",
-            ()=>eliminarVehiculo(formData),
-            () => console.log('Acción cancelada')
-        );
+    } catch (error) {
+        console.error("Error en el proceso:", error);  // Captura errores y muestra un mensaje de error
+    } finally {
+        hideLoadingSpinner();  // Ocultar el spinner independientemente del resultado
+        submitButton.disabled = false;  // Habilitar el botón nuevamente
     }
 });
+
+
+deleteButton.addEventListener("click", async (event) => {
+    const vehiculoForm = document.querySelector("#vehiculoForm");
+    const formData = new FormData(vehiculoForm);
+    showConfirmationDialog("¿Eliminar Vehiculo)",
+        "El sistema no permitira eliminar vehiculos en uso, Esta acción es irreversible",
+        ()=>eliminarVehiculo(formData),
+        () => console.log('Acción cancelada')
+    );
+});
+
 let vehiculos = await ObtenerVehiculos(DocumentoAprendiz);
 if (vehiculos.length > 0) {
     vehiculoList.innerHTML = '';
@@ -77,8 +102,8 @@ if (vehiculos.length > 0) {
         console.log(vehiculo)
         vehiculoList.appendChild(div);
 
-        div.addEventListener('click', () => {
-            llenarFormulario(vehiculo);
+        div.addEventListener('click', async () => {
+             await llenarFormulario(vehiculo);
             ejecutor.id = "sendEdit";
             ejecutor.textContent = "Editar";
         });

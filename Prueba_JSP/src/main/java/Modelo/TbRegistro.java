@@ -2,64 +2,81 @@ package Modelo;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
-@Table(name = "tb_registro")
+@Table(name = "tb_registros")
 public class TbRegistro {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_registro", nullable = false)
-    private Integer id_registro;
+    private int idRegistro;
 
-    private LocalDateTime fecha_registro;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_espacio", nullable = false)
+    private TbEspacio espacio;
 
-    @ManyToOne(fetch = FetchType.EAGER) // Relación con Persona
-    @JoinColumn(name = "id_aprendiz", referencedColumnName = "id", nullable = false)
-    private Persona aprendiz;
+    @Column(name = "hora_entrada")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaEntrada;
 
-    @ManyToOne(fetch = FetchType.EAGER) // Relación con Gestor, si aplica
-    @JoinColumn(name = "id_gestor", referencedColumnName = "id", nullable = true)
+    @Column(name = "fecha_registro", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaRegistro;
+
+    // Cambiar la relación a TbVehiculo en lugar de Persona
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_vehiculo", nullable = false)
+    private TbVehiculo vehiculo;
+
+    // Relación con la entidad Gestor (si es una entidad separada)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_gestor", nullable = false)
     private Persona gestor;
-
-    private int id_espacio;
-    @Column ( nullable = false)
-    private String placaVehiculo;
 
     public TbRegistro() {
     }
 
-    public TbRegistro(Integer id_registro, LocalDateTime fecha_registro, Persona aprendiz, Persona gestor, int id_espacio, String placaVehiculo) {
-        this.id_registro = id_registro;
-        this.fecha_registro = fecha_registro;
-        this.aprendiz = aprendiz;
+
+    public TbRegistro(int idRegistro, TbEspacio espacio, Date fechaEntrada, Date fechaRegistro, TbVehiculo vehiculo, Persona gestor) {
+        this.idRegistro = idRegistro;
+        this.espacio = espacio;
+        this.fechaEntrada = fechaEntrada;
+        this.fechaRegistro = fechaRegistro;
+        this.vehiculo = vehiculo;
         this.gestor = gestor;
-        this.id_espacio = id_espacio;
-        this.placaVehiculo = placaVehiculo;
     }
 
-    public Integer getId_registro() {
-        return id_registro;
+    public int getIdRegistro() {
+        return idRegistro;
     }
 
-    public void setId_registro(Integer id_registro) {
-        this.id_registro = id_registro;
+    public void setIdRegistro(int idRegistro) {
+        this.idRegistro = idRegistro;
     }
 
-    public LocalDateTime getFecha_registro() {
-        return fecha_registro;
+    public TbEspacio getEspacio() {
+        return espacio;
     }
 
-    public void setFecha_registro(LocalDateTime fecha_registro) {
-        this.fecha_registro = fecha_registro;
+    public void setEspacio(TbEspacio espacio) {
+        this.espacio = espacio;
     }
 
-    public Persona getAprendiz() {
-        return aprendiz;
+    public Date getFechaRegistro() {
+        return fechaRegistro;
     }
 
-    public void setAprendiz(Persona aprendiz) {
-        this.aprendiz = aprendiz;
+    public void setFechaRegistro(Date fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
+    public TbVehiculo getVehiculo() {
+        return vehiculo;
+    }
+
+    public void setVehiculo(TbVehiculo vehiculo) {
+        this.vehiculo = vehiculo;
     }
 
     public Persona getGestor() {
@@ -70,20 +87,12 @@ public class TbRegistro {
         this.gestor = gestor;
     }
 
-    public int getId_espacio() {
-        return id_espacio;
+    public Date getFechaEntrada() {
+        return fechaEntrada;
     }
 
-    public void setId_espacio(int id_espacio) {
-        this.id_espacio = id_espacio;
-    }
-
-    public String getPlacaVehiculo() {
-        return placaVehiculo;
-    }
-
-    public void setPlacaVehiculo(String placaVehiculo) {
-        this.placaVehiculo = placaVehiculo;
+    public void setFechaEntrada(Date fechaEntrada) {
+        this.fechaEntrada = fechaEntrada;
     }
 }
 

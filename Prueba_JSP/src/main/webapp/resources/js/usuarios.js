@@ -1,9 +1,10 @@
-import {sendRequest} from "./ajax.js";
+import {hideLoadingSpinner, sendRequest, showLoadingSpinner} from "./ajax.js";
 import {cargarRoles, cargarTiposDocumento} from "./utils/renderSelects.js";
-import {validarDocumento, validarEmail, validarFecha, validarTexto} from "./utils/validations.js";
+import {validarCelular, validarDocumento, validarEmail, validarFecha, validarTexto} from "./utils/validations.js";
 import {showErrorDialog} from "./alerts/error.js";
 import {showSuccessAlert} from "./alerts/success.js";
 import {showConfirmationDialog} from "./alerts/confirm.js";
+
 const formTemplate = document.querySelector("#template_form").content;
 const formNewTemplate = document.querySelector("#template_form_newUser").content;
 const itemTemplate = document.querySelector("#item__list").content;
@@ -19,13 +20,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.addEventListener("click", async (e) => {
         console.log(e.target)
-
-        if(e.target.matches("#button-habilitados")){
-            openTab(e.target, 'habilitados')
-        }
-        if(e.target.matches("#button-deshabilitados")){
-            openTab(e.target, 'deshabilitados')
-        }
 
         if (e.target.matches(".new_user__item")) {
             const user_item = e.target;
@@ -55,13 +49,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             formulario.style.opacity = "0";
             formulario.style.transition = "opacity 0.5s ease";
             if (formulario) {
-                // Añade el evento submit mediante addEventListener
-                formulario.addEventListener("submit", (event) => {
-                    event.preventDefault();
-                    const form = document.querySelector(".newUser");
-                    if(validarFormularioNew(form))
-                    crearUsuario(form);
-                });
                 formulario.setAttribute("data_user", "createUser")
             }
 
@@ -114,15 +101,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             formulario.style.opacity = "0";
             formulario.style.transition = "opacity 0.5s ease";
             if (formulario) {
-                // Añade el evento submit mediante addEventListener
-                formulario.addEventListener("submit", (event) => {
-                    event.preventDefault();
-                    const form = document.querySelector(`form[data-user="${dato_usuario.idUser}"]`)
-                    console.log(form)
-                    if(verificarFormularioEdit(form)){
-                        editUser(form);
-                    }
-                });
                 formulario.setAttribute("data-user", dato_usuario.idUser)
             }
 
@@ -175,6 +153,31 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
     });
+
+    document.addEventListener("submit",async (e)=>{
+        e.preventDefault();
+        const targerForm= e.target;
+        const form = new FormData(targerForm);
+        const tipo=form.get("formType");
+        const submitButton = e.target.querySelector("button[type='submit']");
+        submitButton.disabled = true;
+        showLoadingSpinner()
+        try{
+            if(tipo === "add"){
+                if(validarFormularioNew(form))
+                    await crearUsuario(form)
+            }
+
+            if(tipo === "edit"){
+                if(verificarFormularioEdit(form)){
+                    await editUser(form);
+                }
+            }
+        }finally {
+            hideLoadingSpinner()
+            submitButton.disabled = false;
+        }
+    })
 });
 
 function crearPaginador(totalPaginas, paginaActual) {
@@ -189,15 +192,11 @@ function crearPaginador(totalPaginas, paginaActual) {
         paginadorContainer.appendChild(boton);
     }
 }
-async function cambiarPagina(pagina, tipo) {
+async function cambiarPagina(pagina) {
     let personas;
-    if (tipo === 'habilitados') {
-        personas = await ObtenerUsuariosActivos(pagina);
-    }
+    personas = await ObtenerUsuariosActivos(pagina);
     if (personas && personas.usuarios.length > 0) {
-        if (tipo === 'habilitados') {
-            actualizarListaUsuarios(personas.usuarios, 'listaHabilitados');
-        }
+        actualizarListaUsuarios(personas.usuarios, 'listaHabilitados');
         crearPaginador(personas.totalPaginas, pagina);
     }
 }
@@ -241,7 +240,6 @@ async function ObtenerUsuariosActivos(Pagina_Actual) {
         return { usuarios: [], totalPaginas: 0, paginaActual: 0, totalRegistros: 0 }; // Respuesta vacía con estructura adecuada
     }
 }
-
 function retirarFormsActivos() {
     const formActive = document.querySelector('.user_list__item.form_active .user_list__form');
     // Verifica que el formulario exista antes de continuar
@@ -253,39 +251,52 @@ function retirarFormsActivos() {
 
     });
 }
-async function editUser(form) {
-    console.log(form)
-    const nombre = form.querySelector("#Nombre").value
-    const apellido = form.querySelector("#Apellido").value
-    const correo = form.querySelector("#Correo").value
-    const tipoDocumneto = form.querySelector("#Tipo_documento").value
-    const numeroDocumento = form.querySelector("#numero_documento").value
-    const fechaNacimientoInput = document.querySelector("#Fecha_nacimiento").value;
-    const fechaFormateada = formatFecha(fechaNacimientoInput);
-    const rol = form.querySelector("#Rol").value
-    const idUser = form.querySelector("#idUser").value
-    const numeroCelular= form.querySelector("#numero_celular").value
+
+
+async function editUser(formData) {
     const data = {
         "action": "edit",
-        "nombre": nombre,
-        "apellido": apellido,
-        "correo": correo,
-        "tipoDocumneto": tipoDocumneto,
-        "numeroDocumento": numeroDocumento,
-        "fechaNacimiento": fechaFormateada,
-        "rol": rol,
-        "idUser":idUser,
-        "numeroCelular": numeroCelular
-    }
+        "nombre": formData.get("Nombre"),
+        "apellido": formData.get("Apellido"),
+        "correo": formData.get("Correo"),
+        "tipoDocumneto": formData.get("tipoDocumento"),
+        "numeroDocumento": formData.get("numero_documento"),
+        "fechaNacimiento": formatFecha(formData.get("Fecha_nacimiento")),
+        "rol": formData.get("rol"),
+        "idUser": formData.get("idUser"),
+        "numeroCelular": formData.get("numero_celular")
+    };
 
-        const response = await sendRequest("/Prueba_JSP_war_exploded/usuarios", data);
-        console.log("Solicitud enviada con éxito");
-        if(response.status === "success"){
-            console.log("Se ha Actualizado el vehiculo correctamente")
-            showSuccessAlert(response.message)
-        }else{
-            showErrorDialog(response.message)
-        }
+    const response = await sendRequest("/Prueba_JSP_war_exploded/usuarios", data);
+    console.log("Solicitud enviada con éxito");
+    if (response.status === "success") {
+        console.log("Se ha actualizado el usuario correctamente");
+        showSuccessAlert(response.message);
+    } else {
+        showErrorDialog(response.message);
+    }
+}
+async function crearUsuario(formData) {
+    const data = {
+        "action": "add",
+        "nombre": formData.get("Nombre_new"),
+        "apellido": formData.get("Apellido_new"),
+        "correo": formData.get("Correo_new"),
+        "tipoDocumneto": formData.get("Tipo_documento_new"),
+        "numeroDocumento": formData.get("numero_documento_new"),
+        "fechaNacimiento": formatFecha(formData.get("Fecha_nacimiento_new")),
+        "password": formData.get("password_new"),
+        "rol": formData.get("Rol_new"),
+        "numeroCelular": formData.get("numero_celular_new")
+    };
+
+    const response = await sendRequest("/Prueba_JSP_war_exploded/usuarios", data);
+    if (response.status === "success") {
+        console.log("Se ha creado el usuario correctamente");
+        showSuccessAlert(response.message);
+    } else {
+        showErrorDialog(response.message);
+    }
 }
 async function deshabilitarUsuario(persona) {
     console.log(persona)
@@ -310,59 +321,15 @@ async function deshabilitarUsuario(persona) {
         return false
     }
 }
-async function crearUsuario(form) {
-
-    console.log(form)
-
-    const nombre = form.querySelector("#Nombre_new").value
-    const apellido = form.querySelector("#Apellido_new").value
-    const correo = form.querySelector("#Correo_new").value
-    const tipoDocumneto = form.querySelector("#Tipo_documento_new").value
-    const numeroDocumento = form.querySelector("#numero_documento_new").value
-    const fechaNacimientoInput = document.querySelector("#Fecha_nacimiento_new").value;
-    const password = form.querySelector("#password_new").value;
-    const fechaFormateada = formatFecha(fechaNacimientoInput);
-    const rol = form.querySelector("#Rol_new").value
-    const numeroCelular= form.querySelector("#numero_celular_new").value
-    const data = {
-        "action": "add",
-        "nombre": nombre,
-        "apellido": apellido,
-        "correo": correo,
-        "tipoDocumneto": tipoDocumneto,
-        "numeroDocumento": numeroDocumento,
-        "fechaNacimiento": fechaFormateada,
-        "password": password,
-        "rol": rol,
-        "numeroCelular":numeroCelular
-    }
-
-    const response =  await sendRequest("/Prueba_JSP_war_exploded/usuarios", data);
-    if(response.status === "success"){
-        console.log("Se ha Actualizado el vehiculo correctamente")
-        showSuccessAlert(response.message)
-    }else{
-        showErrorDialog(response.message)
-    }
-
-}
-function formatFecha(inputDate) {
-    const date = new Date(inputDate);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-}
-function validarFormularioNew(form) {
-    console.log(form)
-    const nombre = form.querySelector("#Nombre_new").value;
-    const apellido = form.querySelector("#Apellido_new").value;
-    const correo = form.querySelector("#Correo_new").value;
-    const tipoDocumento = form.querySelector("#Tipo_documento_new").value;
-    const numeroDocumento = form.querySelector("#numero_documento_new").value;
-    const fechaNacimientoInput = form.querySelector("#Fecha_nacimiento_new").value;
-    const password = form.querySelector("#password_new").value;
-    const rol = form.querySelector("#Rol_new").value;
+function validarFormularioNew(formData) {
+    const nombre = formData.get("Nombre_new");
+    const apellido = formData.get("Apellido_new");
+    const correo = formData.get("Correo_new");
+    const tipoDocumento = formData.get("Tipo_documento_new");
+    const numeroDocumento = formData.get("numero_documento_new");
+    const fechaNacimientoInput = formData.get("Fecha_nacimiento_new");
+    const password = formData.get("password_new");
+    const rol = formData.get("Rol_new");
 
     // Validar nombre y apellido solo texto
     if (!validarTexto(nombre, 1)) {
@@ -412,14 +379,15 @@ function validarFormularioNew(form) {
 
     return true; // Si todo es válido
 }
-function verificarFormularioEdit(form) {
-    const nombre = form.querySelector("#Nombre").value;
-    const apellido = form.querySelector("#Apellido").value;
-    const correo = form.querySelector("#Correo").value;
-    const tipoDocumento = form.querySelector("#Tipo_documento").value;
-    const numeroDocumento = form.querySelector("#numero_documento").value;
-    const fechaNacimientoInput = form.querySelector("#Fecha_nacimiento").value;
-    const rol = form.querySelector("#Rol").value;
+function verificarFormularioEdit(formData) {
+    const nombre = formData.get("Nombre");
+    const apellido = formData.get("Apellido");
+    const correo = formData.get("Correo");
+    const tipoDocumento = formData.get("tipoDocumento");
+    const numeroDocumento = formData.get("numero_documento");
+    const numeroCelular = formData.get("numero_celular");
+    const fechaNacimientoInput = formData.get("Fecha_nacimiento");
+    const rol = formData.get("rol");
 
     // Validar que el nombre y apellido solo contengan letras
     if (!validarTexto(nombre, 1)) {
@@ -434,6 +402,12 @@ function verificarFormularioEdit(form) {
     // Validar el correo electrónico
     if (!validarEmail(correo)) {
         showErrorDialog("El correo electrónico no es válido.");
+        return false;
+    }
+
+    // Validar el número de celular
+    if (!validarCelular(numeroCelular)) {
+        showErrorDialog("El celular debe ser un número válido.");
         return false;
     }
 
@@ -463,4 +437,10 @@ function verificarFormularioEdit(form) {
 
     return true; // Si todo es válido
 }
-
+function formatFecha(inputDate) {
+    const date = new Date(inputDate);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}

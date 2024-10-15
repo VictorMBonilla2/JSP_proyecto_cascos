@@ -2,16 +2,14 @@ package Controlador;
 
 
 import Modelo.Persona;
+import Modelo.TbEspacio;
+import Modelo.TbVehiculo;
 import Modelo.enums.EstadoUsuario;
 import Utilidades.JPAUtils;
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -97,19 +95,33 @@ public class PersonaJpaController implements Serializable {
     public Persona findPersona(int id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Persona.class, id);
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Persona> cq = cb.createQuery(Persona.class);
+            Root<Persona> root = cq.from(Persona.class);
+
+            // Hacer un JOIN FETCH para traer los vehículos
+            root.fetch("vehiculos", JoinType.LEFT); // Cambia esto a INNER si solo quieres personas que tienen vehículos
+
+            // Establecer la condición para buscar por ID
+            cq.select(root).where(cb.equal(root.get("id"), id));
+
+            TypedQuery<Persona> query = em.createQuery(cq);
+            return query.getSingleResult(); // Esto asumirá que solo habrá una persona con ese id
+        } catch (NoResultException e) {
+            return null; // Manejar caso donde no se encuentre la persona
         } finally {
             if (em != null && em.isOpen()) {
                 em.close();
             }
         }
     }
+
     public Persona buscarPersonaEnEspacio(int iduser) {
         EntityManager em = getEntityManager();
         try {
-            // Crear la consulta con TypedQuery para buscar el usuario en la tabla de espacios
+            // Crear la consulta con TypedQuery para buscar si un vehículo de la persona está en un espacio
             TypedQuery<Persona> query = em.createQuery(
-                    "SELECT e.persona FROM TbEspacio e WHERE e.persona.id = :iduser",
+                    "SELECT v.persona FROM TbEspacio e JOIN e.vehiculo v WHERE v.persona.id = :iduser",
                     Persona.class
             );
             query.setParameter("iduser", iduser);
@@ -117,12 +129,13 @@ public class PersonaJpaController implements Serializable {
             // Retornar el resultado de la consulta
             return query.getSingleResult();
         } catch (NoResultException e) {
-            System.out.println("No se encontró un usuario en el espacio con el ID: " + iduser);
-            return null; // Si no se encuentra la persona, retorna null
+            System.out.println("No se encontró un vehículo en el espacio asociado a la persona con ID: " + iduser);
+            return null; // Si no se encuentra el vehículo de la persona, retorna null
         } finally {
             em.close();
         }
     }
+
     public Persona buscarPersonaDocumento(int documento) {
         EntityManager em = getEntityManager();
         try {
@@ -135,9 +148,6 @@ public class PersonaJpaController implements Serializable {
 
             // Realizar los LEFT JOINs para permitir la existencia de registros nulos en las relaciones
             personaRoot.fetch("vehiculos", JoinType.LEFT);
-            personaRoot.fetch("rol", JoinType.LEFT);
-            personaRoot.fetch("tipoDocumento", JoinType.LEFT);
-
             // Definir la condición de la consulta (WHERE)
             cq.where(cb.equal(personaRoot.get("documento"), documento));
 

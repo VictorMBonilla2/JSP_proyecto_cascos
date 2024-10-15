@@ -1,4 +1,4 @@
-import {sendRequest} from "../ajax.js";
+import {hideLoadingSpinner, sendRequest, showLoadingSpinner} from "../ajax.js";
 import {host} from "../config.js";
 import {showConfirmationDialog} from "../alerts/confirm.js";
 import {showSuccessAlert} from "../alerts/success.js";
@@ -48,24 +48,28 @@ document.addEventListener("DOMContentLoaded",  async ()=>{
         )
     })
 
-    document.addEventListener("submit",(e)=>{
+    document.addEventListener("submit",async (e)=>{
         e.preventDefault();
         const targerForm= e.target;
-
         const form = new FormData(targerForm);
         const tipo=form.get("formType");
-
-        if (validarFormulario(form)) {
-            if (tipo === "add") {
-                addTipoDocumento(form);
+        const submitButton = e.target.querySelector("button[type='submit']");
+        submitButton.disabled = true;
+        showLoadingSpinner()
+        try{
+            if (validarFormulario(form)) {
+                if (tipo === "add") {
+                    await addTipoDocumento(form);
+                }
+                if (tipo === "edit") {
+                    await editTipoDocumento(form);
+                }
             }
-            if (tipo === "edit") {
-                editTipoDocumento(form);
-            }
+        }finally {
+            hideLoadingSpinner()
+            submitButton.disabled = false;
         }
     })
-
-
 })
 
 async function addTipoDocumento (form) {

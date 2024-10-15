@@ -1,9 +1,5 @@
-import {sendRequest} from "../ajax.js";
 import {host} from "../config.js";
-import {showConfirmationDialog} from "../alerts/confirm.js";
-import {showSuccessAlert} from "../alerts/success.js";
 import {showErrorDialog} from "../alerts/error.js";
-import {validarTexto} from "../utils/validations.js";
 
 document.addEventListener("DOMContentLoaded",  async ()=>{
 

@@ -39,7 +39,9 @@
                 <h1>Datos del Vehículo</h1>
                 <hr class="linea">
                 <%
+                    System.out.println("inteo de acceder a lista de vehiculos");
                     Set<TbVehiculo> vehiculoUser = user.getVehiculos();
+                    System.out.println("Accedio");
                     int index = 0;
 
                     for (TbVehiculo vehiculo : vehiculoUser) {
@@ -51,7 +53,7 @@
                     </div>
                     <div class="vehiculo_data__text">
                         <h1>Marca</h1>
-                        <p><%= vehiculo.getMarcaVehiculo().getNombreMarca() %></p>
+                        <p><%= vehiculo.getModeloVehiculo().getMarcaVehiculo().getNombreMarca() %></p>
                     </div>
                     <div class="vehiculo_data__text">
                         <h1>Modelo</h1>

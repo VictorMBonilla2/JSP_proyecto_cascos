@@ -11,41 +11,44 @@ public class TbReportes {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_reporte", nullable = false)
     private Integer id_reporte;
-
     private Date fecha_reporte;
+
     @Column(nullable = false)
     private String nombre_reporte;
+
     @Column(nullable = false)
     private String descripcion_reporte;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_espacio", nullable = false)
+    private TbEspacio espacio;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_reporte")
     private TipoReporte tipoReporte;
 
-    // Relación ManyToOne con el Aprendiz
+    // Cambiar la relación a TbVehiculo en lugar de Persona
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_aprendiz", referencedColumnName = "id")
-    private Persona aprendiz;
+    @JoinColumn(name = "id_vehiculo", nullable = false)
+    private TbVehiculo vehiculo;
 
     // Relación ManyToOne con el Gestor (Colaborador)
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_gestor", referencedColumnName = "id")
+    @JoinColumn(name = "id_gestor")
     private Persona gestor;
-
-    private String placaVehiculo;
 
     public TbReportes() {
     }
 
-    public TbReportes(Integer id_reporte, Date fecha_reporte, String nombre_reporte, String descripcion_reporte, TipoReporte tipoReporte, Persona aprendiz, Persona gestor, String placaVehiculo) {
+    public TbReportes(Integer id_reporte, Date fecha_reporte, String nombre_reporte, String descripcion_reporte, TbEspacio espacio, TipoReporte tipoReporte, TbVehiculo vehiculo, Persona gestor) {
         this.id_reporte = id_reporte;
         this.fecha_reporte = fecha_reporte;
         this.nombre_reporte = nombre_reporte;
         this.descripcion_reporte = descripcion_reporte;
+        this.espacio = espacio;
         this.tipoReporte = tipoReporte;
-        this.aprendiz = aprendiz;
+        this.vehiculo = vehiculo;
         this.gestor = gestor;
-        this.placaVehiculo = placaVehiculo;
     }
 
     public Integer getId_reporte() {
@@ -88,12 +91,12 @@ public class TbReportes {
         this.tipoReporte = tipoReporte;
     }
 
-    public Persona getAprendiz() {
-        return aprendiz;
+    public TbVehiculo getVehiculo() {
+        return vehiculo;
     }
 
-    public void setAprendiz(Persona aprendiz) {
-        this.aprendiz = aprendiz;
+    public void setVehiculo(TbVehiculo vehiculo) {
+        this.vehiculo = vehiculo;
     }
 
     public Persona getGestor() {
@@ -104,12 +107,12 @@ public class TbReportes {
         this.gestor = gestor;
     }
 
-    public String getPlacaVehiculo() {
-        return placaVehiculo;
+    public TbEspacio getEspacio() {
+        return espacio;
     }
 
-    public void setPlacaVehiculo(String placaVehiculo) {
-        this.placaVehiculo = placaVehiculo;
+    public void setEspacio(TbEspacio espacio) {
+        this.espacio = espacio;
     }
 }
 

@@ -1,4 +1,4 @@
-import {sendRequest} from "../ajax.js";
+import {hideLoadingSpinner, sendRequest, showLoadingSpinner} from "../ajax.js";
 import {showErrorDialog} from "../alerts/error.js";
 import {showSuccessAlert} from "../alerts/success.js";
 import {showConfirmationDialog} from "../alerts/confirm.js";
@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const vehiculoForm= document.querySelector("#vehiculoForm");
     const tipoVehiculoSelect= document.getElementById("tipoSelect");
     const marcaVehiculoSelect= document.getElementById("marcaSelect");
-    const modeloVehiculoSelect = document.getElementById("modeloSelect")
     let vehiculosData = []; // Almacenará los datos de vehículos
 
     await cargarTiposVehiculo('tipoSelect')
@@ -94,20 +93,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    vehiculoForm.addEventListener("submit",(e)=>{
+    vehiculoForm.addEventListener("submit", async (e)=>{
         e.preventDefault();
         const targerForm= e.target;
-
         const form = new FormData(targerForm);
         const tipo=form.get("formType");
-        if(validarFormulario(form)){
-            if(tipo ==="add"){
-                addSector(form)
+        const submitButton = e.target.querySelector("button[type='submit']");
+        submitButton.disabled = true;
+        showLoadingSpinner()
+        try{
+            if(validarFormulario(form)){
+                if(tipo ==="add"){
+                    addSector(form)
+                }
+                if(tipo ==="edit"){
+                    await editVehiculo(form)
+                }
             }
-            if(tipo ==="edit"){
-                editVehiculo(form)
-            }
+        }finally {
+            hideLoadingSpinner()
+            submitButton.disabled = false;
         }
+
     })
 
     // Función para realizar la búsqueda con fetch

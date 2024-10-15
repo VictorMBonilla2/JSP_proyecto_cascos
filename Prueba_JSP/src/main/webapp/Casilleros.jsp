@@ -37,11 +37,11 @@
 <script src="resources/js/buttonListener.js"></script>
 
 <template id="template-espacio-ocupado">
-    <div class="casillero" data-entrada="{tiempoEntrada}" data-tarifa="10.0">
+    <div class="casillero">
         <div class="casillero__title estilo__casillero">
             <h1></h1>
             <p>{nombre}</p>
-            <img src="resources/imagenes/DashiconsWarning.png" class="report__img" data-report="reportmodal{espacioId}">
+            <img src="resources/imagenes/DashiconsWarning.png" class="report__img">
         </div>
 
         <div class="casillero__contenido estilo__contenido">
@@ -61,13 +61,13 @@
                 </div>
             </div>
             <div class="button-container">
-                <button class="button_primary botones__pago" data-pay="paymodal{espacioId}">
+                <button class="button_primary botones__pago" >
                     Liberar
                 </button>
-                <button class="button_secundary button--edit botones__ajustar" data-edit="editmodal{espacioId}">
+                <button class="button_secundary button--edit botones__ajustar" >
                     Ajustar
                 </button>
-                <button class="button_secundary button--edit botones__info" data-edit="infomodal{espacioId}">
+                <button class="button_secundary button--edit botones__info" >
                     info
                 </button>
             </div>
@@ -87,7 +87,7 @@
                 </div>
             </div>
             <div class="button-container">
-                <button class="button_primary addCasilleroBtn" data-add="addmodal{espacioId}">
+                <button class="button_primary addCasilleroBtn" id="updateButton" >
                     Añadir
                 </button>
             </div>
@@ -110,7 +110,7 @@
                         <p class="document"></p>
                         <p class="nameAprendiz"></p>
                         <p class="Placa"></p>
-                        <button type="submit" class="button_primary">Liberar</button>
+                        <button type="submit" class="button_primary" id="releaseButton">Liberar</button>
                     </div>
                 </form>
             </div>
@@ -134,7 +134,8 @@
                         <input type="text" id="editdocumento" placeholder="Documento del aprendiz" name="documento" required readonly>
                         <label for="editcant_cascos">Cantidad de Cascos</label>
                         <input type="number" id="editcant_cascos" placeholder="Cantidad de cascos" name="cant_cascos" required>
-                        <button type="submit" class="button_primary">Añadir</button>
+
+                        <button type="submit" class="button_primary" id="updateButton">Editar</button>
                     </div>
                 </form>
             </div>
@@ -161,7 +162,7 @@
                         <input type="text" id="reportNombre" name="reportNombre" placeholder="Describe lo que pasó">
                         <label for="reportDescripcion">Descripción</label>
                         <textarea id="reportDescripcion" name="description" rows="4" cols="50" placeholder="Escribe aquí tu descripción..."></textarea>
-                        <button type="submit" class="button_primary">Añadir</button>
+                        <button type="submit" class="button_primary" id="reportButton">Reportar</button>
                     </div>
                 </form>
             </div>
@@ -218,6 +219,7 @@
 
 <jsp:include page="resources/success.jsp"/>
 <jsp:include page="resources/error.jsp"/>
+<jsp:include page="resources/confirm.jsp" />
 <jsp:include page="resources/footer.jsp" />
 </body>
 

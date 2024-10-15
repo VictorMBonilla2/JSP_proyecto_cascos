@@ -12,6 +12,9 @@ export function validarCantidadCascos(cantidad) {
     const numCascos = Number(cantidad);
     return !isNaN(numCascos) && numCascos >= 0 && numCascos <= 2;
 }
+export function validarpassword(password, longitudMinima = 1 ) {
+    return password.length >= longitudMinima;
+}
 
 // Validar que el nombre del reporte no tenga más de 20 caracteres y no esté vacío
 export function validarNombreReporte(nombreReporte) {

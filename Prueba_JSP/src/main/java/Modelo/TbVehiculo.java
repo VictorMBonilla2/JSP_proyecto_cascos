@@ -26,22 +26,17 @@ public class TbVehiculo {
     @Column(name = "color_vehiculo")
     private ColorVehiculo colorVehiculo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "persona_documento")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_persona")
     private Persona persona;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_ciudad", nullable = false)  // Relación con la tabla de ciudades
     private Tb_CiudadVehiculo ciudadVehiculo;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tipovehiculo", nullable = false)  // Clave foránea que conecta con TbTipovehiculo
     private TbTipovehiculo tipovehiculo;
-
-    // Nueva relación con Tb_MarcaVehiculo
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_marcavehiculo", nullable = false)  // Clave foránea que conecta con Tb_MarcaVehiculo
-    private Tb_MarcaVehiculo marcaVehiculo;
 
     // Nueva relación con Tb_ModeloVehiculo
     @ManyToOne(fetch = FetchType.EAGER)
@@ -52,7 +47,7 @@ public class TbVehiculo {
     public TbVehiculo() {
     }
 
-    public TbVehiculo(int id_vehiculo, String placaVehiculo, Integer cantCasco, EstadoVehiculo estadoVehiculo, ColorVehiculo colorVehiculo, Persona persona, Tb_CiudadVehiculo ciudadVehiculo, TbTipovehiculo tipovehiculo, Tb_MarcaVehiculo marcaVehiculo, Tb_ModeloVehiculo modeloVehiculo) {
+    public TbVehiculo(int id_vehiculo, String placaVehiculo, Integer cantCasco, EstadoVehiculo estadoVehiculo, ColorVehiculo colorVehiculo, Persona persona, Tb_CiudadVehiculo ciudadVehiculo, TbTipovehiculo tipovehiculo, Tb_ModeloVehiculo modeloVehiculo) {
         this.id_vehiculo = id_vehiculo;
         this.placaVehiculo = placaVehiculo;
         this.cantCasco = cantCasco;
@@ -61,7 +56,6 @@ public class TbVehiculo {
         this.persona = persona;
         this.ciudadVehiculo = ciudadVehiculo;
         this.tipovehiculo = tipovehiculo;
-        this.marcaVehiculo = marcaVehiculo;
         this.modeloVehiculo = modeloVehiculo;
     }
 
@@ -119,14 +113,6 @@ public class TbVehiculo {
 
     public void setTipovehiculo(TbTipovehiculo tipovehiculo) {
         this.tipovehiculo = tipovehiculo;
-    }
-
-    public Tb_MarcaVehiculo getMarcaVehiculo() {
-        return marcaVehiculo;
-    }
-
-    public void setMarcaVehiculo(Tb_MarcaVehiculo marcaVehiculo) {
-        this.marcaVehiculo = marcaVehiculo;
     }
 
     public Tb_ModeloVehiculo getModeloVehiculo() {

@@ -1,6 +1,5 @@
 package Controlador;
 
-import Modelo.Persona;
 import Modelo.TbVehiculo;
 import Modelo.enums.EstadoVehiculo;
 import Utilidades.JPAUtils;

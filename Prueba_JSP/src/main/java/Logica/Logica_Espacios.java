@@ -3,6 +3,7 @@ package Logica;
 import Controlador.PersistenciaController;
 import Modelo.TbEspacio;
 import Modelo.TbSectores;
+import Modelo.enums.EstadoEspacio;
 import Utilidades.EspacioServiceManager;
 
 import java.util.List;
@@ -10,13 +11,12 @@ import java.util.List;
 public class Logica_Espacios {
     private PersistenciaController controladora;
 
-    // Constructor sin referencias a EspacioServiceManager
     public Logica_Espacios(PersistenciaController controladora) {
         this.controladora = controladora;
     }
 
     public List<TbEspacio> DatosEspacio() {
-        return controladora.DatosEspacios();
+        return controladora.DatosEspaciosDisponibles();
     }
     public List<TbEspacio> obtnerEspaciosPorSector (int idsector){
         return controladora.ObtenerEspaciosPorSector(idsector);
@@ -47,7 +47,17 @@ public class Logica_Espacios {
     public void eliminarEspacio(TbEspacio espacio) throws Exception {
         controladora.eliminarEspacio(espacio.getId_espacio());
     }
+    public void desactivarEspacio(TbEspacio espacio){
+        espacio.setEstado_espacio(EstadoEspacio.Inactivo);
+        System.out.println("Se inserta el estado de inactivo");
+        actualizarEspacio(espacio);
+    }
 
+    public void reactivarEspacio(TbEspacio espacio){
+        espacio.setEstado_espacio(EstadoEspacio.Libre);
+        System.out.println("Se inserta el estado de inactivo");
+        actualizarEspacio(espacio);
+    }
 
     public boolean actualizarEspacio(TbEspacio espacio) {
         try {
@@ -58,4 +68,6 @@ public class Logica_Espacios {
             return false;
         }
     }
+
+
 }

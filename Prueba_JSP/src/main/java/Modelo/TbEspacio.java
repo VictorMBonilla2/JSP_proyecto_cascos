@@ -13,20 +13,24 @@ public class TbEspacio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_espacio", nullable = false)
     private Integer id_espacio;
+
     @Column( nullable = false)
     private String nombre;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_vehiculo_fk")
     private TbVehiculo vehiculo;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_aprendiz_fk")
-    private Persona persona;
+
+    //Pasar a hora-fecha
     private Date hora_entrada;
+
     private Integer cantidad_cascos;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "estado_espacio", nullable = false)
     private EstadoEspacio estado_espacio;
-    // Foránea de la clase Casillero
+
+    // Foránea de la clase Sector
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_sector", nullable = false)
     private TbSectores sector;
@@ -36,11 +40,10 @@ public class TbEspacio {
     public TbEspacio() {
     }
 
-    public TbEspacio(Integer id_espacio, String nombre, TbVehiculo vehiculo, Persona persona, Date hora_entrada, Integer cantidad_cascos, EstadoEspacio estado_espacio, TbSectores sector) {
+    public TbEspacio(Integer id_espacio, String nombre, TbVehiculo vehiculo, Date hora_entrada, Integer cantidad_cascos, EstadoEspacio estado_espacio, TbSectores sector) {
         this.id_espacio = id_espacio;
         this.nombre = nombre;
         this.vehiculo = vehiculo;
-        this.persona = persona;
         this.hora_entrada = hora_entrada;
         this.cantidad_cascos = cantidad_cascos;
         this.estado_espacio = estado_espacio;
@@ -71,13 +74,6 @@ public class TbEspacio {
         this.vehiculo = vehiculo;
     }
 
-    public Persona getPersona() {
-        return persona;
-    }
-
-    public void setPersona(Persona persona) {
-        this.persona = persona;
-    }
 
     public Date getHora_entrada() {
         return hora_entrada;

@@ -1,7 +1,7 @@
 import {host} from "./config.js";
 import {cargarTiposDocumento} from "./utils/renderSelects.js";
-import {sendRequest} from "./ajax.js";
-import {validarDocumento, validarTextoNumeros} from "./utils/validations.js";
+import {hideLoadingSpinner, sendRequest, showLoadingSpinner} from "./ajax.js";
+import {validarDocumento} from "./utils/validations.js";
 
 const logo = document.querySelector("#logo_icon");
 const texto_logo = document.querySelector(".logo__text");
@@ -20,12 +20,21 @@ document.addEventListener("DOMContentLoaded",  async () => {
         texto_logo.textContent = "Administrador"
     });
     await cargarTiposDocumento("TipoDocumento")
-    form.addEventListener("submit", (e)=>{
+    form.addEventListener("submit", async (e)=>{
         e.preventDefault();
         const form = new FormData(e.target)
-        if(validarFormulario(form)){
-            validarIngreso(form);
+        const submitButton = e.target.querySelector("button[type='submit']");
+        submitButton.disabled = true;
+        showLoadingSpinner()
+        try{
+            if(validarFormulario(form)){
+               await validarIngreso(form);
+            }
+        } finally {
+            hideLoadingSpinner()
+            submitButton.disabled = false;
         }
+
 
     })
 
@@ -44,7 +53,7 @@ async function validarIngreso(form){
         password : form.get("password"),
         rol: rol
    }
-    const respuesta= await sendRequest(`${host}/SvPersona`,data)
+    const respuesta= await sendRequest(`${host}/SvPersona`,data,"submitButton")
     if (respuesta.status === "success") {
         // Redireccionar según el rol del usuario
         window.location.href = "Home.jsp";

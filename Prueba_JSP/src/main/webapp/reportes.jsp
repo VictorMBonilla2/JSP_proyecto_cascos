@@ -55,10 +55,32 @@
                             <h2>Detalles Reporte</h2>
                             <span class="close" data-modal-id="">×</span>
                         </div>
-                        <div class="modal-body">
-                            <h2></h2>
-                            <h3></h3>
 
+
+
+                        <div class="modal-body">
+                            <h2 class="nombreReporte"></h2>
+                            <div class="input_container input_container--vertical">
+                                <h3>Datos del Gestor reportante: </h3>
+                                <p class="nombreReportante"></p>
+                                <p class="documentoReportante"></p>
+                            </div>
+                            <div class="input_container input_container--vertical">
+                                <h3>Datos del Aprendiz Involucrado: </h3>
+                                <p class="nombreReportado"></p>
+                                <p class="documentoReportado"></p>
+                                <p class="placaReportado"></p>
+
+                            </div>
+                            <div class="input_container ">
+                                <h3 >Tipo de reporte: </h3>
+                                <p class="tipoReporte"></p>
+                            </div>
+
+                            <div class="input_container input_container--vertical">
+                                <h3>Descripcion del reporte: </h3>
+                                <p class="descripcionReporte"></p>
+                            </div>
                         </div>
                     </div>
                 </div>

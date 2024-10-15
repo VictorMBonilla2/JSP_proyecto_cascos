@@ -49,6 +49,7 @@
 <jsp:include page="resources/confirm.jsp"/>
 <jsp:include page="resources/success.jsp"/>
 <jsp:include page="resources/error.jsp"/>
+<jsp:include page="resources/spinner.jsp"/>
 <script type="module" src="resources/js/Registro.js"></script>
 
 </body>

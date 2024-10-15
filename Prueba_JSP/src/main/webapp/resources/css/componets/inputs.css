@@ -78,3 +78,16 @@
     border-radius: 5px;
     font-size: 16px;
 }
+textarea {
+    resize: none; /* Deshabilita el redimensionamiento manual */
+    width: 100%; /* Ajusta el ancho a un tamaño predefinido o al 100% del contenedor */
+    max-width: 100%; /* Limita el tamaño máximo para evitar que se expanda más */
+    height: 150px; /* Asigna una altura fija */
+    max-height: 150px; /* Evita que se expanda verticalmente */
+    padding: 10px; /* Añade algo de espacio interno */
+    border: 1px solid #ccc; /* Bordes simples */
+    border-radius: 5px; /* Bordes redondeados */
+    box-sizing: border-box; /* Asegura que el padding esté dentro del tamaño definido */
+    overflow-y: auto; /* Añade barra de desplazamiento vertical si el contenido es mayor al área */
+    font-size: 16px; /* Ajusta el tamaño de la fuente */
+}

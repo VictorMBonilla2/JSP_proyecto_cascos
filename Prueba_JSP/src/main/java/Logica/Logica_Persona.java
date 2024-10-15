@@ -3,20 +3,21 @@ package Logica;
 import Controlador.PersistenciaController;
 import Modelo.Persona;
 import Modelo.TbInformesUsuarios;
+import Modelo.TbRecuperacion;
 import Modelo.TbVehiculo;
 import Modelo.enums.EstadoUsuario;
-import Servicios.EmailService;
 import Servicios.PDFService;
 import Servicios.PasswordService;
 import Utilidades.ResultadoOperacion;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public class Logica_Persona {
     PersistenciaController controladora = new PersistenciaController();
     PDFService pdfService= new PDFService() ;
+
+
     public ResultadoOperacion validarIngreso(int documento, int tipoDocumento, String clave, String rol) {
         PasswordService passwordService = new PasswordService();
         System.out.println("Iniciando validación de ingreso para documento: " + documento);
@@ -100,6 +101,9 @@ public class Logica_Persona {
 
         return persona;
     }
+    public Persona buscarPersonaPorCorreo(String email) {
+        return controladora.buscarPersonaPorCorreo(email);
+    }
 
     public Persona buscarPersonaConDocumento(int documento) {
         try{
@@ -108,6 +112,16 @@ public class Logica_Persona {
             System.err.println("Error al obtener la persona: " + e.getMessage());
             return null;
         }
+    }
+    // Método que busca un vehículo en la lista de vehículos de una persona por su ID
+    public TbVehiculo buscarVehiculoPorId(Persona persona, int idVehiculo) {
+        if (persona == null || persona.getVehiculos() == null) {
+            return null;
+        }
+        return persona.getVehiculos().stream()
+                .filter(vehiculo -> vehiculo.getId_vehiculo() == idVehiculo)
+                .findFirst()
+                .orElse(null);
     }
 
     public ResultadoOperacion borrarUsuario(int id) throws Exception {
@@ -133,16 +147,7 @@ public class Logica_Persona {
         return null;
     }
 
-    // Método que busca un vehículo en la lista de vehículos de una persona por su ID
-    public TbVehiculo buscarVehiculoPorId(Persona persona, int idVehiculo) {
-        if (persona == null || persona.getVehiculos() == null) {
-            return null;
-        }
-        return persona.getVehiculos().stream()
-                .filter(vehiculo -> vehiculo.getId_vehiculo() == idVehiculo)
-                .findFirst()
-                .orElse(null);
-    }
+
 
     public ResultadoOperacion cambiarEstadoUsuario(int id) {
         Persona usuario = buscarpersonaPorId(id);
@@ -236,83 +241,46 @@ public class Logica_Persona {
 
 
     public String generarInforme(int idUsuario) {
+        // Buscar el usuario por su ID
         Persona usuario = buscarpersonaPorId(idUsuario);
+        // Obtener los vehículos del usuario
         Set<TbVehiculo> vehiculos = usuario.getVehiculos();
+        // Convertir a lista para facilitar el manejo
         List<TbVehiculo> listaVehiculos = new ArrayList<>(vehiculos);
         try{
-            TbInformesUsuarios informe = pdfService.generarPDF(usuario, listaVehiculos);
-
+       TbInformesUsuarios informe = pdfService.generarPDF(usuario, listaVehiculos);
             controladora.subirInforme(informe);
-
             String codigo = informe.getCodigoInforme();
             System.out.println(codigo);
             return codigo;
         }catch (Exception e){
             System.err.println("Hubo un error al crear el pdf "+ e.getMessage());
+            e.printStackTrace();
             return null;
         }
 
     }
 
-    public TbInformesUsuarios findInformeById(Long informeId) {
-
-        return controladora.buscarInformePorId(informeId);
-
-    }
     public TbInformesUsuarios findInformeByCode(String informeCode) {
 
         return controladora.buscarInformePorCodigo(informeCode);
 
     }
 
-    public String generarTokenRecuperacion(String email) {
-        System.out.println("Intentando obtener usuario");
-        Persona usuario = buscarPersonaPorCorreo(email);
-        if (usuario != null) {
-            System.out.println("Usuario obtenido");
-            String token = UUID.randomUUID().toString();
-            // Guardar el token en la base de datos con un tiempo de expiración
-            usuario.setTokenRecuperacion(token);
-            usuario.setFechaExpiracionToken(new Date(System.currentTimeMillis() + 3600000)); // 1 hora
-            actualizarPersona(usuario);
-            return token;
-        }
-        return null;
-    }
-    public void enviarCorreoRecuperacion(String email, String token) {
-        System.out.println("Se inicia la creacion del correo");
-        EmailService emailService = new EmailService();
-        emailService.enviarCorreoRecuperacion(email, token);
-    }
-    public Persona buscarPorToken(String token) {
-        return controladora.buscarPersonaPorToken(token);
-    }
-
-    public boolean isTokenValid(Persona usuario) {
-        System.out.println("Se intenta validar el tocken.");
-        Date now = new Date();
-        return usuario.getFechaExpiracionToken().after(now); // Verifica si el token aún no ha expirado
-    }
-
-    public void actualizarPassword(Persona usuario, String nuevaPassword) {
-        System.out.println("Se inicia el cambio de contraseña");
-        PasswordService passwordService = new PasswordService();
-        String clave_encriptada= passwordService.encriptarContrasena(nuevaPassword);
-        System.out.println("Clave encriptada: "+clave_encriptada );
-        usuario.setClave(clave_encriptada); // Aplica una función hash a la contraseña antes de guardarla
-        usuario.setTokenRecuperacion(null); // Limpia el token después de usarlo
-        usuario.setFechaExpiracionToken(null);
+    public ResultadoOperacion actualizarPassword(Persona usuario, String nuevaPassword) {
         try{
-            controladora.EditarPersona(usuario); // Limpia la fecha de expiración
-            System.out.println("Contraseña cambiada");
+            PasswordService passwordService = new PasswordService();
+            String clave_encriptada= passwordService.encriptarContrasena(nuevaPassword);
+            System.out.println("Se inicia el cambio de contraseña");
+            System.out.println("Clave encriptada: "+ clave_encriptada );
+            usuario.setClave(clave_encriptada);
+            controladora.EditarPersona(usuario);
+            return  new ResultadoOperacion(true, "La contraseña ha sido cambiada");
         } catch (Exception e){
-            System.out.println("Error al cambiar contraseña");
+            System.out.println("Error al cambiar contraseña: " + e.getMessage());
+            return  new ResultadoOperacion(false, "Error al cambiar la contraseña");
         }
-
     }
 
-    private Persona buscarPersonaPorCorreo(String email) {
 
-        return controladora.buscarPersonaPorCorreo(email);
-    }
 }
