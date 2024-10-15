@@ -183,6 +183,7 @@ public class SvCasilleros {
             nuevoRegistro.setFechaRegistro(new Date());
             nuevoRegistro.setEspacio(espacio);
             nuevoRegistro.setVehiculo(espacio.getVehiculo());
+            nuevoRegistro.setFechaEntrada(espacio.getHora_entrada());
 
             // Verificar si la sesión es válida y tiene el atributo documento
             Persona colaborador = obtenerColaboradorDesdeSesion(req, resp);

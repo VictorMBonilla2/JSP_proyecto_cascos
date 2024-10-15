@@ -74,8 +74,6 @@
                 </div>
                 <hr>
                 <div class="input_container input_container--vertical">
-                    <label for="cascoConfirm">¿Lleva Casco?</label>
-                    <input type="checkbox" id="cascoConfirm" name="placa">
                     <label for="cantCasco">Cantidad:</label>
                     <input type="text" id="cantCasco" name="cascosVehiculo" placeholder="Describe lo que paso">
                 </div>

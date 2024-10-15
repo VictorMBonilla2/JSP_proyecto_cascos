@@ -186,6 +186,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 document.getElementById('colorSelect').value = vehiculoSeleccionado.color_vehiculo
 
+                document.getElementById('estadoVehiculo').value = vehiculoSeleccionado.estadoVehiculo
+
                 document.getElementById('cantidadCasco').value = vehiculoSeleccionado.cantidad_cascos
 
                 document.getElementById('ciudadSelect').value = vehiculoSeleccionado.ciudad
@@ -257,6 +259,7 @@ async function editVehiculo(form) {
     const cantCascoVehiculo=form.get("cantCasco");
     const colorVehiculo =   form.get("colorVehiculo")
     const ciudadVehiculo=   form.get("ciudadVehiculo")
+    const estadoVehiculo =  form.get("estadoVehiculo")
 
     const data= {
         action: "edit",
@@ -268,7 +271,8 @@ async function editVehiculo(form) {
         modeloVehiculo: modeloVehiculo,
         cantCascoVehiculo: cantCascoVehiculo,
         colorVehiculo: colorVehiculo,
-        ciudadVehiculo: ciudadVehiculo
+        ciudadVehiculo: ciudadVehiculo,
+        estadoVehiculo:estadoVehiculo
     }
     console.log(data)
     const response= await sendRequest(`${host}/VehiculoAprendiz`,data)

@@ -67,6 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             submitButton.disabled = false;
         }
     });
+    tipoVehiculoSelect.dispatchEvent(new Event('change'));
 });
 
 async function addMarca(form) {

@@ -29,6 +29,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                         thHora.textContent = "Hora";
                         headerRow.appendChild(thHora);
                     }
+                    if (key === "fecha_entrada") {
+                        const thHora = document.createElement("th");
+                        thHora.textContent = "Hora";
+                        headerRow.appendChild(thHora);
+                    }
                 });
                 headerTable.appendChild(headerRow);
                 tabla.appendChild(headerTable);
@@ -42,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         let value = registro[key];
 
                         // Formatear fecha y hora si es "fecha_registro"
-                        if (key === "fecha_registro") {
+                        if (key === "fecha_registro" ||key === "fecha_entrada") {
                             const date = new Date(value);
                             const fecha = date.toLocaleDateString();
                             const hora = date.toLocaleTimeString();
@@ -55,7 +60,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                             const horaTd = document.createElement("td");
                             horaTd.textContent = hora;
                             row.appendChild(horaTd);
-                        } else {
+                        }
+                        else {
                             td.textContent = value;
                             row.appendChild(td);
                         }
