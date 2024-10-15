@@ -1,4 +1,4 @@
-import {sendRequest} from "../ajax.js";
+import {hideLoadingSpinner, sendRequest, showLoadingSpinner} from "../ajax.js";
 import {host} from "../config.js";
 import {showConfirmationDialog} from "../alerts/confirm.js";
 import {showSuccessAlert} from "../alerts/success.js";
@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const inputNombreMarca = document.querySelector("#nameMarca_input");
     const deleteButton = document.querySelector("#delete_button");
 
-    cargarTiposVehiculo()
+    await cargarTiposVehiculo()
 
     tipoVehiculoSelect.addEventListener('change', async function() {
         console.log("Tipo de vehiculo selecciondado. Buscando modelos...");
@@ -44,22 +44,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
     });
 
-    document.addEventListener("submit", (e) => {
+    document.addEventListener("submit", async (e) => {
         e.preventDefault();
         const targetForm = e.target;
 
         const form = new FormData(targetForm);
         const tipo = form.get("formType");
-
-        if(validarFormulario(form)){
-            if (tipo === "add") {
-                addMarca(form);
+        const submitButton = e.target.querySelector("button[type='submit']");
+        submitButton.disabled = true;
+        showLoadingSpinner()
+        try{
+            if(validarFormulario(form)){
+                if (tipo === "add") {
+                   await addMarca(form);
+                }
+                if (tipo === "edit") {
+                    await editMarca(form);
+                }
             }
-            if (tipo === "edit") {
-                editMarca(form);
-            }
+        }finally {
+            hideLoadingSpinner()
+            submitButton.disabled = false;
         }
-
     });
 });
 

@@ -47,8 +47,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const modalDiv = document.importNode(modalTemplate, true);
                 modalDiv.querySelector('.modal').id = modalId;
                 modalDiv.querySelector('.close').setAttribute('data-modal-id', modalId);
-                modalDiv.querySelector('.modal-body h3').textContent = reporte.descripcion_reporte;
-                modalDiv.querySelector('.modal-body h3').textContent = reporte.descripcion_reporte;
+                modalDiv.querySelector('.nombreReporte').textContent = reporte.nombre_reporte;
+                modalDiv.querySelector('.nombreReportante').textContent = reporte.nombre_colaborador;
+                modalDiv.querySelector('.documentoReportante').textContent = reporte.documento_colaborador;
+                modalDiv.querySelector('.nombreReportado').textContent = reporte.nombre_colaborador;
+                modalDiv.querySelector('.documentoReportado').textContent = reporte.documento_aprendiz;
+                modalDiv.querySelector('.placaReportado').textContent = reporte.placa_vehiculo;
+                modalDiv.querySelector('.tipoReporte').textContent = reporte.tipo_reporte;
+                modalDiv.querySelector('.descripcionReporte').textContent = reporte.descripcion_reporte;
 
                 document.body.appendChild(modalDiv);
             });

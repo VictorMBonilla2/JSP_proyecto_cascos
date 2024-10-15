@@ -1,4 +1,5 @@
 package Servlets;
+
 import Logica.Logica_Documentos;
 import Logica.Logica_Persona;
 import Logica.Logica_Rol;
@@ -23,7 +24,6 @@ import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 
 @WebServlet(name = "SvPersona", urlPatterns = {"/SvPersona"})

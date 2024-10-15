@@ -1,4 +1,4 @@
-import {sendRequest} from "../ajax.js";
+import {hideLoadingSpinner, sendRequest, showLoadingSpinner} from "../ajax.js";
 import {host} from "../config.js";
 import {showConfirmationDialog} from "../alerts/confirm.js";
 import {showSuccessAlert} from "../alerts/success.js";
@@ -47,19 +47,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // Manejar los envíos de formularios
-    document.addEventListener("submit", (e) => {
+    document.addEventListener("submit", async (e) => {
         e.preventDefault();
         const targetForm = e.target;
         const form = new FormData(targetForm);
         const tipo = form.get("formType");
-        if (validarFormulario(form)) {
-            if (tipo === "add") {
-                addTipoVehiculo(form);
+        const submitButton = e.target.querySelector("button[type='submit']");
+        submitButton.disabled = true;
+        showLoadingSpinner()
+        try{
+            if (validarFormulario(form)) {
+                if (tipo === "add") {
+                    await  addTipoVehiculo(form);
+                }
+                if (tipo === "edit") {
+                    await editTipoVehiculo(form);
+                }
             }
-            if (tipo === "edit") {
-                editTipoVehiculo(form);
-            }
+        }finally {
+            hideLoadingSpinner()
+            submitButton.disabled = false;
         }
+
     });
 });
 

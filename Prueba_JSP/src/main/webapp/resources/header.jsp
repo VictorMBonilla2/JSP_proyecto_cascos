@@ -39,12 +39,6 @@
     if (isGestor || isAdmin){
 %>
 
-<%
-
-
-
-%>
-
 
 <header class="hea_container">
     <div class="hea_container__logo">

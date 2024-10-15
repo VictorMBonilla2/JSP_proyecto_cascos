@@ -48,6 +48,7 @@
     <jsp:include page="resources/confirm.jsp"/>
     <jsp:include page="resources/success.jsp"/>
     <jsp:include page="resources/error.jsp"/>
+    <jsp:include page="resources/spinner.jsp"/>
 </main>
 <script type="module" src="resources/js/resetPassword.js"></script>
 </body>

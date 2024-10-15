@@ -25,7 +25,7 @@
             Crear Nuevo Usuario
         </div>
     </div>
-    <div id="paginadorHabilitados"></div> <!-- Paginador dinámico -->
+    <div id="paginadorHabilitados"></div>
     <script type="module" src="resources/js/usuarios.js"></script>
 </section>
 
@@ -89,50 +89,48 @@
 <template id="template_form">
     <div class="user_list__form">
         <form class="formulario ">
+            <input type="hidden" id="formType" name="formType" value="edit">
             <input type="hidden" id="idUser" name="idUser" value="">
             <div class="form_persona">
                 <div class="input_container">
                     <label for="Nombre">Nombre</label>
-                    <input type="text" id="Nombre">
+                    <input type="text" id="Nombre" name="Nombre">
                 </div>
                 <div class="input_container">
-                    <label for="Apellido"> Apellido</label>
-                    <input type="text" id="Apellido">
+                    <label for="Apellido">Apellido</label>
+                    <input type="text" id="Apellido" name="Apellido">
                 </div>
                 <div class="input_container">
                     <label for="Correo">Correo Electronico</label>
-                    <input type="text" id="Correo">
+                    <input type="text" id="Correo" name="Correo">
                 </div>
                 <div class="input_container">
                     <label for="numero_celular">Numero Celular</label>
-                    <input type="text" id="numero_celular">
+                    <input type="text" id="numero_celular" name="numero_celular">
                 </div>
                 <div class="input_container">
-                    <label for="Tipo_documento"> Tipo de documento</label>
+                    <label for="Tipo_documento">Tipo de documento</label>
                     <select name="tipoDocumento" id="Tipo_documento">
                     </select>
                 </div>
                 <div class="input_container">
                     <label for="numero_documento">Numero de documento</label>
-                    <input type="text" id="numero_documento">
+                    <input type="text" id="numero_documento" name="numero_documento">
                 </div>
                 <div class="input_container">
                     <label for="Fecha_nacimiento">Fecha de nacimiento</label>
-                    <input type="date" id="Fecha_nacimiento">
+                    <input type="date" id="Fecha_nacimiento" name="Fecha_nacimiento">
                 </div>
                 <div class="input_container">
                     <label for="Rol">Rol del usuario</label>
-                    <select name="rol" id="Rol">
-                    </select>
+                    <select name="rol" id="Rol"></select>
                 </div>
-
             </div>
             <div class="button_container" style="display: flex;">
                 <button class="button_primary" type="submit">Guardar</button>
                 <button class="button_secundary cancel-button" type="button">Cancelar</button>
             </div>
         </form>
-
     </div>
 </template>
 
@@ -140,54 +138,53 @@
 <template id="template_form_newUser">
     <div class="user_list__form">
         <form class="formulario newUser">
+            <input type="hidden" id="formType" name="formType" value="add">
             <div class="form_persona">
                 <div class="input_container">
                     <label for="Nombre_new">Nombre</label>
-                    <input type="text" id="Nombre_new">
+                    <input type="text" id="Nombre_new" name="Nombre_new">
                 </div>
                 <div class="input_container">
-                    <label for="Apellido_new"> Apellido</label>
-                    <input type="text" id="Apellido_new">
+                    <label for="Apellido_new">Apellido</label>
+                    <input type="text" id="Apellido_new" name="Apellido_new">
                 </div>
                 <div class="input_container">
-                    <label for="Correo_new">Correo Electronico</label>
-                    <input type="text" id="Correo_new">
+                    <label for="Correo_new">Correo Electrónico</label>
+                    <input type="text" id="Correo_new" name="Correo_new">
                 </div>
                 <div class="input_container">
-                    <label for="numero_celular_new">Numero Celular</label>
-                    <input type="text" id="numero_celular_new">
+                    <label for="numero_celular_new">Número Celular</label>
+                    <input type="text" id="numero_celular_new" name="numero_celular_new">
                 </div>
                 <div class="input_container">
-                    <label for="Tipo_documento_new"> Tipo de documento</label>
-                    <select type="text" id="Tipo_documento_new"> </select>
+                    <label for="Tipo_documento_new">Tipo de documento</label>
+                    <select id="Tipo_documento_new" name="Tipo_documento_new"></select>
                 </div>
-
                 <div class="input_container">
-                    <label for="numero_documento_new">Numero de documento</label>
-                    <input type="text" id="numero_documento_new">
+                    <label for="numero_documento_new">Número de documento</label>
+                    <input type="text" id="numero_documento_new" name="numero_documento_new">
                 </div>
                 <div class="input_container">
                     <label for="password_new">Contraseña</label>
-                    <input type="password" id="password_new">
+                    <input type="password" id="password_new" name="password_new">
                 </div>
                 <div class="input_container">
                     <label for="Fecha_nacimiento_new">Fecha de nacimiento</label>
-                    <input type="date" id="Fecha_nacimiento_new">
+                    <input type="date" id="Fecha_nacimiento_new" name="Fecha_nacimiento_new">
                 </div>
                 <div class="input_container">
                     <label for="Rol_new">Rol del usuario</label>
-                    <select type="text" id="Rol_new"></select>
+                    <select id="Rol_new" name="Rol_new"></select>
                 </div>
-
             </div>
             <div class="button_container" style="display: flex;">
                 <button class="button_primary" type="submit">Crear</button>
                 <button class="button_secundary cancel-button" type="button">Cancelar</button>
             </div>
         </form>
-
     </div>
 </template>
+
 <jsp:include page="resources/confirm.jsp"/>
 <jsp:include page="resources/success.jsp"/>
 <jsp:include page="resources/error.jsp"/>

@@ -7,8 +7,8 @@
         <p class="card-description">Lorem ipsum dolor sit amet, consectetur adi</p>
     </div>
     <div class="card-button-wrapper">
-        <button class="card-button secondary">Cancel</button>
-        <button class="card-button primary">Delete</button>
+        <button class="card-button secondary ">Cancelar</button>
+        <button class="card-button primary button--delete">Continuar</button>
     </div>
     <button class="exit-button">
         <svg height="20px" viewBox="0 0 384 512">

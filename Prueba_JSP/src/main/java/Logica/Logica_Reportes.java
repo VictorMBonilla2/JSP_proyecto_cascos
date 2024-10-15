@@ -9,6 +9,7 @@ import java.util.List;
 public class Logica_Reportes {
     PersistenciaController controladora = new PersistenciaController();
     Logica_Persona logicaPersona = new Logica_Persona();
+
     public List<TbReportes> ObtenerReportes(int idUsuario) {
         List<TbReportes> lista = null;
         try {
@@ -29,6 +30,7 @@ public class Logica_Reportes {
 
         } catch (Exception e) {
             System.err.println("Hubo un error al obtener la lista de reportes correspondiente a este usuario: " + e.getMessage());
+            e.getStackTrace();
             return null;
         }
 
@@ -37,7 +39,13 @@ public class Logica_Reportes {
 
 
     public void CrearReporte(TbReportes nuevoReporte) {
-
+    try{
+        System.out.println("Intento de crear Reporte");
         controladora.CrearReporte(nuevoReporte);
+    }catch (Exception e){
+        System.err.println("Hubo un error al crear el nuevo reporte: " +e.getMessage());
+        e.getStackTrace();
+    }
+
     }
 }

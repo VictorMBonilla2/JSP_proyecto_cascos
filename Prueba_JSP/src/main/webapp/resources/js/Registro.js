@@ -1,7 +1,7 @@
 import {host} from "./config.js";
 import {showSuccessAlert} from "./alerts/success.js";
 import {showErrorDialog} from "./alerts/error.js";
-import {sendRequest} from "./ajax.js";
+import {hideLoadingSpinner, sendRequest, showLoadingSpinner} from "./ajax.js";
 import {validarDocumento, validarEmail, validarFecha, validarTexto} from "./utils/validations.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -10,24 +10,20 @@ await selectDocumento();
     const formulario = document.getElementById("registro");
     formulario.addEventListener("submit", async (e)=>{
         e.preventDefault();
-        const nombre = document.getElementById("Nombre").value;
-        const apellido = document.getElementById("Apellido").value;
-        const tipoDocumento = document.getElementById("TipoDocumento").value;
-        const documento = document.getElementById("documento").value;
-        const correo = document.getElementById("email").value;
-        const password = document.getElementById("passWord").value;
-        const rol = document.getElementById("rol").value;
+        const submitButton = e.target.querySelector("button[type='submit']");
+        submitButton.disabled = true;
+        showLoadingSpinner()
         const form = new FormData(formulario)
 
-        if(validarFormulario(form)){
-            const response = await enviarRegistro(form);
-            if(response.status === "success"){
-                console.log("Se ha Actualizado el sector correctamente")
-                showSuccessAlert(response.message)
-            }else{
-                showErrorDialog(response.message)
+        try{
+            if(validarFormulario(form)){
+                await enviarRegistro(form);
             }
+        }finally {
+            hideLoadingSpinner()
+            submitButton.disabled = false;
         }
+
 
     })
 

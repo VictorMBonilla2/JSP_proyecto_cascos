@@ -1,8 +1,8 @@
-import {sendRequest} from "./ajax.js";
+import {hideLoadingSpinner, sendRequest, showLoadingSpinner} from "./ajax.js";
 import {host} from "./config.js";
 import {showSuccessAlert} from "./alerts/success.js";
 import {showErrorDialog} from "./alerts/error.js";
-import {validarCelular, validarDocumento, validarEmail, validarFecha, validarTexto} from "./utils/validations.js";
+import {validarCelular, validarEmail, validarFecha, validarTexto} from "./utils/validations.js";
 import {showConfirmationDialog} from "./alerts/confirm.js";
 
 const divPerfil = document.querySelector(".main_container__profile");
@@ -73,10 +73,19 @@ function mostrarFormulario(data) {
 
         saveButton.addEventListener('submit', async (event) => {
             event.preventDefault();
+            const submitButton = event.target.querySelector("button[type='submit']");
+            submitButton.disabled = true;
+            showLoadingSpinner()
             const form = new FormData(event.target)
-            if (validarFormulario(form)) {
-                enviar_formulario(form);
+            try{
+                if (validarFormulario(form)) {
+                    await enviar_formulario(form);
+                }
+            }finally {
+                hideLoadingSpinner()
+                submitButton.disabled = false;
             }
+
         });
 
         cancelEdit.addEventListener('click',()=>{

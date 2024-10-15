@@ -23,7 +23,7 @@ public class PersistenciaController {
     MarcaVehiculoJPAController marcaVehiculoJPA = new MarcaVehiculoJPAController();
     ModeloVehiculoJPAController modeloVehiculoJPA = new ModeloVehiculoJPAController();
     InformeJPAController informaJPA =  new InformeJPAController();
-
+    RecuperacionJPAController recuperacionJPA = new RecuperacionJPAController();
 
 
 
@@ -50,14 +50,13 @@ public class PersistenciaController {
 
     public Persona buscarpersona(int documento) {
         return persoJpa.findPersona(documento);
+
     }
 
     public void EditarPersona(Persona user) throws Exception {
         persoJpa.edit(user);
     }
-    public Persona buscarPersonaPorToken(String token) {
-        return persoJpa.buscarPersonaToken(token);
-    }
+
     public Persona buscarPersonaPorCorreo(String email) {
         return persoJpa.buscarPersonaEmail(email);
     }
@@ -136,8 +135,8 @@ public class PersistenciaController {
 
 
     //JPA ESPACIOS
-    public List<TbEspacio> DatosEspacios(){
-        return espacioJPA.findTbEspacioEntities();
+    public List<TbEspacio> DatosEspaciosDisponibles(){
+        return espacioJPA.findTbEspacioDisponibles();
     }
 
     public void ActualizarEspacio(TbEspacio espacio) throws Exception {
@@ -214,16 +213,30 @@ public class PersistenciaController {
     }
 
     public List<TbRegistro> ObtenerRegistros() {
-
         return registroJPA.findTbRegistroEntities();
+
     }
-    public List<TbRegistro> ObtenerRegistrosGestor(int id) {
-        return registroJPA.findRegistrosGestor(id);
+    public List<TbRegistro> ObtenerRegistrosAdmin(int data_inicio, int data_fin) {
+
+        return registroJPA.findTbRegistroEntities(data_inicio,data_fin);
     }
-    public List<TbRegistro> ObtenerRegistrosAprendiz(int id) {
-        return registroJPA.findRegistrosAprendiz(id);
+    public List<TbRegistro> ObtenerRegistrosGestor(int id, int data_inicio, int data_fin) {
+        return registroJPA.findRegistrosGestor(id, data_inicio, data_fin);
+    }
+    public List<TbRegistro> ObtenerRegistrosAprendiz(int id, int data_inicio, int data_fin) {
+        return registroJPA.findRegistrosAprendiz(id, data_inicio, data_fin);
+    }
+    public long contarRegistrosGestor(int id) {
+        return registroJPA.contarRegistrosGestor(id);
     }
 
+    public long contarRegistrosAprendiz(int id) {
+        return registroJPA.contarRegistrosAprendiz(id);
+    }
+
+    public long contarTodosLosRegistros() {
+        return registroJPA.contarRegistros();
+    }
 
     //JPA REPORTE
 
@@ -235,7 +248,7 @@ public class PersistenciaController {
         reportesJPA.create(nuevoReporte);
     }
 
-    public List<TbReportes> ObtenerReportesGestor(int idGestor) {
+    public List<TbReportes> ObtenerReportesGestor(int idGestor)  throws  Exception{
         return reportesJPA.findReportesGestor(idGestor);
     }
     public List<TbReportes> ObtenerReportesAprendiz(int idAprendiz) {
@@ -469,6 +482,24 @@ public class PersistenciaController {
     }
     public TbInformesUsuarios buscarInformePorCodigo(String informeCode) {
         return informaJPA.findInformeByCodigo(informeCode);
+    }
+
+    //JPA RECUPERACION
+    public TbRecuperacion buscarRecuperacionPorToken(String token) {
+        return recuperacionJPA.buscarRecuperacionToken(token);
+    }
+
+    public void crearToken(TbRecuperacion recuperacion) throws Exception {
+        recuperacionJPA.create(recuperacion);
+    }
+
+    public List<TbRecuperacion> buscarRecuperacionesActivas() {
+
+        return recuperacionJPA.findRecuperacionActivas();
+    }
+
+    public void ActualizarToken(TbRecuperacion tokenObj) throws Exception {
+        recuperacionJPA.edit(tokenObj);
     }
 
 

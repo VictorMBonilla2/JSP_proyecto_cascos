@@ -137,7 +137,7 @@ public class SvVehiculoAprendiz extends HttpServlet {
         jsonObject.put("id_aprendiz", vehiculo.getPersona().getId());
 
         TbTipovehiculo tipoVehiculo = vehiculo.getTipovehiculo();
-        Tb_MarcaVehiculo marcaVehiculo = vehiculo.getMarcaVehiculo();
+        Tb_MarcaVehiculo marcaVehiculo = vehiculo.getModeloVehiculo().getMarcaVehiculo();
         Tb_ModeloVehiculo modeloVehiculo = vehiculo.getModeloVehiculo();
 
         jsonObject.put("tipo_vehiculo", tipoVehiculo != null ? tipoVehiculo.getId() : "N/A");
@@ -271,7 +271,6 @@ public class SvVehiculoAprendiz extends HttpServlet {
             vehiculo.setColorVehiculo(colorVehiculo); // Usar el enum para el color
             vehiculo.setPersona(persona);
             vehiculo.setTipovehiculo(tipovehiculo);
-            vehiculo.setMarcaVehiculo(marca);
             vehiculo.setModeloVehiculo(modelo);
             vehiculo.setEstadoVehiculo(estadoVehiculo);
 
@@ -353,7 +352,6 @@ public class SvVehiculoAprendiz extends HttpServlet {
             vehiculo.setColorVehiculo(colorVehiculo); // Usar el enum para el color
             vehiculo.setPersona(persona);
             vehiculo.setTipovehiculo(tipovehiculo);
-            vehiculo.setMarcaVehiculo(marca);
             vehiculo.setModeloVehiculo(modelo);
             vehiculo.setEstadoVehiculo(estadoVehiculo);
 
@@ -361,6 +359,13 @@ public class SvVehiculoAprendiz extends HttpServlet {
             ResultadoOperacion result = logica_vehiculo.crearVehiculo(vehiculo);
 
             if (result.isExito()) {
+                Persona updatePerson = logica_persona.buscarPersonaConDocumento(usuario);
+
+                // Obtener la sesión y actualizar el atributo "user"
+                HttpSession session = req.getSession(false); // Obtener la sesión actual
+                if (session != null) {
+                    session.setAttribute("user", updatePerson); // Actualizar el usuario en la sesión
+                }
                 enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", result.getMensaje());
             } else {
                 enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", result.getMensaje());

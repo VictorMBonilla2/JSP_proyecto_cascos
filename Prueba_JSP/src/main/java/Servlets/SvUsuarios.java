@@ -148,7 +148,7 @@ public class SvUsuarios extends HttpServlet {
             Date fechaNacimiento = formatter.parse(fechaNacimientoStr);
             persona.setFechaNacimiento(fechaNacimiento);
 
-            int rol = Integer.parseInt(jsonObject.getString("rol"));
+            int rol = jsonObject.getInt("rol");
             Roles roles = logica_rol.ObtenerRol(rol);
             persona.setRol(roles);
 
@@ -166,6 +166,8 @@ public class SvUsuarios extends HttpServlet {
         } catch (ParseException e) {
             enviarRespuesta(response,HttpServletResponse.SC_BAD_REQUEST,"error","Formato de fecha incorrecto.");
         } catch (Exception e) {
+            System.err.println("Error al actualizar el usuario: " +e.getMessage());
+            e.getStackTrace();
             enviarRespuesta(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error","Error al actualizar usuario.");
         }
     }

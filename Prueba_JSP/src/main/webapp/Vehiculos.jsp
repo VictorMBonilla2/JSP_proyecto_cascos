@@ -24,6 +24,7 @@
     <div class="container__vehiculo">
         <div class="container__vehiculo__form">
             <form class="vehiculo__form" id="vehiculoForm">
+                <input type="hidden" id="typeForm" name="typeForm" value="create">
                 <input type="hidden" id="idUser" name="idUser" value="<%=user.getId()%>">
                 <input type="hidden" id="idVehiculo" name="idVehiculo" value="">
                 <div class="vehiculo__form__header">
@@ -79,7 +80,7 @@
                     <input type="text" id="cantCasco" name="cascosVehiculo" placeholder="Describe lo que paso">
                 </div>
                 <div class="button-container child-end">
-                    <button class="button_primary accionador" type="button"
+                    <button class="button_primary accionador" type="submit"
                             id="sendCreate">Crear</button>
                     <button class="button_secundary" type="button" id="cancelEdit">Cancelar</button>
                     <button class="button_secundary button--delete" type="button" id="delete">Eliminar</button>

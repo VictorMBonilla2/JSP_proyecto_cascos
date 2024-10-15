@@ -4,6 +4,7 @@
 @import url(componets/barraIqz.css);
 @import url(componets/confirm.css);
 @import url(componets/resultQuery.css);
+@import url(componets/spinner.css);
 
 :root{/*Establecemos las variables*/
     --backgroundColorGestor:rgb(85, 7, 231);
@@ -67,3 +68,39 @@
     padding: 15px 0px;
     gap: 30px;
 }
+
+
+/* Estilo general del contenedor del paginador */
+#paginadorHabilitados {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 8px;
+}
+
+/* Estilo para los botones del paginador */
+#paginadorHabilitados button {
+    padding: 8px 16px;
+    border: 1px solid #007bff;
+    background-color: white;
+    color: #007bff;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hover sobre los botones */
+#paginadorHabilitados button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Estilo para el botón activo (página actual) */
+#paginadorHabilitados button.active {
+    background-color: #007bff;
+    color: white;
+    pointer-events: none;
+}
+
+

@@ -1,6 +1,7 @@
 package Controlador;
 
 import Modelo.TbEspacio;
+import Modelo.enums.EstadoEspacio;
 import Utilidades.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -95,7 +96,39 @@ public class EspacioJPAController implements Serializable {
 
 
 
+    public List<TbEspacio> findTbEspacioDisponibles() {
+        EntityManager em = null;
+        try{
+            em = getEntityManager();
 
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<TbEspacio> cq = cb.createQuery(TbEspacio.class);
+
+            Root<TbEspacio> root = cq.from(TbEspacio.class);
+
+            root.fetch("vehiculo", JoinType.LEFT);
+
+            cq.select(root).where(cb.notEqual(root.get("estado_espacio"), EstadoEspacio.Inactivo));
+
+            Query query = em.createQuery(cq);
+
+            List<TbEspacio> resultados = query.getResultList();
+
+            return resultados;
+
+        }catch (Exception e) {
+            // Revertir la transacción solo si se inició
+            if (em != null && em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            // Cerrar el EntityManager al final
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+    }
 
     public List<TbEspacio> findTbEspacioEntities() {
         return findTbEspacioEntities(true, -1, -1);
@@ -183,9 +216,8 @@ public class EspacioJPAController implements Serializable {
             // Definir el root de TbEspacio
             Root<TbEspacio> root = cq.from(TbEspacio.class);
 
-            // Hacer fetch manual de las relaciones LAZY para vehiculo y persona con LEFT JOIN
+            // Hacer fetch manual de las relaciones LAZY para vehiculo
             root.fetch("vehiculo", JoinType.LEFT);  // Realiza un LEFT JOIN con vehiculo
-            root.fetch("persona", JoinType.LEFT);   // Realiza un LEFT JOIN con persona
 
             // Añadir la condición para buscar por ID
             cq.select(root).where(cb.equal(root.get("id_espacio"), id));
@@ -234,5 +266,8 @@ public class EspacioJPAController implements Serializable {
         }
     }
 
+
+    public void desactivarEspacio(int espacio) {
+    }
 }
 

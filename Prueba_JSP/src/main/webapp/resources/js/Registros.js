@@ -1,83 +1,100 @@
-import {host} from "./config.js";
+import { host } from "./config.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-
-
     const tabla = document.querySelector("table");
-    const documentoUser= document.querySelector("#idUsuario").value
-    try {
-        const responseDocument = await fetch(`${host}/SvRegistros?iduser=${documentoUser}`);
-        const result1 = await responseDocument.json();
-        if(result1.length>0) {
+    const documentoUser = document.querySelector("#idUsuario").value;
 
-        // Crear el encabezado de la tabla
-        const header_table = document.createElement("thead")
-        const header_encabezado = document.createElement("tr");
-        const cantproperty = Object.keys(result1[0]);
-        cantproperty.forEach(elemento => {
-            const lista = document.createElement("th");
-            lista.textContent = elemento;
-            header_encabezado.appendChild(lista);
+    // Función para cargar los registros y la paginación
+    async function cargarRegistros(pagina = 1) {
+        try {
+            const response = await fetch(`${host}/SvRegistros?iduser=${documentoUser}&Pagination=${pagina}`);
+            const result = await response.json();
 
-            // Agregar un encabezado adicional para la hora si el campo es "fecha_reporte"
-            if (elemento === "fecha_reporte") {
-                const horaEncabezado = document.createElement("th");
-                horaEncabezado.textContent = "Hora";
-                header_encabezado.appendChild(horaEncabezado);
-            }
-            header_table.appendChild(header_encabezado)
-        });
-        tabla.appendChild(header_table);
+            // Limpiar la tabla antes de agregar nuevos datos
+            tabla.innerHTML = '';
 
-        // Crear las filas de datos
-        const hola = document.createElement("tbody")
+            if (result.registros.length > 0) {
+                // Crear el encabezado de la tabla
+                const headerTable = document.createElement("thead");
+                const headerRow = document.createElement("tr");
+                const keys = Object.keys(result.registros[0]);
 
-            result1.forEach(element => {
-                const contenido = document.createElement("tr");
-                cantproperty.forEach(key => {
-                    const lista = document.createElement("td");
-                    let value = element[key];
-
-                    // Transformar la fecha y hora si el campo es "fecha_reporte"
-                    if (key === "fecha_reporte") {
-                        const date = new Date(value);
-                        const fecha = date.toLocaleDateString();
-                        const hora = date.toLocaleTimeString();
-
-                        // Crear y agregar celda de fecha
-                        lista.textContent = fecha;
-                        contenido.appendChild(lista);
-
-                        // Crear y agregar celda de hora
-                        const horaCelda = document.createElement("td");
-                        horaCelda.textContent = hora;
-                        contenido.appendChild(horaCelda);
-                    } else {
-                        lista.textContent = value;
-                        contenido.appendChild(lista);
+                // Generar las columnas dinámicamente
+                keys.forEach((key) => {
+                    const th = document.createElement("th");
+                    th.textContent = key;
+                    headerRow.appendChild(th);
+                    if (key === "fecha_registro") {
+                        const thHora = document.createElement("th");
+                        thHora.textContent = "Hora";
+                        headerRow.appendChild(thHora);
                     }
                 });
-                hola.appendChild(contenido);
-            });
-            tabla.appendChild(hola)
-        }
-        else {
-            const texto = document.createElement("p");
-            texto.textContent="No hay registros."
-            tabla.appendChild(texto)
-        }
-        document.appendChild(tabla)
+                headerTable.appendChild(headerRow);
+                tabla.appendChild(headerTable);
 
+                // Crear las filas de datos
+                const tbody = document.createElement("tbody");
+                result.registros.forEach((registro) => {
+                    const row = document.createElement("tr");
+                    keys.forEach((key) => {
+                        const td = document.createElement("td");
+                        let value = registro[key];
 
-    } catch (error) {
-        console.error('Error fetching or parsing JSON:', error);
+                        // Formatear fecha y hora si es "fecha_registro"
+                        if (key === "fecha_registro") {
+                            const date = new Date(value);
+                            const fecha = date.toLocaleDateString();
+                            const hora = date.toLocaleTimeString();
+
+                            // Crear celda de fecha
+                            td.textContent = fecha;
+                            row.appendChild(td);
+
+                            // Crear celda de hora
+                            const horaTd = document.createElement("td");
+                            horaTd.textContent = hora;
+                            row.appendChild(horaTd);
+                        } else {
+                            td.textContent = value;
+                            row.appendChild(td);
+                        }
+                    });
+
+                    tbody.appendChild(row);
+                });
+                tabla.appendChild(tbody);
+
+                // Crear el paginador
+                crearPaginador(result.totalPaginas, result.paginaActual);
+            } else {
+                // Si no hay registros
+                const texto = document.createElement("p");
+                texto.textContent = "No hay registros.";
+                tabla.appendChild(texto);
+            }
+        } catch (error) {
+            console.error('Error fetching or parsing JSON:', error);
+        }
     }
+
+    // Función para crear el paginador
+    function crearPaginador(totalPaginas, paginaActual) {
+        const paginadorContainer = document.getElementById('paginadorHabilitados');
+        paginadorContainer.innerHTML = ''; // Limpiar el paginador antes de crear nuevos botones
+
+        for (let i = 1; i <= totalPaginas; i++) {
+            const boton = document.createElement('button');
+            boton.textContent = i;
+            boton.className = i === paginaActual ? 'active' : '';
+            boton.addEventListener('click', () => cargarRegistros(i));
+            paginadorContainer.appendChild(boton);
+        }
+    }
+
+    // Cargar la primera página por defecto
+    await cargarRegistros();
 });
-
-
-
-
-
 
 
 

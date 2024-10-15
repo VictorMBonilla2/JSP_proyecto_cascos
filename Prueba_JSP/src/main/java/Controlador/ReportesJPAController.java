@@ -1,10 +1,12 @@
 package Controlador;
 
 
+import Modelo.TbRegistro;
 import Modelo.TbReportes;
+import Modelo.TbVehiculo;
 import Utilidades.JPAUtils;
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.*;
 
 import java.util.List;
 
@@ -123,22 +125,31 @@ public class ReportesJPAController {
             );
             query.setParameter("idGestor", idGestor);
             return query.getResultList();
-        } finally {
+        }
+        finally {
             em.close();
         }
     }
 
 
-
-
+    // Consulta con Criteria API para registros por el ID del Aprendiz
     public List<TbReportes> findReportesAprendiz(int idAprendiz) {
         EntityManager em = getEntityManager();
         try {
-            TypedQuery<TbReportes> query = em.createQuery(
-                    "SELECT r FROM tb_reportes r WHERE r.aprendiz.id = :idAprendiz",
-                    TbReportes.class
-            );
-            query.setParameter("idAprendiz", idAprendiz);
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<TbReportes> cq = cb.createQuery(TbReportes.class);
+
+            Root<TbReportes> root = cq.from(TbReportes.class);
+
+            // JOIN FETCH de vehiculo y persona para inicializar todo
+            Fetch<TbReportes, TbVehiculo> vehiculoFetch = root.fetch("vehiculo", JoinType.INNER);
+            vehiculoFetch.fetch("persona", JoinType.INNER);  // Para cargar la persona a través del vehículo
+            root.fetch("gestor", JoinType.INNER);
+
+            // Añadir el where para filtrar por id del aprendiz (persona)
+            cq.select(root).where(cb.equal(root.get("vehiculo").get("persona").get("id"), idAprendiz));
+
+            TypedQuery<TbReportes> query = em.createQuery(cq);
             return query.getResultList();
         } finally {
             em.close();

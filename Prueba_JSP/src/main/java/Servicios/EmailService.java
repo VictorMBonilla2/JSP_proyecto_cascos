@@ -1,12 +1,14 @@
 package Servicios;
-import java.util.Properties;
+
 import javax.mail.*;
-import javax.mail.internet.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.util.Properties;
 
 public class EmailService {
 
-    private final String username = "";
-    private final String password = "";
+    private final String username = "lossg2234@gmail.com";
+    private final String password = "ahin bwto bedp ttge";
 
     public void enviarCorreoRecuperacion(String destinatario, String token) {
         System.out.println("Se inicia la creacion del correo 1");

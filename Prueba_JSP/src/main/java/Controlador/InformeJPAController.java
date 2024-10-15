@@ -28,7 +28,10 @@ public class InformeJPAController implements Serializable {
             em.getTransaction().begin();
             em.persist(informe);
             em.getTransaction().commit();
-        } finally {
+        } catch (Exception e) {
+            System.err.println("Hubo un error al crear el pdf: " + e.getMessage());
+            e.printStackTrace(); // Esto te dará más información sobre la excepción
+        }finally {
             if (em != null) {
                 em.close();
             }

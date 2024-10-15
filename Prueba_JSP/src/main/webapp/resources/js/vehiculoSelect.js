@@ -8,8 +8,6 @@ export async function fetchVehiculos(documento) {
     if (!documento > 0) {
         return;
     }
-
-
     // Realiza una solicitud AJAX (fetch) al servidor
     const response= await fetch(`VehiculoAprendiz?documento=${documento}`);
     if (response.status === 204) {

@@ -20,7 +20,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +36,6 @@ public class SvCasilleros {
 
         protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
-
             try {
                 List<TbEspacio> DatosEspacio= logica_espacios.DatosEspacio();
                 JSONArray jsonArray = new JSONArray();
@@ -52,22 +50,18 @@ public class SvCasilleros {
                         vehiculo.put("id_vehiculo", espacio.getVehiculo().getId_vehiculo());
                         vehiculo.put("placa", espacio.getVehiculo().getPlacaVehiculo());
                         jsonEspacio.put("vehiculo", vehiculo);
-                    } else {
-                        jsonEspacio.put("vehiculo", JSONObject.NULL);
-                    }
-                    // Aprendiz (Persona)
-                    if (espacio.getPersona() != null) {
                         JSONObject persona = new JSONObject();
-                        persona.put("id_persona", espacio.getPersona().getId());
-                        persona.put("nombreAprendiz", espacio.getPersona().getNombre());
-                        persona.put("documento", espacio.getPersona().getDocumento());
-                        persona.put("correo",espacio.getPersona().getCorreo());
-                        persona.put("celular",espacio.getPersona().getCelular());
+                        Persona usuario = logica_persona.buscarpersonaPorId(espacio.getVehiculo().getPersona().getId());
+                        persona.put("id_persona", usuario.getId());
+                        persona.put("nombreAprendiz", usuario.getNombre());
+                        persona.put("documento", usuario.getDocumento());
+                        persona.put("correo",usuario.getCorreo());
+                        persona.put("celular",usuario.getCelular());
                         jsonEspacio.put("persona", persona);
                     } else {
+                        jsonEspacio.put("vehiculo", JSONObject.NULL);
                         jsonEspacio.put("persona", JSONObject.NULL);
                     }
-
                     jsonEspacio.put("hora_entrada", espacio.getHora_entrada() != null ? espacio.getHora_entrada().getTime() : JSONObject.NULL);
                     jsonEspacio.put("cantidad_cascos", espacio.getCantidad_cascos());
                     jsonEspacio.put("estado_espacio", espacio.getEstado_espacio().name());
@@ -80,18 +74,12 @@ public class SvCasilleros {
 
                     jsonArray.put(jsonEspacio);
                 }
-
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
                 response.getWriter().write(jsonArray.toString());
-
-
             } catch (Exception e){
                 System.out.println("Error al iterar sobre los espacios: " + e.getMessage());
             }
-
-
-
         }
 
         @Override
@@ -145,6 +133,12 @@ public class SvCasilleros {
                     enviarRespuesta(resp, HttpServletResponse.SC_NOT_FOUND, "error", "Persona no encontrada o sin vehículos asociados");
                     return;
                 }
+                boolean Estacionado = logica_persona.UsuarioEnEstacionamiento(persona.getId());
+
+                if(Estacionado){
+                    enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST,"error","¡El usuario ya esta estacionado!");
+                    return;
+                }
 
                 TbVehiculo vehiculoExistente = logica_persona.buscarVehiculoPorId(persona, idVehiculo);
                 if (vehiculoExistente == null) {
@@ -153,7 +147,6 @@ public class SvCasilleros {
                 }
                 espacio.setVehiculo(vehiculoExistente);
                 espacio.setCantidad_cascos(Integer.valueOf(cantcascos));
-                espacio.setPersona(persona);
                 espacio.setEstado_espacio(EstadoEspacio.Ocupado);
                 espacio.setHora_entrada(new Date());
 
@@ -187,10 +180,9 @@ public class SvCasilleros {
 
             // Crear un nuevo registro para la tabla TbRegistro
             TbRegistro nuevoRegistro = new TbRegistro();
-            nuevoRegistro.setFecha_registro(LocalDateTime.now());
-            nuevoRegistro.setId_espacio(espacio.getId_espacio());
-            nuevoRegistro.setPlacaVehiculo(espacio.getVehiculo().getPlacaVehiculo());
-            nuevoRegistro.setAprendiz(espacio.getPersona());
+            nuevoRegistro.setFechaRegistro(new Date());
+            nuevoRegistro.setEspacio(espacio);
+            nuevoRegistro.setVehiculo(espacio.getVehiculo());
 
             // Verificar si la sesión es válida y tiene el atributo documento
             Persona colaborador = obtenerColaboradorDesdeSesion(req, resp);
@@ -215,10 +207,10 @@ public class SvCasilleros {
             TbReportes nuevoReporte = new TbReportes();
             nuevoReporte.setNombre_reporte(jsonObject.getString("tipoReporte"));
             nuevoReporte.setFecha_reporte(new Date());
+            nuevoReporte.setEspacio(espacio);
             nuevoReporte.setNombre_reporte(jsonObject.getString("nombreReporte"));
             nuevoReporte.setDescripcion_reporte(jsonObject.getString("DescReporte"));
-            nuevoReporte.setAprendiz(espacio.getPersona());
-            nuevoReporte.setPlacaVehiculo(espacio.getVehiculo().getPlacaVehiculo());
+            nuevoReporte.setVehiculo(espacio.getVehiculo());
             String tipoReporteStr = jsonObject.getString("tipoReporte");
 
             TipoReporte tipoReporte;
@@ -266,7 +258,6 @@ public class SvCasilleros {
             }
         }
         private void limpiarYActualizarEspacio(HttpServletResponse resp, TbEspacio espacio) throws IOException {
-            espacio.setPersona(null);
             espacio.setVehiculo(null);
             espacio.setHora_entrada(null);
             espacio.setEstado_espacio(EstadoEspacio.Libre);

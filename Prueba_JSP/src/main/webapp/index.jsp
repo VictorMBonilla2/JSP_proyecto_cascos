@@ -27,27 +27,27 @@
       <p id="errorMessage"></p>
     </div>
 
-    <div class="Inputs_Container">
-      <form id="Logeo" class="formulario_login">
-        <input type="hidden" name="action" value="login">
-        <div class="formulario_login__inputs">
-          <input type="text" id="documento" placeholder="Documento" name="documento" required>
+  <div class="Inputs_Container">
+    <form id="Logeo" class="formulario_login">
+      <input type="hidden" name="action" value="login">
+      <div class="formulario_login__inputs">
+        <input type="text" id="documento" placeholder="Documento" name="documento" required>
 
-          <select id="TipoDocumento" name="TipoDocumento">
-          </select>
+        <select id="TipoDocumento" name="TipoDocumento">
+        </select>
 
-          <input type="password" id="passWord" placeholder="Contraseña" name="password" required>
-        </div>
-        <button  type="submit" class="formulario_login__button">Iniciar Sesión</button>
-      </form>
-    </div>
+        <input type="password" id="passWord" placeholder="Contraseña" name="password" required>
+      </div>
+      <button  type="submit" id="submitButton" class="formulario_login__button">Iniciar Sesión</button>
+    </form>
+  </div>
     <a href="forgetPassword.jsp"> <p class="Container__forget">¿Has olvidado tu contraseña?</p></a>
 
 
     <a href="registro_aprendices.jsp" class="Container__register">Nuevo Aprendiz</a>
 
   </section>
-
+  <jsp:include page="resources/spinner.jsp"/>
 </main>
 <script type="module" src="resources/js/Login.js"></script>
 </body>

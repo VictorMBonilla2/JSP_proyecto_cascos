@@ -53,7 +53,7 @@ public class Logica_Vehiculo {
             }
 
             ListaNueva = Lista.stream()
-                    .map(vehiculo -> new VehiculoDTO(vehiculo.getId_vehiculo(), vehiculo.getPlacaVehiculo(), vehiculo.getMarcaVehiculo().getNombreMarca(), vehiculo.getCantCasco()))
+                    .map(vehiculo -> new VehiculoDTO(vehiculo.getId_vehiculo(), vehiculo.getPlacaVehiculo(), vehiculo.getModeloVehiculo().getNombreModelo(), vehiculo.getCantCasco()))
                     .collect(Collectors.toList());
 
         } catch (NumberFormatException e) {
@@ -73,6 +73,9 @@ public class Logica_Vehiculo {
 
             int documentoInt = Integer.parseInt(documento);
             Persona aprendiz=  logicaPersona.buscarPersonaConDocumento(documentoInt);
+            if (aprendiz == null || aprendiz.getEstadoUsuario().equals(EstadoUsuario.INACTIVO)){
+                throw new Exception("El aprendiz no existe o esta inactivo " + documento);
+            }
             List<TbVehiculo> Lista = controladora.obtenerVehiculos(aprendiz.getId());
 
             if (Lista == null || Lista.isEmpty()) {

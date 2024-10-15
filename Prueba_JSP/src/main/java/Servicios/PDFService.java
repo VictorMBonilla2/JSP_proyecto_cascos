@@ -7,8 +7,6 @@ import Modelo.TbVehiculo;
 import com.itextpdf.forms.PdfAcroForm;
 import com.itextpdf.forms.fields.PdfFormField;
 import com.itextpdf.io.exceptions.IOException;
-
-
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.itextpdf.kernel.colors.ColorConstants;
@@ -40,7 +38,7 @@ public class PDFService {
         String sourceFile = URLDecoder.decode(
                 PDFService.class.getClassLoader().getResource("prueba.pdf").getPath(), "UTF-8");
         String temporalId = UUID.randomUUID().toString();
-        System.out.println(temporalId);
+        System.out.println("Codigo temporal: "+temporalId);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  // Puedes ajustar el formato según tus necesidades
         Date hora = new Date();
         String fechaFormateada = sdf.format(hora);
@@ -83,7 +81,7 @@ public class PDFService {
             for (int i = 0; i < vehiculos.size(); i++) {
                 TbVehiculo vehiculo = vehiculos.get(i);
                 datosVehiculos[i][0] = vehiculo.getPlacaVehiculo();
-                datosVehiculos[i][1] = vehiculo.getMarcaVehiculo().getNombreMarca();
+                datosVehiculos[i][1] = vehiculo.getModeloVehiculo().getMarcaVehiculo().getNombreMarca();
                 datosVehiculos[i][2] = vehiculo.getModeloVehiculo().getNombreModelo();
                 datosVehiculos[i][3] = vehiculo.getColorVehiculo().name();
                 datosVehiculos[i][4] = vehiculo.getEstadoVehiculo().name();

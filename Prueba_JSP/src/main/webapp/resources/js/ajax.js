@@ -8,8 +8,13 @@ export async function sendRequest(url, data) {
             body: JSON.stringify(data)
         });
 
-        // Parsear siempre la respuesta como JSON
-        const result = await response.json();
+        // Verificar si el JSON está bien formateado
+        let result;
+        try {
+            result = await response.json();
+        } catch (error) {
+            throw new Error("Error al parsear la respuesta JSON.");
+        }
 
         // Si la respuesta no es exitosa, lanzar un error con el mensaje del servidor
         if (!response.ok || result.status !== "success") {
@@ -20,13 +25,22 @@ export async function sendRequest(url, data) {
         return result;
 
     } catch (error) {
-        console.error("There was a problem with the fetch operation:", error);
+        console.error("Error en la operación fetch:", error);
 
         return {
             status: "error",
             message: error.message || "Error desconocido."
         };
     }
+}
+
+// Funciones para mostrar y ocultar el spinner global
+export function showLoadingSpinner() {
+    document.querySelector(".loader-overlay").style.display = "flex";
+}
+
+export function hideLoadingSpinner() {
+    document.querySelector(".loader-overlay").style.display = "none";
 }
 
 

@@ -1,8 +1,6 @@
 package Servlets;
 
-import Controlador.InformeJPAController;
 import Logica.Logica_Persona;
-import Logica.Logica_Registro;
 import Modelo.TbInformesUsuarios;
 import Utilidades.sendResponse;
 import jakarta.servlet.ServletException;
@@ -10,12 +8,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.Map;
 
 @WebServlet("/descargarInforme")
 public class SvInformes extends HttpServlet {
