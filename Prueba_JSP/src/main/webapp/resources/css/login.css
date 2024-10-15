@@ -38,7 +38,7 @@
 .Container_login__logo{
   display: flex;
   flex-direction: column;
-  width: clamp(35%, 12vw, 20%);
+  width: clamp(20%, 12vw, 20%);
   height: auto;
   padding: 30px 0px;
   align-items: center;

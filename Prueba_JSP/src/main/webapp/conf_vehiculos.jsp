@@ -78,8 +78,11 @@
                     </div>
 
                     <div class="input_container">
-                        <label for="casco">¿Lleva casco?:</label>
-                        <input type="checkbox" id="casco">
+                        <label for="estadoVehiculo">Estado:</label>
+                        <select type="text" id="estadoVehiculo" name="estadoVehiculo">
+                            <option value="ACTIVO">ACTIVO</option>
+                            <option value="INACTIVO">INACTIVO</option>
+                        </select>
                     </div>
 
                     <div class="input_container">

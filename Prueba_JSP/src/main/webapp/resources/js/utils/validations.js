@@ -10,7 +10,7 @@ export function validarCelular(celular) {
 // Validar que la cantidad de cascos sea un número no mayor a 2 y positivo (0 es válido)
 export function validarCantidadCascos(cantidad) {
     const numCascos = Number(cantidad);
-    return !isNaN(numCascos) && numCascos >= 0 && numCascos <= 2;
+    return cantidad.length>0 &&!isNaN(numCascos) && numCascos >= 0 && numCascos <= 2;
 }
 export function validarpassword(password, longitudMinima = 1 ) {
     return password.length >= longitudMinima;

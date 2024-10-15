@@ -64,6 +64,7 @@ public class SvRegistros extends HttpServlet {
                 jsonObject.put("fecha_registro", registro.getFechaRegistro());
                 jsonObject.put("placa_vehiculo", registro.getVehiculo().getPlacaVehiculo());
                 jsonObject.put("id_espacio", registro.getEspacio().getId_espacio());
+                jsonObject.put("fecha_entrada",registro.getFechaEntrada());
                 jsonObject.put("documento_aprendiz", registro.getVehiculo().getPersona().getDocumento());
                 jsonObject.put("documento_colaborador", registro.getGestor().getDocumento());
                 jsonArray.put(jsonObject);

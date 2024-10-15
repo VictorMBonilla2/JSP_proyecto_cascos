@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const tipoVehiculoSelectnew= document.querySelector("#tipoNew_selector");
     const marcaVehiculoSelectnew = document.querySelector("#marcaNew_selector");
-    cargarTiposVehiculo()
+    await cargarTiposVehiculo()
     tipoVehiculoSelectnew.addEventListener('change', async function() {
         console.log("Tipo de vehiculo selecciondado. Buscando modelos...");
         const tipoVehiculoId = tipoVehiculoSelectnew.value;
@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const tipoVehiculoId = tipoVehiculoSelect.value;
         inputNombreModelo.value=''
         await cargarMarcas(tipoVehiculoId,'marca_selector' )
+        marcaVehiculoSelect.dispatchEvent(new Event('change'));
     });
 
     marcaVehiculoSelect.addEventListener('change', async function() {
@@ -35,6 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const marcaVehiculoId = marcaVehiculoSelect.value;
         const tipoVehiculoId = tipoVehiculoSelect.value;
         await cargarModelos(marcaVehiculoId, tipoVehiculoId,'modelo_selector' )
+
     });
     // Escuchar cambios en el selector de modelos
     selectModelo.addEventListener("change", (e) => {
@@ -78,6 +80,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
     });
+    tipoVehiculoSelect.dispatchEvent(new Event('change'));
+    tipoVehiculoSelectnew.dispatchEvent(new Event('change'));
 });
 
 async function addModelo(form) {

@@ -78,7 +78,7 @@ deleteButton.addEventListener("click", async (event) => {
     const vehiculoForm = document.querySelector("#vehiculoForm");
     const formData = new FormData(vehiculoForm);
     showConfirmationDialog("¿Eliminar Vehiculo)",
-        "El sistema no permitira eliminar vehiculos en uso, Esta acción es irreversible",
+        "El sistema no permitira eliminar vehiculos que se hayan usado antes, o se esten usando Esta acción es irreversible",
         ()=>eliminarVehiculo(formData),
         () => console.log('Acción cancelada')
     );
