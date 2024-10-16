@@ -29,11 +29,16 @@
     width: 45%;
 }
 
+.button--width12{
+    width: 12%;
+}
+
 .button-container{
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
+    padding-bottom: 25px;
 }
 
 

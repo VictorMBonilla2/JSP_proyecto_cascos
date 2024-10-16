@@ -50,7 +50,7 @@ ul.list__buttons a {
 #right-sidebar {
     display: none; /* Oculto por defecto */
     position: fixed; /* Fijo en pantalla */
-    z-index: 1; /* Sobre otros elementos */
+    z-index: 2; /* Sobre otros elementos */
     left: 0;
     top: 0;
     width: 100%;
@@ -90,6 +90,13 @@ ul.list__buttons a {
 .close-button:focus {
     color: black;
     text-decoration: none;
+}
+
+.right-sidebar__infoUser{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 10px;
 }
 
 .user{
