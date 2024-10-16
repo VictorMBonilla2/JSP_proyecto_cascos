@@ -9,16 +9,50 @@ const background = document.querySelector(".background_login");
 const form = document.getElementById("Logeo");
 
 document.addEventListener("DOMContentLoaded",  async () => {
-    // Manejador del click en el logo para alternar el rol
-    logo.addEventListener("click", () => {
-        const isAprendiz = background.classList.toggle("background_login_aprendiz");
-        texto_logo.textContent = isAprendiz ? "Aprendiz" : "Colaborador";
+    const roles = ["Aprendiz", "Colaborador"];
+    let isAdmin = false; // Control para saber si estamos en modo Administrador
+    let currentRoleIndex = 0;
+
+    // Función para alternar entre Aprendiz y Colaborador
+    function alternarRol() {
+        if (!isAdmin) { // Solo alternar si no estamos en modo Administrador
+            currentRoleIndex = (currentRoleIndex + 1) % roles.length;
+            const role = roles[currentRoleIndex];
+
+            // Cambiar el fondo y el texto según el rol
+            if (role === "Aprendiz") {
+                background.classList.add("background_login_aprendiz");
+                background.classList.remove("background_login_colaborador", "background_login_Admin");
+            } else {
+                background.classList.add("background_login_colaborador");
+                background.classList.remove("background_login_aprendiz", "background_login_Admin");
+            }
+            texto_logo.textContent = role; // Actualiza el texto
+        }
+    }
+
+    // Función para entrar o salir del modo Administrador
+    function toggleAdministrador() {
+        isAdmin = !isAdmin; // Cambia el estado de Administrador (on/off)
+
+        if (isAdmin) {
+            background.classList.add("background_login_Admin");
+            background.classList.remove("background_login_aprendiz", "background_login_colaborador");
+            texto_logo.textContent = "Administrador";
+        } else {
+            // Si salimos del modo Admin, volvemos al estado alternante
+            alternarRol(); // Alternar entre Aprendiz y Colaborador al salir de Admin
+        }
+    }
+
+    // Evento para alternar entre Aprendiz y Colaborador con un clic
+    logo.addEventListener("click", alternarRol);
+
+    // Evento para alternar Administrador con doble clic
+    logo.addEventListener("dblclick", () => {
+        toggleAdministrador();
     });
-    logo.addEventListener("dblclick", ()=>{
-        console.log("has presionado 2 veces")
-        const isAprendiz = background.classList.toggle("background_login_Admin");
-        texto_logo.textContent = "Administrador"
-    });
+
     await cargarTiposDocumento("TipoDocumento")
     form.addEventListener("submit", async (e)=>{
         e.preventDefault();

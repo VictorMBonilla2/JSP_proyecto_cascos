@@ -1,5 +1,5 @@
 import {host} from "./config.js";
-import {fetchVehiculos} from "./vehiculoSelect.js";
+import {fetchVehiculos} from "./utils/vehiculoSearch.js";
 
 export async function renderEspacios() {
     const response = await fetch(`${host}/SvCasillero`);
@@ -225,7 +225,7 @@ function renderEspacioOcupado(espacio,tiporeportes) {
 
     // Seleccionar los elementos del template y asignar los valores
     clone.querySelector('.casillero__title h1').textContent = `${espacio.nombre}`;
-    clone.querySelector('.casillero__title p').textContent = espacio.persona ? espacio.persona.documento : 'N/A';
+    clone.querySelector('.casillero__title p').textContent = espacio.persona ? espacio.persona.nombreAprendiz : 'N/A';
     clone.querySelector('.info__casillero p').textContent = espacio.persona ? espacio.persona.documento : 'N/A';
     clone.querySelector('.info__tiempo p').textContent = espacio.vehiculo ? espacio.vehiculo.placa : 'N/A';
     clone.querySelector('.info__costo p').textContent = espacio.cantidad_cascos;

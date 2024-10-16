@@ -74,7 +74,7 @@ function validarDatosReporte(form) {
     const descripcionReporte = form.get("description");
 
     if (!validarNombreReporte(nombreReporte)) {
-        showErrorDialog("El nombre del reporte no debe superar los 20 caracteres y no debe estar vacío.");
+        showErrorDialog("El nombre del reporte no debe superar los 40 caracteres y no debe estar vacío.");
         return false;
     }
 

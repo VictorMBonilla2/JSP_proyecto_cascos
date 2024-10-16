@@ -2,7 +2,14 @@ import {host} from "./config.js";
 import {showSuccessAlert} from "./alerts/success.js";
 import {showErrorDialog} from "./alerts/error.js";
 import {hideLoadingSpinner, sendRequest, showLoadingSpinner} from "./ajax.js";
-import {validarDocumento, validarEmail, validarFecha, validarTexto} from "./utils/validations.js";
+import {
+    edadMinima,
+    validarCelular,
+    validarDocumento,
+    validarEmail,
+    validarFecha,
+    validarTexto
+} from "./utils/validations.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
 await selectDocumento();
@@ -74,6 +81,7 @@ function validarFormulario(form) {
     const correo = form.get("correo")
     const tipoDocumento = form.get("TipoDocumento")
     const numeroDocumento = form.get("documento")
+    const celular = form.get("numeroCelular");
     const fechaNacimientoInput = form.get("fecha")
     const password = form.get("password")
 
@@ -84,6 +92,11 @@ function validarFormulario(form) {
     }
     if (!validarTexto(apellido, 1)) {
         showErrorDialog("El apellido debe ser un texto válido.");
+        return false;
+    }
+
+    if (!validarCelular(celular)){
+        showErrorDialog("El celular debe ser un numero válido.");
         return false;
     }
 
@@ -110,13 +123,15 @@ function validarFormulario(form) {
         showErrorDialog("La fecha de nacimiento debe estar en el formato yyyy-mm-dd.");
         return false;
     }
+    if(!edadMinima(fechaNacimientoInput)){
+        showErrorDialog("Necesitas ser mayor a 16 años para poder registrarte.");
+        return false;
+    }
 
     // Validar contraseña no vacía
     if (password.trim() === '') {
         showErrorDialog("La contraseña no puede estar vacía.");
         return false;
     }
-
-
     return true; // Si todo es válido
 }

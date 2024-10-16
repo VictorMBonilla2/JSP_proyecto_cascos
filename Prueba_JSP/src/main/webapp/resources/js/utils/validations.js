@@ -18,7 +18,7 @@ export function validarpassword(password, longitudMinima = 1 ) {
 
 // Validar que el nombre del reporte no tenga más de 20 caracteres y no esté vacío
 export function validarNombreReporte(nombreReporte) {
-    return nombreReporte.trim() !== '' && nombreReporte.length <= 20;
+    return nombreReporte.trim() !== '' && nombreReporte.length <= 40;
 }
 
 // Validar que la descripción del reporte no tenga más de 500 caracteres y no esté vacía
@@ -43,7 +43,25 @@ export function validarFecha(fecha) {
     const fechaPattern = /^\d{4}-\d{2}-\d{2}$/; // Patrón para yyyy-MM-dd
     return fechaPattern.test(fecha);
 }
+export function edadMinima(fechaNacimiento) {
+    const fechaActual = new Date();
+    const fechaNacimientoDate = new Date(fechaNacimiento);
 
+    // Calcular la diferencia de años entre la fecha actual y la fecha de nacimiento
+    let edad = fechaActual.getFullYear() - fechaNacimientoDate.getFullYear();
+
+    // Ajustar la edad si el cumpleaños aún no ha ocurrido en el año actual
+    const mesActual = fechaActual.getMonth();
+    const mesNacimiento = fechaNacimientoDate.getMonth();
+    const diaActual = fechaActual.getDate();
+    const diaNacimiento = fechaNacimientoDate.getDate();
+
+    if (mesActual < mesNacimiento || (mesActual === mesNacimiento && diaActual < diaNacimiento)) {
+        edad--;
+    }
+
+    return edad >= 16;
+}
 
 export function validarTextoNumeros(valor, longitudMinima = 1) {
     const soloTextoNumeros = /^[A-Za-z0-9\s]+$/; // Expresión regular para letras, números y espacios

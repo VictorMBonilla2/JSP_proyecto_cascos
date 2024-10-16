@@ -19,7 +19,10 @@
     }
 %>
 <section class="main_container__conf_Sistema">
-    <a href="UsuariosDesabilitados.jsp"> Ver desabilitados</a>
+
+    <a href="UsuariosDesabilitados.jsp" class="button-secundary button--width45">
+        Ver deshabilitados
+    </a>
     <div class="users_list__container" id="listaHabilitados">
         <div class="user_list__item new_user__item">
             Crear Nuevo Usuario

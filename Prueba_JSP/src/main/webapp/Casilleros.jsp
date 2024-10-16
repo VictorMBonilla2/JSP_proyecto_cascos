@@ -34,7 +34,6 @@
 </main>
 <script type="module" src="resources/js/Casilleros.js"></script>
 <script type="module" src="resources/js/renderCasilleros.js"></script>
-<script src="resources/js/buttonListener.js"></script>
 
 <template id="template-espacio-ocupado">
     <div class="casillero">
@@ -49,7 +48,6 @@
                 <div class="info__casillero">
                     <h3>Documento</h3>
                     <p>{documento}</p>
-                    <span class="tooltip-text">Este es el cuadro de texto que aparece al hacer hover</span>
                 </div>
                 <div class="info__tiempo">
                     <h3>Placa</h3>

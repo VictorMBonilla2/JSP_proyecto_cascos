@@ -46,7 +46,8 @@
         <select id="TipoDocumento" name="TipoDocumento">
         </select>
 
-        <input type="password" id="passWord" placeholder="Contraseña" name="password" required>
+        <input type="password" id="passWord" placeholder="Contraseña" name="password" required autocomplete="current-password">
+
       </div>
       <button  type="submit" id="submitButton" class="formulario_login__button">Iniciar Sesión</button>
     </form>
