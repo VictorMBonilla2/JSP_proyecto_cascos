@@ -1,21 +1,24 @@
 import {host} from "./config.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const tabla = document.querySelector(".reportes__content");
+    const tabla = document.querySelector(".reportes__content__main");
     const reporteTemplate = document.getElementById('reporte-template').content;
     const modalTemplate = document.getElementById('modal-template').content;
     const documentoUser = document.querySelector("#idUsuario").value;
-    let modalCounter = 0;  // Añade un contador global
 
+    let modalCounter = 0;  // Añade un contador global
+    let reportes;
     try {
         const responseDocument = await fetch(`${host}/SvReportes?iduser=${documentoUser}`);
-        const reportes = await responseDocument.json();
+        reportes = await responseDocument.json();
         console.log(reportes);
 
         if (!Array.isArray(reportes)) {
             throw new Error("El JSON recibido no es un array.");
         }
-
+    } catch (error) {
+        console.error('Error fetching or parsing JSON:', error);
+    }
         const reportesPorFecha = reportes.reduce((acc, reporte) => {
             const fecha = reporte.fecha_reporte.split(" ")[0];
             if (!acc[fecha]) {
@@ -26,22 +29,27 @@ document.addEventListener("DOMContentLoaded", async () => {
         }, {});
 
         for (const [fecha, reportes] of Object.entries(reportesPorFecha)) {
+            const contenedorTabla = document.createElement("div")
+            contenedorTabla.classList.add("reportes__content","estilo__contenido");
+
             const fechaDiv = document.createElement("div");
             fechaDiv.classList.add("reportes__fecha", "estilo__casillero");
-            fechaDiv.innerHTML = `<p>${fecha}</p>`;
-            tabla.appendChild(fechaDiv);
-
+            fechaDiv.innerHTML = `<h1>${fecha}</h1>`;
+            contenedorTabla.appendChild(fechaDiv);
+            let modalId = `report${modalCounter}`;
+            console.log(modalId)
             reportes.forEach((reporte) => {
+                console.log(modalId)
                 const reporteItem = document.importNode(reporteTemplate, true);
-                const modalId = `report${modalCounter++}`;  // Usa un contador único para el ID
+                  // Usa un contador único para el ID
 
                 // Actualiza el contenido del reporte
                 reporteItem.querySelector('.item__casillero').textContent = reporte.documento_aprendiz;
                 reporteItem.querySelector('.item__type').textContent = reporte.tipo_reporte;
                 reporteItem.querySelector('.item__placa').textContent = reporte.placa_vehiculo;
-                reporteItem.querySelector('.report__button').setAttribute('data-modal-id', modalId);
+                reporteItem.querySelector('.button_primary').setAttribute('data-modal-id', modalId);
 
-                tabla.appendChild(reporteItem);
+                contenedorTabla.appendChild(reporteItem);
 
                 // Clona y actualiza el contenido del modal
                 const modalDiv = document.importNode(modalTemplate, true);
@@ -57,12 +65,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                 modalDiv.querySelector('.descripcionReporte').textContent = reporte.descripcion_reporte;
 
                 document.body.appendChild(modalDiv);
+
+                modalCounter++
             });
+
+            tabla.appendChild(contenedorTabla)
         }
 
         // Manejo de eventos para abrir y cerrar modales
         document.addEventListener('click', (event) => {
-            if (event.target.matches('.report__button')) {
+            if (event.target.matches('.button_primary')) {
                 const modalId = event.target.getAttribute('data-modal-id');
                 document.getElementById(modalId).style.display = 'flex';
             } else if (event.target.matches('.close')) {
@@ -78,7 +90,5 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
 
-    } catch (error) {
-        console.error('Error fetching or parsing JSON:', error);
-    }
+
 });

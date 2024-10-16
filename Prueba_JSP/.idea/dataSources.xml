@@ -4,7 +4,7 @@
     <data-source source="LOCAL" name="JSP_Proyecto_cascos" uuid="88aac319-f957-40a6-b304-4840e6dddebd">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost:3306/proyecto_cascos</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />

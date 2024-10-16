@@ -35,6 +35,9 @@
     padding: 10px 30px;
 
 }
+.button-container{
+    justify-content: start;
+}
 
 .new_user__item{
     justify-content: center;
@@ -43,6 +46,7 @@
     margin: 10px 0; /* Margen superior e inferior */
     text-align: center; /* Centra el texto horizontalmente */
     border-radius: 5px; /* Opcional: redondea las esquinas */ /* Añade espacio para separar el borde del contenido */
+    cursor: pointer;
 }
 
 
@@ -84,4 +88,9 @@
 
 #habilitados {
     display: block; /* Mostrar la lista de habilitados por defecto */
+}
+
+.input_container> label {
+    min-width: 150px;
+    max-width: 150px;
 }

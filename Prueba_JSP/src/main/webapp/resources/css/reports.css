@@ -1,11 +1,26 @@
 
 .reportes__title{
     text-align: center;
+    padding-bottom: 15px;
+}
+.reportes__content__main {
+    display: flex;
+    gap: 25px;
+}
+
+.reportes__content{
+    background-color: var(--blanco);
 }
 
 .reportes__content hr:last-child{
     display: none;
 }
+
+.reportes__content .report__item:nth-last-child(2) {
+    border-radius: 0 0 10px 10px;
+}
+
+
 .estilo__casillero{
     background-color: var(--color);
     display: flex;
@@ -14,9 +29,12 @@
     gap: 20px;
     border-radius: var(--borderRadius) var(--borderRadius) 0 0
 }
+.estilo__casillero h1{
+    color: var(--blanco);
+    font-weight: 600;
+}
 
 .estilo__contenido{
-    background-color: #FAFAFA;
     flex-direction: column;
     align-items: center;
     border-radius: var(--borderRadius)
@@ -89,11 +107,12 @@
 
 .modal-header {
     display: flex;
+    color: white;
     justify-content: space-between;
     align-items: center;
     padding: 5px 15px;
     border-radius: var(--borderRadius) var(--borderRadius) 0 0;
-    background-color: #007bff;
+    background-color: var(--color);
 }
 
 .modal-body {

@@ -75,8 +75,10 @@
             <div class="user">
                 <img src="" class="user_class">
                 <span class="close-button" modal-id="modal">&times;</span>
-                <h3><%= user.getNombre()%> </h3>
-                <p><%= roles.getNombre()%></p>
+                <div class="right-sidebar__infoUser">
+                    <h3><%= user.getNombre()%> </h3>
+                    <p><%= user.getRol().getNombre()%></p>
+                </div>
                 <hr class="linea">
             </div>
 
@@ -143,10 +145,11 @@
             <div id="right-sidebar">
                 <div id="contenedorIcono" class="escondido">
                     <div class="user">
-                        <img src="" class="user_class">
                         <span class="close-button" modal-id="modal">&times;</span>
-                        <h3><%= user.getNombre()%> </h3>
-                        <p><%= user.getRol().getNombre()%></p>
+                        <div class="right-sidebar__infoUser">
+                            <h3><%= user.getNombre()%> </h3>
+                            <p><%= user.getRol().getNombre()%></p>
+                        </div>
                         <hr class="linea">
                     </div>
 

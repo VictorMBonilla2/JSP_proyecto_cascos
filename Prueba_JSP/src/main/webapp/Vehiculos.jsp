@@ -74,7 +74,7 @@
                 </div>
                 <hr>
                 <div class="input_container input_container--vertical">
-                    <label for="cantCasco">Cantidad:</label>
+                    <label for="cantCasco">Cantidad de cascos :</label>
                     <input type="text" id="cantCasco" name="cascosVehiculo" placeholder="Describe lo que paso">
                 </div>
                 <div class="button-container child-end">

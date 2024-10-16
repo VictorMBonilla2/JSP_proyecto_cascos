@@ -23,7 +23,7 @@
                     <h1>Reportes</h1>
                     <p>Daños, extravios o cualquier irregularidad relacionada al casilleros o cascos se reportara a esta sección. </p>
                 </div>
-                <div class="reportes__content estilo__contenido">
+                <div class="reportes__content__main estilo__contenido">
 
                 </div>
 
@@ -36,13 +36,13 @@
             <!-- Plantilla para los ítems de reporte -->
             <template id="reporte-template">
                 <div class="report__item">
-                    <p>Documento</p>
+                    <h4>Documento</h4>
                     <p class="item__casillero"></p>
-                    <p>Tipo</p>
+                    <h4>Tipo</h4>
                     <p class="item__type"></p>
-                    <p>Placa</p>
+                    <h4>Placa</h4>
                     <p class="item__placa"></p>
-                    <button class="report__button" data-modal-id="">Detalles</button>
+                    <button class="button_primary button--width12" data-modal-id="">Detalles</button>
                 </div>
                 <hr class="linea">
             </template>
@@ -55,7 +55,6 @@
                             <h2>Detalles Reporte</h2>
                             <span class="close" data-modal-id="">×</span>
                         </div>
-
 
 
                         <div class="modal-body">
