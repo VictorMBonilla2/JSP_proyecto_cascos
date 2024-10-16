@@ -81,9 +81,9 @@
 /* Estilo para los botones del paginador */
 #paginadorHabilitados button {
     padding: 8px 16px;
-    border: 1px solid #007bff;
-    background-color: white;
-    color: #007bff;
+    border: 1px solid var(--color);
+    background-color: var(--blanco);
+    color: var(--color);
     font-size: 14px;
     cursor: pointer;
     border-radius: 4px;
@@ -92,14 +92,14 @@
 
 /* Hover sobre los botones */
 #paginadorHabilitados button:hover {
-    background-color: #007bff;
-    color: white;
+    background-color: var(--color);
+    color: var(--blanco);
 }
 
 /* Estilo para el botón activo (página actual) */
 #paginadorHabilitados button.active {
-    background-color: #007bff;
-    color: white;
+    background-color: var(--color);
+    color: var(--blanco);
     pointer-events: none;
 }
 

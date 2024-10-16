@@ -15,7 +15,7 @@
     padding: 30px 0px;
     height: 88vh; /*Debe totalizar 100% con respecto al height del header*/
     grid-gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(calc(100% / 3 - 20px), 1fr));
+    grid-template-columns: repeat(3, 1fr);
     justify-items: center;
     align-items: center;
     font-family: Inter, sans-serif;
@@ -33,6 +33,7 @@
     display: flex;
     border-radius: 15px;
     flex-direction: column;
+    align-self: start;
 }
 
 .casillero__title{
@@ -54,7 +55,7 @@
 
 }
 .estilo__contenido{
-    background-color: #FAFAFA;
+    background-color: var(--blanco);
     flex-direction: column;
     align-items: center;
     border-radius: 0 0 var(--borderRadius) var(--borderRadius)
@@ -64,6 +65,7 @@
     display: flex;
     justify-content: space-around;
     padding: 25px;
+    gap: 25px;
 
 }
 .contenido__info h1{
@@ -107,11 +109,11 @@
     align-items: center;
     padding: 5px 15px;
     border-radius: var(--borderRadius) var(--borderRadius) 0 0;
-    background-color: #007bff;
+    background-color: var(--color);
 }
 
 .modal-body {
-    background-color: #fff;
+    background-color: var(--blanco);
     text-align: center;
     padding: 20px;
     border: 1px solid #888;

@@ -28,12 +28,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="resources/js/VerificarSesion.js"></script>
 </head>
 
 <body>
-
-<input type="hidden" id="sesionStatus" value="<%= user == null ? false: true%>" />
 
     <%
     if (isGestor || isAdmin){
@@ -61,7 +58,7 @@
             <li><a href="Casilleros.jsp">Casilleros</a></li>
         </ul>
         <button id="botonMostrar" class="perfil-button">
-            <img src="resources/imagenes/IconPerfil.png">
+            <img src="resources/imagenes/iconProfile.png">
         </button>
     </div>
     <style>

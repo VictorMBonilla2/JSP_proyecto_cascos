@@ -9,18 +9,18 @@ const formTemplate = document.querySelector("#template_form").content;
 const formNewTemplate = document.querySelector("#template_form_newUser").content;
 const itemTemplate = document.querySelector("#item__list").content;
 const newitemTemplate= document.querySelector("#new-item__list").content;
+let personas;
+
 document.addEventListener("DOMContentLoaded", async () => {
 
     let personasActivas = await ObtenerUsuariosActivos("1");
-    let personas = personasActivas.usuarios;
+    personas = personasActivas.usuarios; // Se inicializa correctamente
     if (personasActivas.usuarios.length > 0) {
         actualizarListaUsuarios(personasActivas.usuarios, "listaHabilitados");
         crearPaginador(personasActivas.totalPaginas, 1);
     }
 
     document.addEventListener("click", async (e) => {
-        console.log(e.target)
-
         if (e.target.matches(".new_user__item")) {
             const user_item = e.target;
             // Si ya tiene la clase form_active, la quitamos y salimos
@@ -90,10 +90,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // Retirar el formulario existente antes de agregar otro
             retirarFormsActivos();
-
+            console.log("data edit target:", data_edit)
             // Añadir la clase activo al form actual
             user_item.classList.add("form_active");
             const dato_usuario = personas.find(persona => persona.idUser === parseInt(data_edit));
+            console.log("Datos usuario seleccionado: ", dato_usuario)
             const clone = document.importNode(formTemplate, true);
 
             const formulario = clone.querySelector(".formulario");
@@ -178,11 +179,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             submitButton.disabled = false;
         }
     })
+
 });
 
 function crearPaginador(totalPaginas, paginaActual) {
-    const paginadorContainer =  document.getElementById('paginadorHabilitados');
-
+    const paginadorContainer = document.getElementById('paginadorHabilitados');
     paginadorContainer.innerHTML = ''; // Limpiar el paginador antes de crear nuevos botones
     for (let i = 1; i <= totalPaginas; i++) {
         const boton = document.createElement('button');
@@ -193,19 +194,19 @@ function crearPaginador(totalPaginas, paginaActual) {
     }
 }
 async function cambiarPagina(pagina) {
-    let personas;
-    personas = await ObtenerUsuariosActivos(pagina);
-    if (personas && personas.usuarios.length > 0) {
-        actualizarListaUsuarios(personas.usuarios, 'listaHabilitados');
-        crearPaginador(personas.totalPaginas, pagina);
+    // Actualizar los datos de personas para la nueva página
+    let personasActivas = await ObtenerUsuariosActivos(pagina);
+    personas = personasActivas.usuarios;  // Actualizamos la lista de personas para la nueva página
+    if (personas && personas.length > 0) {
+        actualizarListaUsuarios(personas, 'listaHabilitados');
+        crearPaginador(personasActivas.totalPaginas, pagina);
     }
 }
 function actualizarListaUsuarios(usuarios, contenedorId) {
     const lista = document.getElementById(contenedorId);
-    lista.innerHTML = '';// Limpiar la lista antes de agregar nuevos usuarios
+    lista.innerHTML = ''; // Limpiar la lista antes de agregar nuevos usuarios
     lista.appendChild(document.importNode(newitemTemplate, true));
     usuarios.forEach(persona => {
-        // Seleccionar el template correcto según el estado del usuario
         const clone = document.importNode(itemTemplate, true);
         clone.querySelector(".user_list__item").setAttribute('data-user', persona.idUser);
         clone.querySelector(".user_item_document > p").textContent = persona.documento;
