@@ -18,7 +18,7 @@ public class Logica_Persona {
     PDFService pdfService= new PDFService() ;
 
 
-    public ResultadoOperacion validarIngreso(int documento, int tipoDocumento, String clave, String rol) {
+    public ResultadoOperacion validarIngreso(int documento, int tipoDocumento, String clave) {
         PasswordService passwordService = new PasswordService();
         System.out.println("Iniciando validación de ingreso para documento: " + documento);
 
@@ -31,20 +31,18 @@ public class Logica_Persona {
         }
         System.out.println("Documento encontrado, continuando validación...");
 
-        int rolInt = Integer.parseInt(rol);
-
         // Validar las credenciales: tipo de documento, clave y rol
         if (persona.getClave() != null) {
             boolean tipoDocCoincide = persona.getTipoDocumento().getId() == tipoDocumento;
             boolean claveCoincide = passwordService.verificarContrasena(clave,persona.getClave());
-            boolean rolCoincide = persona.getRol().getId() == rolInt;
+
 
             System.out.println("Resultado de validaciones:");
             System.out.println("Tipo de documento coincide: " + tipoDocCoincide);
             System.out.println("Clave coincide: " + claveCoincide);
-            System.out.println("Rol coincide: " + rolCoincide);
 
-            if (tipoDocCoincide && claveCoincide && rolCoincide) {
+
+            if (tipoDocCoincide && claveCoincide) {
                 // Verificar si el usuario está activo
                 if (persona.getEstadoUsuario() == EstadoUsuario.ACTIVO) {
                     System.out.println("Usuario activo. Acceso permitido.");

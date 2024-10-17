@@ -10,7 +10,8 @@ import {
     cargarMarcas,
     cargarModelos,
     cargarTiposVehiculo
-} from "./utils/renderSelects.js"; // Mostrar mensajes de éxito
+} from "./utils/renderSelects.js";
+import {clearFormData} from "./utils/clearForms"; // Mostrar mensajes de éxito
 
 
 const DocumentoAprendiz = document.querySelector("#documentoUser").value;
@@ -98,6 +99,9 @@ if (vehiculos.length > 0) {
         const marcaP = document.createElement('p');
         marcaP.textContent = vehiculo.marca.nombre;
         div.appendChild(marcaP);
+        const TipoV = document.createElement('p');
+        TipoV.textContent = vehiculo.nombre_tipo_vehiculo;
+        div.appendChild(TipoV);
 
         console.log(vehiculo)
         vehiculoList.appendChild(div);
@@ -144,6 +148,7 @@ async function crearVehiculo(formData, DocumentoAprendiz) {
         showSuccessAlert(response.message);
         // Actualizar la lista de vehículos después de crear
         await ObtenerVehiculos(DocumentoAprendiz);
+        clearFormData(formData)
     } else {
         showErrorDialog(response.message);
     }
@@ -170,6 +175,7 @@ async function editarVehiculo(formData, DocumentoAprendiz) {
         showSuccessAlert(response.message);
         // Actualizar la lista de vehículos después de editar
         await ObtenerVehiculos(DocumentoAprendiz);
+        clearFormData(formData)
     } else {
         showErrorDialog(response.message);
     }
@@ -185,6 +191,7 @@ async function eliminarVehiculo(formData){
         showSuccessAlert(response.message);
         // Actualizar la lista de vehículos después de editar
         await ObtenerVehiculos(DocumentoAprendiz);
+        clearFormData(formData)
     } else {
         showErrorDialog(response.message);
     }

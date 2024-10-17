@@ -196,9 +196,8 @@ public class SvPersona extends HttpServlet {
         int documento = jsonObject.getInt("documento");
         int tipoDocumento = jsonObject.getInt("tipoDocumento");
         String password = jsonObject.getString("password");
-        String rol = jsonObject.getString("rol");
 
-        ResultadoOperacion validacion = logica_persona.validarIngreso(documento, tipoDocumento, password, rol);
+        ResultadoOperacion validacion = logica_persona.validarIngreso(documento, tipoDocumento, password);
         if (validacion.isExito()) {
             try {
                 // Buscar el usuario por su documento

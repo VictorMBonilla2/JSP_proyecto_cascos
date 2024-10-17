@@ -36,7 +36,9 @@
 
 <template id="new-item__list">
     <div class="user_list__item new_user__item">
+        <h3>
         Crear Nuevo Usuario
+        </h3>
     </div>
 </template>
 

@@ -29,7 +29,6 @@
             <g id="_x23_000000ff-2" transform="matrix(0.31570611,0,0,0.23560774,-391.49698,-10.601126)">
             </g>
       </svg>
-      <p class="logo__text">Colaborador</p>
     </div>
     <h1 class="Container__title">Iniciar Sesión</h1>
 

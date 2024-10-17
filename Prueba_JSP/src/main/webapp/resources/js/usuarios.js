@@ -4,6 +4,7 @@ import {validarCelular, validarDocumento, validarEmail, validarFecha, validarTex
 import {showErrorDialog} from "./alerts/error.js";
 import {showSuccessAlert} from "./alerts/success.js";
 import {showConfirmationDialog} from "./alerts/confirm.js";
+import {clearFormData} from "./utils/clearForms.js";
 
 const formTemplate = document.querySelector("#template_form").content;
 const formNewTemplate = document.querySelector("#template_form_newUser").content;
@@ -273,6 +274,8 @@ async function editUser(formData) {
     if (response.status === "success") {
         console.log("Se ha actualizado el usuario correctamente");
         showSuccessAlert(response.message);
+        clearFormData(formData)
+        retirarFormsActivos()
     } else {
         showErrorDialog(response.message);
     }
@@ -295,6 +298,8 @@ async function crearUsuario(formData) {
     if (response.status === "success") {
         console.log("Se ha creado el usuario correctamente");
         showSuccessAlert(response.message);
+        clearFormData(formData)
+        retirarFormsActivos()
     } else {
         showErrorDialog(response.message);
     }
