@@ -60,6 +60,7 @@
 .main_container{
     display: flex;
     background-color: #E6E6E6;
+    height: 86vh;
 }
 .formulario{
     display: flex;

@@ -20,6 +20,21 @@
     border-radius: 0 0 10px 10px;
 }
 
+.text__container{
+    display: flex;
+    gap: 20px;
+    padding: 15px 0;
+    align-items: center;
+}
+.text__container h4{
+    min-width: 115px;
+    max-width: 115px;
+}
+
+.input_container--vertical{
+    gap: 2px;
+}
+
 
 .estilo__casillero{
     background-color: var(--color);

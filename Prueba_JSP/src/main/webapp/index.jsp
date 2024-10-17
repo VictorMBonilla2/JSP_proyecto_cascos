@@ -48,7 +48,10 @@
         <input type="password" id="passWord" placeholder="Contraseña" name="password" required autocomplete="current-password">
 
       </div>
-      <button  type="submit" id="submitButton" class="formulario_login__button">Iniciar Sesión</button>
+      <div class="button_container">
+        <button  type="submit" id="submitButton" class="button_primary">Iniciar Sesión</button>
+      </div>
+
     </form>
   </div>
     <a href="forgetPassword.jsp"> <p class="Container__forget">¿Has olvidado tu contraseña?</p></a>

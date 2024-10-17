@@ -36,9 +36,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             fechaDiv.classList.add("reportes__fecha", "estilo__casillero");
             fechaDiv.innerHTML = `<h1>${fecha}</h1>`;
             contenedorTabla.appendChild(fechaDiv);
-            let modalId = `report${modalCounter}`;
-            console.log(modalId)
+
+
             reportes.forEach((reporte) => {
+                let modalId = `report${modalCounter}`;
                 console.log(modalId)
                 const reporteItem = document.importNode(reporteTemplate, true);
                   // Usa un contador único para el ID

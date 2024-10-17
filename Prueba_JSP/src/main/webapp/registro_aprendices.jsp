@@ -36,7 +36,8 @@
           <input type="date" id="fecha" placeholder="fechaNacimineto" name="fecha" required>
           <input type="text" id="numeroCelular" placeholder="numeroCelular" name="numeroCelular" required>
           <input type="email" id="email" placeholder="Correo Electronico" name="correo" required>
-          <input type="password" id="passWord" placeholder="contraseña" name="password" required>
+          <input type="password" id="passWord" class="passWord" placeholder="contraseña" name="password" required>
+          <input type="password" id="Confirm-passWord" class="passWord" placeholder="Confirma la contraseña" name="Confirm-passWord" required>
         </div>
         <button  type="submit" class="formulario__button">Registrarse</button>
       </form>

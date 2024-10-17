@@ -19,6 +19,11 @@
     }
 %>
 <section class="main_container__conf_Sistema">
+    <div class="button-container">
+        <a href="Usuarios.jsp" class="button_secundary button--width45">
+            Ver habilitados
+        </a>
+    </div>
     <div class="users_list__container" id="listaDeshabilitados">
         <!-- Usuarios inhabilitados se mostrarán aquí -->
     </div>

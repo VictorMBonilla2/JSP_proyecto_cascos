@@ -84,6 +84,7 @@ function validarFormulario(form) {
     const celular = form.get("numeroCelular");
     const fechaNacimientoInput = form.get("fecha")
     const password = form.get("password")
+    const confirmPassword= form.get("Confirm-passWord");
 
     // Validar nombre y apellido solo texto
     if (!validarTexto(nombre, 1)) {
@@ -133,5 +134,11 @@ function validarFormulario(form) {
         showErrorDialog("La contraseña no puede estar vacía.");
         return false;
     }
+
+    if (!(password === confirmPassword)){
+        showErrorDialog("La contraseña no coincide.");
+        return false;
+    }
+
     return true; // Si todo es válido
 }

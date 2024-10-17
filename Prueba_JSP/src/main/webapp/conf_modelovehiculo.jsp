@@ -19,7 +19,7 @@
     <div class="conf__container">
         <div class="conf_container__sideOne modific_item__container">
             <div class="title__side">
-                <div class="back_button"><span> &lt; </span></div>
+
                 <div class="title__container">
                     <h2>Modificar Modelo de Vehículo</h2>
                 </div>

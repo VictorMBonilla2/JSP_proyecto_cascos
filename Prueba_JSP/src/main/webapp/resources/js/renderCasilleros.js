@@ -21,7 +21,7 @@ function renderTabs(sectores, tiporeportes) {
     sectores.forEach((sector, index) => {
         // Crear el tab del sector
         const tab = document.createElement('li');
-        tab.classList.add('tab');
+        tab.classList.add('tab', 'button_secundary' , 'button--width12');
         tab.textContent = sector.nombre;
         tab.dataset.sectorId = sector.id;
 

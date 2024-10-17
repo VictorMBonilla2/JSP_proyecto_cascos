@@ -1,15 +1,18 @@
 .main_container__conf_Sistema{
     width: 80%;
     margin: 0 auto;
-    padding-top: 60px;
+    padding-top: 25px;
 }
 .info_box__container{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    height: 95%;
+    grid-auto-rows: 180px;
+    height: 98%;
     background-color: #fff;
     border-radius: var(--borderRadius);
     padding: 25px;
+    overflow-x: hidden;
+    overflow-y: auto;
     justify-items: center;
 }
 .config_box{
@@ -25,8 +28,9 @@
     margin-right: -30px;
 
 }
-
-
+.no-border{
+    border: none;
+}
 .conf__container{
     display: flex;
     background-color: #fff;
@@ -34,6 +38,17 @@
     padding: 25px;
     gap: 20px;
 }
+
+.conf__container--individual {
+    display: flex;
+    background-color: #fff;
+    border-radius: var(--borderRadius);
+    padding: 25px;
+    width: 50%;
+    gap: 20px;
+    margin: 0 auto;
+}
+
 .modific_item__container{
     width: 100%;
 }
