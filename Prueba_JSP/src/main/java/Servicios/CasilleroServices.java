@@ -124,7 +124,7 @@ public class CasilleroServices {
                     nuevoEspacio.setEstado_espacio(EstadoEspacio.Libre);
                     nuevoEspacio.setCantidad_cascos(0);
                     // Generar un nombre único para el nuevo espacio
-                    String nombreEspacio = "Espacio" + (listaEspacios.size() + 1 + i);
+                    String nombreEspacio = "Espacio " + (listaEspacios.size() + 1 + i);
                     nuevoEspacio.setNombre(nombreEspacio);
                     System.out.println("Creando nuevo espacio: " + nombreEspacio);
                     logicaEspacios.crearEspacio(nuevoEspacio);

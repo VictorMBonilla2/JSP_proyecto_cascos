@@ -84,7 +84,7 @@
                     <h1>Libre</h1>
                 </div>
             </div>
-            <div class="button-container">
+            <div class="button-container button-container--width80">
                 <button class="button_primary addCasilleroBtn" id="updateButton" >
                     Añadir
                 </button>

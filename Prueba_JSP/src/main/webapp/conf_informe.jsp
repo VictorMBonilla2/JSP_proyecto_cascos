@@ -16,10 +16,9 @@
     }
 %>
 <section class="main_container__conf_Sistema">
-    <div class="conf__container">
-        <div class="conf_container__sideOne modific_item__container">
-            <div class="title__side">
-                <div class="back_button"><span> &lt; </span></div>
+    <div class="conf__container--individual">
+        <div class="conf_container__sideOne modific_item__container no-border">
+            <div class="title__side no-border">
                 <div class="title__container">
                     <h2>Buscar informes</h2>
                 </div>
@@ -40,9 +39,6 @@
                 </form>
 
             </div>
-
-        </div>
-        <div class="conf_sectores__sideTwo modific_item__container">
 
         </div>
     </div>

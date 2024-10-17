@@ -1,6 +1,13 @@
 import {hideLoadingSpinner, sendRequest, showLoadingSpinner} from "./ajax.js";
 import {cargarRoles, cargarTiposDocumento} from "./utils/renderSelects.js";
-import {validarCelular, validarDocumento, validarEmail, validarFecha, validarTexto} from "./utils/validations.js";
+import {
+    edadMinima,
+    validarCelular,
+    validarDocumento,
+    validarEmail,
+    validarFecha,
+    validarTexto
+} from "./utils/validations.js";
 import {showErrorDialog} from "./alerts/error.js";
 import {showSuccessAlert} from "./alerts/success.js";
 import {showConfirmationDialog} from "./alerts/confirm.js";
@@ -371,6 +378,11 @@ function validarFormularioNew(formData) {
         return false;
     }
 
+    if (!edadMinima(fechaNacimientoInput)) {
+        showErrorDialog("La fecha de nacimiento debe estar en el formato yyyy-mm-dd.");
+        return false;
+    }
+
     // Validar contraseña no vacía
     if (password.trim() === '') {
         showErrorDialog("La contraseña no puede estar vacía.");
@@ -432,6 +444,11 @@ function verificarFormularioEdit(formData) {
     // Validar que la fecha de nacimiento tenga el formato correcto (yyyy-MM-dd)
     if (!validarFecha(fechaNacimientoInput)) {
         showErrorDialog("La fecha de nacimiento debe estar en el formato yyyy-MM-dd.");
+        return false;
+    }
+
+    if (!edadMinima(fechaNacimientoInput)) {
+        showErrorDialog("La edad Minima debe ser de 16 años!");
         return false;
     }
 

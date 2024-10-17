@@ -55,6 +55,15 @@
     display: flex;
 
 }
+
+.input_container--vertical{
+    align-items: center;
+}
+.input_container > input,
+.input_container > select {
+    max-width: none; /* Limitar el ancho máximo */
+}
+
 .estilo__contenido{
     background-color: var(--blanco);
     flex-direction: column;

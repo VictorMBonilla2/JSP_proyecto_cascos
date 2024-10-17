@@ -43,7 +43,7 @@
     justify-content: center;
     border: 2px dashed black; /* Borde de 2px de grosor, con estilo de guiones y color negro */
     padding: 16px; /* Espacio interno para separar el contenido del borde */
-    margin: 10px 0; /* Margen superior e inferior */
+    margin: 1px 0 10px; /* Margen superior e inferior */
     text-align: center; /* Centra el texto horizontalmente */
     border-radius: 5px; /* Opcional: redondea las esquinas */ /* Añade espacio para separar el borde del contenido */
     cursor: pointer;

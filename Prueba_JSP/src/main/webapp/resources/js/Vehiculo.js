@@ -11,7 +11,7 @@ import {
     cargarModelos,
     cargarTiposVehiculo
 } from "./utils/renderSelects.js";
-import {clearFormData} from "./utils/clearForms"; // Mostrar mensajes de éxito
+import {clearFormData} from "./utils/clearForms.js"; // Mostrar mensajes de éxito
 
 
 const DocumentoAprendiz = document.querySelector("#documentoUser").value;

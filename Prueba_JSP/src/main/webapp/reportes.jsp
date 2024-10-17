@@ -61,14 +61,31 @@
                             <h2 class="nombreReporte"></h2>
                             <div class="input_container input_container--vertical">
                                 <h3>Datos del Gestor reportante: </h3>
-                                <p class="nombreReportante"></p>
-                                <p class="documentoReportante"></p>
+                                <div class="text__container">
+                                    <h4>Nombre:</h4>
+                                    <p class="nombreReportante"></p>
+                                </div>
+                                <div class="text__container">
+                                    <h4>Numero Documento:</h4>
+                                    <p class="documentoReportante"></p>
+                                </div>
+
                             </div>
                             <div class="input_container input_container--vertical">
                                 <h3>Datos del Aprendiz Involucrado: </h3>
-                                <p class="nombreReportado"></p>
-                                <p class="documentoReportado"></p>
-                                <p class="placaReportado"></p>
+                                <div class="text__container">
+                                    <h4>Nombre:</h4>
+                                    <p class="nombreReportado"></p>
+                                </div>
+                                <div class="text__container">
+                                    <h4>Numero Documento:</h4>
+                                    <p class="documentoReportado"></p>
+                                </div>
+                                <div class="text__container">
+                                    <h4>Placa Vehiculo:</h4>
+                                    <p class="placaReportado"></p>
+                                </div>
+
 
                             </div>
                             <div class="input_container ">
