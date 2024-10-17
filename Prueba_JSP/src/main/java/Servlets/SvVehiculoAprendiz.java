@@ -141,6 +141,7 @@ public class SvVehiculoAprendiz extends HttpServlet {
         Tb_ModeloVehiculo modeloVehiculo = vehiculo.getModeloVehiculo();
 
         jsonObject.put("tipo_vehiculo", tipoVehiculo != null ? tipoVehiculo.getId() : "N/A");
+        jsonObject.put("nombre_tipo_vehiculo", tipoVehiculo != null ? tipoVehiculo.getNombre() : "N/A");
 
         if (marcaVehiculo != null) {
             JSONObject marcaObject = new JSONObject();
