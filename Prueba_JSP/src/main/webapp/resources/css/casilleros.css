@@ -16,6 +16,7 @@
     height: 88vh; /*Debe totalizar 100% con respecto al height del header*/
     grid-gap: 1rem;
     grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 265px;
     justify-items: center;
     align-items: center;
     font-family: Inter, sans-serif;
@@ -38,7 +39,7 @@
 
 .casillero__title{
     width: 100%;
-    height: 30%;
+    height: 25%;
 }
 .estilo__casillero{
     background-color: var(--color);
@@ -51,7 +52,7 @@
 }
 .casillero__contenido{
     width: 100%;
-    height: 73%;
+    height: 65%;
     display: flex;
 
 }

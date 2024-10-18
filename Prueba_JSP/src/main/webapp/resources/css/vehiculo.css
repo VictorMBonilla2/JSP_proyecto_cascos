@@ -43,10 +43,10 @@
     text-align: center;
     width: 100%;
     max-width: 125px;
-    height: 8vh;
+    height: 10vh;
     max-height: 100px;
     color: var(--blanco);
-    background-color: var(--color);
+    background-color: var(--secundary);
     border-radius: var(--borderRadius);
     padding: 10px;
     font-size: clamp(12px, 2vw, 16px); /* Ajustar el uso de vw en lugar de vh */
@@ -57,8 +57,17 @@
     transition: background-color 0.4s;
 }
 
+.vehiculo__list__item p{
+    padding-bottom: 5px;
+}
+
+.input_container> label {
+    min-width: 85px;
+    max-width: 170px;
+}
+
 .vehiculo__list__item:hover{
-    background-color: var(--apoyo);
+    background-color: #015e91;
 }
 
 /* Opción para texto que puede envolver varias líneas */
