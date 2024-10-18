@@ -118,7 +118,7 @@ if (vehiculos.length > 0) {
     addItem.addEventListener("click", () => {
         vaciarFormulario();
         ejecutor.id = "sendCreate";
-        ejecutor.textContent = "Crear";
+        ejecutor.textContent = "Añadir nuevo Vehiculo";
     });
     const addText = document.createElement('p');
     addText.textContent = 'Agregar';
