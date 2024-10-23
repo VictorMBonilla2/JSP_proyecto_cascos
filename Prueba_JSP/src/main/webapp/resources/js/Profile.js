@@ -10,6 +10,7 @@ const divDetalles = document.querySelector(".detalles_user_container");
 const infoContainer = document.querySelector("#userinfo");
 const infoTemplate = document.querySelector("#infoTemplate").content;
 const formTemplate = document.querySelector("#formTemplate").content;
+const infoUserContainer= document.querySelector(".info_user_container");
 const cancelButtonInfoContainer = document.querySelector("#cancelEdit");
 const id_usuario = document.querySelector('#idUsuario').value
 document.addEventListener('DOMContentLoaded',  async ()=>{
@@ -52,6 +53,7 @@ function mostrarFormulario(data) {
     setTimeout(() => {
         divDetalles.style.display = 'none';
         infoContainer.innerHTML = ""; // Limpiar el contenedor antes de agregar el formulario
+        infoUserContainer.classList.add("modificated");
 
         // Clonar el contenido del template
         const clone = document.importNode(formTemplate, true); // Necesitas pasar 'true' para hacer una clonación profunda
@@ -110,8 +112,10 @@ function mostrarInformacion(data) {
     console.log(data)
     divPerfil.classList.remove("modificado");
     divDetalles.classList.remove("oculto");
+    infoUserContainer.classList.remove("modificated");
     divDetalles.style.opacity = '100%';
     divDetalles.style.display = 'flex';
+
 
     // Limpiar el contenedor antes de agregar la información
     infoContainer.innerHTML = "";
@@ -122,7 +126,7 @@ function mostrarInformacion(data) {
     clone.querySelector('.rolUser').textContent=data.rol.namerolUsuario
     clone.querySelector('.correoUser').textContent=data.correoUsuario
     clone.querySelector('.fechaNacUser').textContent=data.fechaNacimiento
-
+    clone.querySelector('.celularUser').textContent=data.numeroCelular
     infoContainer.appendChild(clone);
 
 }

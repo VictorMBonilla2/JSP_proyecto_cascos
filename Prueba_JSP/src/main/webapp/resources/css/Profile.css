@@ -9,17 +9,22 @@
 }
 
 
-.Miranose{
-    width: 75%;
-}
 
 .info_user_container{
-    height: 75vh;
+    height: 60vh;
     background-color: var(--blanco);
     display: flex;
     justify-content: space-around;
     border-radius: var(--borderRadius);
     padding: 40px;
+}
+
+.Miranose{
+    width: 75%;
+}
+
+.modificated{
+    height: 70vh;
 }
 
 .info_user_container__header{
@@ -36,6 +41,7 @@
 .info_user_container__body{
     width: 100%;
     display: flex;
+    padding-bottom: 50px;
     gap: 30px;
     flex-wrap: wrap;
 }

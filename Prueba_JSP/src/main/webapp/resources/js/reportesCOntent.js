@@ -28,7 +28,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             return acc;
         }, {});
 
-        for (const [fecha, reportes] of Object.entries(reportesPorFecha)) {
+
+    const reportesOrdenados = Object.entries(reportesPorFecha).sort((a, b) => {
+        return new Date(b[0]) - new Date(a[0]);
+    });
+        for (const [fecha, reportes] of reportesOrdenados) {
+
             const contenedorTabla = document.createElement("div")
             contenedorTabla.classList.add("reportes__content","estilo__contenido");
 
