@@ -109,7 +109,7 @@
         </div>
         <div class="info_box config_box">
             <div class="info_data">
-                <h1>Activar/Desactivar espacios indiduales</h1>
+                <h1>Activar/Desactivar espacios <individuales></individuales></h1>
                 <hr>
                 <p>Podras desabilitar espacios especificos de lo sectores si la situacion lo amerita</p>
             </div>

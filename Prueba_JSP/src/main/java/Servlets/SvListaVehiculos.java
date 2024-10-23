@@ -15,14 +15,29 @@ import java.util.List;
 
 @WebServlet(name = "SvListaVehiculos", urlPatterns = {"/listaVehiculos"})
 public class SvListaVehiculos extends HttpServlet {
+    // Instancia de la lógica relacionada con vehículos
     Logica_Vehiculo logica_vehiculo = new Logica_Vehiculo();
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+
+    /**
+     * Maneja las solicitudes GET para obtener la lista de vehículos de una persona,
+     * basándose en el documento proporcionado como parámetro en la solicitud.
+     * Devuelve la lista de vehículos en formato JSON.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Obtener el parámetro 'documento' de la solicitud
         String documento = request.getParameter("documento");
         System.out.println("El documento a consultar es: " + documento);
 
+        // Obtener la lista de vehículos asociados al documento
         List<VehiculoDTO> listaVehiculos = logica_vehiculo.obtenerVehiculosDePersona(documento);
 
-        // Si la lista está vacía, devolvemos un JSON vacío
+        // Si la lista está vacía, devolver un JSON vacío
         if (listaVehiculos == null || listaVehiculos.isEmpty()) {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
@@ -30,7 +45,7 @@ public class SvListaVehiculos extends HttpServlet {
             return;
         }
 
-        // Convertir la lista a JSON
+        // Convertir la lista de vehículos a formato JSON
         JSONArray jsonArray = new JSONArray();
         for (VehiculoDTO vehiculo : listaVehiculos) {
             JSONObject jsonObject = new JSONObject();
@@ -46,5 +61,5 @@ public class SvListaVehiculos extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(jsonArray.toString());
     }
-
 }
+

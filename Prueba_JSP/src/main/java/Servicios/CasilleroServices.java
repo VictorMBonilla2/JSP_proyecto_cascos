@@ -9,15 +9,30 @@ import Utilidades.ResultadoOperacion;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Esta clase gestiona la creación, reactivación y desactivación de espacios dentro de sectores.
+ * Utiliza la lógica de espacios a través de la clase {@link Logica_Espacios} para interactuar con la base de datos.
+ */
 public class CasilleroServices {
 
     private Logica_Espacios logicaEspacios;
 
-    // Inyección de Logica_Espacios, que gestionará la interacción con la base de datos a través de los controladores JPA
+    /**
+     * Constructor de CasilleroServices que inyecta la lógica de espacios.
+     *
+     * @param logicaEspacios La lógica que gestiona la interacción con los espacios en la base de datos.
+     */
     public CasilleroServices(Logica_Espacios logicaEspacios) {
         this.logicaEspacios = logicaEspacios;
     }
 
+    /**
+     * Crea, reactiva o desactiva espacios dentro de un sector en función de las necesidades del sector modificado.
+     *
+     * @param sectorActual      El sector actual que contiene los espacios.
+     * @param sectorModificado  El sector modificado con los datos actualizados.
+     * @return                  Un objeto {@link ResultadoOperacion} indicando si la operación fue exitosa y un mensaje.
+     */
     public ResultadoOperacion crearEspaciosParaSector(TbSectores sectorActual, TbSectores sectorModificado) {
         try {
             // Validaciones iniciales
@@ -25,26 +40,27 @@ public class CasilleroServices {
                 return new ResultadoOperacion(false, "Los parámetros de sector no pueden ser nulos.");
             }
 
+            // Verificar la cantidad de espacios esperada
             int cantidadEspaciosEsperada = sectorModificado.getCant_espacio();
             if (cantidadEspaciosEsperada < 0) {
                 return new ResultadoOperacion(false, "La cantidad esperada de espacios no puede ser negativa.");
             }
 
+            // Obtener los espacios existentes en el sector actual
             Set<TbEspacio> espaciosExistentes = sectorActual.getEspacios();
             List<TbEspacio> listaEspacios = new ArrayList<>(espaciosExistentes);
 
-            // Ordenar la lista original por el número en el nombre del espacio (ascendente)
+            // Ordenar la lista por el número de los nombres de los espacios (ascendente)
             listaEspacios.sort(Comparator.comparingInt(espacio -> {
                 String nombre = espacio.getNombre();
                 try {
                     return Integer.parseInt(nombre.replaceAll("[^0-9]", ""));
                 } catch (NumberFormatException e) {
-                    // Manejar casos donde el nombre no sigue el formato esperado
                     return 0;
                 }
             }));
 
-            // Separar espacios activos e inactivos
+            // Separar los espacios activos e inactivos
             List<TbEspacio> espaciosActivos = new ArrayList<>();
             List<TbEspacio> espaciosInactivos = new ArrayList<>();
 
@@ -56,9 +72,8 @@ public class CasilleroServices {
                 }
             }
 
-            // Invertir solo espaciosActivos para desactivar desde el último hacia el primero
+            // Invertir la lista de espacios activos para desactivar desde el último
             Collections.reverse(espaciosActivos);
-            // No invertir espaciosInactivos para reactivar desde el primero hacia el último
 
             int cantidadActualActiva = espaciosActivos.size();
             int cantidadInactivos = espaciosInactivos.size();
@@ -75,29 +90,26 @@ public class CasilleroServices {
                 }
 
                 int desactivados = 0;
-                // Iterar desde el último hacia el primero (lista invertida)
+                // Desactivar los espacios necesarios
                 for (int i = 0; i < espaciosActivos.size() && desactivados < espaciosARemover; i++) {
                     TbEspacio espacio = espaciosActivos.get(i);
                     if (espacio.getEstado_espacio() == EstadoEspacio.Libre) {
                         System.out.println("Desactivando espacio: " + espacio.getNombre());
                         logicaEspacios.desactivarEspacio(espacio);
                         desactivados++;
-                        // Opcional: Remover el espacio de la lista si ya no está activo
-                        // espaciosActivos.remove(i);
                     }
                 }
 
                 // Actualizar la cantidad activa después de desactivar
                 cantidadActualActiva -= desactivados;
 
-                // Retornar el resultado parcial si ya no es necesario continuar
+                // Retornar el resultado si ya se alcanzó la cantidad esperada
                 if (cantidadActualActiva == cantidadEspaciosEsperada) {
                     return new ResultadoOperacion(true, "Se desactivaron " + desactivados + " espacios.");
                 }
-                // Si aún se necesita reactivar o crear, continuar con los siguientes pasos
             }
 
-            // Paso 2: Reactivar espacios inactivos hasta alcanzar la cantidad esperada
+            // Paso 2: Reactivar espacios inactivos si es necesario
             int espaciosNecesarios = cantidadEspaciosEsperada - cantidadActualActiva;
             int espaciosAReactivar = Math.min(espaciosNecesarios, cantidadInactivos);
 
@@ -109,7 +121,8 @@ public class CasilleroServices {
                     espaciosActivos.add(espacio);  // Actualizar la lista de activos
                 }
                 cantidadActualActiva += espaciosAReactivar;
-                // Retornar si ya se ha alcanzado la cantidad esperada
+
+                // Retornar si se ha alcanzado la cantidad esperada
                 if (cantidadActualActiva == cantidadEspaciosEsperada) {
                     return new ResultadoOperacion(true, "Se reactivaron " + espaciosAReactivar + " espacios.");
                 }
@@ -140,5 +153,5 @@ public class CasilleroServices {
         }
     }
 
-
 }
+

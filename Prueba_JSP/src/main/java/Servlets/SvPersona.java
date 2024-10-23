@@ -28,30 +28,46 @@ import java.util.Date;
 
 @WebServlet(name = "SvPersona", urlPatterns = {"/SvPersona"})
 public class SvPersona extends HttpServlet {
-    //CONTROLADORA LOGICA
+    // Instancias de lógica para manejar personas, roles y documentos
     Logica_Persona logica_persona = new Logica_Persona();
     Logica_Rol logica_rol = new Logica_Rol();
     Logica_Documentos documentos = new Logica_Documentos();
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+
+    /**
+     * Maneja las solicitudes GET para obtener información detallada de una persona
+     * basada en su ID. La información de la persona se devuelve en formato JSON.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         int id_usuario = Integer.parseInt(request.getParameter("id_usuario"));
 
+        // Buscar la persona por su ID
         Persona persona = logica_persona.buscarpersonaPorId(id_usuario);
 
         try {
+            // Configurar la respuesta en formato JSON
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
+
+            // Crear el objeto JSON con los datos de la persona
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("idUsuario", persona.getId());
             jsonObject.put("nombreUsuario", persona.getNombre());
             jsonObject.put("ApellidoUsuario", persona.getApellido());
             jsonObject.put("fechaNacimiento", persona.getFechaNacimiento());
-            JSONObject jsonObjectrol = new JSONObject();
 
+            // Datos del rol asociado a la persona
+            JSONObject jsonObjectrol = new JSONObject();
             jsonObjectrol.put("idRol", persona.getRol().getId());
             jsonObjectrol.put("nombreRol", persona.getRol().getNombre());
             jsonObject.put("rol",jsonObjectrol);
 
+            // Más información de la persona
             jsonObject.put("correoUsuario", persona.getCorreo());
             jsonObject.put("tipoDocumento", persona.getTipoDocumento().getId());
             JSONObject jsonObjectdoc = new JSONObject();
@@ -71,21 +87,33 @@ public class SvPersona extends HttpServlet {
         }
 
     }
+    /**
+     * Maneja las solicitudes POST para realizar diversas acciones relacionadas con
+     * personas, como login, logout, registro, edición de datos, deshabilitación de cuentas,
+     * y obtención de información de cuenta.
+     *
+     * @param req  La solicitud HTTP.
+     * @param resp La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // Leer el cuerpo de la solicitud
         JSONObject jsonObject;
         try {
+            // Parsear el JSON de la solicitud
             jsonObject = JsonReader.parsearJson(req);
         } catch (JSONException e) {
             sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "error al parsear el json");
             return;
         }
-
+        // Obtener la acción solicitada
         String action = jsonObject.optString("action");
         HttpSession session = req.getSession(false);
         System.out.println("Accion encontrada: "+ action);
         try {
+            // Ejecutar la acción correspondiente
             switch (action) {
                 case "login":
                     Login(jsonObject, req, resp, session);
@@ -113,14 +141,16 @@ public class SvPersona extends HttpServlet {
         }
     }
 
-
-
-
+    /**
+     * Actualiza los datos principales de una persona (nombre, apellido, fecha de nacimiento, correo, número de celular)
+     * y guarda los cambios en la base de datos. También actualiza la información de la sesión si la operación es exitosa.
+     *
+     * @param jsonObject El objeto JSON que contiene los datos a actualizar.
+     * @param resp       La respuesta HTTP.
+     * @param session    La sesión HTTP actual, que será actualizada con los nuevos datos del usuario.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void EditPrimaryData(JSONObject jsonObject, HttpServletResponse resp, HttpSession session) throws IOException {
-        // Logs para ver los datos recibidos
-        System.out.println("EditPrimaryData llamado");
-        System.out.println("Datos recibidos: " + jsonObject.toString());
-
         try {
             // Recupera el ID del usuario desde el JSON
             int usuarioId = jsonObject.getInt("usuarioId");
@@ -187,11 +217,20 @@ public class SvPersona extends HttpServlet {
         } catch (Exception e) {
             // Captura de cualquier otra excepción inesperada
             System.out.println("Error inesperado: " + e.getMessage());
-            e.printStackTrace(); // Esto ayudará a tener más detalles del error en los logs
             sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error interno del servidor.");
         }
     }
 
+    /**
+     * Realiza la operación de inicio de sesión para un usuario.
+     * Si las credenciales son válidas, crea una sesión y la asocia con el usuario.
+     *
+     * @param jsonObject El objeto JSON con las credenciales del usuario.
+     * @param req        La solicitud HTTP.
+     * @param resp       La respuesta HTTP.
+     * @param session    La sesión HTTP actual.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void Login(JSONObject jsonObject, HttpServletRequest req, HttpServletResponse resp, HttpSession session) throws IOException {
         int documento = jsonObject.getInt("documento");
         int tipoDocumento = jsonObject.getInt("tipoDocumento");
@@ -221,6 +260,13 @@ public class SvPersona extends HttpServlet {
 
     }
 
+    /**
+     * Invalida la sesión actual para cerrar la sesión del usuario.
+     *
+     * @param resp    La respuesta HTTP.
+     * @param session La sesión HTTP actual.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void Logout(HttpServletResponse resp, HttpSession session) throws IOException {
         if (session != null) {
             session.invalidate();
@@ -228,34 +274,35 @@ public class SvPersona extends HttpServlet {
         sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", "Desautenticado.");
     }
 
+    /**
+     * Registra una nueva persona en el sistema utilizando los datos proporcionados en el objeto JSON.
+     * Valida los datos, crea una nueva persona con un rol predefinido, y guarda los cambios en la base de datos.
+     *
+     * @param jsonObject El objeto JSON con los datos de registro (nombre, apellido, tipo de documento, documento, correo, etc.).
+     * @param resp       La respuesta HTTP.
+     * @throws IOException    Si ocurre un error al manejar la respuesta.
+     * @throws ParseException Si el formato de fecha proporcionado es incorrecto.
+     */
     private void Registro(JSONObject jsonObject, HttpServletResponse resp) throws IOException, ParseException {
         try{
             String nombre = jsonObject.getString("nombre");
-            System.out.println(nombre);
             String apellido = jsonObject.getString("apellido");
-            System.out.println(apellido);
             int idDocumento = jsonObject.getInt("TipoDocumento");
-            System.out.println(idDocumento);
             int documento = jsonObject.getInt("documento");
-            System.out.println(documento);
             String correo = jsonObject.getString("correo");
-            System.out.println(documento);
             String clave = jsonObject.getString("password");
-            System.out.println(clave);
             String celular = jsonObject.getString("numeroCelular");
-            System.out.println(celular);
             String fecha = jsonObject.getString("fechaNacimiento");
-            System.out.println(fecha);
+
+            // Parsear la fecha de nacimiento
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             Date fechaNacimiento = formatter.parse(fecha);
-            System.out.println(fechaNacimiento);
 
-            System.out.println("Antes de buscar tipo de documento");
+            // Obtener el tipo de documento y rol
             TbTipoDocumento tipoDocumento = documentos.obtenerDocumentoID(idDocumento);
-            System.out.println("despues de buscar tipo de documento");
-            System.out.println("Antes de buscar rol ");
-            Roles rol = logica_rol.ObtenerRol(2);/*Debe ser el id de rol de aprendiz*/
-            System.out.println("despues de buscar rol ");
+            Roles rol = logica_rol.ObtenerRol(2);  // Rol de Aprendiz
+
+            // Crear una nueva persona
             Persona persona = new Persona();
             persona.setNombre(nombre);
             persona.setApellido(apellido);
@@ -267,13 +314,13 @@ public class SvPersona extends HttpServlet {
             persona.setRol(rol);
             persona.setEstadoUsuario(EstadoUsuario.ACTIVO);
             persona.setFechaNacimiento(fechaNacimiento);
+
+            // Guardar la persona en la base de datos
             ResultadoOperacion resultado = logica_persona.crearPersona(persona,clave);
 
             if (resultado.isExito()) {
-                System.out.println("Aprendiz creada exitosamente.");
                 sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
             } else {
-                System.out.println("Error al crear al Aprendiz.");
                 sendResponse.enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
             }
         } catch (ParseException e) {
@@ -283,8 +330,15 @@ public class SvPersona extends HttpServlet {
         }
     }
 
+    /**
+     * Deshabilita la cuenta de un usuario cambiando su estado en el sistema y luego cierra su sesión.
+     *
+     * @param jsonObject El objeto JSON con el ID del usuario cuya cuenta se va a deshabilitar.
+     * @param resp       La respuesta HTTP.
+     * @param session    La sesión HTTP actual, que será invalidada si la operación es exitosa.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void DeshabilarCuenta(JSONObject jsonObject, HttpServletResponse resp, HttpSession session) throws IOException {
-
         int idUsuario= jsonObject.getInt("idUsuario");
 
         ResultadoOperacion resultado=  logica_persona.cambiarEstadoUsuario(idUsuario);
@@ -297,6 +351,15 @@ public class SvPersona extends HttpServlet {
 
     }
 
+    /**
+     * Genera un informe sobre la cuenta de un usuario y lo devuelve en formato JSON.
+     * El informe contiene un código de identificación único y un mensaje de éxito.
+     *
+     * @param jsonObject El objeto JSON con el ID del usuario sobre el cual se generará el informe.
+     * @param resp       La respuesta HTTP.
+     * @param session    La sesión HTTP actual.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void InfoDeUsuario(JSONObject jsonObject, HttpServletResponse resp, HttpSession session) throws IOException {
         try {
             int idUsuario = jsonObject.getInt("idUsuario");

@@ -20,31 +20,52 @@ import java.util.List;
 
 @WebServlet(name = "tipodocumento", urlPatterns = "/tipoDoc")
 public class SvTipoDocumento extends HttpServlet {
-        Logica_Documentos logicaDocumentos = new Logica_Documentos();
+    // Instancia de la lógica para gestionar documentos
+    Logica_Documentos logicaDocumentos = new Logica_Documentos();
+
+    /**
+     * Maneja las solicitudes GET para obtener una lista de tipos de documento.
+     * Los tipos de documento se devuelven en formato JSON.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<TbTipoDocumento> lista= logicaDocumentos.obtenerDocumentos();
-        try{
+        List<TbTipoDocumento> lista = logicaDocumentos.obtenerDocumentos();
+        try {
+            // Configurar la respuesta en formato JSON
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
-            JSONArray jsonArray = new  JSONArray();
-            for (TbTipoDocumento tipo : lista){
+            // Convertir la lista de tipos de documento a JSON
+            JSONArray jsonArray = new JSONArray();
+            for (TbTipoDocumento tipo : lista) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id_documento", tipo.getId());
-                jsonObject.put("nombre_documento",tipo.getNombreDocumento());
+                jsonObject.put("nombre_documento", tipo.getNombreDocumento());
                 jsonArray.put(jsonObject);
             }
+
+            // Enviar la respuesta JSON
             PrintWriter out = response.getWriter();
             out.println(jsonArray.toString());
             out.flush();
-        }catch (Exception e){
-            System.out.println("Error al parsear el JSON "+e);
+        } catch (Exception e) {
+            System.out.println("Error al parsear el JSON " + e);
         }
-
-
     }
 
+    /**
+     * Maneja las solicitudes POST para crear, editar o eliminar tipos de documento según la acción especificada.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         JSONObject jsonObject = JsonReader.parsearJson(request);
@@ -63,109 +84,99 @@ public class SvTipoDocumento extends HttpServlet {
             default:
                 System.out.println("Acción no reconocida");
         }
-
     }
 
-
+    /**
+     * Crea un nuevo tipo de documento en el sistema basado en los datos proporcionados en el JSON.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene los datos del nuevo tipo de documento.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void crearDocumento(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
-            // Obtener los parámetros del JSON
-            String nombre_Sector = jsonObject.getString("nombreDocumento");
+            String nombreDocumento = jsonObject.getString("nombreDocumento");
 
-            if (nombre_Sector != null && !nombre_Sector.trim().isEmpty()) {
-                // Crear el objeto TbTipoDocumento
+            if (nombreDocumento != null && !nombreDocumento.trim().isEmpty()) {
                 TbTipoDocumento documento = new TbTipoDocumento();
-                documento.setNombreDocumento(nombre_Sector);
+                documento.setNombreDocumento(nombreDocumento);
 
-                // Intentar crear el documento utilizando logica_sectores
                 ResultadoOperacion resultado = logicaDocumentos.crearDocumento(documento);
 
-                // Verificar si la creación del documento fue exitosa
                 if (resultado.isExito()) {
-                    System.out.println("Documento creado exitosamente.");
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
                 } else {
-                    System.out.println("Error al crear el Documento.");
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
                 }
             } else {
-                // Datos no válidos, enviar una respuesta de error
                 sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos inválidos para crear el Documento.");
             }
-
         } catch (JSONException e) {
-            // Manejar el error si los datos JSON son incorrectos
-            System.err.println("Error en los datos JSON: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos JSON inválidos.");
         } catch (Exception e) {
-            // Manejar cualquier otro tipo de error
-            System.err.println("Error inesperado: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al crear el Documento.");
         }
     }
 
+    /**
+     * Edita un tipo de documento existente en el sistema basado en los datos proporcionados en el JSON.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene los datos actualizados del tipo de documento.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void editDocumento(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
-            // Obtener los parámetros del JSON
             int idDocumento = jsonObject.getInt("idDocumento");
             String nombre = jsonObject.getString("nombreDocumento");
 
-            // Validar los parámetros
             if (idDocumento > 0 && nombre != null && !nombre.trim().isEmpty()) {
-                // Crear el objeto TbSectores con los datos nuevos
                 TbTipoDocumento documento = new TbTipoDocumento();
-                documento.setId(idDocumento);  // Establecer el ID del sector
+                documento.setId(idDocumento);
                 documento.setNombreDocumento(nombre);
 
-                // Intentar actualizar el documento usando el nuevo enfoque de ResultadoOperacion
                 ResultadoOperacion resultado = logicaDocumentos.actualizarDocumento(documento);
 
-                // Verificar si la operación fue exitosa
                 if (resultado.isExito()) {
-                    System.out.println("Documento actualizado exitosamente.");
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
                 } else {
-                    System.out.println("Error al actualizar el documento: " + resultado.getMensaje());
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
                 }
             } else {
-                // Si los datos no son válidos
                 sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos inválidos para actualizar el documento.");
             }
-
         } catch (JSONException e) {
-            // Manejar el error en los datos JSON
-            System.err.println("Error en los datos JSON: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos JSON inválidos.");
         } catch (Exception e) {
-            // Manejar cualquier otro tipo de error
-            System.err.println("Error inesperado: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al actualizar el documento.");
         }
     }
 
-
+    /**
+     * Elimina un tipo de documento existente en el sistema basado en el ID proporcionado en el JSON.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene el ID del tipo de documento a eliminar.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void deleteDocumento(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             int idDocumento = jsonObject.getInt("idDocumento");
 
-            // Llamar al método de lógica para eliminar el sector
             ResultadoOperacion resultado = logicaDocumentos.eliminarTipoDocumento(idDocumento);
 
-            // Manejar la respuesta según el resultado de la operación
             if (resultado.isExito()) {
                 sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
             } else {
                 sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
             }
-
         } catch (JSONException e) {
-            System.err.println("Error en los datos JSON: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos JSON inválidos.");
         } catch (Exception e) {
-            System.err.println("Error inesperado: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al eliminar el tipo de documento.");
         }
     }
-
 }

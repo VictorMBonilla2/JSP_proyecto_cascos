@@ -19,15 +19,27 @@ import java.util.Map;
 
 @WebServlet(name = "SvRegistros", urlPatterns = {"/SvRegistros"})
 public class SvRegistros extends HttpServlet {
+    // Instancias de la lógica para gestionar registros y personas
     Logica_Registro logica_registro = new Logica_Registro();
     Logica_Persona logicaPersona = new Logica_Persona();
 
+    /**
+     * Maneja las solicitudes GET para obtener registros de vehículos asociados a un usuario,
+     * presentando la información de manera paginada. Los registros se devuelven en formato JSON.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String paginaParam = request.getParameter("Pagination");
         int idUsuario = Integer.parseInt(request.getParameter("iduser"));
 
         int numeroPagina;
         try {
+            // Obtener el número de página, si no se proporciona, se asigna la página 1
             numeroPagina = (paginaParam != null) ? Integer.parseInt(paginaParam) : 1;
             if (numeroPagina < 1) {
                 numeroPagina = 1;
@@ -36,7 +48,7 @@ public class SvRegistros extends HttpServlet {
             numeroPagina = 1;
         }
 
-        // Obtener el resultado paginado que contiene los registros y la información de paginación
+        // Obtener los registros paginados del usuario especificado
         Map<String, Object> resultado = logica_registro.ObtenerRegistrosPaginados(idUsuario, numeroPagina);
 
         if (resultado == null) {
@@ -50,21 +62,21 @@ public class SvRegistros extends HttpServlet {
         int totalPaginas = (int) resultado.get("totalPaginas");
         int paginaActual = (int) resultado.get("paginaActual");
 
-        // Crear el JSONArray para almacenar los registros
+        // Crear el JSONArray para los registros
         JSONArray jsonArray = new JSONArray();
 
         try {
-            // Configurar la respuesta para JSON
+            // Configurar la respuesta en formato JSON
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
-            // Iterar sobre los registros y construir los objetos JSON
+            // Iterar sobre los registros y construir objetos JSON
             for (TbRegistro registro : registros) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("fecha_registro", registro.getFechaRegistro());
                 jsonObject.put("placa_vehiculo", registro.getVehiculo().getPlacaVehiculo());
                 jsonObject.put("id_espacio", registro.getEspacio().getId_espacio());
-                jsonObject.put("fecha_entrada",registro.getFechaEntrada());
+                jsonObject.put("fecha_entrada", registro.getFechaEntrada());
                 jsonObject.put("documento_aprendiz", registro.getVehiculo().getPersona().getDocumento());
                 jsonObject.put("documento_colaborador", registro.getGestor().getDocumento());
                 jsonArray.put(jsonObject);
@@ -86,6 +98,8 @@ public class SvRegistros extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
+
+
 
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

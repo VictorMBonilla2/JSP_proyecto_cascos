@@ -23,14 +23,26 @@ import java.util.List;
 
 @WebServlet(name = "SvMarcasVehiculo", urlPatterns = "/listaMarcas")
 public class SvMarcasVehiculo extends HttpServlet {
+    // Instancia de la lógica relacionada con marcas de vehículos
     Logica_MarcaVehiculo logica_marcaVehiculo = new Logica_MarcaVehiculo();
+    // Instancia de la lógica relacionada con tipos de vehículos
     Logica_TipoVehiculo logicaTipoVehiculo = new Logica_TipoVehiculo();
 
+    /**
+     * Maneja las solicitudes GET para obtener la lista de marcas de vehículos, filtradas
+     * por el tipo de vehículo, y devuelve la información en formato JSON.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Obtener el parámetro 'id_Tipo' para filtrar las marcas por tipo de vehículo
         int idTipoVehiculo = Integer.parseInt(request.getParameter("id_Tipo"));
 
-        // Obtener las marcas de vehículos filtradas por tipo de vehículo
+        // Obtener las marcas de vehículos filtradas por el tipo de vehículo
         List<Tb_MarcaVehiculo> marcasVehiculo = logica_marcaVehiculo.ObtenerMarcasPorTipo(idTipoVehiculo);
         try {
             response.setContentType("application/json");
@@ -54,11 +66,21 @@ public class SvMarcasVehiculo extends HttpServlet {
         }
     }
 
+    /**
+     * Maneja las solicitudes POST para realizar acciones sobre las marcas de vehículos,
+     * como crear, editar o eliminar marcas, dependiendo del parámetro 'action' en la solicitud.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         JSONObject jsonObject = JsonReader.parsearJson(request);
         String action = jsonObject.getString("action");
 
+        // Realizar la acción correspondiente
         switch (action) {
             case "add":
                 crearMarcaVehiculo(request, response, jsonObject);
@@ -73,7 +95,14 @@ public class SvMarcasVehiculo extends HttpServlet {
                 System.out.println("Acción no reconocida");
         }
     }
-
+    /**
+     * Crea una nueva marca de vehículo con los datos proporcionados en el JSON de la solicitud.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON con los datos de la nueva marca.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void crearMarcaVehiculo(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             String nombreMarca = jsonObject.getString("nombreMarca");
@@ -110,6 +139,14 @@ public class SvMarcasVehiculo extends HttpServlet {
         }
     }
 
+    /**
+     * Edita una marca de vehículo existente con los datos proporcionados en el JSON de la solicitud.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON con los datos actualizados de la marca.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void editMarcaVehiculo(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             int idMarca = jsonObject.getInt("idMarca");
@@ -147,11 +184,19 @@ public class SvMarcasVehiculo extends HttpServlet {
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al actualizar la marca.");
         }
     }
-
+    /**
+     * Elimina una marca de vehículo con el ID proporcionado en el JSON de la solicitud.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON con el ID de la marca a eliminar.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void deleteMarcaVehiculo(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             int idMarca = jsonObject.getInt("idMarca");
 
+            // Eliminar la marca de vehículo
             ResultadoOperacion resultado = logica_marcaVehiculo.eliminarMarcaVehiculo(idMarca);
 
             if (resultado.isExito()) {

@@ -72,6 +72,10 @@
     border-radius: 0 0 var(--borderRadius) var(--borderRadius)
 }
 
+.report__img{
+    cursor: pointer;
+}
+
 .contenido__info{
     display: flex;
     justify-content: space-around;
@@ -176,7 +180,10 @@
     display: none; /* Oculto por defecto */
     padding: 10px;
 }
+.info-user__container{
+    display: flex;
 
+}
 
 
 .tooltip-text {

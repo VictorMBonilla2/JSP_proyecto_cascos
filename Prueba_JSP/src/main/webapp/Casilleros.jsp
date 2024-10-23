@@ -200,15 +200,18 @@
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
-                <h2>Informacion de contacto</h2>
-                <div>
-                    <h3>Correo electronico</h3>
-                    <p class="correo-info"></p>
+                <div class="input_container input_container--vertical " >
+                    <h2>Informacion de contacto</h2>
+                    <div>
+                        <h3>Correo electronico</h3>
+                        <p class="correo-info"></p>
+                    </div>
+                    <div>
+                        <h3>Numero celular</h3>
+                        <p class="celular-info"></p>
+                    </div>
                 </div>
-                <div>
-                    <h3>Numero celular</h3>
-                    <p class="celular-info"></p>
-                </div>
+
             </div>
         </div>
     </div>

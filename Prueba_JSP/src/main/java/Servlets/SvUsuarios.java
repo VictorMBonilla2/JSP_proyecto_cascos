@@ -28,9 +28,21 @@ import static Utilidades.sendResponse.enviarRespuesta;
 
 @WebServlet(urlPatterns = "/usuarios")
 public class SvUsuarios extends HttpServlet {
+
+    // Instancias de la lógica para gestionar usuarios, roles y documentos
     Logica_Persona logica_persona = new Logica_Persona();
     Logica_Rol logica_rol = new Logica_Rol();
     Logica_Documentos logicaDocumentos= new Logica_Documentos();
+
+    /**
+     * Maneja las solicitudes GET para obtener una lista de usuarios.
+     * Los usuarios pueden filtrarse por estado (activo o inactivo) y se devuelven en formato JSON.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String paginaParam = request.getParameter("Pagination");
         String estadoParam = request.getParameter("estado"); // Estado para filtrar activos o inactivos
@@ -95,7 +107,7 @@ public class SvUsuarios extends HttpServlet {
             jsonArray = new JSONArray();
         }
 
-// Añadir la lista de usuarios y otros datos a la respuesta JSON
+        // Añadir la lista de usuarios y otros datos a la respuesta JSON
         respuestaJson.put("usuarios", jsonArray);
         respuestaJson.put("totalPaginas", resultado.get("totalPaginas"));
         respuestaJson.put("paginaActual", resultado.get("paginaActual"));
@@ -106,6 +118,15 @@ public class SvUsuarios extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(respuestaJson.toString());
     }
+
+    /**
+     * Maneja las solicitudes POST para crear, editar, eliminar o cambiar el estado de usuarios según la acción especificada.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         JSONObject jsonObject = JsonReader.parsearJson(request);
         String action = jsonObject.getString("action");
@@ -129,48 +150,14 @@ public class SvUsuarios extends HttpServlet {
         }
     }
 
-    private void editarUsuario(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
-        Persona persona = new Persona();
-        try {
-            persona.setId(jsonObject.getInt("idUser"));
-            persona.setNombre(jsonObject.getString("nombre"));
-            persona.setApellido(jsonObject.getString("apellido"));
-            persona.setCorreo(jsonObject.getString("correo"));
-            persona.setCelular(jsonObject.getString("numeroCelular"));
-            persona.setDocumento(Integer.parseInt(jsonObject.getString("numeroDocumento")));
-            persona.setEstadoUsuario(EstadoUsuario.ACTIVO);
-            System.out.println(Integer.parseInt(jsonObject.getString("numeroDocumento")));
-            String fechaNacimientoStr = jsonObject.optString("fechaNacimiento");
-
-            System.out.println("fechaNacimientoStr = " + fechaNacimientoStr);
-            
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            Date fechaNacimiento = formatter.parse(fechaNacimientoStr);
-            persona.setFechaNacimiento(fechaNacimiento);
-
-            int rol = jsonObject.getInt("rol");
-            Roles roles = logica_rol.ObtenerRol(rol);
-            persona.setRol(roles);
-
-            int idDocumento= jsonObject.getInt("tipoDocumneto");
-            TbTipoDocumento documento = logicaDocumentos.obtenerDocumentoID(idDocumento);
-            persona.setTipoDocumento(documento);
-
-            ResultadoOperacion resultado = logica_persona.actualizarPersona(persona);
-            if (resultado.isExito()){
-                enviarRespuesta(response,HttpServletResponse.SC_OK,"success", resultado.getMensaje() );
-            }else{
-                enviarRespuesta(response,HttpServletResponse.SC_BAD_REQUEST,"error", resultado.getMensaje());
-            }
-
-        } catch (ParseException e) {
-            enviarRespuesta(response,HttpServletResponse.SC_BAD_REQUEST,"error","Formato de fecha incorrecto.");
-        } catch (Exception e) {
-            System.err.println("Error al actualizar el usuario: " +e.getMessage());
-            e.getStackTrace();
-            enviarRespuesta(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error","Error al actualizar usuario.");
-        }
-    }
+    /**
+     * Crea un nuevo usuario en el sistema basado en los datos proporcionados en el JSON.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene los datos del nuevo usuario.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void crearUsuario(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         Persona persona = new Persona();
         try {
@@ -206,31 +193,101 @@ public class SvUsuarios extends HttpServlet {
             enviarRespuesta(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error","Error al actualizar usuario.");
         }
     }
-    private void eliminarUsuario(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject)  throws IOException {
-        try{
-            int id= jsonObject.getInt("id");
-            ResultadoOperacion resultado= logica_persona.borrarUsuario(id);
-            if(resultado.isExito()){
-                enviarRespuesta(response,HttpServletResponse.SC_OK,"success", resultado.getMensaje());
-            }else {
-                enviarRespuesta(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error", resultado.getMensaje());
+
+    /**
+     * Edita un usuario existente en el sistema basado en los datos proporcionados en el JSON.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene los datos actualizados del usuario.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
+    private void editarUsuario(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
+        Persona persona = new Persona();
+        try {
+            // Establece los datos del usuario
+            persona.setId(jsonObject.getInt("idUser"));
+            persona.setNombre(jsonObject.getString("nombre"));
+            persona.setApellido(jsonObject.getString("apellido"));
+            persona.setCorreo(jsonObject.getString("correo"));
+            persona.setCelular(jsonObject.getString("numeroCelular"));
+            persona.setDocumento(Integer.parseInt(jsonObject.getString("numeroDocumento")));
+            persona.setEstadoUsuario(EstadoUsuario.ACTIVO);
+
+            // Procesa la fecha de nacimiento
+            String fechaNacimientoStr = jsonObject.optString("fechaNacimiento");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            Date fechaNacimiento = formatter.parse(fechaNacimientoStr);
+            persona.setFechaNacimiento(fechaNacimiento);
+
+            // Asigna el rol y tipo de documento
+            int rol = jsonObject.getInt("rol");
+            Roles roles = logica_rol.ObtenerRol(rol);
+            persona.setRol(roles);
+
+            int idDocumento = jsonObject.getInt("tipoDocumneto");
+            TbTipoDocumento documento = logicaDocumentos.obtenerDocumentoID(idDocumento);
+            persona.setTipoDocumento(documento);
+
+            // Actualiza la persona en la base de datos
+            ResultadoOperacion resultado = logica_persona.actualizarPersona(persona);
+            if (resultado.isExito()) {
+                enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
+            } else {
+                enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", resultado.getMensaje());
             }
-        } catch (Exception e){
-            enviarRespuesta(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error","Error al actualizar usuario.");
+
+        } catch (ParseException e) {
+            enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Formato de fecha incorrecto.");
+        } catch (Exception e) {
+            System.err.println("Error al actualizar el usuario: " + e.getMessage());
+            enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error al actualizar usuario.");
         }
     }
+
+    /**
+     * Elimina un usuario existente basado en el ID proporcionado en el JSON.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene el ID del usuario a eliminar.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
+    private void eliminarUsuario(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
+        try {
+            int id = jsonObject.getInt("id");
+            ResultadoOperacion resultado = logica_persona.borrarUsuario(id);
+            if (resultado.isExito()) {
+                enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
+            } else {
+                enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
+            }
+        } catch (Exception e) {
+            enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error al eliminar usuario.");
+        }
+    }
+
+    /**
+     * Cambia el estado de un usuario (activo/inactivo) basado en el ID proporcionado en el JSON.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene el ID del usuario.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void cambiarEstadoUsuario(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
-        try{
-            int id= jsonObject.getInt("id");
-            ResultadoOperacion resultado= logica_persona.cambiarEstadoUsuario(id);
-            if(resultado.isExito()){
-                enviarRespuesta(response,HttpServletResponse.SC_OK,"success", resultado.getMensaje());
-            }else {
-                enviarRespuesta(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error", resultado.getMensaje());
+        try {
+            int id = jsonObject.getInt("id");
+            ResultadoOperacion resultado = logica_persona.cambiarEstadoUsuario(id);
+            if (resultado.isExito()) {
+                enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
+            } else {
+                enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
             }
-        } catch (Exception e){
-            enviarRespuesta(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"error","Error al actualizar usuario.");
+        } catch (Exception e) {
+            enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error al cambiar estado del usuario.");
         }
     }
+
 
 }
