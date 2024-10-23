@@ -55,7 +55,9 @@
 
         <ul class="list__buttons">
             <li><a href="Home.jsp">Inicio</a></li>
+            <%if(isGestor){%>
             <li><a href="Casilleros.jsp">Casilleros</a></li>
+            <%}%>
         </ul>
         <button id="botonMostrar" class="perfil-button">
             <img src="resources/imagenes/iconProfile.png">

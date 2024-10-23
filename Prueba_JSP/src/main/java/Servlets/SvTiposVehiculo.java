@@ -22,15 +22,27 @@ import java.util.List;
 @WebServlet(name = "SvTiposVehiculo", urlPatterns = {"/tiposVehiculos"})
 public class SvTiposVehiculo extends HttpServlet {
 
+    // Instancia de la lógica para gestionar tipos de vehículo
     Logica_TipoVehiculo logicaTipoVehiculo = new Logica_TipoVehiculo();
 
+    /**
+     * Maneja las solicitudes GET para obtener una lista de tipos de vehículo.
+     * Los tipos de vehículo se devuelven en formato JSON.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<TbTipovehiculo> tiposVehiculo = logicaTipoVehiculo.ObtenerTiposVehiculo();
         try {
+            // Configurar la respuesta en formato JSON
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
+            // Convertir la lista de tipos de vehículo a JSON
             JSONArray jsonArray = new JSONArray();
             for (TbTipovehiculo tipo : tiposVehiculo) {
                 JSONObject jsonObject = new JSONObject();
@@ -38,6 +50,8 @@ public class SvTiposVehiculo extends HttpServlet {
                 jsonObject.put("nombre_Tipo", tipo.getNombre());
                 jsonArray.put(jsonObject);
             }
+
+            // Enviar la respuesta JSON
             PrintWriter out = response.getWriter();
             out.println(jsonArray.toString());
             out.flush();
@@ -46,6 +60,14 @@ public class SvTiposVehiculo extends HttpServlet {
         }
     }
 
+    /**
+     * Maneja las solicitudes POST para crear, editar o eliminar tipos de vehículo según la acción especificada.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         JSONObject jsonObject = JsonReader.parsearJson(request);
@@ -66,7 +88,14 @@ public class SvTiposVehiculo extends HttpServlet {
         }
     }
 
-    // Método para crear un nuevo tipo de vehículo
+    /**
+     * Crea un nuevo tipo de vehículo en el sistema basado en los datos proporcionados en el JSON.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene los datos del nuevo tipo de vehículo.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void crearTipoVehiculo(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             String nombre_Tipo = jsonObject.getString("nombreVehiculo");
@@ -78,25 +107,28 @@ public class SvTiposVehiculo extends HttpServlet {
                 ResultadoOperacion resultado = logicaTipoVehiculo.crearTipoVehiculo(tipoVehiculo);
 
                 if (resultado.isExito()) {
-                    System.out.println("Tipo de vehículo creado exitosamente.");
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
                 } else {
-                    System.out.println("Error al crear el tipo de vehículo.");
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
                 }
             } else {
                 sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos inválidos para crear el tipo de vehículo.");
             }
         } catch (JSONException e) {
-            System.err.println("Error en los datos JSON: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos JSON inválidos.");
         } catch (Exception e) {
-            System.err.println("Error inesperado: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al crear el tipo de vehículo.");
         }
     }
 
-    // Método para editar un tipo de vehículo existente
+    /**
+     * Edita un tipo de vehículo existente en el sistema basado en los datos proporcionados en el JSON.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene los datos actualizados del tipo de vehículo.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void editTipoVehiculo(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             int id_Tipo = jsonObject.getInt("idTipo");
@@ -110,25 +142,28 @@ public class SvTiposVehiculo extends HttpServlet {
                 ResultadoOperacion resultado = logicaTipoVehiculo.actualizarTipoVehiculo(tipoVehiculo);
 
                 if (resultado.isExito()) {
-                    System.out.println("Tipo de vehículo actualizado exitosamente.");
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
                 } else {
-                    System.out.println("Error al actualizar el tipo de vehículo.");
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
                 }
             } else {
                 sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos inválidos para actualizar el tipo de vehículo.");
             }
         } catch (JSONException e) {
-            System.err.println("Error en los datos JSON: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos JSON inválidos.");
         } catch (Exception e) {
-            System.err.println("Error inesperado: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al actualizar el tipo de vehículo.");
         }
     }
 
-    // Método para eliminar un tipo de vehículo
+    /**
+     * Elimina un tipo de vehículo existente en el sistema basado en el ID proporcionado en el JSON.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene el ID del tipo de vehículo a eliminar.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void deleteTipoVehiculo(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             int id_Tipo = jsonObject.getInt("idTipo");
@@ -141,10 +176,8 @@ public class SvTiposVehiculo extends HttpServlet {
                 sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
             }
         } catch (JSONException e) {
-            System.err.println("Error en los datos JSON: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos JSON inválidos.");
         } catch (Exception e) {
-            System.err.println("Error inesperado: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al eliminar el tipo de vehículo.");
         }
     }

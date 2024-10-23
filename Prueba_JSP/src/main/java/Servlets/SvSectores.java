@@ -20,27 +20,47 @@ import java.util.List;
 
 @WebServlet(name = "SvSectores", urlPatterns = {"/SvSector"})
 public class SvSectores extends HttpServlet {
+    // Instancia de la lógica para gestionar sectores
     Logica_Sectores logica_sectores = EspacioServiceManager.getInstance().getLogicaSectores();
+
+    /**
+     * Maneja las solicitudes GET para obtener una lista de sectores.
+     * Los sectores se devuelven en formato JSON.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<TbSectores> sectores = logica_sectores.ObtenerSectores();
         request.setAttribute("sectores", sectores);
 
-
+        // Crear el JSONArray para almacenar los sectores
         JSONArray jsonArray = new JSONArray();
-
-        for (TbSectores sector : sectores){
-            JSONObject jsonObject= new JSONObject();
+        for (TbSectores sector : sectores) {
+            JSONObject jsonObject = new JSONObject();
             jsonObject.put("id_sector", sector.getId());
             jsonObject.put("cant_espacio", sector.getCant_espacio());
             jsonObject.put("nombre_sector", sector.getNombreSector());
             jsonArray.put(jsonObject);
         }
 
+        // Configurar la respuesta en formato JSON
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(jsonArray.toString());
     }
+
+    /**
+     * Maneja las solicitudes POST para crear, editar o eliminar sectores según la acción especificada.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         JSONObject jsonObject = JsonReader.parsearJson(request);
@@ -60,105 +80,101 @@ public class SvSectores extends HttpServlet {
                 System.out.println("Acción no reconocida");
         }
     }
+
+    /**
+     * Crea un nuevo sector en el sistema basado en los datos proporcionados en el JSON.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene los datos del nuevo sector.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void crearSector(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
-            // Obtener los parámetros del JSON
             int cantidad_Espacios = jsonObject.getInt("cantidadEspacio");
             String nombre_Sector = jsonObject.getString("nombreSector");
 
-            // Verificar que cantidad_Espacios sea mayor que 0 y que nombre_Sector no sea null ni esté vacío
             if (cantidad_Espacios > 0 && nombre_Sector != null && !nombre_Sector.trim().isEmpty()) {
-                // Crear el objeto TbSectores
                 TbSectores sector = new TbSectores();
                 sector.setCant_espacio(cantidad_Espacios);
                 sector.setNombreSector(nombre_Sector);
 
-                // Intentar crear el sector utilizando logica_sectores
                 ResultadoOperacion resultado = logica_sectores.crearSector(sector);
 
-                // Verificar si la creación del sector fue exitosa
                 if (resultado.isExito()) {
-                    System.out.println("Sector creado exitosamente.");
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
                 } else {
-                    System.out.println("Error al crear el sector.");
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
                 }
             } else {
-                // Datos no válidos, enviar una respuesta de error
                 sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos inválidos para crear el sector.");
             }
-
         } catch (JSONException e) {
-            // Manejar el error si los datos JSON son incorrectos
-            System.err.println("Error en los datos JSON: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos JSON inválidos.");
         } catch (Exception e) {
-            // Manejar cualquier otro tipo de error
-            System.err.println("Error inesperado: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al crear el sector.");
         }
     }
+
+    /**
+     * Edita un sector existente en el sistema basado en los datos proporcionados en el JSON.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene los datos actualizados del sector.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void editSector(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
-            // Obtener los parámetros del JSON
             int idSector = jsonObject.getInt("idSector");
             int cantEspacio = jsonObject.getInt("cantidadEspacio");
             String nombre = jsonObject.getString("nombreSector");
 
-            // Validar los parámetros
             if (idSector > 0 && cantEspacio > 0 && nombre != null && !nombre.trim().isEmpty()) {
-                // Crear el objeto TbSectores con los datos nuevos
                 TbSectores sector = new TbSectores();
-                sector.setId(idSector);  // Establecer el ID del sector
+                sector.setId(idSector);
                 sector.setCant_espacio(cantEspacio);
                 sector.setNombreSector(nombre);
 
-                // Intentar actualizar el sector usando el nuevo enfoque de ResultadoOperacion
                 ResultadoOperacion resultado = logica_sectores.actualizarSector(sector);
 
-                // Verificar si la operación fue exitosa
                 if (resultado.isExito()) {
-                    System.out.println("Sector actualizado exitosamente.");
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
                 } else {
-                    System.out.println("Error al actualizar el sector: " + resultado.getMensaje());
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
                 }
             } else {
-                // Si los datos no son válidos
                 sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos inválidos para actualizar el sector.");
             }
-
         } catch (JSONException e) {
-            // Manejar el error en los datos JSON
-            System.err.println("Error en los datos JSON: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos JSON inválidos.");
         } catch (Exception e) {
-            // Manejar cualquier otro tipo de error
-            System.err.println("Error inesperado: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al actualizar el sector.");
         }
     }
+
+    /**
+     * Elimina un sector existente en el sistema basado en el ID proporcionado en el JSON.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene el ID del sector a eliminar.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void deleteSector(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             int idSector = jsonObject.getInt("idSector");
 
-            // Llamar al método de lógica para eliminar el sector
             ResultadoOperacion resultado = logica_sectores.eliminarSector(idSector);
 
-            // Manejar la respuesta según el resultado de la operación
             if (resultado.isExito()) {
                 sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
             } else {
                 sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
             }
-
         } catch (JSONException e) {
-            System.err.println("Error en los datos JSON: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos JSON inválidos.");
         } catch (Exception e) {
-            System.err.println("Error inesperado: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al eliminar el sector.");
         }
     }

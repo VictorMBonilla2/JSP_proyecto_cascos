@@ -14,9 +14,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Clase que contiene la lógica relacionada con la gestión de vehículos.
+ * Proporciona métodos para crear, actualizar, buscar, eliminar y cambiar el estado de los vehículos.
+ */
 public class Logica_Vehiculo {
     PersistenciaController controladora = new PersistenciaController();
     Logica_Persona logicaPersona = new Logica_Persona();
+
+    /**
+     * Crea un nuevo vehículo en la base de datos.
+     *
+     * @param vehiculo El vehículo a crear.
+     * @return Un objeto {@link ResultadoOperacion} que indica si la operación fue exitosa o no.
+     */
     public ResultadoOperacion crearVehiculo(TbVehiculo vehiculo) {
 
         try{
@@ -30,6 +41,12 @@ public class Logica_Vehiculo {
     }
 
 
+    /**
+     * Actualiza los datos de un vehículo existente en la base de datos.
+     *
+     * @param vehiculo El vehículo con los datos actualizados.
+     * @return Un objeto {@link ResultadoOperacion} que indica si la operación fue exitosa o no.
+     */
     public ResultadoOperacion actualizarVehiculo(TbVehiculo vehiculo) {
 
         try{
@@ -40,6 +57,13 @@ public class Logica_Vehiculo {
             return new ResultadoOperacion(false, "Error al actualizar el vehiculo");
         }
     }
+
+    /**
+     * Obtiene la lista de vehículos de una persona en base a su documento de identidad.
+     *
+     * @param documento El documento de identidad de la persona.
+     * @return Una lista de objetos {@link VehiculoDTO} con los vehículos de la persona.
+     */
 
     public List<VehiculoDTO> obtenerVehiculosDePersona(String documento) {
         List<VehiculoDTO> ListaNueva = new ArrayList<>();
@@ -67,6 +91,13 @@ public class Logica_Vehiculo {
         return ListaNueva;
     }
 
+
+    /**
+     * Busca los vehículos registrados de una persona en base a su documento.
+     *
+     * @param documento El documento de identidad de la persona.
+     * @return Una lista de objetos {@link TbVehiculo} con los vehículos de la persona.
+     */
     public List<TbVehiculo> buscarVehiculoDePersona(String documento) {
         List<TbVehiculo>  ListaVehiculos = new ArrayList<>();
         try {
@@ -91,6 +122,13 @@ public class Logica_Vehiculo {
 
         return ListaVehiculos;
     }
+
+    /**
+     * Busca un vehículo en base a su placa.
+     *
+     * @param placa La placa del vehículo.
+     * @return El vehículo encontrado o {@code null} si no existe.
+     */
     public TbVehiculo buscarVehiculoPorPlaca(String placa) {
         TbVehiculo vehiculo = new TbVehiculo();
         try{
@@ -100,6 +138,14 @@ public class Logica_Vehiculo {
         }
         return vehiculo;
     }
+
+    /**
+     * Busca la marca de un vehículo según su tipo.
+     *
+     * @param marcaVehiculo El ID de la marca del vehículo.
+     * @param tipoVehiculo  El ID del tipo de vehículo.
+     * @return La marca del vehículo o {@code null} si no se encuentra.
+     */
 
     public Tb_MarcaVehiculo buscarMarcaPorTipo(int marcaVehiculo, int tipoVehiculo) {
         try{
@@ -111,7 +157,14 @@ public class Logica_Vehiculo {
         }
 
     }
-
+    /**
+     * Busca el modelo de un vehículo según su marca y tipo.
+     *
+     * @param modeloVehiculo El ID del modelo del vehículo.
+     * @param marcaVehiculo  El ID de la marca del vehículo.
+     * @param tipoVehiculo   El ID del tipo de vehículo.
+     * @return El modelo del vehículo o {@code null} si no se encuentra.
+     */
     public Tb_ModeloVehiculo buscarModeloPorMarcaYTipo(int modeloVehiculo, int marcaVehiculo, int tipoVehiculo) {
         try{
             return controladora.obtenerModeloPorMarcaYTipo(modeloVehiculo, marcaVehiculo, tipoVehiculo);
@@ -122,7 +175,12 @@ public class Logica_Vehiculo {
         }
 
     }
-
+    /**
+     * Elimina un vehículo en base a su ID.
+     *
+     * @param idVehiculo El ID del vehículo a eliminar.
+     * @return Un objeto {@link ResultadoOperacion} que indica si la operación fue exitosa o no.
+     */
     public ResultadoOperacion borrarVehiculo(int idVehiculo) {
         try{
             controladora.eliminarVehiculo(idVehiculo);
@@ -133,7 +191,12 @@ public class Logica_Vehiculo {
         }
     }
 
-
+    /**
+     * Cambia el estado de un vehículo (ACTIVO/INACTIVO).
+     *
+     * @param idVehiculo El ID del vehículo cuyo estado se desea cambiar.
+     * @return Un objeto {@link ResultadoOperacion} que indica si la operación fue exitosa o no.
+     */
     public ResultadoOperacion cambiarEstadoVehiculo(int idVehiculo) {
         TbVehiculo vehiculo = buscarVehiculoPorId(idVehiculo);
         if (vehiculo != null) {
@@ -155,6 +218,12 @@ public class Logica_Vehiculo {
         }
     }
 
+    /**
+     * Busca un vehículo por su ID.
+     *
+     * @param idVehiculo El ID del vehículo.
+     * @return El vehículo encontrado o {@code null} si no existe.
+     */
     private TbVehiculo buscarVehiculoPorId(int idVehiculo) {
         try{
             return controladora.buscarvehiculo(idVehiculo);
@@ -163,6 +232,12 @@ public class Logica_Vehiculo {
         }
         return  null;
     }
+    /**
+     * Verifica si un vehículo está actualmente en un estacionamiento.
+     *
+     * @param idVehiculo El ID del vehículo.
+     * @return {@code true} si el vehículo está en un estacionamiento, {@code false} en caso contrario.
+     */
     private boolean VehiculoEnEstacionamiento(int idVehiculo){
         TbVehiculo vehiculoEnEspacios = controladora.buscarVehiculoEnEspacios(idVehiculo);
 

@@ -19,34 +19,58 @@ import java.io.PrintWriter;
 import java.util.List;
 @WebServlet(name = "SvRoles", urlPatterns = "/listaRoles")
 public class SvRol extends HttpServlet {
+    // Instancia de la lógica para gestionar roles
     Logica_Rol logicaRol = new Logica_Rol();
 
+    /**
+     * Maneja las solicitudes GET para obtener una lista de roles del sistema.
+     * Los roles se devuelven en formato JSON.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Roles> lista = logicaRol.ObtenerRoles();
-        try{
+        try {
+            // Configurar la respuesta en formato JSON
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            JSONArray jsonArray = new  JSONArray();
-            for (Roles rol : lista){
+
+            // Convertir la lista de roles a JSON
+            JSONArray jsonArray = new JSONArray();
+            for (Roles rol : lista) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id_rol", rol.getId());
-                jsonObject.put("nombre_rol",rol.getNombre());
+                jsonObject.put("nombre_rol", rol.getNombre());
                 jsonArray.put(jsonObject);
             }
+
+            // Enviar la respuesta JSON
             PrintWriter out = response.getWriter();
             out.println(jsonArray.toString());
             out.flush();
-        }catch (Exception e){
-            System.out.println("Error al parsear el JSON "+e);
+        } catch (Exception e) {
+            System.out.println("Error al parsear el JSON: " + e);
         }
     }
 
+    /**
+     * Maneja las solicitudes POST para crear, editar o eliminar roles según la acción especificada.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         JSONObject jsonObject = JsonReader.parsearJson(request);
         String action = jsonObject.getString("action");
 
+        // Realizar la acción correspondiente
         switch (action) {
             case "add":
                 crearRol(request, response, jsonObject);
@@ -62,104 +86,98 @@ public class SvRol extends HttpServlet {
         }
     }
 
+    /**
+     * Crea un nuevo rol en el sistema basado en los datos proporcionados en el JSON.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene los datos del nuevo rol.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void crearRol(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
-            // Obtener los parámetros del JSON
             String nombre_Rol = jsonObject.getString("nombreRol");
 
             if (nombre_Rol != null && !nombre_Rol.trim().isEmpty()) {
-                // Crear el objeto TbTipoDocumento
                 Roles roles = new Roles();
                 roles.setNombre(nombre_Rol);
 
-                // Intentar crear el documento utilizando logica_sectores
                 ResultadoOperacion resultado = logicaRol.crearRol(roles);
 
-                // Verificar si la creación del documento fue exitosa
                 if (resultado.isExito()) {
-                    System.out.println("Rol creado exitosamente.");
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
                 } else {
-                    System.out.println("Error al crear el rol.");
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
                 }
             } else {
-                // Datos no válidos, enviar una respuesta de error
                 sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos inválidos para crear el rol.");
             }
-
         } catch (JSONException e) {
-            // Manejar el error si los datos JSON son incorrectos
-            System.err.println("Error en los datos JSON: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos JSON inválidos.");
         } catch (Exception e) {
-            // Manejar cualquier otro tipo de error
-            System.err.println("Error inesperado: " + e.getMessage());
-            sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al crear el Documento.");
+            sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al crear el rol.");
         }
     }
 
+    /**
+     * Edita un rol existente en el sistema basado en los datos proporcionados en el JSON.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene los datos actualizados del rol.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void editRol(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
-            // Obtener los parámetros del JSON
             int idRol = jsonObject.getInt("idRol");
             String nombre = jsonObject.getString("nombreRol");
 
-            // Validar los parámetros
             if (idRol > 0 && nombre != null && !nombre.trim().isEmpty()) {
-                // Crear el objeto TbSectores con los datos nuevos
                 Roles roles = new Roles();
-                roles.setId(idRol);  // Establecer el ID del sector
+                roles.setId(idRol);
                 roles.setNombre(nombre);
 
-                // Intentar actualizar el documento usando el nuevo enfoque de ResultadoOperacion
                 ResultadoOperacion resultado = logicaRol.actualizarRol(roles);
 
-                // Verificar si la operación fue exitosa
                 if (resultado.isExito()) {
-                    System.out.println("Rol actualizado exitosamente.");
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
                 } else {
-                    System.out.println("Error al actualizar el rol: " + resultado.getMensaje());
                     sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
                 }
             } else {
-                // Si los datos no son válidos
                 sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos inválidos para actualizar el rol.");
             }
-
         } catch (JSONException e) {
-            // Manejar el error en los datos JSON
-            System.err.println("Error en los datos JSON: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos JSON inválidos.");
         } catch (Exception e) {
-            // Manejar cualquier otro tipo de error
-            System.err.println("Error inesperado: " + e.getMessage());
-            sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al actualizar el documento.");
+            sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al actualizar el rol.");
         }
     }
 
+    /**
+     * Elimina un rol existente en el sistema basado en el ID proporcionado en el JSON.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene el ID del rol a eliminar.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void deleteRol(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             int idRol = jsonObject.getInt("idRol");
 
-            // Llamar al método de lógica para eliminar el sector
             ResultadoOperacion resultado = logicaRol.eliminarRol(idRol);
 
-            // Manejar la respuesta según el resultado de la operación
             if (resultado.isExito()) {
                 sendResponse.enviarRespuesta(response, HttpServletResponse.SC_OK, "success", resultado.getMensaje());
             } else {
                 sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", resultado.getMensaje());
             }
-
         } catch (JSONException e) {
-            System.err.println("Error en los datos JSON: " + e.getMessage());
             sendResponse.enviarRespuesta(response, HttpServletResponse.SC_BAD_REQUEST, "error", "Datos JSON inválidos.");
         } catch (Exception e) {
-            System.err.println("Error inesperado: " + e.getMessage());
-            sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al eliminar el tipo de documento.");
+            sendResponse.enviarRespuesta(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error inesperado al eliminar el rol.");
         }
-
     }
 }
+

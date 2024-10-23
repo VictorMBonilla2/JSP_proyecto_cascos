@@ -21,7 +21,14 @@ import java.util.List;
 @WebServlet(name = "SvCiudades", urlPatterns = "/listaCiudades")
 public class SvCiudades extends HttpServlet {
     Logica_Ciudad logicaCiudad = new Logica_Ciudad();
-
+    /**
+     * Maneja las solicitudes GET para obtener la lista de ciudades y devolverla en formato JSON.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Tb_CiudadVehiculo> listaCiudades = logicaCiudad.obtenerCiudades();
@@ -29,12 +36,14 @@ public class SvCiudades extends HttpServlet {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             JSONArray jsonArray = new JSONArray();
+            // Itera sobre la lista de ciudades y convierte cada ciudad a formato JSON
             for (Tb_CiudadVehiculo ciudad : listaCiudades) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id_Ciudad", ciudad.getId());
                 jsonObject.put("nombre_Ciudad", ciudad.getNombreCiudad());
                 jsonArray.put(jsonObject);
             }
+            // Envía la respuesta en formato JSON
             PrintWriter out = response.getWriter();
             out.println(jsonArray.toString());
             out.flush();
@@ -43,11 +52,20 @@ public class SvCiudades extends HttpServlet {
         }
     }
 
+    /**
+     * Maneja las solicitudes POST para realizar operaciones de agregar, editar o eliminar una ciudad.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         JSONObject jsonObject = JsonReader.parsearJson(request);
         String action = jsonObject.getString("action");
 
+        // Realiza la operación correspondiente basada en la acción recibida
         switch (action) {
             case "add":
                 crearCiudad(request, response, jsonObject);
@@ -63,14 +81,24 @@ public class SvCiudades extends HttpServlet {
         }
     }
 
+    /**
+     * Crea una nueva ciudad basada en los datos proporcionados en la solicitud.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene los datos de la nueva ciudad.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void crearCiudad(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             String nombre_Ciudad = jsonObject.getString("nombreCiudad");
 
+            // Verifica que el nombre de la ciudad no esté vacío
             if (nombre_Ciudad != null && !nombre_Ciudad.trim().isEmpty()) {
                 Tb_CiudadVehiculo ciudad = new Tb_CiudadVehiculo();
                 ciudad.setNombreCiudad(nombre_Ciudad);
 
+                // Lógica para crear la ciudad
                 ResultadoOperacion resultado = logicaCiudad.crearCiudad(ciudad);
 
                 if (resultado.isExito()) {
@@ -93,16 +121,25 @@ public class SvCiudades extends HttpServlet {
         }
     }
 
+    /**
+     * Edita una ciudad existente basada en los datos proporcionados en la solicitud.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene los datos actualizados de la ciudad.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void editCiudad(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             int idCiudad = jsonObject.getInt("idCiudad");
             String nombreCiudad = jsonObject.getString("nombreCiudad");
-
+            // Verifica que el ID y el nombre de la ciudad sean válidos
             if (idCiudad > 0 && nombreCiudad != null && !nombreCiudad.trim().isEmpty()) {
                 Tb_CiudadVehiculo ciudad = new Tb_CiudadVehiculo();
                 ciudad.setId(idCiudad);
                 ciudad.setNombreCiudad(nombreCiudad);
 
+                // Lógica para actualizar la ciudad
                 ResultadoOperacion resultado = logicaCiudad.actualizarCiudad(ciudad);
 
                 if (resultado.isExito()) {
@@ -125,6 +162,14 @@ public class SvCiudades extends HttpServlet {
         }
     }
 
+    /**
+     * Elimina una ciudad basada en el ID proporcionado en la solicitud.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON que contiene el ID de la ciudad a eliminar.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void deleteCiudad(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             int idCiudad = jsonObject.getInt("idCiudad");

@@ -21,7 +21,7 @@
         <div class="info_user_container">
             <div class="user_container_side1" id="userinfo">
                 <div class="info_user_container__header">
-                    <img src="resources/imagenes/IconPerfil.png" alt="">
+                    <img src="resources/imagenes/iconProfile.png">
                     <h1 class="nameUser"></h1>
                     <h3 class="rolUser"></h3>
                 </div>

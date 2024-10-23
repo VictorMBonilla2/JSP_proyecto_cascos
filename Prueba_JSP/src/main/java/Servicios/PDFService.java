@@ -32,19 +32,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Servicio para la generación de archivos PDF que contienen la información de un usuario y su lista de vehículos.
+ */
 public class PDFService {
-    // Método para generar el PDF con una persona y su lista de vehículos
+
+    /**
+     * Genera un archivo PDF con la información de una persona y su lista de vehículos.
+     *
+     * @param persona   La persona cuya información se va a incluir en el PDF.
+     * @param vehiculos La lista de vehículos pertenecientes a la persona.
+     * @return Un objeto {@link TbInformesUsuarios} que contiene el PDF generado y los datos del informe.
+     * @throws UnsupportedEncodingException Si se produce un error al decodificar la ruta del archivo fuente.
+     */
     public TbInformesUsuarios generarPDF(Persona persona, List<TbVehiculo> vehiculos) throws UnsupportedEncodingException {
         String sourceFile = URLDecoder.decode(
                 PDFService.class.getClassLoader().getResource("prueba.pdf").getPath(), "UTF-8");
         String temporalId = UUID.randomUUID().toString();
-        System.out.println("Codigo temporal: "+temporalId);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  // Puedes ajustar el formato según tus necesidades
+        System.out.println("Código temporal: " + temporalId);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date hora = new Date();
         String fechaFormateada = sdf.format(hora);
+
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(byteArrayOutputStream));  // Cambiado a ByteArrayOutputStream
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFile), new PdfWriter(byteArrayOutputStream));
             Document document = new Document(pdfDoc);
 
             PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDoc, true);
@@ -64,11 +76,9 @@ public class PDFService {
             // Aplanar los campos del formulario
             form.flattenFields();
 
-            // Crear una nueva página y agregar la tabla de vehículos
+            // Crear una nueva página para la tabla de vehículos
             pdfDoc.addNewPage();
-            document = new Document(pdfDoc, pdfDoc.getDefaultPageSize()); // Asociar el nuevo Document a la nueva página
-
-            // Agregar un salto de página explícito si fuera necesario
+            document = new Document(pdfDoc, pdfDoc.getDefaultPageSize());
             document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
             document.add(new Paragraph("Lista de Vehículos").setBold().setFontSize(14));
 
@@ -87,7 +97,7 @@ public class PDFService {
                 datosVehiculos[i][4] = vehiculo.getEstadoVehiculo().name();
             }
 
-            // Crear la tabla con los datos de los vehículos
+            // Crear la tabla de vehículos
             Table table = crearTablaConEstilos(columnWidths, headers, datosVehiculos, font);
             document.add(table);
 
@@ -104,20 +114,23 @@ public class PDFService {
             informe.setFileName("informe_usuario_" + persona.getDocumento() + ".pdf");
             informe.setFileType("application/pdf");
             informe.setCodigoInforme(temporalId);
-            System.out.println("Formulario PDF completado exitosamente.");
-            return  informe;
 
-        } catch (IOException e) {
+            System.out.println("Formulario PDF completado exitosamente.");
+            return informe;
+
+        } catch (IOException | java.io.IOException e) {
             System.out.println("Error al crear el archivo PDF: " + e.getMessage());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (java.io.IOException e) {
-            throw new RuntimeException(e);
         }
         return null;
     }
 
-    // Método para establecer los valores de los campos
+    /**
+     * Establece el valor de un campo en el formulario PDF.
+     *
+     * @param form      El formulario PDF.
+     * @param fieldName El nombre del campo en el formulario.
+     * @param value     El valor que se va a establecer en el campo.
+     */
     private void setField(PdfAcroForm form, String fieldName, String value) {
         PdfFormField field = form.getField(fieldName);
         if (field != null) {
@@ -127,7 +140,14 @@ public class PDFService {
             System.out.println("El campo '" + fieldName + "' no fue encontrado.");
         }
     }
-    // Método para personalizar las celdas del encabezado
+
+    /**
+     * Personaliza las celdas del encabezado de una tabla.
+     *
+     * @param celda La celda del encabezado a personalizar.
+     * @param font  La fuente que se va a aplicar.
+     * @return La celda personalizada.
+     */
     private Cell personalizarEncabezado(Cell celda, PdfFont font) {
         celda.setBackgroundColor(ColorConstants.LIGHT_GRAY);
         celda.setFont(font);
@@ -138,7 +158,13 @@ public class PDFService {
         return celda;
     }
 
-    // Método para personalizar las celdas de datos
+    /**
+     * Personaliza las celdas de datos de una tabla.
+     *
+     * @param celda La celda de datos a personalizar.
+     * @param font  La fuente que se va a aplicar.
+     * @return La celda personalizada.
+     */
     private Cell personalizarCeldaDato(Cell celda, PdfFont font) {
         celda.setFont(font);
         celda.setFontSize(10);
@@ -146,17 +172,27 @@ public class PDFService {
         celda.setPadding(5);  // Espaciado dentro de la celda
         return celda;
     }
+
+    /**
+     * Crea una tabla estilizada con los datos proporcionados.
+     *
+     * @param columnWidths Los anchos de las columnas.
+     * @param headers      Los encabezados de las columnas.
+     * @param datos        Los datos que se van a mostrar en la tabla.
+     * @param font         La fuente utilizada para el texto en la tabla.
+     * @return Una tabla personalizada con los estilos aplicados.
+     */
     public Table crearTablaConEstilos(float[] columnWidths, String[] headers, String[][] datos, PdfFont font) {
         Table table = new Table(columnWidths);
 
-        // Personalizar y agregar encabezados
+        // Agregar encabezados
         for (String header : headers) {
             Cell headerCell = personalizarEncabezado(new Cell(), font);
             headerCell.add(new Paragraph(header));
             table.addHeaderCell(headerCell);
         }
 
-        // Personalizar y agregar los datos
+        // Agregar los datos
         for (String[] fila : datos) {
             for (String dato : fila) {
                 Cell dataCell = personalizarCeldaDato(new Cell(), font);
@@ -168,4 +204,3 @@ public class PDFService {
         return table;
     }
 }
-

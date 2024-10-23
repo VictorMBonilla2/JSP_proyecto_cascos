@@ -23,6 +23,16 @@ import static Utilidades.sendResponse.enviarRespuesta;
 public class SvConfigCasilleros extends HttpServlet {
     Logica_Espacios logica_espacios = EspacioServiceManager.getInstance().getLogicaEspacios();
 
+    /**
+     * Maneja las solicitudes GET para obtener los espacios disponibles de un sector específico,
+     * basado en el parámetro 'idSector' proporcionado en la solicitud. La información de los
+     * espacios se devuelve en formato JSON.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -67,18 +77,33 @@ public class SvConfigCasilleros extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Debe proporcionar el parámetro idSector.");
         }
     }
+
+    /**
+     * Maneja las solicitudes POST para cambiar el estado de un espacio (Reactivar o Desactivar).
+     * El estado de un espacio es enviado como un parámetro JSON. Dependiendo del estado, se
+     * reactiva o desactiva el espacio.
+     *
+     * @param req  La solicitud HTTP.
+     * @param resp La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // Parsear el JSON de la solicitud
         JSONObject jsonObject = JsonReader.parsearJson(req);
 
+        // Obtener los parámetros del JSON
         int idEspacio = jsonObject.getInt("idEspacio");
         String estadoEspacio = jsonObject.getString("estadoEspacio");
 
+        // Buscar el espacio en la base de datos
         TbEspacio espacio = logica_espacios.buscarEspacio(idEspacio);
-
         try {
+            // Convertir el estado a Enum
             EstadoEspacio estado = EstadoEspacio.valueOf(estadoEspacio);
 
-            // Ahora puedes hacer la comparación
+
+            // Reactivar o desactivar el espacio según el estado proporcionado
             if (estado == EstadoEspacio.Libre) {
                 logica_espacios.reactivarEspacio(espacio);
                 enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", "El espacio a sido Reactivado Correctamente");
@@ -87,9 +112,11 @@ public class SvConfigCasilleros extends HttpServlet {
                 enviarRespuesta(resp, HttpServletResponse.SC_OK, "success", "El espacio a sido Desactivado Correctamente");
             }
         } catch (IllegalArgumentException e) {
+            // Manejar error si el estado proporcionado no es válido
             System.out.println("Estado inválido: " + estadoEspacio);
             enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Error en los datos enviados");
         }catch (Exception e){
+            // Manejar errores generales
             enviarRespuesta(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "error", "Error interno en el sistema");
         }
     }

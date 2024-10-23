@@ -25,10 +25,20 @@ import java.util.List;
 @WebServlet(name = "SvModeloVehiculo", urlPatterns = {"/listaModelo"})
 public class SvModeloVehiculo extends HttpServlet {
 
+    // Instancias de la lógica
     Logica_Modelo logicaModelo = new Logica_Modelo();
     Logica_MarcaVehiculo logicaMarcaVehiculo = new Logica_MarcaVehiculo();
     Logica_TipoVehiculo logicaTipoVehiculo = new Logica_TipoVehiculo();
 
+    /**
+     * Maneja las solicitudes GET para obtener la lista de modelos de vehículos,
+     * filtrados por marca y tipo de vehículo, y devuelve la información en formato JSON.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
@@ -61,17 +71,26 @@ public class SvModeloVehiculo extends HttpServlet {
             out.println(jsonArray.toString());
             out.flush();
 
-
         } catch (Exception e) {
             System.out.println("Error al parsear el JSON: " + e);
         }
     }
 
+    /**
+     * Maneja las solicitudes POST para realizar acciones sobre los modelos de vehículos,
+     * como crear, editar o eliminar modelos, dependiendo del parámetro 'action' en la solicitud.
+     *
+     * @param request  La solicitud HTTP.
+     * @param response La respuesta HTTP.
+     * @throws ServletException Si ocurre un error en el servlet.
+     * @throws IOException      Si ocurre un error al manejar la respuesta.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         JSONObject jsonObject = JsonReader.parsearJson(request);
         String action = jsonObject.getString("action");
 
+        // Realizar la acción correspondiente
         switch (action) {
             case "add":
                 crearModelo(request, response, jsonObject);
@@ -87,6 +106,14 @@ public class SvModeloVehiculo extends HttpServlet {
         }
     }
 
+    /**
+     * Crea un nuevo modelo de vehículo con los datos proporcionados en el JSON de la solicitud.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON con los datos del nuevo modelo.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void crearModelo(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             String nombreModelo = jsonObject.getString("nombreModelo");
@@ -123,6 +150,14 @@ public class SvModeloVehiculo extends HttpServlet {
         }
     }
 
+    /**
+     * Edita un modelo de vehículo existente con los datos proporcionados en el JSON de la solicitud.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON con los datos actualizados del modelo.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void editModelo(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             int idModelo = jsonObject.getInt("id_Modelo");
@@ -149,6 +184,14 @@ public class SvModeloVehiculo extends HttpServlet {
         }
     }
 
+    /**
+     * Elimina un modelo de vehículo con el ID proporcionado en el JSON de la solicitud.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param jsonObject  El objeto JSON con el ID del modelo a eliminar.
+     * @throws IOException Si ocurre un error al manejar la respuesta.
+     */
     private void deleteModelo(HttpServletRequest request, HttpServletResponse response, JSONObject jsonObject) throws IOException {
         try {
             int idModelo = jsonObject.getInt("id_Modelo");

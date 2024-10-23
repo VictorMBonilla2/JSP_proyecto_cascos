@@ -8,73 +8,93 @@ import Utilidades.ResultadoOperacion;
 
 import java.util.List;
 
-public class Logica_Sectores {
-    private PersistenciaController controladora;
-    private CasilleroServices casilleroServices;
 
+/**
+ * Clase que contiene la lógica relacionada con la gestión de sectores.
+ * Proporciona métodos para crear, actualizar, eliminar y obtener sectores, así como gestionar sus espacios.
+ */
+public class Logica_Sectores {
+
+    private final PersistenciaController controladora;
+    private final CasilleroServices casilleroServices;
+
+    /**
+     * Constructor que inicializa los servicios necesarios para la lógica de sectores.
+     *
+     * @param controladora      Controlador de persistencia para interactuar con la base de datos.
+     * @param casilleroServices Servicio de casilleros para gestionar los espacios de los sectores.
+     */
     public Logica_Sectores(PersistenciaController controladora, CasilleroServices casilleroServices) {
         this.controladora = controladora;
         this.casilleroServices = casilleroServices;
     }
 
+    /**
+     * Obtiene todos los sectores registrados en la base de datos.
+     *
+     * @return Una lista de objetos {@link TbSectores} que representan los sectores.
+     */
     public List<TbSectores> ObtenerSectores() {
         return controladora.ObtenerSectores();
     }
 
+    /**
+     * Crea un nuevo sector en la base de datos, y genera los espacios asociados a dicho sector.
+     *
+     * @param sector El sector que se desea crear.
+     * @return Un objeto {@link ResultadoOperacion} que indica si la operación fue exitosa o no.
+     */
     public ResultadoOperacion crearSector(TbSectores sector) {
         try {
-            // Primero, intentar crear el sector en la base de datos
             boolean result = controladora.CrearSector(sector);
 
-            // Verificar si la creación del sector fue exitosa
             if (result) {
-                // Obtener el sector recién creado, incluyendo su ID
                 TbSectores sectorCreado = ConseguirSector(sector.getId());
 
-                // Crear los espacios para el sector recién creado
+                // Crear los espacios asociados al nuevo sector
                 ResultadoOperacion resultadoEspacios = casilleroServices.crearEspaciosParaSector(sectorCreado, sectorCreado);
 
-                // Verificar si la creación de espacios fue exitosa
                 if (!resultadoEspacios.isExito()) {
-                    // Si la creación de espacios falló, retornar ese mensaje
                     return new ResultadoOperacion(false, "Sector creado, pero error al crear espacios: " + resultadoEspacios.getMensaje());
                 }
 
-                // Si todo salió bien
                 return new ResultadoOperacion(true, "Sector y espacios creados correctamente.");
             } else {
                 return new ResultadoOperacion(false, "Error al crear el sector en la base de datos.");
             }
 
         } catch (Exception e) {
-            // En caso de excepción, capturamos el error y lo devolvemos en el ResultadoOperacion
             System.out.println("Error al crear el sector: " + e);
             return new ResultadoOperacion(false, "Error al crear el sector: " + e.getMessage());
         }
     }
 
-
+    /**
+     * Obtiene un sector específico basado en su ID.
+     *
+     * @param sectorId El ID del sector a obtener.
+     * @return El objeto {@link TbSectores} que representa el sector encontrado.
+     */
     public TbSectores ConseguirSector(int sectorId) {
         return controladora.TraerSector(sectorId);
     }
 
+    /**
+     * Actualiza los datos de un sector, ajustando también los espacios según sea necesario.
+     *
+     * @param sector El sector con los datos actualizados.
+     * @return Un objeto {@link ResultadoOperacion} que indica si la operación fue exitosa o no.
+     */
     public ResultadoOperacion actualizarSector(TbSectores sector) {
         try {
-            // Primero ajustar los espacios del sector con casilleroServices
             TbSectores sectorActual = ConseguirSector(sector.getId());
             ResultadoOperacion resultadoEspacios = casilleroServices.crearEspaciosParaSector(sectorActual, sector);
 
-            // Verificar si la creación o eliminación de espacios fue exitosa
             if (!resultadoEspacios.isExito()) {
-                System.out.println("Error al ajustar los espacios del sector: " + resultadoEspacios.getMensaje());
                 return new ResultadoOperacion(false, "Error al ajustar los espacios: " + resultadoEspacios.getMensaje());
             }
 
-            // Si todo salió bien con los espacios, proceder a actualizar el sector en la base de datos
             boolean result = controladora.ActualizarSector(sector);
-            System.out.println("El resultado de la actualización del sector: " + result);
-
-            // Confirmar si la actualización del sector fue exitosa
             if (result) {
                 return new ResultadoOperacion(true, "Sector actualizado correctamente.");
             } else {
@@ -87,44 +107,37 @@ public class Logica_Sectores {
         }
     }
 
-
+    /**
+     * Elimina un sector si no tiene espacios ocupados.
+     *
+     * @param idSector El ID del sector que se desea eliminar.
+     * @return Un objeto {@link ResultadoOperacion} que indica si la operación fue exitosa o no.
+     */
     public ResultadoOperacion eliminarSector(int idSector) {
         try {
-            // Obtener el sector con sus espacios
             TbSectores sector = ConseguirSector(idSector);
 
             if (sector == null) {
                 String mensaje = "El sector con ID " + idSector + " no existe.";
-                System.out.println(mensaje);
-                return new ResultadoOperacion(false, mensaje); // Retornar false si el sector no existe
+                return new ResultadoOperacion(false, mensaje);
             }
 
-            // Verificar si hay espacios ocupados
             boolean tieneEspaciosOcupados = sector.getEspacios().stream()
                     .anyMatch(espacio -> espacio.getEstado_espacio() != EstadoEspacio.Libre);
 
             if (tieneEspaciosOcupados) {
                 String mensaje = "No se puede eliminar el sector. Tiene espacios ocupados.";
-                System.out.println(mensaje);
-                return new ResultadoOperacion(false, mensaje); // No eliminar si hay espacios ocupados
+                return new ResultadoOperacion(false, mensaje);
             }
 
-            // Intentar eliminar el sector si no tiene espacios ocupados
             boolean result = controladora.eliminarSector(idSector);
-
             if (result) {
-                return new ResultadoOperacion(true, "Sector eliminado exitosamente."); // Retornar true si se eliminó con éxito
+                return new ResultadoOperacion(true, "Sector eliminado exitosamente.");
             } else {
-                return new ResultadoOperacion(false, "No se pudo eliminar el sector."); // Retornar false si no se pudo eliminar
+                return new ResultadoOperacion(false, "No se pudo eliminar el sector.");
             }
         } catch (Exception e) {
-            // Manejar cualquier excepción y retornar false
-            return new ResultadoOperacion(false, "Error al eliminar el sector: " + e.getMessage()); // En caso de error, retornar false con mensaje
+            return new ResultadoOperacion(false, "Error al eliminar el sector: " + e.getMessage());
         }
     }
-
-
-
-
-
 }
