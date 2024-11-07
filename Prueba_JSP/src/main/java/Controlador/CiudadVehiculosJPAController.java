@@ -9,18 +9,35 @@ import org.hibernate.exception.ConstraintViolationException;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Controlador JPA para la entidad Tb_CiudadVehiculo. Proporciona operaciones CRUD
+ * y métodos para la gestión de objetos Tb_CiudadVehiculo en la base de datos.
+ */
 public class CiudadVehiculosJPAController implements Serializable {
 
     private EntityManagerFactory fabricaEntidades;
 
+    /**
+     * Constructor que inicializa el EntityManagerFactory.
+     */
     public CiudadVehiculosJPAController() {
         this.fabricaEntidades = JPAUtils.getEntityManagerFactory();
     }
 
+    /**
+     * Obtiene una instancia de EntityManager.
+     *
+     * @return EntityManager creado a partir de la fábrica de entidades.
+     */
     public EntityManager getEntityManager() {
         return fabricaEntidades.createEntityManager();
     }
 
+    /**
+     * Crea y persiste un nuevo Tb_CiudadVehiculo en la base de datos.
+     *
+     * @param ciudadVehiculo El objeto Tb_CiudadVehiculo que se desea crear.
+     */
     public void create(Tb_CiudadVehiculo ciudadVehiculo) {
         EntityManager em = null;
         try {
@@ -35,6 +52,12 @@ public class CiudadVehiculosJPAController implements Serializable {
         }
     }
 
+    /**
+     * Edita un Tb_CiudadVehiculo existente en la base de datos.
+     *
+     * @param ciudadVehiculo El objeto Tb_CiudadVehiculo que se desea editar.
+     * @throws Exception si ocurre un error al editar o si el Tb_CiudadVehiculo no existe.
+     */
     public void edit(Tb_CiudadVehiculo ciudadVehiculo) throws Exception {
         EntityManager em = null;
         try {
@@ -44,7 +67,7 @@ public class CiudadVehiculosJPAController implements Serializable {
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
-            if (msg == null || msg.length() == 0) {
+            if (msg == null || msg.isEmpty()) {
                 int id = ciudadVehiculo.getId();
                 if (findCiudadVehiculo(id) == null) {
                     throw new Exception("El ciudadVehiculo con id " + id + " ya no existe.");
@@ -58,6 +81,13 @@ public class CiudadVehiculosJPAController implements Serializable {
         }
     }
 
+    /**
+     * Elimina un Tb_CiudadVehiculo de la base de datos.
+     *
+     * @param id El ID del Tb_CiudadVehiculo a eliminar.
+     * @throws PersistenceException si el Tb_CiudadVehiculo está en uso y no se puede eliminar.
+     * @throws Exception si el Tb_CiudadVehiculo no existe o si ocurre cualquier otro error inesperado.
+     */
     public void destroy(int id) throws PersistenceException, Exception {
         EntityManager em = null;
         try {
@@ -92,15 +122,32 @@ public class CiudadVehiculosJPAController implements Serializable {
         }
     }
 
-
+    /**
+     * Obtiene una lista de todos los Tb_CiudadVehiculo.
+     *
+     * @return Lista de todos los Tb_CiudadVehiculo.
+     */
     public List<Tb_CiudadVehiculo> findCiudadVehiculoEntities() {
         return findCiudadVehiculoEntities(true, -1, -1);
     }
 
+    /**
+     * Obtiene una lista de Tb_CiudadVehiculo con límites de resultados.
+     *
+     * @param maxResults Número máximo de resultados a devolver.
+     * @param firstResult Primer resultado a devolver.
+     * @return Lista de Tb_CiudadVehiculo en el rango especificado.
+     */
     public List<Tb_CiudadVehiculo> findCiudadVehiculoEntities(int maxResults, int firstResult) {
         return findCiudadVehiculoEntities(false, maxResults, firstResult);
     }
 
+    /**
+     * Encuentra un Tb_CiudadVehiculo por su ID.
+     *
+     * @param id ID del Tb_CiudadVehiculo a buscar.
+     * @return Tb_CiudadVehiculo con el ID especificado o null si no se encuentra.
+     */
     public Tb_CiudadVehiculo findCiudadVehiculo(int id) {
         EntityManager em = getEntityManager();
         try {
@@ -112,6 +159,14 @@ public class CiudadVehiculosJPAController implements Serializable {
         }
     }
 
+    /**
+     * Método privado para obtener Tb_CiudadVehiculo con límites de resultados.
+     *
+     * @param all Si es true, devuelve todos los resultados.
+     * @param maxResults Número máximo de resultados a devolver.
+     * @param firstResult Primer resultado a devolver.
+     * @return Lista de Tb_CiudadVehiculo en el rango especificado o todos si all es true.
+     */
     private List<Tb_CiudadVehiculo> findCiudadVehiculoEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {

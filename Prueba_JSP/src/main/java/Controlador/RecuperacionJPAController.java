@@ -8,18 +8,36 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Controlador JPA para la entidad TbRecuperacion. Proporciona operaciones CRUD
+ * y métodos para la gestión de objetos TbRecuperacion en la base de datos.
+ */
 public class RecuperacionJPAController implements Serializable {
 
     private EntityManagerFactory fabricaEntidades;
 
+    /**
+     * Constructor que inicializa el EntityManagerFactory.
+     */
     public RecuperacionJPAController() {
         this.fabricaEntidades = JPAUtils.getEntityManagerFactory();
     }
 
+    /**
+     * Obtiene una instancia de EntityManager.
+     *
+     * @return EntityManager creado a partir de la fábrica de entidades.
+     */
     public EntityManager getEntityManager() {
         return fabricaEntidades.createEntityManager();
     }
 
+    /**
+     * Crea y persiste un nuevo TbRecuperacion en la base de datos.
+     *
+     * @param recuperacion El objeto TbRecuperacion que se desea crear.
+     * @throws Exception si ocurre un error durante la persistencia.
+     */
     public void create(TbRecuperacion recuperacion) throws Exception {
         EntityManager em = null;
         try {
@@ -41,6 +59,12 @@ public class RecuperacionJPAController implements Serializable {
         }
     }
 
+    /**
+     * Edita un TbRecuperacion existente en la base de datos.
+     *
+     * @param recuperacion El objeto TbRecuperacion que se desea editar.
+     * @throws Exception si ocurre un error al editar o si el TbRecuperacion no existe.
+     */
     public void edit(TbRecuperacion recuperacion) throws Exception {
         EntityManager em = null;
         try {
@@ -50,7 +74,7 @@ public class RecuperacionJPAController implements Serializable {
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
-            if (msg == null || msg.length() == 0) {
+            if (msg == null || msg.isEmpty()) {
                 Long id = recuperacion.getId();
                 if (findRecuperacion(id) == null) {
                     throw new Exception("La recuperación con id " + id + " ya no existe.");
@@ -64,6 +88,12 @@ public class RecuperacionJPAController implements Serializable {
         }
     }
 
+    /**
+     * Elimina un TbRecuperacion de la base de datos.
+     *
+     * @param id El ID del TbRecuperacion a eliminar.
+     * @throws Exception si el TbRecuperacion no existe o si ocurre un error durante la eliminación.
+     */
     public void destroy(Long id) throws Exception {
         EntityManager em = null;
         try {
@@ -72,7 +102,7 @@ public class RecuperacionJPAController implements Serializable {
             TbRecuperacion recuperacion;
             try {
                 recuperacion = em.getReference(TbRecuperacion.class, id);
-                recuperacion.getId();  // Verificar si existe
+                recuperacion.getId();
             } catch (EntityNotFoundException enfe) {
                 throw new Exception("La recuperación con id " + id + " ya no existe.", enfe);
             }
@@ -85,6 +115,12 @@ public class RecuperacionJPAController implements Serializable {
         }
     }
 
+    /**
+     * Busca un TbRecuperacion en la base de datos utilizando su ID.
+     *
+     * @param id ID del TbRecuperacion a buscar.
+     * @return TbRecuperacion con el ID especificado o null si no se encuentra.
+     */
     public TbRecuperacion findRecuperacion(Long id) {
         EntityManager em = getEntityManager();
         try {
@@ -96,23 +132,34 @@ public class RecuperacionJPAController implements Serializable {
         }
     }
 
+    /**
+     * Busca un TbRecuperacion en la base de datos utilizando un token de recuperación.
+     *
+     * @param token Token de recuperación para buscar el TbRecuperacion.
+     * @return TbRecuperacion con el token especificado o null si no se encuentra.
+     */
     public TbRecuperacion buscarRecuperacionToken(String token) {
         EntityManager em = getEntityManager();
         try {
-            // Crear la consulta para buscar el token
-            TypedQuery<TbRecuperacion> query = em.createQuery("SELECT r FROM TbRecuperacion r WHERE r.tokenRecuperacion = :token", TbRecuperacion.class);
+            TypedQuery<TbRecuperacion> query = em.createQuery(
+                    "SELECT r FROM TbRecuperacion r WHERE r.tokenRecuperacion = :token",
+                    TbRecuperacion.class
+            );
             query.setParameter("token", token);
 
-            return query.getSingleResult(); // Se asume que el token es único y siempre existe uno
+            return query.getSingleResult();
         } catch (NoResultException e) {
-            // Retorna null si no se encuentra ningún resultado
             return null;
         } finally {
             em.close();
         }
     }
 
-
+    /**
+     * Obtiene una lista de TbRecuperacion que están activas (no expiradas y no usadas).
+     *
+     * @return Lista de TbRecuperacion activas, o null si no se encuentran resultados.
+     */
     public List<TbRecuperacion> findRecuperacionActivas() {
         EntityManager em = getEntityManager();
         try {
@@ -120,12 +167,11 @@ public class RecuperacionJPAController implements Serializable {
                     "SELECT r FROM TbRecuperacion r WHERE r.tokenUsado = false AND r.fechaExpiracionToken > :now",
                     TbRecuperacion.class
             );
-            query.setParameter("now", new Date()); // Solo los tokens que no han expirado
+            query.setParameter("now", new Date());
             return query.getResultList();
-        }catch (NoResultException e){
+        } catch (NoResultException e) {
             return null;
-        }
-        finally {
+        } finally {
             em.close();
         }
     }

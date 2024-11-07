@@ -12,19 +12,36 @@ import jakarta.persistence.criteria.*;
 import java.io.Serializable;
 import java.util.List;
 
-
+/**
+ * Controlador JPA para la entidad Persona. Proporciona operaciones CRUD
+ * y métodos para la gestión de objetos Persona en la base de datos.
+ */
 public class PersonaJpaController implements Serializable {
 
     private EntityManagerFactory fabricaEntidades;
 
+    /**
+     * Constructor que inicializa el EntityManagerFactory.
+     */
     public PersonaJpaController() {
         this.fabricaEntidades = JPAUtils.getEntityManagerFactory();
     }
 
+    /**
+     * Obtiene una instancia de EntityManager.
+     *
+     * @return EntityManager creado a partir de la fábrica de entidades.
+     */
     public EntityManager getEntityManager() {
         return fabricaEntidades.createEntityManager();
     }
 
+    /**
+     * Crea y persiste un nuevo Persona en la base de datos.
+     *
+     * @param persona El objeto Persona que se desea crear.
+     * @throws Exception si ocurre un error durante la persistencia.
+     */
     public void create(Persona persona) throws Exception {
         EntityManager em = null;
         try {
@@ -36,10 +53,8 @@ public class PersonaJpaController implements Serializable {
             if (em != null && em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
-            // Maneja la excepción de persistencia, por ejemplo, registrando el error
             System.err.println("Error de persistencia: " + e.getMessage());
             e.printStackTrace();
-            // Lanza una excepción personalizada si es necesario
             throw new RuntimeException("Error al persistir la entidad", e);
         } finally {
             if (em != null) {
@@ -48,32 +63,44 @@ public class PersonaJpaController implements Serializable {
         }
     }
 
-    public void edit(Persona persona) throws  Exception {
+    /**
+     * Edita un Persona existente en la base de datos.
+     *
+     * @param persona El objeto Persona que se desea editar.
+     * @throws Exception si ocurre un error al editar o si el Persona no existe.
+     */
+    public void edit(Persona persona) throws Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             persona = em.merge(persona);
             em.getTransaction().commit();
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 int id = persona.getId();
-                if(findPersona(id)==null){
-                    throw new Exception("The persona with id "+"no longer exists.");
+                if (findPersona(id) == null) {
+                    throw new Exception("La persona con id " + id + " ya no existe.");
                 }
             }
             throw ex;
-        }finally {
+        } finally {
             if (em != null) {
                 em.close();
             }
         }
     }
 
+    /**
+     * Elimina un Persona de la base de datos.
+     *
+     * @param id El ID del Persona a eliminar.
+     * @throws Exception si el Persona no existe o si ocurre un error durante la eliminación.
+     */
     public void destroy(int id) throws Exception {
         EntityManager em = null;
-        try{
+        try {
             em = getEntityManager();
             em.getTransaction().begin();
             Persona persona;
@@ -81,7 +108,7 @@ public class PersonaJpaController implements Serializable {
                 persona = em.getReference(Persona.class, id);
                 persona.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new Exception("The persona with id "+id+" no longer exists.", enfe);
+                throw new Exception("La persona con id " + id + " ya no existe.", enfe);
             }
             em.remove(persona);
             em.getTransaction().commit();
@@ -92,23 +119,25 @@ public class PersonaJpaController implements Serializable {
         }
     }
 
+    /**
+     * Encuentra un Persona por su ID.
+     *
+     * @param id ID del Persona a buscar.
+     * @return Persona con el ID especificado o null si no se encuentra.
+     */
     public Persona findPersona(int id) {
         EntityManager em = getEntityManager();
         try {
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<Persona> cq = cb.createQuery(Persona.class);
             Root<Persona> root = cq.from(Persona.class);
+            root.fetch("vehiculos", JoinType.LEFT);
 
-            // Hacer un JOIN FETCH para traer los vehículos
-            root.fetch("vehiculos", JoinType.LEFT); // Cambia esto a INNER si solo quieres personas que tienen vehículos
-
-            // Establecer la condición para buscar por ID
             cq.select(root).where(cb.equal(root.get("id"), id));
-
             TypedQuery<Persona> query = em.createQuery(cq);
-            return query.getSingleResult(); // Esto asumirá que solo habrá una persona con ese id
+            return query.getSingleResult();
         } catch (NoResultException e) {
-            return null; // Manejar caso donde no se encuentre la persona
+            return null;
         } finally {
             if (em != null && em.isOpen()) {
                 em.close();
@@ -116,42 +145,47 @@ public class PersonaJpaController implements Serializable {
         }
     }
 
+
+    /**
+     * Busca una Persona en el espacio según el ID del usuario.
+     *
+     * @param iduser ID del usuario cuya persona se desea buscar en el espacio.
+     * @return La Persona asociada a un vehículo en el espacio, o null si no se encuentra.
+     */
     public Persona buscarPersonaEnEspacio(int iduser) {
         EntityManager em = getEntityManager();
         try {
-            // Crear la consulta con TypedQuery para buscar si un vehículo de la persona está en un espacio
             TypedQuery<Persona> query = em.createQuery(
                     "SELECT v.persona FROM TbEspacio e JOIN e.vehiculo v WHERE v.persona.id = :iduser",
                     Persona.class
             );
             query.setParameter("iduser", iduser);
 
-            // Retornar el resultado de la consulta
             return query.getSingleResult();
         } catch (NoResultException e) {
             System.out.println("No se encontró un vehículo en el espacio asociado a la persona con ID: " + iduser);
-            return null; // Si no se encuentra el vehículo de la persona, retorna null
+            return null;
         } finally {
             em.close();
         }
     }
 
+    /**
+     * Busca una Persona en la base de datos utilizando su documento.
+     *
+     * @param documento Número de documento de la persona a buscar.
+     * @return La Persona con el documento especificado, o null si no se encuentra.
+     */
     public Persona buscarPersonaDocumento(int documento) {
         EntityManager em = getEntityManager();
         try {
-            // Crear el constructor de la consulta
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<Persona> cq = cb.createQuery(Persona.class);
-
-            // Definir la raíz de la consulta (tabla principal)
             Root<Persona> personaRoot = cq.from(Persona.class);
 
-            // Realizar los LEFT JOINs para permitir la existencia de registros nulos en las relaciones
             personaRoot.fetch("vehiculos", JoinType.LEFT);
-            // Definir la condición de la consulta (WHERE)
             cq.where(cb.equal(personaRoot.get("documento"), documento));
 
-            // Ejecutar la consulta y devolver el resultado
             return em.createQuery(cq).getSingleResult();
         } catch (NoResultException e) {
             System.out.println("No se encontró la persona con documento: " + documento);
@@ -167,59 +201,71 @@ public class PersonaJpaController implements Serializable {
     public List<Persona> findPersonaEntities(int maxResults, int firstResult) {
         return findPersonaEntities(false,maxResults,firstResult);
     }
+
+
+    /**
+     * Obtiene una lista de entidades Persona, con la opción de cargar todas las entidades o aplicar paginación.
+     * Las entidades Persona incluyen las relaciones `rol` y `tipoDocumento` cargadas mediante `JOIN FETCH`.
+     *
+     * @param all Si es true, se obtienen todas las entidades; si es false, se aplica la paginación.
+     * @param maxResults El número máximo de resultados a devolver cuando se aplica la paginación.
+     * @param firstResult El índice del primer resultado a devolver cuando se aplica la paginación.
+     * @return Lista de entidades Persona con las relaciones `rol` y `tipoDocumento` cargadas.
+     */
     private List<Persona> findPersonaEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
-            // Crear la consulta JPQL con JOIN FETCH para cargar la relación `rol`
             String jpql = "SELECT p FROM tb_persona p " +
                     "LEFT JOIN FETCH p.rol " +
                     "LEFT JOIN FETCH p.tipoDocumento";
 
-
-            // Crear la consulta TypedQuery basada en la consulta JPQL y se espera un resultado de tipo Persona
             TypedQuery<Persona> query = em.createQuery(jpql, Persona.class);
 
-            // Aplicar paginación si no se deben traer todas las entidades
             if (!all) {
                 query.setMaxResults(maxResults);
                 query.setFirstResult(firstResult);
             }
 
-            // Ejecutar la consulta y obtener la lista de resultados
-
             return query.getResultList();
         } finally {
             if (em != null && em.isOpen()) {
-                em.close(); // Cerrar el EntityManager después de completar las operaciones
+                em.close();
             }
         }
     }
 
+
+    /**
+     * Obtiene una lista de entidades Persona filtradas por estado de usuario y cargando las relaciones `rol`
+     * y `tipoDocumento` mediante `JOIN FETCH`.
+     *
+     * @param estado El estado de usuario para filtrar las entidades (ACTIVO o INACTIVO).
+     * @param maxResults El número máximo de resultados a devolver.
+     * @param firstResult El índice del primer resultado a devolver.
+     * @return Lista de entidades Persona que coinciden con el estado especificado, con las relaciones `rol` y `tipoDocumento` cargadas.
+     */
     private List<Persona> findUsuariosPorEstado(EstadoUsuario estado, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
-            // Crear la consulta JPQL con JOIN FETCH para cargar la relación `rol` y filtrado por estado
             String jpql = "SELECT p FROM tb_persona p " +
                     "LEFT JOIN FETCH p.rol " +
                     "LEFT JOIN FETCH p.tipoDocumento " +
                     "WHERE p.estadoUsuario = :estado";
 
-            // Crear la consulta TypedQuery basada en la consulta JPQL
             TypedQuery<Persona> query = em.createQuery(jpql, Persona.class);
-            query.setParameter("estado", estado); // Establecer el estado (ACTIVO o INACTIVO)
+            query.setParameter("estado", estado);
 
-            // Aplicar paginación
             query.setMaxResults(maxResults);
             query.setFirstResult(firstResult);
 
-            // Ejecutar la consulta y obtener la lista de resultados
             return query.getResultList();
         } finally {
             if (em != null && em.isOpen()) {
-                em.close(); // Cerrar el EntityManager
+                em.close();
             }
         }
     }
+
     public List<Persona> findUsuariosActivos(int maxResults, int firstResult) {
         return findUsuariosPorEstado(EstadoUsuario.ACTIVO, maxResults, firstResult);
     }
@@ -227,38 +273,42 @@ public class PersonaJpaController implements Serializable {
         return findUsuariosPorEstado(EstadoUsuario.INACTIVO, maxResults, firstResult);
     }
 
+    /**
+     * Cuenta el número total de usuarios que tienen el estado ACTIVO en la base de datos.
+     *
+     * @return Número total de usuarios activos.
+     */
     public int contarUsuariosActivos() {
-        // Realiza una consulta para contar cuántos usuarios tienen estado ACTIVO
         EntityManager em = getEntityManager();
         try {
             String jpql = "SELECT COUNT(p) FROM tb_persona p WHERE p.estadoUsuario = :estado";
             Query query = em.createQuery(jpql);
             query.setParameter("estado", EstadoUsuario.ACTIVO);
-            return ((Long) query.getSingleResult()).intValue(); // Devuelve el total de usuarios activos
+            return ((Long) query.getSingleResult()).intValue();
         } finally {
             em.close();
         }
     }
 
+
     public int contarUsuariosInactivos() {
         return 0;
     }
 
-
-
-
-
-
+    /**
+     * Actualiza el estado de una Persona en la base de datos.
+     *
+     * @param persona La entidad Persona cuyo estado se desea actualizar.
+     * @param nuevoEstado El nuevo estado que se establecerá para la Persona.
+     * @throws Exception si ocurre un error durante la actualización.
+     */
     public void actualizarEstado(Persona persona, EstadoUsuario nuevoEstado) throws Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
 
-            // Actualizar el estado del usuario directamente
             persona.setEstadoUsuario(nuevoEstado);
-
-            // Guardar los cambios en la base de datos
             em.merge(persona);
 
             em.getTransaction().commit();
@@ -269,15 +319,15 @@ public class PersonaJpaController implements Serializable {
         }
     }
 
-
+    /**
+     * Cuenta el número total de usuarios en la base de datos.
+     *
+     * @return Número total de entidades Persona.
+     */
     public long contarUsuarios() {
         EntityManager em = getEntityManager();
         try {
-            // Crear la consulta JPQL para contar todas las entidades de Persona
-            TypedQuery<Long> query = em.createQuery(
-                    "SELECT COUNT(p) FROM tb_persona p", Long.class
-            );
-            // Ejecutar la consulta y devolver el resultado
+            TypedQuery<Long> query = em.createQuery("SELECT COUNT(p) FROM tb_persona p", Long.class);
             return query.getSingleResult();
         } finally {
             if (em != null && em.isOpen()) {
@@ -286,25 +336,25 @@ public class PersonaJpaController implements Serializable {
         }
     }
 
+    /**
+     * Busca una Persona en la base de datos utilizando su correo electrónico.
+     *
+     * @param email Correo electrónico de la persona a buscar.
+     * @return La entidad Persona con el correo electrónico especificado, o null si no se encuentra.
+     */
     public Persona buscarPersonaEmail(String email) {
         EntityManager em = getEntityManager();
         try {
-            // Crear el constructor de la consulta
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<Persona> cq = cb.createQuery(Persona.class);
-
-            // Definir la raíz de la consulta (tabla principal)
             Root<Persona> personaRoot = cq.from(Persona.class);
 
-            // Realizar los LEFT JOINs para permitir la existencia de registros nulos en las relaciones
             personaRoot.fetch("vehiculos", JoinType.LEFT);
             personaRoot.fetch("rol", JoinType.LEFT);
             personaRoot.fetch("tipoDocumento", JoinType.LEFT);
 
-            // Definir la condición de la consulta (WHERE) para buscar por email
             cq.where(cb.equal(personaRoot.get("correo"), email));
 
-            // Ejecutar la consulta y devolver el resultado
             return em.createQuery(cq).getSingleResult();
         } catch (NoResultException e) {
             System.out.println("No se encontró la persona con email: " + email);
@@ -314,77 +364,6 @@ public class PersonaJpaController implements Serializable {
         }
     }
 
-
-
-    public Persona buscarPersonaToken(String token) {
-        EntityManager em = getEntityManager();
-        try {
-            // Crear el constructor de la consulta
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Persona> cq = cb.createQuery(Persona.class);
-
-            // Definir la raíz de la consulta (tabla principal)
-            Root<Persona> personaRoot = cq.from(Persona.class);
-
-            // Realizar los LEFT JOINs para permitir la existencia de registros nulos en las relaciones
-            personaRoot.fetch("vehiculos", JoinType.LEFT);
-            personaRoot.fetch("rol", JoinType.LEFT);
-            personaRoot.fetch("tipoDocumento", JoinType.LEFT);
-
-            // Definir la condición de la consulta (WHERE) para buscar por token
-            cq.where(cb.equal(personaRoot.get("tokenRecuperacion"), token));
-
-            // Ejecutar la consulta y devolver el resultado
-            return em.createQuery(cq).getSingleResult();
-        } catch (NoResultException e) {
-            System.out.println("No se encontró la persona con token: " + token);
-            return null;
-        } finally {
-            em.close();
-        }
-    }
-
 }
-
-
-//En caso de Cambiar la Gestion de las consultas por "CriteriaQuery", Se guarda en este fragmento un ejemplo funcional de la sintaxis a usar.
-// La funcion devuelve una Lista tipo Persona la cual se le hace un Join Fetch del modelo Rol.
-
-//private List<Persona> findPersonaEntities(boolean all, int maxResults, int firstResult) {
-//    EntityManager em = getEntityManager();
-//    try {
-//        // Crear CriteriaBuilder y CriteriaQuery
-//        CriteriaBuilder cb = em.getCriteriaBuilder();
-//        CriteriaQuery<Persona> cq = cb.createQuery(Persona.class);
-//
-//        // Definir la raíz de la consulta
-//        Root<Persona> root = cq.from(Persona.class);
-//
-//        // Agregar JOIN FETCH para inicializar la relación `rol`
-//        root.fetch("rol", JoinType.LEFT); // Esto cargará la relación `rol` junto con la entidad `Persona`
-//
-//        // Construir la consulta
-//        cq.select(root);
-//
-//        // Crear la consulta
-//        TypedQuery<Persona> query = em.createQuery(cq);
-//
-//        // Aplicar paginación si no se deben traer todas las entidades
-//        if (!all) {
-//            query.setMaxResults(maxResults);
-//            query.setFirstResult(firstResult);
-//        }
-//
-//        // Ejecutar la consulta y obtener la lista de resultados
-//        List<Persona> personas = query.getResultList();
-//
-//
-//        return personas;
-//    } finally {
-//        if (em != null && em.isOpen()) {
-//            em.close(); // Cerrar el EntityManager después de completar las operaciones
-//        }
-//    }
-//}
 
 

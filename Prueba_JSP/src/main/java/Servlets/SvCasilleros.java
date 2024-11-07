@@ -198,6 +198,9 @@ public class SvCasilleros {
             } catch (NumberFormatException e) {
                 enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Formato de número incorrecto");
             }
+            catch (JSONException e) {
+                enviarRespuesta(resp, HttpServletResponse.SC_BAD_REQUEST, "error", "Faltaron datos para completar la solicitud");
+            }
         }
 
         // Método manejarEdit

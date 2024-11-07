@@ -37,8 +37,8 @@ public class Logica_Persona {
         Persona persona = controladora.buscarPersonaDocumento(documento);
         // Verificar si se encontró el documento
         if (persona == null) {
-            System.err.println("Error: No se encontraron registros para el documento: " + documento);
-            return new ResultadoOperacion(false, "No se encontraron registros para el documento.");
+            System.err.println("Error: No se encontraron usuarios para el documento: " + documento);
+            return new ResultadoOperacion(false, "No se encontraron usuarios para el documento.");
         }
         System.out.println("Documento encontrado, continuando validación...");
 
