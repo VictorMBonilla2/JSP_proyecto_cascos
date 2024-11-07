@@ -7,6 +7,13 @@ import jakarta.persistence.PersistenceException;
 
 import java.util.List;
 
+
+/**
+ * Controlador de persistencia que proporciona métodos para interactuar con múltiples entidades
+ * mediante el uso de varios controladores JPA. Proporciona operaciones CRUD para entidades como
+ * Persona, Casilleros, Espacio, Vehículo, Registro, Reportes, Tipo de Documento, Tipo de Vehículo,
+ * Roles, Marca, Modelo, Ciudad y otras entidades relacionadas.
+ */
 public class PersistenciaController {
 //Aca se Instancian de todos los controladores Jpa, y se retorna las consultas deseadas
     PersonaJpaController persoJpa = new PersonaJpaController();
@@ -501,7 +508,6 @@ public class PersistenciaController {
     public void ActualizarToken(TbRecuperacion tokenObj) throws Exception {
         recuperacionJPA.edit(tokenObj);
     }
-
 
 }
 

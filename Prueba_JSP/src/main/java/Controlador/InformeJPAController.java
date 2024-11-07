@@ -8,19 +8,35 @@ import org.hibernate.exception.ConstraintViolationException;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Controlador JPA para la entidad TbInformesUsuarios. Proporciona operaciones CRUD
+ * y métodos para la gestión de objetos TbInformesUsuarios en la base de datos.
+ */
 public class InformeJPAController implements Serializable {
 
     private EntityManagerFactory fabricaEntidades;
 
+    /**
+     * Constructor que inicializa el EntityManagerFactory.
+     */
     public InformeJPAController() {
         this.fabricaEntidades = JPAUtils.getEntityManagerFactory();
     }
 
+    /**
+     * Obtiene una instancia de EntityManager.
+     *
+     * @return EntityManager creado a partir de la fábrica de entidades.
+     */
     public EntityManager getEntityManager() {
         return fabricaEntidades.createEntityManager();
     }
 
-    // Método para crear un nuevo informe
+    /**
+     * Crea y persiste un nuevo TbInformesUsuarios en la base de datos.
+     *
+     * @param informe El objeto TbInformesUsuarios que se desea crear.
+     */
     public void create(TbInformesUsuarios informe) {
         EntityManager em = null;
         try {
@@ -29,16 +45,21 @@ public class InformeJPAController implements Serializable {
             em.persist(informe);
             em.getTransaction().commit();
         } catch (Exception e) {
-            System.err.println("Hubo un error al crear el pdf: " + e.getMessage());
-            e.printStackTrace(); // Esto te dará más información sobre la excepción
-        }finally {
+            System.err.println("Hubo un error al crear el informe: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
             if (em != null) {
                 em.close();
             }
         }
     }
 
-    // Método para editar un informe existente
+    /**
+     * Edita un TbInformesUsuarios existente en la base de datos.
+     *
+     * @param informe El objeto TbInformesUsuarios que se desea editar.
+     * @throws Exception si ocurre un error al editar o si el TbInformesUsuarios no existe.
+     */
     public void edit(TbInformesUsuarios informe) throws Exception {
         EntityManager em = null;
         try {
@@ -48,7 +69,7 @@ public class InformeJPAController implements Serializable {
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
-            if (msg == null || msg.length() == 0) {
+            if (msg == null || msg.isEmpty()) {
                 Long id = informe.getId();
                 if (findInforme(id) == null) {
                     throw new Exception("El informe con id " + id + " ya no existe.");
@@ -62,7 +83,13 @@ public class InformeJPAController implements Serializable {
         }
     }
 
-    // Método para eliminar un informe por ID
+    /**
+     * Elimina un TbInformesUsuarios de la base de datos.
+     *
+     * @param id El ID del TbInformesUsuarios a eliminar.
+     * @throws PersistenceException si el TbInformesUsuarios está en uso y no se puede eliminar.
+     * @throws Exception si el TbInformesUsuarios no existe o si ocurre cualquier otro error inesperado.
+     */
     public void destroy(Long id) throws PersistenceException, Exception {
         EntityManager em = null;
         try {
@@ -94,7 +121,12 @@ public class InformeJPAController implements Serializable {
         }
     }
 
-    // Método para encontrar un informe por ID
+    /**
+     * Encuentra un TbInformesUsuarios por su ID.
+     *
+     * @param id ID del TbInformesUsuarios a buscar.
+     * @return TbInformesUsuarios con el ID especificado o null si no se encuentra.
+     */
     public TbInformesUsuarios findInforme(Long id) {
         EntityManager em = getEntityManager();
         try {
@@ -103,24 +135,32 @@ public class InformeJPAController implements Serializable {
             em.close();
         }
     }
+
+    /**
+     * Encuentra un TbInformesUsuarios por su código de informe.
+     *
+     * @param codigoInforme Código del informe a buscar.
+     * @return TbInformesUsuarios con el código especificado o null si no se encuentra.
+     */
     public TbInformesUsuarios findInformeByCodigo(String codigoInforme) {
         EntityManager em = getEntityManager();
         try {
-            // Crear la consulta utilizando JPQL para buscar el informe por código
             String jpql = "SELECT i FROM TbInformesUsuarios i WHERE i.codigoInforme = :codigoInforme";
             return em.createQuery(jpql, TbInformesUsuarios.class)
                     .setParameter("codigoInforme", codigoInforme)
                     .getSingleResult();
         } catch (NoResultException e) {
-            // Manejar el caso en el que no se encuentra el informe
             return null;
         } finally {
             em.close();
         }
     }
 
-
-    // Método para encontrar todos los informes
+    /**
+     * Obtiene una lista de todos los TbInformesUsuarios.
+     *
+     * @return Lista de todos los TbInformesUsuarios.
+     */
     public List<TbInformesUsuarios> findAllInformes() {
         EntityManager em = getEntityManager();
         try {
@@ -130,4 +170,5 @@ public class InformeJPAController implements Serializable {
         }
     }
 }
+
 
